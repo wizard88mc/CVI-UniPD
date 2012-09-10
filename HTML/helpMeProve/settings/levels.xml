@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<levelsToChoose>
+<groupLevels name="Facili" numberOfTargets="1" numberOfDistracters="0">
+	<level targetFamily="animali" sound="sound_prova">
+		<object type="T" />
+	</level>
+	<level targetFamily="macchine" sound="sound_prova">
+		<object type="T" />
+	</level>
+	<level targetFamily="fiori" sound="sound_prova">
+		<object type="T" />
+	</level>
+</groupLevels>
+
+
+<groupLevels name="Medi" numberOfTargets="1" numberOfDistracters="0">
+	<level targetFamily="macchine" sound="sound_prova">
+		<object type="T" />
+	</level>
+</groupLevels>
+
+<groupLevels name="Difficili" numberOfTargets="1" numberOfDistracters="0">
+	<level targetFamily="fiori" sound="sound_prova">
+		<object type="T" />
+	</level>
+</groupLevels>
+
+</levelsToChoose>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+
+<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+Remove this if you use the .htaccess -->
+
+<title>prova</title>
+<meta name="description" content="" />
+<meta name="author" content="Matteo" />
+
+<script src="js/jquery-1.7.2.min.js"></script>
+<script src="js/jquery-ui-1.8.20.custom.min.js"></script>
+
+
+<script>
+
+window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+
+window.webkitStorageInfo.requestQuota(window.PERSISTENT, 5*1024*1024, function(grantedBytes) {
+	
+	window.requestFileSystem(window.PERSISTENT, grantedBytes, onInitFs); 
+}, function(e) {
+	console.log(e)
+});
+
+function toArray(list) {
+  return Array.prototype.slice.call(list || [], 0);
+}
+
+function listResults(entries) {
+  // Document fragments can improve performance since they're only appended
+  // to the DOM once. Only one browser reflow occurs.
+  var fragment = document.createDocumentFragment();
+
+  entries.forEach(function(entry, i) {
+  	
+  	console.log(entry.name);
+  });
+}
+
+function onInitFs(fs) {
+
+	fs.root.getDirectory('offline_visits/1/', {}, function(directoryEntry) {
+	
+	var dirReader = directoryEntry.createReader();
+  var entries = [];
+
+  // Call the reader.readEntries() until no more results are returned.
+  var readEntries = function() {
+     dirReader.readEntries (function(results) {
+      if (!results.length) {
+        listResults(entries.sort());
+      } else {
+        entries = entries.concat(toArray(results));
+        readEntries();
+      }
+    });
+  };
+
+  readEntries(); // Start reading dirs.	
+	})
+  
+
+}
+
+/*function onInitFs(fs) {
+	
+	fs.root.getDirectory('offline_visits', {create: true}, function(dirEntry) {
+		
+		console.log(dirEntry);
+	}, function(error) {
+		console.log(error);
+	});
+}*/
+</script>
+
+</head>
+
+<body>
+
+</body>
+</html>

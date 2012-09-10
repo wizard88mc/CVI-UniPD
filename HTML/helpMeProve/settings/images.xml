@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<imageMaterials>
+    <family type="animali" audioFile="animali.mp3">
+        <image name="Oca" fileName="oca.jpg" />
+        <image name="Oca1" fileName="oca.jpg" />
+        <image name="Oca2" fileName="oca.jpg" />
+        <image name="Oca3" fileName="oca.jpg" />
+    </family>
+    <family type="macchine" audioFile="macchine.mp3">
+        <image name="Ferrari" fileName="ferrari.png" />
+        <image name="Ferrari1" fileName="ferrari.png" />
+        <image name="Ferrari2" fileName="ferrari.png" />
+        <image name="Ferrari3" fileName="ferrari.png" />
+    </family>
+    <family type="fiori" audioFile="fiori.mp3">
+        <image name="Rosa" fileName="rosa.png" />
+        <image name="Rosa1" fileName="rosa.png" />
+        <image name="Rosa2" fileName="rosa.png" />
+        <image name="Rosa3" fileName="rosa.png" />
+    </family>
+</imageMaterials>

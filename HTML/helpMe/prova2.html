@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript" src="../js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="../js/Utilities.js"></script>
+    <script src="js/PresentationManager.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="style/prova.css" />
+<script type="text/javascript">
+window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
+
+var presentationManager = null;
+
+var frameAnimatorNamespace = {
+
+		
+functionMoveGnomo: function(currentTime) {
+    presentationManager.currentAnimationFrame = 
+        window.requestAnimationFrame(frameAnimatorNamespace.functionMoveGnomo);
+    
+    var delta = currentTime - presentationManager.timeLastFrame;
+    if (delta > 1000 / 25) {
+        if (!presentationManager.gnomo.moveRight) {
+            if (presentationManager.slitta.left + presentationManager.slitta.width * 2
+                > 0) {
+                presentationManager.gnomo.moveElement(true, delta / 2);
+                presentationManager.gnomo.increaseDimensions(delta / 2);
+                presentationManager.slitta.increaseDimensions(delta / 2);
+                presentationManager.slitta.moveObject(true);
+                presentationManager.gnomo.drawElement();
+                presentationManager.slitta.drawElement();
+                presentationManager.timeLastFrame = currentTime;
+            }
+            else {
+                presentationManager.gnomo.moveRight = true;
+                presentationManager.slitta.element.attr('src', presentationManager.slitta.imageFileBack);
+            }
+        }
+        else {
+            
+            if (presentationManager.slitta.left < getScreenWidth()) {
+                presentationManager.gnomo.moveElement(false, delta);
+                presentationManager.gnomo.increaseDimensions(delta);
+                presentationManager.slitta.increaseDimensions(delta);
+                presentationManager.slitta.moveObject(false);
+                presentationManager.gnomo.drawElement();
+                presentationManager.slitta.drawElement();
+                presentationManager.timeLastFrame = currentTime;
+            }
+            else {
+                window.webkitCancelRequestAnimationFrame(presentationManager.currentAnimationFrame);
+                var screenPart = getScreenHeight() / 4;
+                var half = screenPart / 2;
+                var positionInPart = half - presentationManager.gnomo.height / 2;
+                presentationManager.gnomo.top = screenPart * 2 + positionInPart;
+                presentationManager.gnomo.width = presentationManager.gnomo.targetWidth;
+                presentationManager.gnomo.height = presentationManager.gnomo.targetHeight;
+                presentationManager.slitta.width = presentationManager.slitta.targetWidth;
+                presentationManager.slitta.height = presentationManager.slitta.targetHeight;
+                presentationManager.slitta.moveObject(true);
+                presentationManager.slitta.element.attr('src', presentationManager.slitta.imageFile);
+                presentationManager.gnomo.drawElement();
+                presentationManager.slitta.drawElement();
+                presentationManager.currentAnimationFrame = 
+                    window.requestAnimationFrame(frameAnimatorNamespace.moveGnomoToCenter);
+            }
+        }
+    }
+},
+
+    moveGnomoToCenter: function(time) {
+    
+    presentationManager.currentAnimationFrame = 
+        window.requestAnimationFrame(frameAnimatorNamespace.moveGnomoToCenter);
+    
+    var delta = time - presentationManager.timeLastFrame;
+    if (delta > 1000 / 25) {
+        if (!presentationManager.gnomo.arrivedToCenter) {
+
+            var distance = presentationManager.gnomo.left - 
+                (getScreenWidth() / 2 - presentationManager.gnomo.width / 2);
+            if (distance > 0) {
+
+                if (distance < 100 && distance > 30 /* && !presentationManager.distanceModified*/) {
+                    $('#audioFrenata').get(0).play();
+                    presentationManager.speedForElementsWidth = 
+                        (distance / 1 / 1000);
+                    presentationManager.distanceModified = true;
+                }
+                presentationManager.gnomo.left -= presentationManager.speedForElementsWidth * delta ;
+                presentationManager.slitta.left -= presentationManager.speedForElementsWidth * delta;
+                presentationManager.gnomo.drawElement();
+                presentationManager.slitta.drawElement();
+                presentationManager.timeLastFrame = time;
+            }
+            else {
+                presentationManager.gnomo.arrivedToCenter = true;
+            }
+        }
+        else {
+            presentationManager.gnomo.element.css({'z-index': 3});
+            if (presentationManager.angleForJump < Math.PI) {
+                presentationManager.angleForJump += 0.3;
+                presentationManager.gnomo.top += Math.sin(presentationManager.angleForJump) * 10;
+                presentationManager.gnomo.drawElement();
+            }
+            else {
+                window.webkitCancelRequestAnimationFrame(presentationManager.currentAnimationFrame);
+                $('#audioIntroduzione').on('ended', function() {
+                    console.log("Completed");
+                    $('#divMainContent').children().remove();
+                    ExampleNamespace.prepareExamples();
+                }).get(0).play();
+            }
+        }
+    }
+    }
+}
+$('document').ready(function() {
+    
+	var soundFrenata = $('<audio id="audioFrenata"></audio>');
+    $('<source src="sounds/frenata.mp3" />').appendTo(soundFrenata);
+    soundFrenata.appendTo('body');
+    
+    var introductionSound = $('<audio id="audioIntroduzione"></audio>');
+    $('<source src="sounds/sound_prova.mp3" />').appendTo(introductionSound);
+    introductionSound.appendTo('body');
+    presentationManager = new PresentationManager();
+    presentationManager.createElements();
+});
+</script>
+</head>
+<body>
+</body>
+</html>
