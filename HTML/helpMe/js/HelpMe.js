@@ -58,6 +58,9 @@ function presentationComplete() {
 			websocket.close();
 			location.replace('../patient/index.html');
 		}
+		else if (data.TYPE == "STOP_GAME") {
+			gameManager.gameInProgress = false;
+		}
 		else {
 			console.log(data);
 			console.log(message);
@@ -128,7 +131,7 @@ function manageLevels(repeatLevel) {
         gameManager.levelCompletedCorrectly = true;
     }
 
-    if (gameManager.levelIndex < livelliGioco.length) {
+    if (gameManager.levelIndex < livelliGioco.length && gameManager.gameInProgress) {
         gameManager.currentLevel = livelliGioco[gameManager.levelIndex];
 
         utilsNamespace.istantiateLevel(gameManager.currentLevel);
@@ -141,11 +144,13 @@ function manageLevels(repeatLevel) {
     }
     else {
         // Gioco completato: faccio animazione finale e invio pacchetto
-        var packetEnd = {
-            TYPE: "STOP_GAME"
-        };
-
-        websocket.send(JSON.stringify(packetEnd));
+    	if (gameManager.gameInProgress) {
+	        var packetEnd = {
+	            TYPE: "STOP_GAME"
+	        };
+	
+	        websocket.send(JSON.stringify(packetEnd));
+    	}
         
         $('#divSacco, #divBarraTempo').remove();
         

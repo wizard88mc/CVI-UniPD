@@ -44,6 +44,18 @@ var HelpMeNamespace = {
 			HelpMeNamespace.prepareLegend();
 			HelpMeNamespace.prepareCanvas();
 			
+			$('<div id="divButtonStopGame">Interrompi gioco</div>').insertBefore('#tableResultsHelpMe')
+			.button().on('click', function() {
+				
+				var packetToSend = {
+					TYPE: "STOP_GAME";
+				}
+				
+				websocket.send(JSON.stringify(packetToSend));
+				
+				$(this).remove();
+			})
+			
 			$('<div id="dialogWaitingToStart" title="Pronto"><p>Non appena tutto sarà pronto, cliccare su Ok per iniziare la presentazione</p></div>').appendTo('#divMainContent')
 			.dialog({
 				modal: true,

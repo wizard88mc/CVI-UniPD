@@ -71,11 +71,11 @@ function checkLogin(e) {
 	
 }
 
-function newExam(e) {	
+function patientClient(e) {	
 	location.replace('patient/index.html');
 }
 
-function watchExam(e) {
+function doctorClient(e) {
 	location.replace('doctor/index.html');
 }
 
@@ -141,16 +141,16 @@ function secondStepPage() {
 						.css('margin', 'auto')
 						.css('padding-bottom', '2.0em');
 						
-	var buttonManagePatients = $('<button id="managePatients">Gestisci Pazienti</button>').button();
+	var buttonManagePatients = $('<button id="managePatients">Gestione Pazienti</button>').button();
 	buttonManagePatients.click(managePatients);
-	var buttonStartExams = $('<button id="startExams">Effettua Visite</button>').button();
-	buttonStartExams.click(newExam);
-	var buttonWatchExam = $('<button id="watchExam">Osserva Visita</button>').button();
-	buttonWatchExam.click(watchExam);
+	var buttonDoctorClient = $('<button id="doctorClient">Schermo Dottore</button>').button();
+	buttonDoctorClient.click(doctorClient);
+	var buttonPatientClient = $('<button id="patientClient">Schermo paziente</button>').button();
+	buttonPatientClient.click(patientClient);
 	
 	buttonManagePatients.appendTo(divSceltaOperazione);
-	buttonWatchExam.appendTo(divSceltaOperazione);
-	buttonStartExams.appendTo(divSceltaOperazione);
+	buttonDoctorClient.appendTo(divSceltaOperazione);
+	buttonPatientClient.appendTo(divSceltaOperazione);
 	
 	divSceltaOperazione.appendTo(divPage);
 	

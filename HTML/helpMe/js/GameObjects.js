@@ -22,6 +22,7 @@ function GameManager() {
     this.levelCompletedCorrectly = true;
     this.maxRepetitionForLevel = 3;
     this.currentLevelRepetition = 1;
+    this.gameInProgress = true;
 
 this.getSystemImages = function() {
 

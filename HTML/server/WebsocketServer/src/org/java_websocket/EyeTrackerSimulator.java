@@ -49,7 +49,18 @@ public class EyeTrackerSimulator extends Thread {
         }
         System.out.println("*** EYE TRACKER STOPPED ***");
     }
-            
+    
+    public void simulateTraining() {
+        
+        Thread simulator = new Thread() {
+            @Override
+            public void run() {
+                
+            }
+        };
+        
+        simulator.start();
+    }
     
     public void connect() throws Exception {
         clientConnecter = new WebSocketClient(new URI(host)) {

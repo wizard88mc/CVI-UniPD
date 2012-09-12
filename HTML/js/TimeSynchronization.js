@@ -20,8 +20,7 @@ function handleOffsetCalculation(message) {
 		
 		localStorage.setItem('machineID', packet.MACHINE_ID);
 		
-		websocket.close();
-		
+		console.log("Sync completed");
 		timeSyncCompleted();
 	}
 }

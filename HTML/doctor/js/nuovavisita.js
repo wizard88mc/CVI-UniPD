@@ -46,6 +46,7 @@ startNewGame: function() {
 			buttons: {
 				Ok: function() {
 					$(this).dialog("close");
+					$(this).remove();
 				}
 			}
 		});
@@ -67,7 +68,7 @@ getListOfPatients: function() {
 			
 			try {
 				var arrayOfPatients = JSON.parse(message);
-				var listOfOption = '<option value="""></option>';
+				var listOfOption = '<option value=""></option>';
 				for (var i = 0; i < arrayOfPatients.length; i++) {
 					var patient = arrayOfPatients[i];
 					
@@ -125,65 +126,110 @@ goToGame: function() {
 			var data =JSON.parse(message);
 			gameIdentification = data.IDENTIFICATION;
 			
-			if (gameIdentification == "CATCH_ME") {
-				// lavoro con settings di catchMe
-				console.log("CatchMe to watch");
-				var packetToSend = {
-					'TYPE': "GAME",
-					'GAME_ID': gameIdentification
-				};
-				websocket.send(JSON.stringify(packetToSend));
-				
-				websocket.onmessage = function(message) {
-					
-					try {
-						var data = JSON.parse(message.data);
-						if (data.TYPE == "GAME" && data.RESULT == true) {
-							setTimeout(CatchMeSettingsNamespace.requestScreenClient, 1000);
-						}
-						else if (data.TYPE == "GAME" && data.RESULT == false) {
-							console.log("No client connected");
-						}
-					}
-					catch(error) {
-						console.log("Error in waiting response from game packet");
-						console.log(error);
-						console.log(message);
-					}
-				}
-				
-				
-				
+			if (websocket == null) {
+				NewVisitNamespace.noServerWorking();
 			}
-			else if (gameIdentification == "HELP_ME") {
-				// lavoro con settings helpMe
-				// $('#divMainContent div').remove();
-				var packetToSend = {
+			else {
+				if (gameIdentification == "CATCH_ME") {
+					// lavoro con settings di catchMe
+					console.log("CatchMe to watch");
+					var packetToSend = {
 						'TYPE': "GAME",
 						'GAME_ID': gameIdentification
 					};
-				websocket.send(JSON.stringify(packetToSend));
-				
-				websocket.onmessage = function(message) {
-					//try {
-						var data = JSON.parse(message.data);
-						if (data.TYPE == "GAME" && data.RESULT == true) {
-							HelpMeSettingsNamespace.getImagesFamilies();
+					websocket.send(JSON.stringify(packetToSend));
+					
+					websocket.onmessage = function(message) {
+						
+						try {
+							var data = JSON.parse(message.data);
+							if (data.TYPE == "GAME" && data.RESULT == true) {
+								setTimeout(CatchMeSettingsNamespace.requestScreenClient, 1000);
+							}
+							else if (data.TYPE == "GAME" && data.RESULT == false) {
+								console.log("No client connected");
+								NewVisitNamespace.noClientConnected();
+							}
 						}
-					/*}
-					catch(error) {
-						console.log("Error in waiting response from game packet");
-						console.log(error);
-						console.log(message);
-					}*/
+						catch(error) {
+							console.log("Error in waiting response from game packet");
+							console.log(error);
+							console.log(message);
+						}
+					}
+					
+					
+					
 				}
-				
-				console.log("HelpMe to watch");
-				
+				else if (gameIdentification == "HELP_ME") {
+					// lavoro con settings helpMe
+					// $('#divMainContent div').remove();
+					var packetToSend = {
+							'TYPE': "GAME",
+							'GAME_ID': gameIdentification
+						};
+					websocket.send(JSON.stringify(packetToSend));
+					
+					websocket.onmessage = function(message) {
+						try {
+							var data = JSON.parse(message.data);
+							if (data.TYPE == "GAME" && data.RESULT == true) {
+								HelpMeSettingsNamespace.getImagesFamilies();
+							}
+							else if (data.TYPE == "GAME" && data.RESULT == false) {
+								NewVisitNamespace.noClientConnected();
+							}
+						}
+						catch(error) {
+							console.log("Error in waiting response from game packet");
+							console.log(error);
+							console.log(message);
+						}
+					}
+					
+					console.log("HelpMe to watch");
+					
+				}
 			}
-			
 		}
 	})
+},
+
+noServerWorking: function() {
+	
+	$('<div id="divDialogServerNotWorking" title="Attenzione"><p>Attenzione: Server non attivato o non funzionante. Verificare e riprovare</p></div>')
+	.appendTo('#divMainContent')
+	.dialog({
+		modal: true,
+		resizable: false,
+		draggable: false,
+		width: (getScreenWidth() * 0.4),
+		buttons: {
+			"Chiudi": function() {
+				$(this).dialog("close");
+				$(this).remove();
+				location.replace('../index.html');
+			}
+		}
+	});
+},
+
+noClientConnected: function() {
+	
+	$('<div id="divDialogNoClientConnected" title="Errore"><p>Attenzione: nessun dispositivo per il paziente connesso. Collegarlo e riprovare</p></div>')
+	.appendTo('#divMainContent')
+	.dialog({
+		modal: true,
+		resizable: false,
+		draggable: false,
+		width: (getScreenWidth() * 0.4),
+		buttons : {
+			"Chiudi": function() {
+				$(this).dialog("close");
+				$(this).remove();
+			}
+		}
+	});
 },
 
 returnToIndex: function() {
@@ -193,20 +239,15 @@ returnToIndex: function() {
 presentationComplete: function() {
 	
 	console.log("Presentation Complete");
-	startSynchronization();
+	//startSynchronization();
+	initializePage();
 },
 
-timeSyncCompleted: function() {
+/*timeSyncCompleted: function() {
 	
-	// Tutti i dati pronti, posso cominciare partita
-	if (gameReady && checkAlreadySync()) {
-		goToGame();
-	}
-	// Presento form per inserimento dei dati di gioco
-	else if (!($('#examSpecification').length > 0)) {
-		initializePage();
-	}
-},
+	initializePage();
+
+},*/
 
 initializePage: function() {
 	
@@ -283,6 +324,7 @@ initializePage: function() {
 					buttons: {
 						Ok: function() {
 							$(this).dialog('close');
+							$(this).remove();
 						}
 					}
 				}).parent().addClass('ui-state-error');
@@ -323,7 +365,8 @@ initializePage: function() {
 								width: width,
 								buttons: {
 									Ok: function() {
-										$('#dialogInsertOk').dialog("destroy");
+										$(this).dialog("destroy");
+										$(this).remove();
 									}
 								}
 							});
@@ -346,6 +389,7 @@ initializePage: function() {
 								buttons: {
 									Ok: function() {
 										$(this).dialog("close");
+										$(this).remove();
 									}
 								}
 							}).parent().addClass('ui-state-error');
