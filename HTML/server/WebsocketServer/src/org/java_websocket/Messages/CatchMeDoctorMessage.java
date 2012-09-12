@@ -15,6 +15,8 @@ import org.json.simple.JSONObject;
 public class CatchMeDoctorMessage extends DoctorClientPacket {
     
     protected Map<String, Long> imagePosition = new HashMap<String, Long>();
+    protected Map<String, Long> touchPosition = new HashMap<String, Long>();
+    protected Map<String, Long> eyesPosition = new HashMap<String, Long>();
     protected long imageY = -1;
     protected long deltaEye = -1;
     protected long deltaTouch = -1;
@@ -25,6 +27,8 @@ public class CatchMeDoctorMessage extends DoctorClientPacket {
         
         if (catchMePacket != null && eyePacket != null) {
             time = (catchMePacket.getTime() + eyePacket.getTime()) / 2;
+            
+            
         }
         else {
             if (catchMePacket == null) {
@@ -37,6 +41,24 @@ public class CatchMeDoctorMessage extends DoctorClientPacket {
         
         if (catchMePacket != null) {
             movement = catchMePacket.getMovement();
+        }
+        
+        if (catchMePacket != null) {
+            touchPosition.put("posLeft", catchMePacket.touch.x);
+            touchPosition.put("posTop", catchMePacket.touch.y);
+        }
+        else {
+            touchPosition.put("posLeft", -1L);
+            touchPosition.put("posTop", -1L);
+        }
+        
+        if (eyePacket != null) {
+            eyesPosition.put("posLeft", eyePacket.eyes.x);
+            eyesPosition.put("posTop", eyePacket.eyes.y);
+        }
+        else {
+            eyesPosition.put("posLeft", -1L);
+            eyesPosition.put("posTop", -1L);
         }
         
         imagePosition.put("posLeft", catchMePacket.image.x);
@@ -77,6 +99,8 @@ public class CatchMeDoctorMessage extends DoctorClientPacket {
         packet.put("TYPE", type);
         packet.put("TIME", time);
         packet.put("IMAGE_SPECS", imagePosition);
+        packet.put("TOUCH_SPECS", touchPosition);
+        packet.put("EYES_SPECS", eyesPosition);
         packet.put("MOVEMENT", movement);
         if (deltaTouch != -1) {
             packet.put("DELTA_TOUCH", deltaTouch);

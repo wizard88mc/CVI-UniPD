@@ -10,6 +10,8 @@ var deltaTouch = [];
 var deltaEye = [];
 var movements = [];
 var imagePositions = [];
+var eyesPositions = [];
+var touchPositions = [];
 var lastGraphWatched = null;
 
 function drawCatchMeTable(visits) {
@@ -349,16 +351,6 @@ function drawGraph(differentValues) {
 				}
 			});
 			
-			/*$('<div id="divBackButtonContainer"></div>').insertBefore('#divGrafo');
-			$('<img src="../images/tasto_indietro.png" alt="Torna Indietro" />').appendTo('#divBackButtonContainer');
-			
-			$('#divBackButtonContainer img').click(function() {
-				$('#divBackButtonContainer, #divGrafo').fadeOut('fast', function() {
-					$('#imgPreloaderMiddle').fadeIn('fast', function() {
-						drawTable(false);	
-					})
-				});
-			})*/
 			$('#imgGoBack').off('click');
 			$('#imgGoBack').one('click', function() {
 				
@@ -412,6 +404,12 @@ function drawGraph(differentValues) {
 			
 			var imagePos = objectInfo.IMAGE_POS
 			imagePositions[time] = new Point(imagePos[0], imagePos[1]);
+			
+			var touchPos = objectInfo.TOUCH_POS;
+			touchPositions[time] = new Point(touchPos[0], touchPos[1]);
+			
+			var eyesPos = objectInfo.EYES_POS;
+			eyesPositions[time] = new Point(eyesPos[0], eyesPos[1]);
 			
 		}
 		

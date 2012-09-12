@@ -1,6 +1,7 @@
 var imagesFamily = new Object();
 var listOfLevels = [];
-var listOfLevelTipologies = []
+var listOfLevelTipologies = [];
+var listOfImages = [];
 var familySound = new Object();
 
 function ImageGame(ID,name, fileName) {
@@ -100,7 +101,9 @@ var HelpMeSettingsNamespace = {
 			var imageID = $(this).val();
 			var typeElement = $(this).parent().parent().children('.columnImageType').text();
 			var divLevel = $(this).parents().eq(4);
-			var targetFamily = divLevel.find('select.selectTargetFamily').val(); 
+			var targetFamily = divLevel.find('select.selectTargetFamily').val();
+			
+			$(this).parent().next().children('img').attr('src', '../helpMe/images/'+HelpMeSettingsNamespace.getImageFilename(imageID));
 
 			var isImageCorrect = HelpMeSettingsNamespace.checkImageType(imageID, typeElement, targetFamily);
 			
@@ -137,7 +140,7 @@ var HelpMeSettingsNamespace = {
 	
 	buildLevelTitle: function(index, targets, distracters) {
 		
-		return 'Livello ' + (index + 1) + ' - T: ' + targets 
+		return 'Livello <span class="levelIndex">' + (index + 1) + '</span> - T: ' + targets 
 		+ ' x D: ' + distracters;
 	},
 	
@@ -150,6 +153,29 @@ var HelpMeSettingsNamespace = {
 				$(this).addClass('ui-selected');
 			}
 		});
+	},
+	
+	updateLabelsTabs: function() {
+		$('#menuTabs li').each(function(index) {
+			$(this).children('a').text(index + 1);
+			$(this).children('a').attr('href', "#level" + index);
+		});
+		
+		$('div[id^="level"]').each(function(index) {
+			
+			$(this).find('h2 span[class="levelIndex"]').text(index + 1);
+			$(this).attr('id', "level" + index);
+		});
+	},
+	
+	getImageFilename: function(id) {
+		
+		for (var i = 0; i < listOfImages.length; i++) {
+			
+			if (listOfImages[i].imageID == id) {
+				return listOfImages[i].fileName;
+			}
+		}
 	},
 
 	getImagesFamilies: function() {
@@ -176,7 +202,9 @@ var HelpMeSettingsNamespace = {
 	                    var fileName = $(this).attr('fileName');
 	                    var imageID = $(this).attr('id');
 	
-	                    imagesFamily[family].push(new ImageGame(imageID, name, fileName));
+	                    var image = new ImageGame(imageID, name, fileName);
+	                    imagesFamily[family].push(image);
+	                    listOfImages.push(image);
 	                });
 	            });
 	            // recupero le diverse tipologie di livelli
@@ -245,7 +273,7 @@ var HelpMeSettingsNamespace = {
 	        			var imageID = $(this).attr('imageID');
 	        			var isTarget = true;
 	        			if (type == 'D') {
-	        				target = false;
+	        				isTarget = false;
 	        			}
 	        			sequenceOfImages.push(new ImageLevel(isTarget, imageID));
 	        		})
@@ -325,6 +353,8 @@ var HelpMeSettingsNamespace = {
 					.addClass('ui-widget-content');
 				selectImage.appendTo(row.children('td').last());
 				
+				$('<td><img class="imgPreview" /></td>').appendTo(row);
+				
 				HelpMeSettingsNamespace.makeRowSelectable(row);
 			}
 			
@@ -335,6 +365,7 @@ var HelpMeSettingsNamespace = {
 					.addClass('ui-widget-content');
 				selectImage.appendTo(row.children('td').last());
 				
+				$('<td><img class="imgPreview" /></td>').appendTo(row);
 				HelpMeSettingsNamespace.makeRowSelectable(row);
 			}
 			
@@ -348,6 +379,8 @@ var HelpMeSettingsNamespace = {
 			
 			var label = indexLevel + 1;
 			$('#tabsLevels').tabs("add", link, label, indexToInsert + 1);
+			
+			HelpMeSettingsNamespace.updateLabelsTabs();
 		})
 		
 		var divTabs = $('<div id="tabsLevels"></div>').appendTo(divContainerAll);
@@ -390,6 +423,10 @@ var HelpMeSettingsNamespace = {
 					.addClass('ui-widget-content');
 				selectImage.appendTo($('td.columnImageSelect').last());
 				
+				$('<img>').addClass('imgPreview')
+				.attr('src', '../helpMe/images/'+HelpMeSettingsNamespace.getImageFilename(image.imageID))
+				.appendTo($('<td></td>').appendTo(row));
+				
 				HelpMeSettingsNamespace.makeRowSelectable(row);
 			}
 			
@@ -422,7 +459,18 @@ var HelpMeSettingsNamespace = {
 			if (rowIndex < totalRows - 1) {
 				rowSelected.insertAfter(rowSelected.parent().children().get(rowIndex + 1));
 			}
+		});
+		
+		$('<div id="buttonDeleteLevel">Elimina livello</div>').appendTo(divButtons).button()
+		.on('click', function() {
+			
+			var index = $('#menuTabs').children().index('#menuTabs li[class*="ui-tabs-selected"]');
+			
+			divTabs.tabs("remove", index);
+			
+			HelpMeSettingsNamespace.updateLabelsTabs();
 		})
+		
 		$('<div id="buttonComplete">Livelli completati</div>').appendTo(divButtons).button()
 			.on('click', function() {
 				HelpMeSettingsNamespace.collectLevelsToSend();
@@ -441,9 +489,6 @@ var HelpMeSettingsNamespace = {
 		});
 		
 		divTabs.tabs();
-		
-		
-		
 	},
 	
 	collectLevelsToSend: function() {
@@ -530,6 +575,7 @@ var HelpMeSettingsNamespace = {
 	
 	sendLevelsToClient: function(levels) {
 		
+		console.log(levels);
 		
 		$.getScript('js/watchHelpMe.js')
 		.done(function(data, textStatus) {
@@ -540,7 +586,7 @@ var HelpMeSettingsNamespace = {
 				TYPE: "GAME_SETTINGS",
 				LEVELS: levels
 			};
-				
+			
 			websocket.send(JSON.stringify(packetToSend));
 			
 			/*var packetSession = {

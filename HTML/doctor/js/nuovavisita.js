@@ -139,7 +139,7 @@ goToGame: function() {
 					try {
 						var data = JSON.parse(message.data);
 						if (data.TYPE == "GAME" && data.RESULT == true) {
-							setTimeout(CatchMeSettingsNamespace.requestScreenClient, 500);
+							setTimeout(CatchMeSettingsNamespace.requestScreenClient, 1000);
 						}
 						else if (data.TYPE == "GAME" && data.RESULT == false) {
 							console.log("No client connected");
@@ -165,17 +165,17 @@ goToGame: function() {
 				websocket.send(JSON.stringify(packetToSend));
 				
 				websocket.onmessage = function(message) {
-					try {
+					//try {
 						var data = JSON.parse(message.data);
 						if (data.TYPE == "GAME" && data.RESULT == true) {
 							HelpMeSettingsNamespace.getImagesFamilies();
 						}
-					}
+					/*}
 					catch(error) {
 						console.log("Error in waiting response from game packet");
 						console.log(error);
 						console.log(message);
-					}
+					}*/
 				}
 				
 				console.log("HelpMe to watch");
@@ -211,6 +211,8 @@ timeSyncCompleted: function() {
 initializePage: function() {
 	
 	$('#divMainContent div').remove();
+	
+	$('#divMainContent > h1').text("Nuova visita");
 	
 	var divChooseOldPatient = $('<div id="divChooseOldPatient"></div>');
 	divChooseOldPatient.addClass('ui-corner-all');

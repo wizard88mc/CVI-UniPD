@@ -249,7 +249,7 @@ function timeExpired() {
 
     $('#divMainContent div').hide();
     imageObjectOnScreen.element.remove();
-    gameManager.packetWithResults.FIRST_RESPONSE_TIME = null;
+    gameManager.packetWithResults.FIRST_RESPONSE_TIME = 0;
     gameManager.packetWithResults.COMPLETION_TIME = gameManager.maxTimeObjectOnScreen;
 
     // Non ha inserito un oggetto target all'interno
@@ -283,7 +283,7 @@ function waitingToStart(message) {
         websocket.onmessage = function(message) {
             var packet = JSON.parse(message);
             if (packet.TYPE == "STOP_GAME") {
-
+            	
             }
             else {
                 console.log("Bad message received during game: ");
@@ -297,6 +297,8 @@ function waitingToStart(message) {
 
 function gameIsEnded() {
 	
+	websocket.close();
+	setTimeout(location.replace('../patient/index.html'), 2000);
 }
 
 function manageOnCloseWebsocket(e) {

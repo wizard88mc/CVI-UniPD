@@ -16,13 +16,16 @@
 	border-color: gray;
 }
 
+.tableLevel td {
+	vertical-align: middle;
+}
+
 .columnImageType {
-	width: 30%;
+	width: 20%;
 }
 
 .columnImageSelect {
-	width: 65%;
-	
+	width: 45%;
 	text-align: left;
 }
 
@@ -33,6 +36,10 @@ td.columnImageSelect select {
 td.ui-selected {
 	background-color: #305071;
 	color: white;
+}
+
+.imgPreview {
+	width: 45%;
 }
 
 #divNewLevel {

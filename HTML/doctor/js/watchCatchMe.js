@@ -4,6 +4,9 @@ datiTouch = [];
 maxTouch = -1;
 movements = new Object();
 imagePositions = new Object();
+touchPositions = new Object();
+eyesPositions = new Object();
+
 	
 timing = null;
 currentSpeedValue = -1;
@@ -215,6 +218,10 @@ var CatchMeNamespace = {
 			
 			imagePositions[dataReceived.TIME] = new Point(dataReceived.IMAGE_SPECS.posTop, 
 												dataReceived.IMAGE_SPECS.posLeft);
+			touchPositions[dataReceived.TIME] = new Point(dataReceived.TOUCH_SPECS.posTop,
+												dataReceived.TOUCH_SPECS.posLeft);
+			eyesPositions[dataReceived.TIME] = new Point(dataReceived.EYES_SPECS.posTop,
+												dataReceived.EYES_SPECS.posLeft);
 												
 			movements[dataReceived.TIME] = dataReceived.MOVEMENT;
 		}

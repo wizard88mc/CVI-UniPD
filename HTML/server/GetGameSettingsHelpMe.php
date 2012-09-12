@@ -13,7 +13,7 @@ $row;
  * First check if there is already defined an exercise for this particular game for
  * this particular patient
  */
-$queryExerciseAlreadyDefined = $baseQuery . "IDPatient = $patientID";
+$queryExerciseAlreadyDefined = $baseQuery . "IDPatient = $patientID AND CurrentValidSettings = 1";
 
 $resultQueryExerciseAlreadyDefined = mysqli_query($connection, $queryExerciseAlreadyDefined);
 

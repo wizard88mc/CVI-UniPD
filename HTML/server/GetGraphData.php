@@ -18,6 +18,8 @@ $folder = $row[0];
 
 $fileNameDelta = str_replace('/', DIRECTORY_SEPARATOR, "WebsocketServer/" . $folder . "DeltaValues.txt");
 $fileNameImagePositions = str_replace('/', DIRECTORY_SEPARATOR, 'WebsocketServer/' . $folder . "InputImage.txt");
+$fileNameTouchPositions = str_replace('/', DIRECTORY_SEPARATOR, 'WebsocketServer/' . $folder . "InputTouch.txt");
+$fileNameEyesPositions = str_replace('/', DIRECTORY_SEPARATOR, 'WebsocketServer/' . $folder . "InputEyeTracking.txt");
 $fileNameSettings = str_replace('/', DIRECTORY_SEPARATOR, 'WebsocketServer/' . $folder . 'GameSpecs.ini');
 
 $fileSettings = fopen($fileNameSettings, "r") or die($fileNameSettings);
@@ -36,6 +38,8 @@ if ($fileSettings != 0) {
 
 $fileDelta = fopen($fileNameDelta, "r") or die($fileNameDelta);
 $fileImage = fopen($fileNameImagePositions, "r") or die($fileNameImagePositions);
+$fileTouch = fopen($fileNameTouchPositions, "r") or die($fileNameTouchPositions);
+$fileEyes = fopen($fileNameEyesPositions, "r") or die($fileNameEyesPositions);
 
 // c'è il file dell'eye tracking
 if ($fileDelta != 0) {
@@ -50,6 +54,14 @@ if ($fileDelta != 0) {
 		$lineImage = str_replace(array('(', ')'), '', $lineImage);
 		$componentsImage = explode(',', $lineImage); // in 1 c'è left, in 2 c'è top
 		
+		$lineTouch = fgets($fileTouch);
+		$lineTouch = str_replace(array('(', ')'), '', $lineTouch);
+		$componentsTouch = explode(',', $lineTouch);
+		
+		$lineEyes = fgets($fileEyes);
+		$lineEyes = str_replace(array('(', ')'), '', $lineEyes);
+		$componentsEyes = explode(',', $lineEyes);
+		
 		// [0] c'è il tempo, [1] delta touch, [2] delta eye, [3] image pos left
 		// [4] image pos top, [5] movement
 		
@@ -62,7 +74,11 @@ if ($fileDelta != 0) {
 				"IMG_RIGHT" => str_replace($replace, "", $components[4]),
 				"MOVEMENT" => str_replace($replace, "", $components[5]),
 				"IMAGE_POS" => array(str_replace($replace, "", $componentsImage[2]), 
-								str_replace($replace, "", $componentsImage[1]))
+								str_replace($replace, "", $componentsImage[1])),
+				"TOUCH_POS" => array(str_replace($replace, "", $componentsTouch[2]),
+								str_replace($replace, "", $componentsTouch[1])),
+				"EYES_POS" => array(str_replace($replace, "", $componentsEyes[2]),
+								str_replace($replace, "", $componentsEyes[1]))
 			);
 			
 			$time = $components[0];

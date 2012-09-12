@@ -10,13 +10,13 @@ $row = mysqli_fetch_array($resultQueryGetFolderHelpMe);
 
 $folderGame = $row[0];
 
-$completeFolderGameSettings = "../$folderGame/settings/$patientID/";
+$completeFolderGameSettings = "../$folderGame/settings/";
 
 if (!file_exists($completeFolderGameSettings)) {
 	mkdir($completeFolderGameSettings);
 }
 
-$fileNewLevel = date("Ymd-His") . '.xml';
+$fileNewLevel = $patientID . "/" . date("Ymd-His") . '.xml';
 $completeNewFile = $completeFolderGameSettings . $fileNewLevel;
 $stringFileLevel = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
 $stringFileLevel .= "<levels>\r\n";
@@ -64,7 +64,7 @@ $resultQuerySelectCurrentExercise = mysqli_query($connection, $querySelectCurren
 if (mysqli_num_rows($resultQuerySelectCurrentExercise) > 0) {
 	
 	// setto l'esercizio corrente a non più valido
-	$row = mysqli_fetch_assoc($resultQuerySelectCurrentExercise);
+	$row = mysqli_fetch_array($resultQuerySelectCurrentExercise);
 	$entryID = $row[0];
 	
 	$queryUpdateRecord = "UPDATE HelpMeExercises SET CurrentValidSettings = 0 WHERE ID=$entryID";

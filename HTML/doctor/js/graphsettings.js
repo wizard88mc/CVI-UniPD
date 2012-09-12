@@ -19,8 +19,8 @@ var opzioniGrafo = {
 			hoverable: true,
 			clickable: true
 		},
-		xaxis: {panRange: [0, null], min: 0},
-		yaxis: {panRange: false, min: 0},
+		xaxis: {panRange: [0, null], min: 0, axisLabel : 'Tempo (ms)'},
+		yaxis: {panRange: false, min: 0, axisLabel: 'Errore (pixels)'},
 		pan: { interactive: true}
 		};
 
@@ -32,6 +32,10 @@ function createTooltip(posX, posY, time, scaleFactor) {
 	if (tooltipObject['tooltipWidth'] + left > getScreenWidth()) {
 		left = posX - 5 - tooltipObject['tooltipWidth'];
 	}
+	if (tooltipObject['tooltipHeight'] + posY > getScreenHeight()) {
+		posY = posY - tooltipObject['tooltipHeight'];
+	}
+	
 	divContent.css({
 		position: 'absolute',
 		width: tooltipObject['tooltipWidth'] + 'px',
@@ -39,14 +43,54 @@ function createTooltip(posX, posY, time, scaleFactor) {
 		top: posY + 5,
 		left: left, 
 		'background-color': '#FEE',
-		'background-image': 'url(images/schermo.fw.png)',
+		'background-image': 'url(images/schermo1.png)',
 		'background-repeat': 'no-repeat',
-		'background-size': '20%',
+		'background-size': '100%',
 		'background-position': 'center',
 		opacity: 1,
 		border: '1px solid',
 		display: 'none'
 	});
+	
+	var dimension = (tooltipObject['tooltipWidth'] * 8) / 100;
+	
+	var eyesPosition = eyesPositions[time];
+	
+	if (eyesPosition.left != -1 && eyesPosition.top != -1) {
+		var leftEyes = eyesPosition.left * scaleFactor;
+		var topEyes = eyesPosition.top * scaleFactor;
+		
+		leftEyes = leftEyes - (dimension / 2);
+		topEyes = topEyes - (dimension / 2);
+		
+		$('<img src="images/eye.png" />').appendTo(divContent)
+			.css({
+				position: 'relative',
+				width: dimension,
+				height: dimension,
+				left: leftEyes,
+				top: topEyes,
+				'z-index': 2 
+			});
+	}
+	
+	var touchPosition = touchPositions[time];
+	
+	if (touchPosition.left != -1 && touchPosition.top != -1) {
+		var leftTouch = touchPosition.left * scaleFactor;
+		var topTouch = touchPosition.top * scaleFactor;
+		leftTouch = leftTouch - (dimension / 2);
+		
+		$('<img src="images/hand_finger.png" />').appendTo(divContent)
+			.css({
+				position: 'relative',
+				width: dimension,
+				height: dimension,
+				left: leftTouch,
+				top: topTouch,
+				'z-index': 3
+			});
+	}
 	
 	// Recupero oggetto Point per la posizione x e y dell'immagine
 	var imagePosition = imagePositions[time];

@@ -525,7 +525,7 @@ personalizationComplete: function() {
 		}
 	})
 	
-	/*var packetToSend = {
+	var packetToSend = {
 		"TYPE": "GAME_SETTINGS",
 		"GAME_ID": gameIdentification,
 		"SETTINGS": gameSettings
@@ -550,6 +550,6 @@ personalizationComplete: function() {
 			console.log(jqxhr);
 			console.log(settings);
 			console.log(exception);
-		});*/
+		});
 }
 }
