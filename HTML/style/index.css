@@ -47,3 +47,11 @@
 .buttonBig {
 	padding: 5%;
 }
+
+#buttonLogout {
+	position: relative;
+	width: 11%;
+	right: 15%;
+	vertical-align: middle;
+	cursor: pointer;
+}

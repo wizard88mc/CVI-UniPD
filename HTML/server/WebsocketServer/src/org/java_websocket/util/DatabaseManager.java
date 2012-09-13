@@ -106,8 +106,8 @@ public class DatabaseManager {
             
             
             Statement insertNewMachine = connect.createStatement();
-            return 1;
-            /*int rowAffected = insertNewMachine.executeUpdate(
+            //return 1;
+            int rowAffected = insertNewMachine.executeUpdate(
                     "INSERT INTO MachinesOffset(Offset, DateOffsetCalculation) " + 
                     "VALUES ( '" + offset + "', '" + today + "')", 
                     Statement.RETURN_GENERATED_KEYS);
@@ -119,7 +119,7 @@ public class DatabaseManager {
             }
             else {
                 return -1;
-            }*/
+            }
             
         }
         catch(SQLException exc) {

@@ -119,14 +119,7 @@ function secondStepPage() {
 	var title = $('<h2 id="welcomeDoctor">Bentornato Dott. '+ doctorName + ' ' + doctorSurname + '</h2>').appendTo(divPage);
 	
 	
-	var logout = $('<img src="images/logout.png" alt="Logout" />').appendTo(title);
-	logout.css({
-		position: 'relative',
-		width: '11%',
-		left: '40%',
-		'vertical-align': 'middle',
-		cursor: 'pointer'
-	});
+	var logout = $('<img id="buttonLogout" src="images/logout.png" alt="Logout" />').appendTo(title);
 	
 	logout.on('click', function() {
 		
