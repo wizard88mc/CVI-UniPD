@@ -48,7 +48,7 @@ var HelpMeNamespace = {
 			.button().on('click', function() {
 				
 				var packetToSend = {
-					TYPE: "STOP_GAME";
+					TYPE: "STOP_GAME"
 				}
 				
 				websocket.send(JSON.stringify(packetToSend));

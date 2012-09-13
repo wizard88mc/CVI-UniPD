@@ -5,6 +5,8 @@ import org.java_websocket.BaseManager;
 import org.java_websocket.Messages.CatchMeDataPacket;
 import org.java_websocket.Messages.CatchMeDoctorMessage;
 import org.java_websocket.Messages.EyeTrackerDataPacket;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -12,12 +14,15 @@ import org.java_websocket.Messages.EyeTrackerDataPacket;
  */
 public class CatchMeMessagesManager extends BaseMessagesManager {
     
+    protected JSONObject lastValidPacket = null;
+    
     public CatchMeMessagesManager(String patientID, int visitID) {
         super(patientID, visitID);
     }
     
     @Override
     public void run() {
+        
         while (!endGame) {
             synchronized(bufferSynchronizer) {
                 while (messagesGameBuffer.isEmpty() && messagesEyeTrackerBuffer.isEmpty()) {
@@ -57,6 +62,12 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
 
                     removeMessageGame = true;
                     removeMessageEyeTracker = true;
+                    
+                    long time = (messageEyeTracker.getTime() + messageGame.getTime())
+                            / 2;
+                    
+                    messageEyeTracker.setTime(time);
+                    messageGame.setTime(time);
 
                     writeEyeTrackerMessage(messageEyeTracker);
                     writeGameMessage(messageGame);
@@ -71,6 +82,14 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
 
                     removeMessageGame = true;
                     writeGameMessage(messageGame);
+                    
+                    JSONObject stupidEye = new JSONObject();
+                    stupidEye.put("TIME", messageGame.getTime());
+                    stupidEye.put("POSX", -1L);
+                    stupidEye.put("POSY", -1L);
+                    
+                    messageEyeTracker = new EyeTrackerDataPacket(stupidEye);
+                    writeEyeTrackerMessage(messageEyeTracker);
                 }
                 /**
                 * Ho solo informazioni riguardanti l'eye-tracker
@@ -80,7 +99,6 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
                 else if (timeEyeTrackerMessage < timeMessageGame) {
 
                     removeMessageEyeTracker = true;
-                    writeEyeTrackerMessage(messageEyeTracker);
                 }
             }
             else if (messagesGameBuffer.isEmpty()) {
@@ -88,9 +106,8 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
                         new EyeTrackerDataPacket(messagesEyeTrackerBuffer.get(0));
                 
                 if (System.currentTimeMillis() - startTime - messageEyeTracker.getTime() > MAX_TIME_WAITING) {
+                    
                     removeMessageEyeTracker = true;
-                    writeEyeTrackerMessage(messageEyeTracker);
-                    System.out.println("Immagini vuoto");
                 }
             }
             else if (messagesEyeTrackerBuffer.isEmpty()) {
@@ -99,7 +116,14 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
                 if (System.currentTimeMillis() - startTime - messageGame.getTime() > MAX_TIME_WAITING) {
                     removeMessageGame = true;
                     writeGameMessage(messageGame);
-                    System.out.println("Eye tracker vuoto");
+                    
+                    JSONObject stupidEye = new JSONObject();
+                    stupidEye.put("TIME", messageGame.getTime());
+                    stupidEye.put("POSX", -1L);
+                    stupidEye.put("POSY", -1L);
+                    
+                    messageEyeTracker = new EyeTrackerDataPacket(stupidEye);
+                    writeEyeTrackerMessage(messageEyeTracker);
                 }
             }
             if (removeMessageEyeTracker || removeMessageGame) {
@@ -126,7 +150,6 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
                     writeDeltaMessage(message.toString());
                     doctorManager.sendMessageToDoctorClient(message);
                 }
-                
             }
         }
         

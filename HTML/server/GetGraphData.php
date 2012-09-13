@@ -62,6 +62,12 @@ if ($fileDelta != 0) {
 		$lineEyes = str_replace(array('(', ')'), '', $lineEyes);
 		$componentsEyes = explode(',', $lineEyes);
 		
+		while ($componentsImage[0] != $components[0]) {
+			$line = fgets($fileDelta);
+			$line = str_replace('(', '', str_replace(')', '', $line));
+			$components = explode(',', $line);
+		}
+		
 		// [0] c'è il tempo, [1] delta touch, [2] delta eye, [3] image pos left
 		// [4] image pos top, [5] movement
 		

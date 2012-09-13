@@ -207,15 +207,21 @@ function levelComplete() {
     // Livello completato
     gameManager.indexImageObject = -1;
     
-    if (gameManager.levelCompletedCorrectly) {
-        // chiudo sacco e 
-    	// posso farlo uscire verso sotto
-    	// al livello successivo torna su
-        manageLevels(false);
-    }
-    else {
-        manageLevels(true);
-    }
+    sacco.element.addClass('saccoTransition');
+    sacco.css({
+    	top: getScreenHeight()
+    }).one('transitionend webkitTransitionEnd oTransitionnd', function() {
+    	if (gameManager.levelCompletedCorrectly) {
+            // chiudo sacco e 
+        	// posso farlo uscire verso sotto
+        	// al livello successivo torna su
+            manageLevels(false);
+        }
+        else {
+            manageLevels(true);
+        }
+    })
+    
 }
 
 /**

@@ -49,7 +49,7 @@
 }
 
 #buttonLogout {
-	position: relative;
+	position: absolute;
 	width: 11%;
 	right: 15%;
 	vertical-align: middle;

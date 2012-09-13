@@ -10,3 +10,17 @@ html, body {
 body, #divMainContent {
     overflow: hidden;
 }
+
+.saccoTransition {
+	transition: top 2s;
+	-moz-transition: top 2s;
+	-webkit-transition: top 2;
+	-o-transition: top 2;
+}
+
+.saccoNoTransition {
+	transition: none;
+	-moz-transition: none;
+	-webkit-transition: none;
+	-o-transition: none;
+}

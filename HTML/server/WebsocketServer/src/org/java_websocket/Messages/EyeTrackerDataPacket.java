@@ -22,4 +22,8 @@ public class EyeTrackerDataPacket extends BaseDataPacket {
         
         return buildString(eyes);
     }
+    
+    public boolean hasValidCoordinates() {
+        return (eyes.x != -1L && eyes.y != -1L);
+    }
 }

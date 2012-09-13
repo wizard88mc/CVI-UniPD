@@ -50,6 +50,10 @@ public class BaseDataPacket {
         return time;
     }
     
+    public void setTime(long time) {
+        this.time = time;
+    }
+    
     public String buildString(Point point) {
         
         return new String().concat("(")

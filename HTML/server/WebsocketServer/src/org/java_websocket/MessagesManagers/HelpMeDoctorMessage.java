@@ -24,15 +24,7 @@ public class HelpMeDoctorMessage extends DoctorClientPacket {
     public HelpMeDoctorMessage(HelpMeDataPacket helpMePacket, EyeTrackerDataPacket eyePacket) {
         super("GAME_POSITIONS");
         
-        if (helpMePacket != null && eyePacket != null) {
-            time = helpMePacket.getTime() + eyePacket.getTime();
-        }
-        else if (eyePacket == null) {
-            time = helpMePacket.getTime();
-        }
-        else  if (helpMePacket == null) {
-            time = eyePacket.getTime();
-        }
+        time = helpMePacket.time;
         
         if (helpMePacket != null) {
             imagePosition.put("TOP", helpMePacket.image.y);
@@ -54,7 +46,6 @@ public class HelpMeDoctorMessage extends DoctorClientPacket {
             eyePosition.put("TOP", null);
             eyePosition.put("LEFT", null);
         }
-        
     }
     
     @Override

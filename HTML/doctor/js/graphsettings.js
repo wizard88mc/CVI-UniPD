@@ -98,9 +98,9 @@ function createTooltip(posX, posY, time, scaleFactor) {
 	var topImage = imagePosition.top * scaleFactor;
 	
 	var arrowFactor = 0.5;
-	if (!tooltipObject['arrowWidth']) {
-		tooltipObject['arrowWidth'] = tooltipObject['imageWidth'] * arrowFactor;
-	}
+	
+	tooltipObject['arrowWidth'] = tooltipObject['imageWidth'] * arrowFactor;
+	
 	
 	var arrowLeft = tooltipObject['imageWidth'] / 2 - (tooltipObject['arrowWidth'] / 2);
 	var arrowTop = tooltipObject['imageHeight'] / 2 - (tooltipObject['arrowWidth'] / 2);

@@ -25,19 +25,7 @@ public class CatchMeDoctorMessage extends DoctorClientPacket {
     public CatchMeDoctorMessage(CatchMeDataPacket catchMePacket, EyeTrackerDataPacket eyePacket) {
         super("GRAPH_DATA");
         
-        if (catchMePacket != null && eyePacket != null) {
-            time = (catchMePacket.getTime() + eyePacket.getTime()) / 2;
-            
-            
-        }
-        else {
-            if (catchMePacket == null) {
-                time = eyePacket.time;
-            }
-            else if (eyePacket == null) {
-                time = catchMePacket.time;
-            }
-        }
+        time = catchMePacket.time;
         
         if (catchMePacket != null) {
             movement = catchMePacket.getMovement();
@@ -63,23 +51,24 @@ public class CatchMeDoctorMessage extends DoctorClientPacket {
         
         imagePosition.put("posLeft", catchMePacket.image.x);
         imagePosition.put("posTop", catchMePacket.image.y);
-        
+
         long imageCenterX = catchMePacket.image.x + 
                     (OnlyImageGameDataPacket.imageWidth / 2);
         long imageCenterY = catchMePacket.image.y + 
                     (OnlyImageGameDataPacket.imageHeight / 2);
-        
+
         if (catchMePacket != null && catchMePacket.hasValidTouchCoordinates()) {
             deltaTouch = (long)Math.sqrt(
                     Math.pow(imageCenterX - catchMePacket.touch.x, 2) +
                     Math.pow(imageCenterY - catchMePacket.touch.y, 2));
         }
-        
-        if (eyePacket != null) {   
+
+        if (eyePacket != null && eyePacket.hasValidCoordinates()) {   
             deltaEye = (long)Math.sqrt(
                     Math.pow(imageCenterX - eyePacket.eyes.x, 2) +
                     Math.pow(imageCenterY - eyePacket.eyes.y, 2));
         }
+    
     }
     
     @Override
