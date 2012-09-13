@@ -36,7 +36,7 @@ public abstract class BaseMessagesManager extends Thread {
     public long startTime = 0;
 
     public final Object bufferSynchronizer = new Object();
-    protected Long MAX_DIFFERENCE = new Long(2000); // 2 secondi
+    protected Long MAX_DIFFERENCE = new Long(2 * 1000); // 2 secondi
     protected Long MAX_TIME_WAITING = new Long(10 * 1000); // 10 secondi
 
     protected static DoctorClientManager doctorManager = null;

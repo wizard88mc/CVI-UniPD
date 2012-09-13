@@ -44,7 +44,7 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
         JSONObject packet = (JSONObject)JSONValue.parse(message);
         
         if (packet.get("TYPE").equals("IDENTIFICATION") && clientConnected != null) {
-            DoctorClientManager.patientManager = this;
+            BaseManager.patientManager = this;
         }
         if (!alreadyManaged) {
             

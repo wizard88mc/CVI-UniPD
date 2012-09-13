@@ -65,7 +65,7 @@ function createTooltip(posX, posY, time, scaleFactor) {
 		
 		$('<img src="images/eye.png" />').appendTo(divContent)
 			.css({
-				position: 'relative',
+				position: 'absolute',
 				width: dimension,
 				height: dimension,
 				left: leftEyes,
@@ -83,7 +83,7 @@ function createTooltip(posX, posY, time, scaleFactor) {
 		
 		$('<img src="images/hand_finger.png" />').appendTo(divContent)
 			.css({
-				position: 'relative',
+				position: 'absolute',
 				width: dimension,
 				height: dimension,
 				left: leftTouch,

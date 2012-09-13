@@ -27,10 +27,13 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
     public boolean onMessage(WebSocket conn, String message) {
         
         boolean alreadyManaged = super.onMessage(conn, message);
+        JSONObject packet = (JSONObject)JSONValue.parse(message);
+        
+        if (packet.get("TYPE").equals("IDENTIFICATION") && clientConnected != null) {
+            BaseManager.eyeTrackerManager = this;
+        }
         
         if (!alreadyManaged) {
-            
-            JSONObject packet = (JSONObject)JSONValue.parse(message);
             
             if (packet.get("TYPE").equals("EYE_TRACKER_DATA")) {
             

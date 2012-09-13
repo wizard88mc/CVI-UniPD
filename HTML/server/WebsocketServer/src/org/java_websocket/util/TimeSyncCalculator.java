@@ -1,5 +1,7 @@
 package org.java_websocket.util;
 
+import java.text.DecimalFormat;
+
 /**
  *
  * @author Matteo Ciman
@@ -108,5 +110,24 @@ public class TimeSyncCalculator {
     
     public double getFinalB12() {
         return finalb12;
+    }
+    
+    public static void main(String[] args) {
+        
+        double finala12 = 0.9996216420734014;
+        double finalb12 = 401311.864;
+        
+        DecimalFormat twoDigits = new DecimalFormat("###.#");
+        try {
+            double valuea12 = Double.parseDouble(twoDigits.format(finala12).replace(",", "."));
+            double valueb12 = Double.parseDouble(twoDigits.format(finalb12).replace(",", "."));
+            
+            System.out.println(valuea12);
+            System.out.println(valueb12);
+        }
+        catch(NumberFormatException exc) {
+            System.out.println("Errore format: " + exc.toString());
+            
+        }
     }
 }

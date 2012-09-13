@@ -113,7 +113,7 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
         
         if (operationComplete) {
             
-            DecimalFormat twoDigits = new DecimalFormat();
+            DecimalFormat twoDigits = new DecimalFormat("###.#");
             twoDigits.setMaximumFractionDigits(1);
             try {
                 valuea12 = Double.parseDouble(twoDigits.format(offsetCalculator.getFinalA12()).replace(",", "."));
@@ -121,8 +121,6 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
             }
             catch(NumberFormatException exc) {
                 System.out.println("Errore format: " + exc.toString());
-                valuea12 = offsetCalculator.getFinalA12();
-                valueb12 = offsetCalculator.getFinalB12();
             }
             
             int machineID = dbManager.insertNewMachineOffset(valuea12 + "," + valueb12);

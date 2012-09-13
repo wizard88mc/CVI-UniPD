@@ -56,6 +56,78 @@ public class EyeTrackerSimulator extends Thread {
             @Override
             public void run() {
                 
+                try {
+                
+                    Thread.sleep((long)(3000));
+                }
+                catch(Exception exc) {
+                    System.out.println("Error in EyeTracker");
+                }
+                
+                JSONObject firstMessage = new JSONObject();
+                firstMessage.put("TYPE", "TRAINING_POSITIONS");
+                firstMessage.put("POS_LEFT", 150);
+                firstMessage.put("POS_TOP", 150);
+                
+                clientConnecter.send(firstMessage.toJSONString());
+                
+                try {
+                
+                    Thread.sleep((long)(3000));
+                }
+                catch(Exception exc) {
+                    System.out.println("Error in EyeTracker");
+                }
+                JSONObject secondMessage = new JSONObject();
+                secondMessage.put("TYPE", "TRAINING_POSITIONS");
+                secondMessage.put("POS_LEFT", 150);
+                secondMessage.put("POS_TOP", 600);
+                
+                clientConnecter.send(secondMessage.toJSONString());
+                
+                try {
+                
+                    Thread.sleep((long)(3000));
+                }
+                catch(Exception exc) {
+                    System.out.println("Error in EyeTracker");
+                }
+                
+                JSONObject thirdMessage = new JSONObject();
+                thirdMessage.put("TYPE", "TRAINING_POSITIONS");
+                thirdMessage.put("POS_LEFT", 800);
+                thirdMessage.put("POS_TOP", 150);
+                
+                clientConnecter.send(thirdMessage.toJSONString());
+                
+                try {
+                
+                    Thread.sleep((long)(3000));
+                }
+                catch(Exception exc) {
+                    System.out.println("Error in EyeTracker");
+                }
+                
+                JSONObject fourthMessage = new JSONObject();
+                fourthMessage.put("TYPE", "TRAINING_POSITIONS");
+                fourthMessage.put("POS_LEFT", 800);
+                fourthMessage.put("POS_TOP", 600);
+                
+                clientConnecter.send(fourthMessage.toJSONString());
+                
+                try {
+                
+                    Thread.sleep((long)(3000));
+                }
+                catch(Exception exc) {
+                    System.out.println("Error in EyeTracker");
+                }
+                
+                JSONObject finalMessage = new JSONObject();
+                finalMessage.put("TYPE", "TRAINING_RESULT");
+                finalMessage.put("EVALUATION", 70);
+                
+                clientConnecter.send(finalMessage.toJSONString());
             }
         };
         
@@ -117,6 +189,9 @@ public class EyeTrackerSimulator extends Thread {
                     //altrimenti recupero ID della macchina da impostazioni
                     // e lo spedisco insieme a pacchetto READY_TO_PLAY
                 }
+                else if (packet.get("TYPE").equals("START_TRAINING")) {
+                    EyeTrackerSimulator.this.simulateTraining();
+                }
                 else if (packet.get("TYPE").equals("OFFSET_CALCULATION_COMPLETE")) {
                     System.out.println("EYE: Fine calcolo offset");
                     // Calcolo dell'offset completato
@@ -127,7 +202,6 @@ public class EyeTrackerSimulator extends Thread {
                     packetToSend.put("TYPE", "READY_TO_PLAY");
                     
                     clientConnecter.send(packetToSend.toJSONString());
-                    
                 }
             }
 

@@ -20,7 +20,6 @@ public class DoctorClientManager extends BaseManager {
     
     protected String patientID = null;
     protected ArrayList<String> messagesToSend = new ArrayList<String>();
-    protected static IPADClientManager patientManager = null;
     
     public DoctorClientManager(int port) throws UnknownHostException {
         super("DOCTOR_CLIENT", port);
@@ -70,7 +69,6 @@ public class DoctorClientManager extends BaseManager {
             }
             
             clientConnected.send(packet.toJSONString());
-            
         }
         else if (packet.get("TYPE").equals("SCREEN_MEASURES")) {
             
@@ -91,6 +89,9 @@ public class DoctorClientManager extends BaseManager {
         else if (packet.get("TYPE").equals("START_PRESENTATION") || 
                 packet.get("TYPE").equals("GO_BACK")) {
             patientManager.sendPacket(packet);
+        }
+        else if (packet.get("TYPE").equals("START_TRAINING")) {
+            eyeTrackerManager.sendPacket(packet);
         }
         else if (packet.get("TYPE").equals("SESSION_SPECS")) {
             

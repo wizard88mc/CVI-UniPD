@@ -22,6 +22,8 @@ public abstract class BaseManager extends WebSocketServer {
     protected WebSocket clientConnected = null;
     public static DatabaseManager dbManager = null;
     protected static BaseMessagesManager messageManager;
+    protected static IPADClientManager patientManager = null;
+    protected static EyeTrackerManager eyeTrackerManager = null;
     
     public BaseManager(String clientType, int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
