@@ -8,6 +8,7 @@ var screenHeight = 0;
 var ratio = 0;
 var canvas = null;
 var context = null;
+var indexCurrentLevel = 0;
 var drawingSettings = {
 	firstPointTouch: false,
 	firstPointEye: false,
@@ -211,6 +212,9 @@ var HelpMeNamespace = {
 			}
 			
 			
+		}
+		else if (data.TYPE == 'LEVEL_ENDED') {
+			indexCurrentLevel++;
 		}
 		else if (data.TYPE == 'SESSION_RESULTS') {
 			

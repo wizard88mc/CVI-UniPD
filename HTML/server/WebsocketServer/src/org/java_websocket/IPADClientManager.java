@@ -48,7 +48,8 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
         }
         if (!alreadyManaged) {
             
-            if (packet.get("TYPE").equals("GAME_DATA")) {
+            String packetType = (String)packet.get("TYPE");
+            if (packetType.equals("GAME_DATA")) {
             
                 if (packet.get("SUBTYPE").equals("POSITIONS")) {
                     
@@ -61,14 +62,15 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                     messageManager.manageDifferentGameData(packet);
                 }
             }
-            else if (packet.get("TYPE").equals("SPEED_VALUE") || 
-                    packet.get("TYPE").equals("PRESENTATION_COMPLETE") ||
-                    packet.get("TYPE").equals("SCREEN_MEASURES"))  {
+            else if (packetType.equals("SPEED_VALUE") || 
+                    packetType.equals("PRESENTATION_COMPLETE") ||
+                    packetType.equals("SCREEN_MEASURES") ||
+                    packetType.equals("LEVEL_ENDED"))  {
                 
                 doctorManager.sendPacket(packet);
             }
             
-            else if (packet.get("TYPE").equals("READY_TO_PLAY")) {                     
+            else if (packetType.equals("READY_TO_PLAY")) {                     
 
                 if (packet.containsKey("IMAGE_WIDTH")) {
                     imageWidth = (Long)packet.get("IMAGE_WIDTH");

@@ -24,6 +24,8 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
     protected int totalRightAnswers = 0;
     protected int totalBadAnswers = 0;
     
+    //protected long lastTimeValidPacket = 0L;
+    
     public HelpMeMessagesManager(String patientID, int visitID) {
         super(patientID, visitID);
         
@@ -58,7 +60,8 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
             HelpMeDataPacket imageInformations = null;
             EyeTrackerDataPacket eyeTrackerInformations = null;
             
-            if (!messagesGameBuffer.isEmpty() && !messagesEyeTrackerBuffer.isEmpty()) {
+            if (!removeMessageEyeTracker && !removeMessageGame && 
+                    !messagesGameBuffer.isEmpty() && !messagesEyeTrackerBuffer.isEmpty()) {
                 
                 imageInformations = 
                         new HelpMeDataPacket(messagesGameBuffer.get(0));
@@ -82,7 +85,8 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
                     
                     writeEyeTrackerMessage(eyeTrackerInformations);
                     writeImageMessage(imageInformations);
-                    // System.out.println("Entrambi");
+                     System.out.println("Entrambi");
+                    
                 }
                 else if (timeMessageGame < timeEyeTrackerMessage) {
                     // devo spedire solo pacchetto relativo all'immagine
@@ -97,7 +101,7 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
                     eyeTrackerInformations = new EyeTrackerDataPacket(stupidEye);
                     writeEyeTrackerMessage(eyeTrackerInformations);
                     
-                    // System.out.println("Solo immagine");
+                    System.out.println("Solo immagine");
                 }
                 else if (timeEyeTrackerMessage < timeMessageGame) {
                     // devo spedire solo pacchetto relativo all'eye-tracker
@@ -111,7 +115,7 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
                     
                     imageInformations = new HelpMeDataPacket(stupidImage);
                     writeImageMessage(imageInformations);
-                    // System.out.println("Solo eye");
+                    System.out.println("Solo eye, " + deltaTime );
                 }
             }
             else if (messagesGameBuffer.isEmpty()) {
@@ -124,8 +128,15 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
                     removeMessageEyeTracker = true;
                     writeEyeTrackerMessage(eyeTrackerInformations);
                     
+                    JSONObject stupidImage = new JSONObject();
+                    stupidImage.put("TIME", eyeTrackerInformations.getTime());
+                    stupidImage.put("TOUCH", stupidPositions);
+                    stupidImage.put("IMAGE", stupidPositions);
                     
-                    // System.out.println("Immagini vuoto");
+                    imageInformations = new HelpMeDataPacket(stupidImage);
+                    writeImageMessage(imageInformations);
+                    
+                    System.out.println("Immagini vuoto");
                 }
             }
             else if (messagesEyeTrackerBuffer.isEmpty()) {
@@ -142,7 +153,8 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
                     
                     eyeTrackerInformations = new EyeTrackerDataPacket(stupidEye);
                     writeEyeTrackerMessage(eyeTrackerInformations);
-                    // System.out.println("Eye tracker vuoto");
+                    
+                     System.out.println("Eye tracker vuoto");
                 }
             }
             
@@ -155,7 +167,7 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
                     
                     messagesGameBuffer.remove(0);
                 }
-                
+                    //lastTimeValidPacket -= MAX_DIFFERENCE;
                 HelpMeDoctorMessage message = new HelpMeDoctorMessage(imageInformations, eyeTrackerInformations);
                 doctorManager.sendMessageToDoctorClient(message);
             }

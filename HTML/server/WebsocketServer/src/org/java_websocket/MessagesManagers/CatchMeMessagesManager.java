@@ -14,8 +14,6 @@ import org.json.simple.JSONObject;
  */
 public class CatchMeMessagesManager extends BaseMessagesManager {
     
-    protected JSONObject lastValidPacket = null;
-    
     public CatchMeMessagesManager(String patientID, int visitID) {
         super(patientID, visitID);
     }

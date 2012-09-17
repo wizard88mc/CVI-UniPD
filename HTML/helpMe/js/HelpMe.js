@@ -150,6 +150,8 @@ function manageLevels(repeatLevel) {
 	        };
 	
 	        websocket.send(JSON.stringify(packetEnd));
+	        
+	        gameManager.gameInProgress = false;
     	}
         
         $('#divSacco, #divBarraTempo').remove();
@@ -206,6 +208,12 @@ function levelComplete() {
 
     // Livello completato
     gameManager.indexImageObject = -1;
+    
+    var packetEndLevel = {
+		TYPE: "LEVEL_ENDED"
+    };
+    
+    websocket.send(JSON.stringify(packetEndLevel));
     
     sacco.element.addClass('saccoTransition');
     sacco.css({

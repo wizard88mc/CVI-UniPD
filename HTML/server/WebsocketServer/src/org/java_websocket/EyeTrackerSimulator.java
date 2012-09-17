@@ -35,7 +35,7 @@ public class EyeTrackerSimulator extends Thread {
         while (work) {
             try {
                 
-                Thread.sleep((long)(1000 / 25));
+                Thread.sleep(1000 / 25);
             }
             catch(Exception exc) {
                 System.out.println("Error in EyeTracker");
@@ -43,8 +43,8 @@ public class EyeTrackerSimulator extends Thread {
             JSONObject message = new JSONObject();
             message.put("TYPE", "EYE_TRACKER_DATA");
             message.put("TIME", new Date().getTime() - startTime);
-            message.put("POSX", 100);
-            message.put("POSY", 100);
+            message.put("POSX", (long)(Math.random() * 100));
+            message.put("POSY", (long)Math.random() * 100);
             clientConnecter.send(message.toJSONString());
         }
         System.out.println("*** EYE TRACKER STOPPED ***");
