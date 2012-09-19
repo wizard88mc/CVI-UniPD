@@ -17,5 +17,11 @@ function Sacco() {
         'background-color': '#800000',
         'z-index': 100
     });
+    
+    this.reset = function() {
+    	this.element.css({
+            top: this.drawingPosition.top,
+        });
+    }
 
 }

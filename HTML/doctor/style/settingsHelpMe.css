@@ -65,3 +65,11 @@ td.ui-selected {
 .divSelectTargetFamily {
 	margin-bottom: 0.3em;
 }
+
+.divSelectMaxTime {
+	margin-bottom: 0.3em;
+}
+
+.divSelectMaxTime select {
+	width: 20%;
+}

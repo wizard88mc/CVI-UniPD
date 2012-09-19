@@ -4,7 +4,7 @@ function GameManager() {
     this.currentLevel = null;
     this.indexImageObject = -1;
     this.currentImage = null;
-    this.maxTimeObjectOnScreen = 100000;
+    this.maxTimeObjectOnScreen = 30000;
     this.startTimeObjectOnScreen = null;
     this.imageRetrieved = 0;
     this.totalImageToRetrieve = 2;
@@ -22,6 +22,7 @@ function GameManager() {
     this.levelCompletedCorrectly = true;
     this.maxRepetitionForLevel = 3;
     this.currentLevelRepetition = 1;
+    this.gameInProgress = true;
 
 this.getSystemImages = function() {
 

@@ -19,13 +19,14 @@ function ImageLevel(isTarget, imageID) {
 	}
 }
 
-function Level(type, targets, distracters, targetFamily, sequence, sound) {
+function Level(type, targets, distracters, targetFamily, sequence, maxTimeImage, sound) {
 	this.type = type;
 	this.numberOfTargets = targets;
 	this.numberOfDistracters = distracters;
 	this.targetFamily = targetFamily;
 	this.sequence = sequence;
 	this.sound = sound;
+	this.maxTimeImage = maxTimeImage;
 	
 	this.compare = function(otherLevel) {
 		
@@ -33,6 +34,7 @@ function Level(type, targets, distracters, targetFamily, sequence, sound) {
 			this.numberOfTargets != otherLevel.numberOfTargets ||
 			this.numberOfDistracters != otherLevel.numberOfDistracters || 
 			this.targetFamily != otherLevel.targetFamily || 
+			this.maxTimeImage != otherLevel.maxTimeImage || 
 			this.sequence.length != otherLevel.sequence.length) {
 			
 			return false;
@@ -136,6 +138,25 @@ var HelpMeSettingsNamespace = {
 		
 		return select;
 		
+	},
+	
+	buildMaxTimeSelect: function(timeDefined) {
+		
+		console.log(timeDefined);
+		var select = $('<select class="selectMaxTime"></select>');
+		if (timeDefined == null) {
+			$('<option value=""></option>').attr('selected', 'selected').appendTo(select);
+		}
+		
+		for (var i = 6; i <= 20; i += 1) {
+			var selected = '';
+			if (i == timeDefined) {
+				selected = ' selected="selected" ';
+			}
+			$('<option'+selected+'>'+i+'</option>').attr('value', i).appendTo(select);
+		}
+		
+		return select;
 	},
 	
 	buildLevelTitle: function(index, targets, distracters) {
@@ -266,6 +287,7 @@ var HelpMeSettingsNamespace = {
 	        		var type = $(this).attr('type');
 	        		var targetsAndDistracters = type.split('x');
 	        		var targetFamily = $(this).attr('targetFamily');
+	        		var maxTime = $(this).attr('maxTimeImage');
 	        		var sequenceOfImages = [];
 	        		
 	        		$(this).find('image').each(function() {
@@ -279,7 +301,7 @@ var HelpMeSettingsNamespace = {
 	        		})
 	        		
 	        		listOfLevels.push(new Level(type, targetsAndDistracters[0], targetsAndDistracters[1],
-	        				targetFamily, sequenceOfImages));
+	        				targetFamily, sequenceOfImages, maxTime));
 	        		
 	        	});
 	        	
@@ -343,6 +365,9 @@ var HelpMeSettingsNamespace = {
 			var select = HelpMeSettingsNamespace.buildSelectTargetFamily();
 			select.appendTo($('<div class="divSelectTargetFamily">Famiglia target: </div>').appendTo(divLevel));
 			
+			var selectTime = HelpMeSettingsNamespace.buildMaxTimeSelect();
+			selectTime.appendTo($('<div class="divSelectMaxTime">Tempo massimo immagine: </div>').appendTo(divLevel));
+			
 			var table = $('<table class="tableLevel"></table>').appendTo(divLevel);
 			
 			for (var i = 0; i < elements[0]; i++) {
@@ -405,6 +430,9 @@ var HelpMeSettingsNamespace = {
 			
 			var select = HelpMeSettingsNamespace.buildSelectTargetFamily(currentLevel.targetFamily);
 			select.appendTo($('<div class="divSelectTargetFamily">Famiglia target: </div>').appendTo(divLevel));
+			
+			var selectTime = HelpMeSettingsNamespace.buildMaxTimeSelect(currentLevel.maxTimeImage);
+			selectTime.appendTo($('<div class="divSelectMaxTime">Tempo massimo immagine: </div>').appendTo(divLevel));
 			
 			var sequenceImages = currentLevel.sequence;
 			var table = $('<table class="tableLevel"></table>').appendTo(divLevel);
@@ -504,6 +532,7 @@ var HelpMeSettingsNamespace = {
 			var numberOfTargets = $(currentLevel).children('input[name="numberTargets"]').val()
 			var numberOfDistracters = $(currentLevel).children('input[name="numberDistracters"]').val()
 			var targetFamily = $(currentLevel).children().children('select[class="selectTargetFamily"]').val();
+			var maxTimeWaiting = $(currentLevel).children().children('select[class="selectMaxTime"]').val();
 			var sound = familySound[targetFamily];
 			
 			var rowsElements = $(currentLevel).find('table tbody tr');
@@ -522,7 +551,8 @@ var HelpMeSettingsNamespace = {
 				imagesSequence.push(new ImageLevel(isTarget, imageID));
 			});
 			
-			listOfNewLevels.push(new Level(levelType, numberOfTargets, numberOfDistracters, targetFamily, imagesSequence, sound));
+			listOfNewLevels.push(new Level(levelType, numberOfTargets, numberOfDistracters, targetFamily, 
+					imagesSequence, maxTimeWaiting, sound));
 			
 		}
 		

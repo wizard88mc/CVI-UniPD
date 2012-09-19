@@ -95,11 +95,8 @@ this.loadImage = function() {
 
     if (exampleManager.imagesRetrieved == exampleManager.totalImagesToRetrieve) {
 
-        // posso iniziare con gli esempi
-        gameManager.isAnExample = true;
-
         initGame();
-
+        gameManager.isAnExample = true;
         ExampleNamespace.iterateOnExamples();
     }
 },
@@ -134,11 +131,8 @@ this.loadImage = function() {
         
     }
     else {
-        gameManager.isAnExample = false;
-        $('#divSounds #soundBefore').remove();
-        $('#divSounds #soundAfter').remove();
-        $('#imgArrow').remove();
-        openWebSocket(port);
+        allExamplesCompleted();
+        // openWebSocket(port);
     }
 
 },

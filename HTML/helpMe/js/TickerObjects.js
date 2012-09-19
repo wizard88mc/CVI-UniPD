@@ -55,18 +55,17 @@ var frameAnimatorNamespace = {
     	// Se non è un esempio faccio entrare la barra del tempo
     	// + registro eventi per gestire tocco sull'immagine
         if (!gameManager.isAnExample) {
-            barraTempo.element.fadeIn(1500, function(){
+            //barraTempo.element.fadeIn(1500, function(){
 
-                imageObjectOnScreen.element.draggable({
-                    start: touchManagerNamespace.touchStart,
-                    drag: touchManagerNamespace.touchMove,
-                    stop: touchManagerNamespace.touchEnd
-                    }
-                );
+            imageObjectOnScreen.element.draggable({
+                start: touchManagerNamespace.touchStart,
+                drag: touchManagerNamespace.touchMove,
+                stop: touchManagerNamespace.touchEnd
+                });
 
-                gameManager.startTimeObjectOnScreen = new Date().getTime();
-                gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.realGameManager);
-            });
+            gameManager.startTimeObjectOnScreen = new Date().getTime();
+            gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.realGameManager);
+            //});
         }
         else {
 
@@ -161,7 +160,7 @@ var frameAnimatorNamespace = {
         if (!imageObjectOnScreen.moveInsideSacco) {
             var elapsedTime = time - gameManager.startTimeObjectOnScreen;
 
-            barraTempo.timeIsPassing(elapsedTime / gameManager.maxTimeObjectOnScreen);
+            //barraTempo.timeIsPassing(elapsedTime / gameManager.maxTimeObjectOnScreen);
 
             if (elapsedTime >= gameManager.maxTimeObjectOnScreen) {
                 window.cancelRequestAnimationFrame(gameManager.currentAnimationFrame);

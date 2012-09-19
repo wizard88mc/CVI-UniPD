@@ -443,6 +443,7 @@ setGameSettings: function(data) {
 			gameSettings.startFromCenter = $('#startFromCenter').is(':checked');
 			gameSettings.mixMovements = $('#mixMovements').is(':checked');
 			
+			
 			var areThereErrors = false;
 			var stringErrors = "";
 			
@@ -452,7 +453,8 @@ setGameSettings: function(data) {
 				stringErrors += "<li>Nessun movimento impostato</li>";
 			}
 			
-			if (!checkColorContrast(gameSettings.getBackgroundRGB(), gameSettings.getForegroundRGB())) {
+			if (gameSettings.changeImageColor && 
+					!checkColorContrast(gameSettings.getBackgroundRGB(), gameSettings.getForegroundRGB())) {
 				areThereErrors = true;
 				stringErrors += "<li>Basso contrasto tra colori</li>";
 			}

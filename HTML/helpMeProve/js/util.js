@@ -41,8 +41,9 @@ getImagesFromSettings: function() {
 
                     var name = $(this).attr('name');
                     var fileName = $(this).attr('fileName');
+                    var imageID = $(this).attr('id');
 
-                    immaginiADisposizione[family].push(new ImageObject(name, fileName));
+                    immaginiADisposizione[family].push(new ImageObject(name, fileName, imageID));
                 })
             });
 
@@ -55,16 +56,20 @@ anotherImageRetrieved: function() {
     gameManager.imageRetrieved++;
     if (gameManager.totalImageToRetrieve == gameManager.imageRetrieved) {
 
-        presentationManager = new PresentationManager();
-        presentationManager.createElements();
+    	// devo aprire connessione e mettermi in attesa
+    	//ExampleNamespace.prepareExamples();
+        //presentationManager = new PresentationManager();
+        //presentationManager.createElements();
+        
+        
         //ExampleNamespace.prepareExamples();
-    	//openWebSocket(port);
+    	openWebSocket(port);
     }
 },
 
 retrieveLevels: function() {
 
-    $.ajax({
+	$.ajax({
         type: 'GET',
         url: 'settings/levels.xml',
         dataType: 'xml',
@@ -110,7 +115,7 @@ istantiateLevel: function(level) {
     var target = [];
     var targetFamily = level.targetFamily;
     oggettiPerLivello = [];
-
+    
     for(var family in immaginiADisposizione) {
 
         if (family == targetFamily) {
@@ -130,34 +135,30 @@ istantiateLevel: function(level) {
         }
     }
 
+    for (var i = 0; i < level.sequence.length; i++) {
+    	
+    	var currentImageLevel = level.sequence[i];
+    	var objectImage = null;
+    	var arrayToSearch = null;
+    	if (currentImageLevel.isTarget) {
+    		arrayToSearch = target;
+    	}
+    	else {
+    		arrayToSearch = distrattori;
+    	}
+    	
+    	for (var j = 0; j < arrayToSearch.length && objectImage == null; j++ ) {
+    		
+    		if (arrayToSearch[j].imageID == currentImageLevel.imageID) {
+    			objectImage = arrayToSearch[j]
+    		}
+    		
+    	}
+    	oggettiPerLivello.push(objectImage);
+    }
+
     // ho immagini a disposizione, costruisco livello definendo array
 
-    if (level.sequenceOfObjects.length == 0) {
-        for (var i = 0; i < level.numberOfTargets; i++) {
-            var position = Math.floor(Math.random() * target.length);
-            oggettiPerLivello.push(target[position]);
-        }
-        for (var i = 0; i < level.numberOfDistracters; i++) {
-            var position = Math.floor(Math.random() * distrattori.length);
-            oggettiPerLivello.push(distrattori[position]);
-        }
-
-        oggettiPerLivello.sort(function() { return Math.random() - Math.random() * 0.5;});
-    }
-    else {
-
-        for (var i = 0; i < level.sequenceOfObjects.length; i++) {
-
-            if (level.sequenceOfObjects[i] == 'T') {
-                var position = Math.floor(Math.random() * target.length);
-                oggettiPerLivello.push(target[position]);
-            }
-            else {
-                var position = Math.floor((Math.random() * distrattori.length));
-                oggettiPerLivello.push(distrattori[position]);
-            }
-        }
-    }
     var audio = $('<audio id="audioLevel"></audio>').appendTo('#divSounds');
     $('<source src="sounds/' + level.sound + '" />').appendTo(audio);
 

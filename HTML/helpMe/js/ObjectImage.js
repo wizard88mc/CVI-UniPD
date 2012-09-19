@@ -1,10 +1,13 @@
 
 function ImageObjectOnScreen(currentImage) {
 
-    this.element = $(currentImage.image);
+    this.element = $('<canvas></canvas>');
+    var context = this.element.get(0).getContext('2d');
     this.imageElement = currentImage.image;
+    this.element.get(0).width = currentImage.image.naturalWidth;
+    this.element.get(0).height = currentImage.image.naturalHeight;
+    context.drawImage(currentImage.image, 0, 0);
     this.targetCenter = new Point(Math.round(getScreenHeight() * 0.49), Math.round(getScreenWidth() * 0.49));
-
     this.targetWidth = Math.round(getScreenWidth() / 5);
     /*if (this.targetWidth > getScreenWidth() * 0.16) {
     	this.targetWidth = getScreenWidth() * 0.16;

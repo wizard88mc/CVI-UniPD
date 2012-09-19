@@ -9,6 +9,7 @@ var ratio = 0;
 var canvas = null;
 var context = null;
 var indexCurrentLevel = 0;
+var changeCurrentIndexLevel = false;
 var drawingSettings = {
 	firstPointTouch: false,
 	firstPointEye: false,
@@ -69,7 +70,7 @@ var HelpMeNamespace = {
 						$(this).remove();
 						console.log("Starting");
 						
-						$('#divMainContent > h1').text('Prendimi!');
+						$('#divMainContent > h1').text('Aiutami!');
 						
 						var packetToSend = {
 							'TYPE': 'START_PRESENTATION'
@@ -214,20 +215,20 @@ var HelpMeNamespace = {
 			
 		}
 		else if (data.TYPE == 'LEVEL_ENDED') {
-			indexCurrentLevel++;
+			changeCurrentIndexLevel = true; 
 		}
 		else if (data.TYPE == 'SESSION_RESULTS') {
 			
 			var targetFamily = data.TARGET_FAMILY;
 			
-			if (!firstResponseTimeValues[targetFamily]) {
+			if (!firstResponseTimeValues[indexCurrentLevel]) {
 				// livello non ancora iniziato, inizializzo valori
-				firstResponseTimeValues[targetFamily] = new Array(data.FIRST_RESPONSE_TIME);
-				completionTimeValues[targetFamily] = new Array(data.COMPLETION_TIME);
-				goodAnswers[targetFamily] = 0;
-				badAnswers[targetFamily] = 0;
+				firstResponseTimeValues[indexCurrentLevel] = new Array();
+				completionTimeValues[indexCurrentLevel] = new Array();
+				goodAnswers[indexCurrentLevel] = 0;
+				badAnswers[indexCurrentLevel] = 0;
 				
-				var row = $('<tr id="' + targetFamily +'"></tr>');
+				var row = $('<tr id="' + targetFamily + indexCurrentLevel +'"></tr>');
 				row.appendTo(tableBody);
 				$('<td>Riepilogo</td>').appendTo(row);
 				$('<td>' + targetFamily + '</td>').appendTo(row);
@@ -236,19 +237,24 @@ var HelpMeNamespace = {
 				$('<td class="counts"></td>').appendTo(row);
 			}
 			
-			firstResponseTimeValues[targetFamily].push(data.FIRST_RESPONSE_TIME);
-			completionTimeValues[targetFamily].push(data.COMPLETION_TIME);
+			firstResponseTimeValues[indexCurrentLevel].push(data.FIRST_RESPONSE_TIME);
+			completionTimeValues[indexCurrentLevel].push(data.COMPLETION_TIME);
 				
 			if (data.RIGHT_ANSWER == true) {
-				goodAnswers[targetFamily]++;
+				goodAnswers[indexCurrentLevel]++;
 			}
 			else {
-				badAnswers[targetFamily]++;
+				badAnswers[indexCurrentLevel]++;
 			}
 			
 			HelpMeNamespace.updateFamilyRow(targetFamily);
 			
 			HelpMeNamespace.resetCanvas();
+			
+			if (changeCurrentIndexLevel) {
+				indexCurrentLevel++;
+				changeCurrentIndexLevel = false;
+			}
 		}
 		else {
 			console.log("Bad message received in Entry Function: ");
@@ -263,32 +269,32 @@ var HelpMeNamespace = {
 		var meanValueCT = 0;
 		var totalCT = 0;
 		
-		for (var i = 0; i < firstResponseTimeValues[targetFamily].length; i++) {
+		for (var i = 0; i < firstResponseTimeValues[indexCurrentLevel].length; i++) {
 			
-			if (firstResponseTimeValues[targetFamily][i] != null) {
-				meanValueFRT += firstResponseTimeValues[targetFamily][i];
+			if (firstResponseTimeValues[indexCurrentLevel][i] != null) {
+				meanValueFRT += firstResponseTimeValues[indexCurrentLevel][i];
 				totalFRT++;
 			}
 		}
 		
 		meanValueFRT = meanValueFRT / totalFRT;
 		
-		for (var i = 0; i < completionTimeValues[targetFamily].length; i++) {
+		for (var i = 0; i < completionTimeValues[indexCurrentLevel].length; i++) {
 			
-			if (completionTimeValues[targetFamily][i] != null) {
-				meanValueCT += completionTimeValues[targetFamily][i];
+			if (completionTimeValues[indexCurrentLevel][i] != null) {
+				meanValueCT += completionTimeValues[indexCurrentLevel][i];
 				totalCT++;
 			}
 		}
 		
 		meanValueCT = meanValueCT / totalCT;
 		
-		var row = $('#tableResultsHelpMe tr[id=' + targetFamily + ']');
+		var row = $('#tableResultsHelpMe tr[id=' + targetFamily + indexCurrentLevel + ']');
 		
 		row.children('.meanValueFRT').text(meanValueFRT.toFixed(2));
 		row.children('.meanValueCT').text(meanValueCT.toFixed(2));
-		row.children('.counts').text(goodAnswers[targetFamily] + '/' + 
-									badAnswers[targetFamily]);
+		row.children('.counts').text(goodAnswers[indexCurrentLevel] + '/' + 
+									badAnswers[indexCurrentLevel]);
 		
 	},
 	

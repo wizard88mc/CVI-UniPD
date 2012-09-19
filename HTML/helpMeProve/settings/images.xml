@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <imageMaterials>
-    <family type="animali" audioFile="animali.mp3">
-        <image name="Oca" fileName="oca.jpg" />
-        <image name="Oca1" fileName="oca.jpg" />
-        <image name="Oca2" fileName="oca.jpg" />
-        <image name="Oca3" fileName="oca.jpg" />
+    <family type="animali" audioFile="sound_prova.mp3">
+        <image id="1" name="Oca" fileName="oca.jpg" />
+        <image id="2" name="Asino" fileName="asino.png" />
+        <image id="3" name="Coniglio" fileName="coniglio.png" />
+        <image id="4" name="Gallina" fileName="gallina.png" />
+        <image id="5" name="Gatto" fileName="gatto.jpg" />
+        <image id="6" name="Maiale" fileName="maiale.png" />
+        <image id="7" name="Tartaruga" fileName="tartaruga.png" />
     </family>
-    <family type="macchine" audioFile="macchine.mp3">
-        <image name="Ferrari" fileName="ferrari.png" />
-        <image name="Ferrari1" fileName="ferrari.png" />
-        <image name="Ferrari2" fileName="ferrari.png" />
-        <image name="Ferrari3" fileName="ferrari.png" />
+    <family type="macchine" audioFile="sound_prova.mp3">
+        <image id="8" name="Ferrari" fileName="ferrari.png" />
     </family>
-    <family type="fiori" audioFile="fiori.mp3">
-        <image name="Rosa" fileName="rosa.png" />
-        <image name="Rosa1" fileName="rosa.png" />
-        <image name="Rosa2" fileName="rosa.png" />
-        <image name="Rosa3" fileName="rosa.png" />
+    <family type="fiori" audioFile="sound_prova.mp3">
+        <image id="9" name="Rosa" fileName="rosa.png" />
+    </family>
+    <family type="oggetti" audioFile="sound_prova.mp3">
+    	<image id="10" name="Biscotto" fileName="biscuit.png" />
+    	<image id="11" name="Occhiali" fileName="occhiali.png" />
+    	<image id="12" name="Ombrello" fileName="ombrello.png" />
+    	<image id="13" name="Orologio bambino" fileName="orologio-bambino.jpg" />
+    	<image id="14" name="Pipa" fileName="pipa.png" />
     </family>
 </imageMaterials>

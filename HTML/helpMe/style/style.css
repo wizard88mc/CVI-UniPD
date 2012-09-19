@@ -12,10 +12,14 @@ body, #divMainContent {
 }
 
 .saccoTransition {
-	transition: top 2s;
-	-moz-transition: top 2s;
-	-webkit-transition: top 2;
-	-o-transition: top 2;
+	transition: top 1s;
+	transition-timing-function: linear;
+	-moz-transition: top 1s;
+	-moz-transition-timing-function: linear;
+	-webkit-transition: top 1s;
+	-webkit-transition-timing-function: linear;
+	-o-transition: top 1s;
+	-o-transition-timing-function: linear;
 }
 
 .saccoNoTransition {

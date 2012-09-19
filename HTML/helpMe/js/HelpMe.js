@@ -1,6 +1,6 @@
 var tubo = null;
 var sacco = null;
-var barraTempo = null;
+//var barraTempo = null;
 var imageObjectOnScreen = null;
 var immaginiADisposizione = {};
 var livelliGioco = [];
@@ -109,9 +109,10 @@ function initGame() {
 
     sacco = new Sacco();
     sacco.element.appendTo('#divMainContent');
+    sacco.element.addClass('saccoTransition');
 
-    barraTempo = new BarraTempo();
-    barraTempo.element.appendTo('#divMainContent');
+    //barraTempo = new BarraTempo();
+    //barraTempo.element.appendTo('#divMainContent');
 }
 
 function manageLevels(repeatLevel) {
@@ -132,6 +133,8 @@ function manageLevels(repeatLevel) {
     }
 
     if (gameManager.levelIndex < livelliGioco.length && gameManager.gameInProgress) {
+    	
+    	sacco.reset();
         gameManager.currentLevel = livelliGioco[gameManager.levelIndex];
 
         utilsNamespace.istantiateLevel(gameManager.currentLevel);
@@ -154,7 +157,7 @@ function manageLevels(repeatLevel) {
 	        gameManager.gameInProgress = false;
     	}
         
-        $('#divSacco, #divBarraTempo').remove();
+        $('#divSacco').remove();
         
         $('body').css({
         	'background-image': 'url(images/ZZ10042.jpg)'
@@ -192,7 +195,7 @@ function manageImageObjectsLevel() {
         gameManager.packetWithResults.IS_TARGET = gameManager.currentImage.target;
         gameManager.packetWithResults.OBJECT_NAME = gameManager.currentImage.name;
         //tubo.reset();
-        barraTempo.reset();
+        //barraTempo.reset();
 
         gameManager.timeLastFrame = new Date().getTime();
         gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerIngressoImmagine);
@@ -215,14 +218,12 @@ function levelComplete() {
     
     websocket.send(JSON.stringify(packetEndLevel));
     
-    sacco.element.addClass('saccoTransition');
-    sacco.css({
+    sacco.element.css({
     	top: getScreenHeight()
-    }).one('transitionend webkitTransitionEnd oTransitionnd', function() {
+    }).one('transitionend webkitTransitionEnd oTransitionEnd', function() {
     	if (gameManager.levelCompletedCorrectly) {
-            // chiudo sacco e 
-        	// posso farlo uscire verso sotto
-        	// al livello successivo torna su
+
+    		// livello completato correttamente
             manageLevels(false);
         }
         else {

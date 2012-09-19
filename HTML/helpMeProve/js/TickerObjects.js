@@ -398,6 +398,7 @@ var frameAnimatorNamespace = {
 			else {
 				
 				window.cancelRequestAnimationFrame(presentationManager.currentAnimationFrame);
+				gameIsEnded();
 			}
 			
 			presentationManager.timeLastFrame = time;

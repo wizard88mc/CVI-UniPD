@@ -161,6 +161,7 @@ istantiateLevel: function(level) {
 
     var audio = $('<audio id="audioLevel"></audio>').appendTo('#divSounds');
     $('<source src="sounds/' + level.sound + '" />').appendTo(audio);
+    gameManager.maxTimeObjectOnScreen = Number(level.maxTimeImage) * 1000;
 
 },
 

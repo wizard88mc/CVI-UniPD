@@ -26,8 +26,10 @@ for ($i = 0; $i < count($levels); $i++) {
 	$currentLevel = $levels[$i];
 	$levelType = $currentLevel["type"];
 	$targetFamily = $currentLevel["targetFamily"];
+	$maxTimeWaiting = $currentLevel["maxTimeImage"];
 	
-	$stringObject = "<level targetFamily=\"" . $targetFamily . "\" type=\"" . $levelType . "\">\r\n";
+	$stringObject = "<level targetFamily=\"" . $targetFamily . "\" type=\"" . $levelType . 
+	"\" maxTimeImage=\"" . $maxTimeWaiting . "\">\r\n";
 	$listOfImages = $currentLevel["sequence"];
 	
 	for ($j = 0; $j < count($listOfImages); $j++) {
