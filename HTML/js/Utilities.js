@@ -209,5 +209,20 @@ function checkColorContrast(backgroundColor, foregroundColor) {
 	return totalSum > 500; 
 }
 
+function insertSound(soundID, fileName) {
+	
+	var sound = $('<audio></audio>').attr('id', soundID).appendTo('#divSounds');
+	$('<source src="sounds/' + fileName + '.mp3" />').appendTo(sound);
+	$('<source src="sounds/' + fileName + '.ogg" />').appendTo(sound);
+}
+
+function cacheIsChecking() {
+	console.log("checking");
+}
+
+function cacheIsDownloading() {
+	console.log("downloading");
+}
+
 	
 

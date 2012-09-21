@@ -123,6 +123,7 @@ function GameManager() {
 	this.sequenceOfAnimations = [];
 	this.animationsIterator = 0;
 	this.currentAnimation = null;
+	this.lastTimePlayedGoodSound = 0;
 }
 var gameManager = null;
 
@@ -149,6 +150,9 @@ defineGame: function(settings) {
 	canvasSettings.width = Number(dimensions[0]);
 	canvasSettings.height = Number(dimensions[1]);
 	canvasSettings.fileName = settings.imageFileName;
+	
+	$('<div id="divSounds"></div>').appendTo('body');
+	insertSound('soundOnImage', 'good_image');
 	
 	CatchMeNamespace.buildAnimations();
 },
@@ -224,7 +228,7 @@ timingFunction: function() {
 
 putInWaiting: function() {
 	
-	$('#divMain').remove();
+	$('#divMainContent').remove();
 	
 	var machineID = checkAlreadySync();
 	
@@ -285,13 +289,13 @@ waitingToStart: function(message) {
 
 drawCanvas: function() {
 	
-	$('<canvas id="image"></canvas>').appendTo($('body'));
-	var canvas = $('#image');
+	var canvas = $('<canvas id="image"></canvas>').appendTo($('body'));
+	canvas.css('z-index', '10');
 	canvas[0].width = canvasSettings.width;
 	canvas[0].height = canvasSettings.height;
 	var context = canvas[0].getContext('2d');
 	var image = new Image();
-	image.src = '../images/' + canvasSettings.fileName;
+	image.src = 'images/' + canvasSettings.fileName;
 	$(image).load(function() {
 		context.drawImage(image, 0, 0, canvasSettings.width, canvasSettings.height);
 	})
@@ -361,6 +365,15 @@ startGame: function() {
 	$('body').on('tapone', touchTouch)
 			.on('swipemove', touchMove)
 			.on('swipeone', touchUp);
+	
+	$('#image').on('tapone swipemove swipeone mouseover', function() {
+
+		var time = new Date().getTime();
+		if (time - gameManager.lastTimePlayedGoodSound > 5000) {
+			$('#divSounds #soundOnImage').get(0).play();
+			gameManager.lastTimePlayedGoodSound = time;
+		}
+	})
 	
 	$('<div id="divCloseGame"></div>').appendTo($('body'));
 	$('#divCloseGame').css('position','absolute')

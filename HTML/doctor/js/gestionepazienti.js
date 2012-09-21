@@ -13,6 +13,7 @@ var imagePositions = [];
 var eyesPositions = [];
 var touchPositions = [];
 var lastGraphWatched = null;
+var doctorID = getFromSessionStorage("doctorID");
 
 function drawCatchMeTable(visits) {
 	
@@ -555,6 +556,9 @@ $('document').ready(function() {
 	$.ajax({
 		url:'../server/GetPatientsList.php',
 		type: 'POST',
+		data: {
+			doctorID: doctorID
+		},
 		success: function(data, status) {
 			
 			if (status == 'success') {

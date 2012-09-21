@@ -148,7 +148,7 @@ var HelpMeSettingsNamespace = {
 			$('<option value=""></option>').attr('selected', 'selected').appendTo(select);
 		}
 		
-		for (var i = 6; i <= 20; i += 1) {
+		for (var i = 20; i <= 40; i += 1) {
 			var selected = '';
 			if (i == timeDefined) {
 				selected = ' selected="selected" ';

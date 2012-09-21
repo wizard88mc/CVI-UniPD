@@ -12,6 +12,7 @@ var gameReady = false;
 var arrayOfDescriptionGames = Array();
 var arrayOfFoldersGames = Array();
 var identificationType = 'GAME_CLIENT';
+var doctorID = getFromSessionStorage("doctorID"); 
 
 var NewVisitNamespace = {
 
@@ -64,6 +65,10 @@ getListOfPatients: function() {
 	
 	$.ajax({
 		url: '../server/GetPatientsList.php',
+		type: 'POST',
+		data: {
+			'doctorID': doctorID
+		},
 		success: function(message) {
 			
 			try {
@@ -342,7 +347,7 @@ initializePage: function() {
 					data: {
 						name: patientName, surname: patientSurname, 
 						dateOfBirth: dateOfBirth, disabilita: disability, 
-						sex: sex},
+						sex: sex, doctorID: doctorID },
 					success: function(message) {
 						
 						console.log(message);

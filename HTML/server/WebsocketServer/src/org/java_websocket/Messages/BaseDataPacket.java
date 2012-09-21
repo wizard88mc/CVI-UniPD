@@ -38,7 +38,12 @@ public class BaseDataPacket {
     protected Long time = null;
     
     public BaseDataPacket(JSONObject packet) {
-        this.type = (String)packet.get("TYPE");
+        if (!packet.containsKey("TYPE")) {
+            this.type = "DEFAULT";
+        }
+        else {
+            this.type = (String)packet.get("TYPE");
+        }
         this.time = (Long)packet.get("TIME");
     }
     

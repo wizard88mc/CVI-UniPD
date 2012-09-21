@@ -343,7 +343,7 @@ setGameSettings: function(data) {
 		var newImageID = $(this).val();
 		gameSettings.imageFileName = aviableImages[newImageID].FILENAME;
 		
-		$('#imgPreview').attr('src', '../images/'+gameSettings.imageFileName);
+		$('#imgPreview').attr('src', '../catchMe/images/' + gameSettings.imageFileName);
 		gameSettings.imageID = newImageID;
 		
 		// Modifico anche il canvas di preview con le dimensioni del nuovo oggetto
@@ -369,7 +369,7 @@ setGameSettings: function(data) {
 			'DIMENSIONS': data.CANVAS_DIMENSIONS};
 	
 	gameSettings.imageFileName = data.IMG_SPECS.IMG_FILE;
-	$('<img id="imgPreview" src="../images/' +gameSettings.imageFileName + '" alt="Preview" />').appendTo(divImage);
+	$('<img id="imgPreview" src="../catchMe/images/' + gameSettings.imageFileName + '" alt="Preview" />').appendTo(divImage);
 	
 	var otherImages = data.OTHER_IMG;
 	

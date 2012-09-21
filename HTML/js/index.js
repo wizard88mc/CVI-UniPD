@@ -26,49 +26,64 @@ function checkLogin(e) {
 		return;
 	}
 	else {
-		var divDialog = $('<div id="dialogLogin" title="Attendere.."><p>Login in corso. . .</p></div>');
 		
-		divDialog.appendTo(divPage);
-		
-		saveInLocalStorage("username", username);
-		saveInLocalStorage("password", password);
-		
-		password = MD5(password);
-		
-		var width = getScreenWidth() * 0.4;
-		
-		divDialog.dialog({
-			width: width,
-			modal: true,
-			draggable: false,
-			resizable: false,
-			closeOnEscape: false,
-			open: function() {
-				$('a.ui-dialog-titlebar-close').hide();
-			}
-		})
-	}
-	
-	$.ajax({
-		url: 'server/CheckLogin.php',
-		type: 'POST',
-		data: {username: username, password: password},
-		success: function(message) {
+		if (navigator.onLine) {
+			var divDialog = $('<div id="dialogLogin" title="Attendere.."><p>Login in corso. . .</p></div>');
 			
-			var data = JSON.parse(message);
+			divDialog.appendTo(divPage);
 			
-			if (data.CORRECT == "true") {
-				loginCorrect(data);
-			}
-			else {
-				loginIncorrect();
-			}
-		},
-		error: function(message) {
-			loginIncorrect();
+			saveInLocalStorage("username", username);
+			saveInLocalStorage("password", password);
+			
+			password = MD5(password);
+			
+			var width = getScreenWidth() * 0.4;
+			
+			divDialog.dialog({
+				width: width,
+				modal: true,
+				draggable: false,
+				resizable: false,
+				closeOnEscape: false,
+				open: function() {
+					$('a.ui-dialog-titlebar-close').hide();
+				}
+			})
+			
+			$.ajax({
+				url: 'server/CheckLogin.php',
+				type: 'POST',
+				data: {username: username, password: password},
+				success: function(message) {
+					
+					var data = JSON.parse(message);
+					
+					if (data.CORRECT == "true") {
+						loginCorrect(data);
+					}
+					else {
+						loginIncorrect();
+					}
+				},
+				error: function(message) {
+					loginIncorrect();
+				}
+			});
 		}
-	})
-	
+		else {
+			if (getFromLocalStorage("username") == username && 
+				getFromLocalStorage("password") == password) {
+				
+				var permission = getFromLocalStorage("permission");
+				if (permission == "PATIENT") {
+					patientClient();
+				}
+				else {
+					console.log("Loggato come dottore");
+				}
+			}			
+		}
+	}
 }
 
 function patientClient(e) {	
@@ -92,7 +107,8 @@ function loginCorrect(data) {
 		
 		setSessionStorage("doctorName", doctorName);
 		setSessionStorage("doctorSurname", doctorSurname);
-		setSessionStorage("perimission", "DOCTOR");
+		setSessionStorage("permission", "DOCTOR");
+		setSessionStorage("doctorID", doctorID);
 		
 		setSessionStorage("logged", "true");
 		
@@ -100,7 +116,8 @@ function loginCorrect(data) {
 	}
 	else if (data.PERMISSION == 'PATIENT') {
 		setSessionStorage("permission", "PATIENT");
-		location.replace('patient/index.html?patientID=' + data.ID);
+		setSessionStorage("patientID", data.ID);
+		location.replace('patient/index.html');
 	}
 }
 

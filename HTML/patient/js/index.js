@@ -80,6 +80,6 @@ $('document').ready(function(e) {
 		openWebSocket(port);
 	}
 	else if (getFromSessionStorage("permission") == "PATIENT") {
-		
+		var patientID = getFromSessionStorage("patientID");
 	}
 });
