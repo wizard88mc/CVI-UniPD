@@ -157,7 +157,7 @@ var frameAnimatorNamespace = {
         }
 
         // riduce la dimensione della barra in relazione al tempo passato ed a quello massimo di attesa
-        if (!imageObjectOnScreen.moveInsideSacco) {
+        if (!imageObjectOnScreen.moveInsideSacco && !imageObjectOnScreen.moveInsideCestino) {
             var elapsedTime = time - gameManager.startTimeObjectOnScreen;
 
             //barraTempo.timeIsPassing(elapsedTime / gameManager.maxTimeObjectOnScreen);
@@ -168,7 +168,7 @@ var frameAnimatorNamespace = {
                 timeExpired();
             }
         }
-        else {
+        else if (imageObjectOnScreen.moveInsideSacco) {
         	
         	var delta = time - gameManager.timeLastFrame;
 
@@ -178,6 +178,15 @@ var frameAnimatorNamespace = {
                 window.cancelRequestAnimationFrame(gameManager.currentAnimationFrame);
                 objectInsertedIntoSacco();
             }
+        }
+        else if (imageObjectOnScreen.moveInsideCestino) {
+        	imageObjectOnScreen.moveObjectIntoCestino(delta);
+        	
+        	if (imageObjectOnScreen.drawingPosition.left + imageObjectOnScreen.width < cestino.width / 2) {
+        		
+        		window.cancelRequestAnimationFrame(gameManager.currentAnimationFrame);
+        		timeExpired();
+        	}
         }
     },
     

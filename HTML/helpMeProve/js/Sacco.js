@@ -20,8 +20,8 @@ function Sacco() {
     
     this.reset = function() {
     	this.element.css({
-            top: this.drawingPosition.top,
-        });
+    		top: this.drawingPosition.top
+    	});
     }
 
 }

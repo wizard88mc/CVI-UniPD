@@ -36,6 +36,7 @@ getImagesFromSettings: function() {
                 var audioFile = $(this).attr('audioFile');
 
                 immaginiADisposizione[family] = new Array();
+                familySound[family] = audioFile;
 
                 $(this).find('image').each(function() {
 
@@ -62,42 +63,48 @@ anotherImageRetrieved: function() {
         //presentationManager.createElements();
         
         
-        //ExampleNamespace.prepareExamples();
-    	openWebSocket(port);
+        // ExampleNamespace.prepareExamples();
+    	// openWebSocket(port);
+    	
+    	utilsNamespace.retrieveLevels('1/20120911-075801.xml')
+    	
     }
 },
 
-retrieveLevels: function() {
+retrieveLevels: function(fileName) {
 
 	$.ajax({
         type: 'GET',
-        url: 'settings/levels.xml',
+        url: 'settings/' + fileName,
         dataType: 'xml',
         cahce: 'false',
         success: function(xml) {
 
-            $(xml).find('level').each(function() {
 
-                var familyName = $(this).attr('imagesFamily');
-                var sound = $(this).attr('sound');
-                var distractors = 0;
-                var target = 0;
-                var listOfObjects = [];
-
-                if ($(this).attr('defined') == 'true') {
-
-                    $(this).find('object').each(function() {
-                        listOfObjects.push($(this).attr('type'));
-                    });
-
-                }
-                else {
-                    var target = parseInt($(this).attr('numberOfTargets'));
-                    var distractors = parseInt($(this).attr('numberOfDistracters'));
-                }
-
-                livelliGioco.push(new Level(familyName, target, distractors, listOfObjects, sound));
-            });
+        	$(xml).find('level').each(function() {
+	        		
+        		var type = $(this).attr('type');
+        		var targetsAndDistracters = type.split('x');
+        		var targetFamily = $(this).attr('targetFamily');
+        		var maxTime = $(this).attr('maxTimeImage');
+        		var sequenceOfImages = [];
+        		
+        		$(this).find('image').each(function() {
+        			var type = $(this).attr('type');
+        			var imageID = $(this).attr('imageID');
+        			var isTarget = true;
+        			if (type == 'D') {
+        				isTarget = false;
+        			}
+        			sequenceOfImages.push(new ImageLevel(isTarget, imageID));
+        		})
+        		
+        		livelliGioco.push(new Level(type, targetsAndDistracters[0], targetsAndDistracters[1],
+	        				targetFamily, sequenceOfImages, familySound[targetFamily] , maxTime));
+	        		
+        	});
+        	
+			// console.log(livelliGioco);
 
             //ExampleNamespace.prepareExamples();
 
@@ -105,6 +112,10 @@ retrieveLevels: function() {
             openWebSocket(port);
             gameManager.timeToStart = new Date().getTime();
             allInfosRetrieved();*/
+        	
+        	initGame();
+        	gameManager.timeToStart = new Date().getTime();
+        	allInfosRetrieved();
         }
     });
 },
@@ -161,6 +172,7 @@ istantiateLevel: function(level) {
 
     var audio = $('<audio id="audioLevel"></audio>').appendTo('#divSounds');
     $('<source src="sounds/' + level.sound + '" />').appendTo(audio);
+    gameManager.maxTimeObjectOnScreen = Number(level.maxTimeImage) * 1000;
 
 },
 

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.java_websocket.Messages;
 
 import java.util.HashMap;
@@ -24,7 +20,15 @@ public class HelpMeDoctorMessage extends DoctorClientPacket {
     public HelpMeDoctorMessage(HelpMeDataPacket helpMePacket, EyeTrackerDataPacket eyePacket) {
         super("GAME_POSITIONS");
         
-        time = helpMePacket.time;
+        if (helpMePacket != null && eyePacket != null) {
+            time = helpMePacket.getTime() + eyePacket.getTime();
+        }
+        else if (eyePacket == null) {
+            time = helpMePacket.getTime();
+        }
+        else  if (helpMePacket == null) {
+            time = eyePacket.getTime();
+        }
         
         if (helpMePacket != null) {
             imagePosition.put("TOP", helpMePacket.image.y);

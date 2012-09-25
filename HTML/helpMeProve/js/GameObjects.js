@@ -4,7 +4,7 @@ function GameManager() {
     this.currentLevel = null;
     this.indexImageObject = -1;
     this.currentImage = null;
-    this.maxTimeObjectOnScreen = 30000;
+    this.maxTimeObjectOnScreen = 1200000;
     this.startTimeObjectOnScreen = null;
     this.imageRetrieved = 0;
     this.totalImageToRetrieve = 2;

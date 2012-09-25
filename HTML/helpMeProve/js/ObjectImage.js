@@ -1,10 +1,13 @@
 
 function ImageObjectOnScreen(currentImage) {
 
-    this.element = $(currentImage.image);
+    this.element = $('<canvas></canvas>');
+    var context = this.element.get(0).getContext('2d');
     this.imageElement = currentImage.image;
+    this.element.get(0).width = currentImage.image.naturalWidth;
+    this.element.get(0).height = currentImage.image.naturalHeight;
+    context.drawImage(currentImage.image, 0, 0);
     this.targetCenter = new Point(Math.round(getScreenHeight() * 0.49), Math.round(getScreenWidth() * 0.49));
-
     this.targetWidth = Math.round(getScreenWidth() / 5);
     /*if (this.targetWidth > getScreenWidth() * 0.16) {
     	this.targetWidth = getScreenWidth() * 0.16;
@@ -26,9 +29,11 @@ function ImageObjectOnScreen(currentImage) {
     this.height = 0;
     this.currentScale = 0;
     this.moveInsideSacco = false;
+    this.moveInsideCestino = false;
+    this.dimensionsAlreadyReduced = false;
 
     this.element.css({
-        position: 'relative',
+        position: 'absolute',
         width: this.width + 'px',
         height: this.height + 'px',
         top: this.drawingPosition.top,
@@ -77,6 +82,54 @@ this.moveObject = function(delta, intoSacco) {
         }
         
         this.center.left += Math.round(deltaLeft);
+        this.center.top += Math.round(deltaTop);
+        this.drawingPosition.left += deltaLeft;
+        this.drawingPosition.top += deltaTop;
+
+        this.element.css({
+            top: this.drawingPosition.top,
+            left: this.drawingPosition.left
+        });
+	};
+	
+	this.moveObjectIntoCestino = function(delta) {
+		
+		if (!this.dimensionsAlreadyReduced) {
+			this.dimensionsAlreadyReduced = true;
+			var ratio = this.width / this.height;
+			this.width = cestino.width * 0.5;
+			this.height = this.width / ratio;
+			this.center.left = this.drawingPosition.left + this.width / 2;
+			this.center.top = this.drawingPosition.top + this.height / 2;
+			this.element.css({
+				width: this.width + 'px',
+				height: this.height + 'px'
+			});
+		}
+		else {
+			var ratio = this.width / this.height;
+			this.width = this.width * 0.9;
+			this.height = this.height * 0.9;
+			this.center.left = this.drawingPosition.left + this.width / 2;
+			this.center.top = this.drawingPosition.top + this.height / 2;
+			this.element.css({
+				width: this.width + 'px',
+				height: this.height + 'px'
+			});
+		}
+		
+		var deltaTop = 0; var deltaLeft = 0;
+		if (this.center.left > 0) {
+			deltaLeft = -1.5;
+		}
+		if (this.center.top > cestino.top + cestino.height / 2) {
+			deltaTop = -1.5;
+		}
+		if (this.center.top < cestino.top + cestino.height / 2) {
+			deltaTop = 1.5;
+		}
+		
+		this.center.left += Math.round(deltaLeft);
         this.center.top += Math.round(deltaTop);
         this.drawingPosition.left += deltaLeft;
         this.drawingPosition.top += deltaTop;

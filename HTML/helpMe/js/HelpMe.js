@@ -1,6 +1,6 @@
 var tubo = null;
 var sacco = null;
-//var barraTempo = null;
+var cestino = null;
 var imageObjectOnScreen = null;
 var immaginiADisposizione = {};
 var livelliGioco = [];
@@ -111,6 +111,8 @@ function initGame() {
     sacco.element.appendTo('#divMainContent');
     sacco.element.addClass('saccoTransition');
 
+    cestino = new Cestino();
+    cestino.element.appendTo('#divMainContent');
     //barraTempo = new BarraTempo();
     //barraTempo.element.appendTo('#divMainContent');
 }
@@ -405,7 +407,7 @@ $('document').ready(function() {
 
     gameManager.getSystemImages();
     gameManager.getSystemSounds();
-    utilsNamespace.retrieveLevels();
+    //utilsNamespace.retrieveLevels();
     utilsNamespace.getImagesFromSettings();
     //utilsNamespace.retrieveLevels();
 });

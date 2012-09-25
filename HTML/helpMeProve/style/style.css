@@ -19,7 +19,7 @@ body, #divMainContent {
 	-webkit-transition: top 1s;
 	-webkit-transition-timing-function: linear;
 	-o-transition: top 1s;
-	-o-transition-timing-functiion: linear;
+	-o-transition-timing-function: linear;
 }
 
 .saccoNoTransition {

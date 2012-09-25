@@ -11,15 +11,16 @@ var touchManagerNamespace = {
 
         gameManager.touchManagerObject.position.left = event.pageX;
         gameManager.touchManagerObject.position.top = event.pageY;
-
-        var top = Math.round(parseInt(removeMeasureUnit(imageObjectOnScreen.element.css('top'))));
-        var left = Math.round(parseInt(removeMeasureUnit(imageObjectOnScreen.element.css('left'))));
-
-        imageObjectOnScreen.center.top = Math.round(top + Math.floor(imageObjectOnScreen.height / 2));
-        imageObjectOnScreen.center.left = Math.round(left + Math.floor(imageObjectOnScreen.width / 2));
+        
+        var left = imageObjectOnScreen.element.position().left;
+        var top = imageObjectOnScreen.element.position().top;
+        
+        imageObjectOnScreen.center.top = top + imageObjectOnScreen.height / 2;
+        imageObjectOnScreen.center.left = left + imageObjectOnScreen.width / 2;
 
         imageObjectOnScreen.drawingPosition.top = top;
         imageObjectOnScreen.drawingPosition.left = left;
+        
     },
 
     touchEnd: function(event, ui) {
@@ -35,6 +36,14 @@ var touchManagerNamespace = {
 
             imageObjectOnScreen.moveInsideSacco = true;
             gameManager.packetWithResults.COMPLETION_TIME = new Date().getTime() - gameManager.startTimeObjectOnScreen;
+        }
+        
+        if (imageObjectOnScreen.center.top > cestino.top && 
+        		imageObjectOnScreen.center.top < cestino.top + cestino.height &&
+        		imageObjectOnScreen.center.left < cestino.width) {
+        	
+        	imageObjectOnScreen.moveInsideCestino = true;
+        	gameManager.packetWithResults.COMPLETION_TIME = new Date().getTime() - gameManager.startTimeObjectOnScreen;
         }
     },
 

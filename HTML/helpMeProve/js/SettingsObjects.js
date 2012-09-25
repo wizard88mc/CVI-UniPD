@@ -12,10 +12,17 @@ function ImageObject(name, fileN, id, target) {
     this.image.onload = utilsNamespace.anotherImageRetrieved;
 }
 
-function Level(family, targets, distracters, objects, sound) {
-    this.targetFamily = family;
-    this.numberOfTargets = targets;
-    this.numberOfDistracters = distracters;
-    this.sequenceOfObjects = objects;
+function Level(type, numberOfTargets, numberOfDistracters, targetFamily, sequence, sound, maxTimeImage) {
+	this.type = type;
+    this.numberOfTargets = numberOfTargets;
+    this.numberOfDistracters = numberOfDistracters;
+    this.targetFamily = targetFamily;
+    this.sequence = sequence;
     this.sound = sound;
+    this.maxTimeImage = maxTimeImage;
+}
+
+function ImageLevel(isTarget, imageID) {
+	this.isTarget = isTarget;
+	this.imageID = imageID;
 }

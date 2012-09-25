@@ -98,8 +98,7 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
                     stupidEye.put("POSX", -1L);
                     stupidEye.put("POSY", -1L);
                     
-                    eyeTrackerInformations = new EyeTrackerDataPacket(stupidEye);
-                    writeEyeTrackerMessage(eyeTrackerInformations);
+                    writeEyeTrackerMessage(new EyeTrackerDataPacket(stupidEye));
                     
                     System.out.println("Solo immagine");
                 }
@@ -113,9 +112,7 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
                     stupidImage.put("TOUCH", stupidPositions);
                     stupidImage.put("IMAGE", stupidPositions);
                     
-                    imageInformations = new HelpMeDataPacket(stupidImage);
-                    writeImageMessage(imageInformations);
-                    System.out.println("Solo eye, " + deltaTime );
+                    writeImageMessage(new HelpMeDataPacket(stupidImage));
                 }
             }
             else if (messagesGameBuffer.isEmpty()) {
@@ -133,8 +130,7 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
                     stupidImage.put("TOUCH", stupidPositions);
                     stupidImage.put("IMAGE", stupidPositions);
                     
-                    imageInformations = new HelpMeDataPacket(stupidImage);
-                    writeImageMessage(imageInformations);
+                    writeImageMessage(new HelpMeDataPacket(stupidImage));
                     
                     System.out.println("Immagini vuoto");
                 }
@@ -151,8 +147,7 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
                     stupidEye.put("POSX", -1L);
                     stupidEye.put("POSY", -1L);
                     
-                    eyeTrackerInformations = new EyeTrackerDataPacket(stupidEye);
-                    writeEyeTrackerMessage(eyeTrackerInformations);
+                    writeEyeTrackerMessage(new EyeTrackerDataPacket(stupidEye));
                     
                      System.out.println("Eye tracker vuoto");
                 }
