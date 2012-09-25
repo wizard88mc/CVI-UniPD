@@ -267,12 +267,14 @@ function objectInsertedIntoSacco() {
  * Function chiamata quando un oggetto non viene inserito dentro il sacco entro
  * il tempo massimo a disposizione
  */
-function timeExpired() {
+function timeExpired(intoBin) {
 
     $('#divMainContent div').hide();
     imageObjectOnScreen.element.remove();
-    gameManager.packetWithResults.FIRST_RESPONSE_TIME = 0;
-    gameManager.packetWithResults.COMPLETION_TIME = gameManager.maxTimeObjectOnScreen;
+    
+    if (!intoBin) {
+    	gameManager.packetWithResults.COMPLETION_TIME = gameManager.maxTimeObjectOnScreen;
+    }
 
     // Non ha inserito un oggetto target all'interno
     // del sacco: ERRORE

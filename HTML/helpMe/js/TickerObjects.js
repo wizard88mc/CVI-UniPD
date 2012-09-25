@@ -165,7 +165,7 @@ var frameAnimatorNamespace = {
             if (elapsedTime >= gameManager.maxTimeObjectOnScreen) {
                 window.cancelRequestAnimationFrame(gameManager.currentAnimationFrame);
                 // devo richiamare funzione per fine tempo
-                timeExpired();
+                timeExpired(false);
             }
         }
         else if (imageObjectOnScreen.moveInsideSacco) {
@@ -185,7 +185,7 @@ var frameAnimatorNamespace = {
         	if (imageObjectOnScreen.drawingPosition.left + imageObjectOnScreen.width < cestino.width / 2) {
         		
         		window.cancelRequestAnimationFrame(gameManager.currentAnimationFrame);
-        		timeExpired();
+        		timeExpired(true);
         	}
         }
     },

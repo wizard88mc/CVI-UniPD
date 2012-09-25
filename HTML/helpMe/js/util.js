@@ -177,6 +177,8 @@ istantiateLevel: function(level) {
         $('#divMainContent div[id!="divBarraTempo"]').show();
         $('#audioLevel').remove();
         imageObjectOnScreen.element.remove();
+        
+        gameManager.packetWithResults.FIRST_RESPONSE_TIME = 0;
     }
 
 };
