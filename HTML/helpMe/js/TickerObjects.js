@@ -145,8 +145,8 @@ var frameAnimatorNamespace = {
                 TYPE: 'GAME_DATA',
                 SUBTYPE: 'POSITIONS',
                 TIME: time - gameManager.timeToStart,
-                IMAGE: [imageObjectOnScreen.center.left, imageObjectOnScreen.center.top],
-                TOUCH: [gameManager.touchManagerObject.position.left, gameManager.touchManagerObject.position.top]
+                IMAGE: [Math.round(imageObjectOnScreen.center.left), Math.round(imageObjectOnScreen.center.top)],
+                TOUCH: [Math.round(gameManager.touchManagerObject.position.left), Math.round(gameManager.touchManagerObject.position.top)]
             };
 
             if (websocket != null) {

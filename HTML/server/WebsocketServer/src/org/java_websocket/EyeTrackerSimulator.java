@@ -149,7 +149,12 @@ public class EyeTrackerSimulator extends Thread {
                 
                 if (packet.get("TYPE").equals("CALCULATING")) {
                     
-                    packet.put("CLIENT_TIME", System.currentTimeMillis());
+                    try {
+                        Thread.sleep(200);
+                        packet.put("CLIENT_TIME", System.currentTimeMillis());
+                        Thread.sleep(200);
+                    }
+                    catch(InterruptedException exc) {}
                     clientConnecter.send(packet.toJSONString());
                 }
                 else if (packet.get("TYPE").equals("START_WORKING")) {

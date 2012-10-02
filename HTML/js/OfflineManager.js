@@ -1,4 +1,4 @@
-offlineObjectManager = new Object();
+	offlineObjectManager = new Object();
 offlineObjectManager.folderWhereWrite = null;
 offlineObjectManager.rootDirectoryEntry = null;
 offlineObjectManager.arrayOfflineVisits = new Array();
@@ -44,7 +44,7 @@ var OfflineNamespace = {
 
         var date = new Date();
         var folderGame = date.getFullYear() + '_' + date.getMonth() + '_' + date.getDate() + '_' + date.getHours() + '_'
-            + date.getMinutes() + '_' + date.getMinutes();
+            + date.getMinutes() + '_' + date.getSeconds();
 
         folderGame = patientID + '/' + folderGame;
         OfflineNamespace.createDirectoryForSave(offlineObjectManager.rootDirectoryEntry, folderGame.split('/'));
@@ -161,16 +161,20 @@ var OfflineNamespace = {
 		      		}
 		      		else {
 		      			
-		      			/*for (secondIndex in subfolders) {
+		      			for (secondIndex in subfolders) {
 		      				
 		      				OfflineNamespace.workWithOfflineFolder(subfolders[secondIndex]);
-		      			}*/
-		      			OfflineNamespace.workWithOfflineFolder(subfolders[0]);
+		      			}
+		      			//OfflineNamespace.workWithOfflineFolder(subfolders[0]);
 		      		}
 		    	});
 		  	};
 		
 			readEntries();
+    		
+    		/*offlineObjectManager.arrayOfflineVisits[index].removeRecursively(function() {
+    			console.log("Folder rimossa");
+    		});*/
     	}
     }, 
     
@@ -189,8 +193,9 @@ var OfflineNamespace = {
 				readerPackets.onloadend = function(e) {
 					
 					var packets = JSON.stringify(this.result);
+					
 					console.log(packets);
-					console.log(folderName);
+					
 					$.ajax({
 						url: 'server/OfflinePackets.php',
 						type: 'POST',
@@ -200,13 +205,16 @@ var OfflineNamespace = {
 						},
 						success: function(message) {
 							console.log(message);
-							directoryEntry.removeRecursively(function() {
-								
-								OfflineNamespace.anotherVisitSend();
-							})
+							
+							if (message == "completed") {
+								/*directoryEntry.removeRecursively(function() {
+									
+									OfflineNamespace.anotherVisitSend();
+								});*/
+							}
 						}
 						
-					})
+					});
 				}
 				
 				readerPackets.readAsText(filePackets);

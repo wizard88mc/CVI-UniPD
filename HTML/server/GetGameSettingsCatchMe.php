@@ -3,11 +3,11 @@ require_once("DBParameters.php");
 
 $patientID = $_POST['patientID'];
 
-$baseQuery = "SELECT e.Movements, e.Speed, e.ChangeImageColor, 
-				e.BackgroundColor, e.ImageColor, e.ImageWidth, 
-				i.ID, i.ImageName, i.FileName, i.Dimensions
-				FROM CatchMeExercises e JOIN Images i 
-				WHERE e.ImageID = i.ID AND ";
+$baseQuery = "SELECT e.Movements, e.StartFromCenter, e.MixMovements, 
+			e.Speed, e.ChangeImageColor, e.BackgroundColor, e.ImageColor, 
+			e.ImageWidth, i.ID, i.ImageName, i.FileName, i.Dimensions
+			FROM CatchMeExercises e JOIN Images i 
+			WHERE e.ImageID = i.ID AND ";
 
 $row;
 /**
@@ -69,29 +69,35 @@ $arrayToSend = array(
 	"UP_MOV" => $movements['UpMovement'],
 	"DOWN_MOV" => $movements['DownMovement'],
 	"SPEED" => $row["Speed"],
+	"START_CENTER" => (boolean)$row["StartFromCenter"],
+	"MIX_MOVEMENTS" => (boolean)$row["MixMovements"],
 	"BACK_COLOR" => $row["BackgroundColor"],
 	"IMG_COLOR" => $row["ImageColor"],
-	"CHANGE_IMG_COLOR" => $row["ChangeImageColor"],
+	"CHANGE_IMG_COLOR" => (boolean)$row["ChangeImageColor"],
 	"IMG_SPECS" => array("IMG_ID" => $row['ID'], "IMG_NAME" => $row['ImageName'], "IMG_FILE" => $row['FileName']),
 	"IMG_WIDTH" => $row['ImageWidth'],
 	"CANVAS_DIMENSIONS" => $row['Dimensions']
 );
 
-$arrayOtherImages = array();
-
-while ($row = mysqli_fetch_assoc($resultQuerySelectImages)) {
-	$imageID = $row['ID'];
-	if ($imageID != $arrayToSend['IMG_SPECS']['IMG_ID']) {
-		$arrayOtherImages[$imageID] = array(
-			"IMG_NAME" => $row["ImageName"], 
-			"IMG_FILE" => $row['FileName'],
-			"IMG_DIMS" => $row['Dimensions']);
-	} 
+if (!isset($_POST['onlySettings'])) {
+	$arrayOtherImages = array();
+	
+	while ($row = mysqli_fetch_assoc($resultQuerySelectImages)) {
+		$imageID = $row['ID'];
+		if ($imageID != $arrayToSend['IMG_SPECS']['IMG_ID']) {
+			$arrayOtherImages[$imageID] = array(
+					"IMG_NAME" => $row["ImageName"],
+					"IMG_FILE" => $row['FileName'],
+					"IMG_DIMS" => $row['Dimensions']);
+		}
+	}
+	
+	if (count($arrayOtherImages) != 0) {
+		$arrayToSend['OTHER_IMG'] = $arrayOtherImages;
+	}	
 }
 
-if (count($arrayOtherImages) != 0) {
-	$arrayToSend['OTHER_IMG'] = $arrayOtherImages;
-}
+
 	
 echo json_encode($arrayToSend);
 

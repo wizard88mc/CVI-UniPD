@@ -1,36 +1,20 @@
 <?php
 
 function manageOfflineCatchMePackets($packets, $folderForFiles, $visitID, $connection) {
-
+	
 	$fileNameInputEyeTracking = $folderForFiles . DIRECTORY_SEPARATOR . 'InputEyeTracking.txt';
 	$fileNameInputImage = $folderForFiles . DIRECTORY_SEPARATOR . 'InputImage.txt';
 	$fileNameInputTouch = $folderForFiles . DIRECTORY_SEPARATOR . 'InputTouch.txt';
-	$fileDelta = $folderForFiles . DIRECTORY_SEPARATOR . 'DeltaValues.txt';
-	$fileNameSettings = $folderForFiles . DIRECTORY_SEPARATOR . 'GameSettings.ini';
+	$fileNameDelta = $folderForFiles . DIRECTORY_SEPARATOR . 'DeltaValues.txt';
+	$fileNameSettings = $folderForFiles . DIRECTORY_SEPARATOR . 'GameSpecs.ini';
 	
 	$fileEyeTracking = fopen($fileNameInputEyeTracking, 'w');
 	$fileImage = fopen($fileNameInputImage, 'w');
 	$fileTouch = fopen($fileNameInputTouch, 'w');
-	$fileResults = fopen($fileNameResults, 'w');
-	
-	$packetWithSettings = $packets[0];
-	
-	$imageWidth = $packetWithSettings["IMAGE_WIDTH"];
-	$imageHeight = $packetWithSettings["IMAGE_HEIGHT"]; 
-	
-	$stringScreenDimensions = $packetWithSettings['SCREEN_WIDTH'] . "x"
-		. $packetWithSettings["SCREEN_HEIGHT"] . "\r\n";
-		
-	$stringImageDimensions = $imageWidth . "x"
-		. $imageHeight . "\r\n";
-		
-	$fileSettings = fopen($fileNameSettings, "w");
-	fwrite($fileSettings, $stringScreenDimensions);
-	fwrite($fileSettings, $stringImageDimensions);
-	fclose($fileSettings);
+	$fileDelta = fopen($fileNameDelta, 'w');
 	
 	
-	for($i = 0; $i < count($packets); $i++) {
+	for($i = 1; $i < count($packets); $i++) {
 		
 		$currentPacket = json_decode($packets[$i], true);
 		
@@ -42,7 +26,7 @@ function manageOfflineCatchMePackets($packets, $folderForFiles, $visitID, $conne
 			$touchPosition = (array)$currentPacket["TOUCH"];
 			$movement = $currentPacket["MOVEMENT"];
 			
-			$stringEye = "(" . $time . ",-1, -1)\r\n";
+			$stringEye = "(" . $time . ",-1,-1)\r\n";
 			$stringTouch = "(" . $time . "," . $touchPosition[0]
 				. "," . $touchPosition[1] . ")\r\n";
 			$stringImage = "(" . $time . "," . $imagePosition[0]
@@ -64,20 +48,48 @@ function manageOfflineCatchMePackets($packets, $folderForFiles, $visitID, $conne
 			fwrite($fileTouch, $stringTouch);
 				
 		}
+		else if ($currentPacket["TYPE"] == "READY_TO_PLAY") {
+			
+			$imageWidth = $currentPacket["IMAGE_WIDTH"];
+			$imageHeight = $currentPacket["IMAGE_HEIGHT"];
+			
+			$stringScreenDimensions = $currentPacket['SCREEN_WIDTH'] . "x"
+					. $currentPacket["SCREEN_HEIGHT"] . "\r\n";
+			
+			$stringImageDimensions = $imageWidth . "x"
+					. $imageHeight . "\r\n";
+			
+			$fileSettings = fopen($fileNameSettings, "w");
+			
+			fwrite($fileSettings, $stringScreenDimensions);
+			fwrite($fileSettings, $stringImageDimensions);
+			fclose($fileSettings);
+		}
 	}
-
-	// invocazione di codice java per 
+	
+	fclose($fileEyeTracking);
+	fclose($fileImage);
+	fclose($fileDelta);
+	fclose($fileTouch);
+	
+	$stringToRemove = "WebsocketServer" . DIRECTORY_SEPARATOR;
+	
+	/*$fileNameInputEyeTracking = str_replace($stringToRemove, "", $fileNameInputEyeTracking);
+	$fileNameInputImage = str_replace($stringToRemove, "", $fileNameInputImage);
+	$fileNameInputTouch = str_replace($stringToRemove, "", $fileNameInputTouch);
+	$fileNameSettings = str_replace($stringToRemove, "", $fileNameSettings);*/
+	
+	// invocazione di codice java per
 	// far partire performance analyzer di catchMe
 	
+	$array = Array();
+	
+	$parameters = "$fileNameInputImage $fileNameInputEyeTracking $fileNameInputTouch $fileNameSettings $visitID";
+	
+	exec("java -jar WebsocketServer" . DIRECTORY_SEPARATOR . "dist\WebSocketServer.jar $parameters", $array);
+	
+	print_r($array);
 }
-
-
-
-
-
-
-
-
 
 
 

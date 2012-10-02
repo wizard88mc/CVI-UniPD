@@ -46,15 +46,19 @@ public class TimeSyncCalculator {
                 
                 double a12Lower = (double)(startTime - firstStartTime - 
                     (RTT)) 
+                     //(endTime - startTime))
                     / (double)(middleTime - 0);
                 double a12Upper = (double)(startTime - firstStartTime + 
-                    (RTT)) / (double)(middleTime - 0);
+                    (RTT)) 
+                    //(endTime - startTime))
+                    / (double)(middleTime - 0);
             
                 /*System.out.println("A12 lower: " + a12Lower);
                 System.out.println("A12 upper: " + a12Upper);*/
 
                 double b12Lower = firstStartTime - 0 * a12Upper;
                 double b12Upper = firstStartTime + (RTT) - 
+                       // (endTime - startTime) -
                         0 * a12Lower;
 
                 /*System.out.println("B12 Lower: " + b12Lower);
@@ -80,7 +84,9 @@ public class TimeSyncCalculator {
                 finalb12 = (maxValueB12 + minValueB12) / 2;
 
                 double deltaA12 = 2 * (double)(RTT) / (double)(middleTime - 0);
+                //double deltaA12 = 2 * (double)(endTime - startTime) / (double)(middleTime - 0);
                 double deltaB12 = (RTT) + 0 * deltaA12;
+                //double deltaB12 = (endTime - startTime) + 0 * deltaA12;
 
                 /*System.out.println("Valore a12: " + finala12);
                 System.out.println("Valore b12: " + finalb12);*/

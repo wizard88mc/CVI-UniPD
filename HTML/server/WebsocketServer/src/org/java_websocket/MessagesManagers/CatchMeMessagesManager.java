@@ -195,6 +195,6 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
         }
         CatchMePerformanceAnalyzer.dbManager = BaseManager.dbManager;
         new CatchMePerformanceAnalyzer(fileImage, fileEyeTracking, fileTouch, 
-                fileSpecs, MAX_DIFFERENCE, visitID).start();
+                fileSpecs, visitID).start();
     }
 }

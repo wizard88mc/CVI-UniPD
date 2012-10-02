@@ -6,6 +6,9 @@
 
 var port = 8001;
 var identificationType = "GAME_CLIENT";
+var gameIdentification = "CATCH_ME";
+var patientID = "";
+var stringForOfflineFile = "";
 
 function presentationComplete() {
 	
@@ -134,22 +137,22 @@ defineGame: function(settings) {
 	gameManager = new GameManager();
 	gameSettings = new GameSettings();
 	
-	gameSettings.rightMovement = settings.rightMovement;
-	gameSettings.downMovement = settings.downMovement;
-	gameSettings.upMovement = settings.upMovement;
-	gameSettings.leftMovement = settings.leftMovement;
-	gameSettings.startFromCenter = settings.startFromCenter;
-	gameSettings.mixMovements = settings.mixMovements;
-	gameSettings.backgroundColor = settings.backgroundColor;
-	gameSettings.foregroundColor = settings.foregroundColor;
-	gameSettings.speed = Number(settings.speed);
-	gameSettings.changeImageColor = settings.changeImageColor;
-	gameSettings.percentualImageWidth = Number(settings.percentualImageWidth);
+	gameSettings.rightMovement = settings.rightMovement || settings.RIGHT_MOV;
+	gameSettings.downMovement = settings.downMovement || settings.DOWN_MOV;
+	gameSettings.upMovement = settings.upMovement || settings.DOWN_MOV;
+	gameSettings.leftMovement = settings.leftMovement || settings.LEFT_MOV;
+	gameSettings.startFromCenter = Boolean(settings.startFromCenter || settings.START_CENTER);
+	gameSettings.mixMovements = Boolean(settings.mixMovements || settings.MIX_MOVEMENTS);
+	gameSettings.backgroundColor = settings.backgroundColor || settings.BACK_COLOR;
+	gameSettings.foregroundColor = settings.foregroundColor || settings.IMG_COLOR;
+	gameSettings.speed = Number(settings.speed || settings.SPEED);
+	gameSettings.changeImageColor = Boolean(settings.changeImageColor || settings.CHANGE_IMG_COLOR);
+	gameSettings.percentualImageWidth = Number(settings.percentualImageWidth || settings.IMG_WIDTH);
 	
-	var dimensions = (settings.canvasDimensions).split("x");
+	var dimensions = (settings.canvasDimensions || settings.CANVAS_DIMENSIONS).split("x");
 	canvasSettings.width = Number(dimensions[0]);
 	canvasSettings.height = Number(dimensions[1]);
-	canvasSettings.fileName = settings.imageFileName;
+	canvasSettings.fileName = settings.imageFileName || settings.IMG_SPECS.IMG_FILE;
 	
 	$('<div id="divSounds"></div>').appendTo('body');
 	insertSound('soundOnImage', 'good_image');
@@ -181,7 +184,7 @@ timingFunction: function() {
 	
 	var timeNow = new Date().getTime();
 	var position = $('#image').position();
-	canvasSettings.actual = new Point(position.top, position.left);
+	canvasSettings.actual = new Point(Math.round(position.top), Math.round(position.left));
 		
 	var packet = {
 		"TYPE": "GAME_DATA",
@@ -453,7 +456,7 @@ defineSingleAnimation: function() {
 	var startPoint = null, endPoint = null;
 							
 	if (gameSettings.startFromCenter) {
-		startPoint = new Point(center.top, center.left);
+		startPoint = new Point(centerImage.top, centerImage.left);
 	}
 	if (gameSettings.upMovement) {
 		
@@ -998,6 +1001,7 @@ animationEndGame: function() {
 
 $('document').ready(function(e) {
 	
+	
 	openWebSocket(port);
 });
 
@@ -1005,7 +1009,6 @@ $('document').ready(function(e) {
 function manageOnCloseWebsocket(e) {
     console.log("Websocket works offline");
 
-    //TODO: da rimuovere a regime
     window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
 
     window.webkitStorageInfo.requestQuota(window.PERSISTENT, 10*1024*1024, function(grantedBytes) {
@@ -1020,7 +1023,35 @@ function manageOnCloseWebsocket(e) {
 }
 
 function localFileSystemInitializationComplete() {
-    OfflineNamespace.initFolderForGame();
+	
+	if (getFromSessionStorage("permission") == "PATIENT") {
+		
+		if (getFromSessionStorage("patientID")) {
+			patientID = getFromSessionStorage("patientID");
+		}
+		else {
+			patientID = "1";
+		}
+		
+		$.ajax({
+			url:'../server/GetGameSettingsCatchMe.php',
+			data: {
+				patientID : patientID,
+				onlySettings: true
+			},
+			cache: false,
+			type: 'POST',
+			dataType: 'json',
+			success: function(message) {
+				
+				CatchMeNamespace.defineGame(message);
+				gameManager.sensibility = 1000 / 10;
+				OfflineNamespace.initFolderForGame();
+			}
+			
+		});
+	}
+    
 }
 
 function folderForOfflineSavingCreated() {
@@ -1033,9 +1064,25 @@ function folderForOfflineSavingCreated() {
             offlineObjectManager.fileWriterPackets = fileWriter;
 
             websocket.send = manageWriteOffline;
+            
+            var firstPacket = {
+            	"GAME": gameIdentification,
+            	"PATIENT_ID": patientID
+            };
+            
+            websocket.send(JSON.stringify(firstPacket));
+            
+            var secondPacket = {
+        		"TYPE": "READY_TO_PLAY", 
+        		IMAGE_WIDTH: gameSettings.effectiveImageWidth,
+        		IMAGE_HEIGHT: gameSettings.effectiveImageHeight,
+        		SCREEN_WIDTH: getScreenWidth(),
+        		SCREEN_HEIGHT: getScreenHeight()
+        	};
 
-            presentationComplete();
-            gameManager.timeToStart = new Date().getTime();
+            websocket.send(JSON.stringify(secondPacket));
+            
+            gameManager.timeToStart = new Date().getTime() + 5000;
             CatchMeNamespace.startGame();
 
         }, function(error) {
@@ -1050,13 +1097,21 @@ function folderForOfflineSavingCreated() {
 
 function manageWriteOffline(data) {
 
-	if (offlineObjectManager.fileWriterPackets.length > 0) {
-		console.log("Moving filewriter")
-    	offlineObjectManager.fileWriterPackets.seek(offlineObjectManager.fileWriterPackets.length);
-	}
-    var bb = new Blob([data + "\n"], {type: 'text/plain'});
+	// if pacchetto.type == "STOP_GAME" finito gioco
+	
+	stringForOfflineFile = stringForOfflineFile + data + "\n";
+	
+	if ((JSON.parse(data)).TYPE == "STOP_GAME") {
+		
+		var bb = new Blob([stringForOfflineFile + '\n'], {type: 'text/plain'});
 
-    //offlineObjectManager.fileWriterPackets.write(bb);
+	    try {
+	    	offlineObjectManager.fileWriterPackets.write(bb);
+	    }
+	    catch(error) {
+	    	offlineObjectManager.fileWriterPackets.write(bb);
+	    }
+	}
 
 }
 

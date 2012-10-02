@@ -23,6 +23,7 @@ function Cestino() {
 		background: 'url(images/bin.png)',
 		'background-size': '100% 100%',
 		'background-repeat': 'no-repeat',
-		'z-index': '100'
+		'z-index': '100',
+		display: 'none'
 	});
 }

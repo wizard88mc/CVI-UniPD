@@ -8,7 +8,7 @@ $querySelect = "SELECT v.ID, DATE_FORMAT(v.Date, '%d/%m/%Y') AS Date, c.TouchEva
 				FROM Visits v JOIN CatchMeEvaluation c
 				ON v.ID = c.IDVisit
 				WHERE v.IDPatient = $patientID
-				ORDER BY v.Date DESC";
+				ORDER BY v.Date DESC, v.ID DESC";
 					
 $resultQuery = mysqli_query($connection, $querySelect) or die("Error in query: " . mysqli_error($connection));
 

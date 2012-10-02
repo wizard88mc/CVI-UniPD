@@ -24,7 +24,6 @@ public class CatchMePerformanceAnalyzer extends Thread {
     protected ArrayList<SimplePacket> packetsEyeTracker = new ArrayList<SimplePacket>();
     protected int imageWidth;
     protected int imageHeight;
-    protected long maxDifference = 0;
     protected double pointCenter = 1, pointInside = 0.5, pointNear = 0.25 ;
     protected int visitID = 0;
     public static DatabaseManager dbManager = null;
@@ -40,10 +39,10 @@ public class CatchMePerformanceAnalyzer extends Thread {
     }
     
     public CatchMePerformanceAnalyzer(String fileImage, String fileEyeTracker,
-            String fileTouch, String fileGameSpecs, long maxDifference, int visitID) {
+            String fileTouch, String fileGameSpecs, int visitID) {
         this.fileImage = fileImage; this.fileEyeTracker = fileEyeTracker;
         this.fileTouch = fileTouch; this.fileGameSpecs = fileGameSpecs;
-        this.maxDifference = maxDifference; this.visitID = visitID;
+        this.visitID = visitID;
         
     }
     
@@ -86,6 +85,7 @@ public class CatchMePerformanceAnalyzer extends Thread {
                         Long.parseLong(infoTouch[1]),
                         Long.parseLong(infoTouch[2])));
             }
+            System.out.println("Punto 1");
             
             while ((line = readerFileEyeTracker.readLine()) != null) {
                 
@@ -97,6 +97,7 @@ public class CatchMePerformanceAnalyzer extends Thread {
                         Long.parseLong(infoEye[1]), 
                         Long.parseLong(infoEye[2])));
             }
+            System.out.println("Punto 2");
             
             // Ho tutti i pacchetti pronti, devo lavorare a coppie
             int totalPackets = Math.min(packetsEyeTracker.size(), packetsImage.size());
@@ -111,109 +112,74 @@ public class CatchMePerformanceAnalyzer extends Thread {
                 SimplePacket packetTouch = packetsTouch.get(0);
                 SimplePacket packetEye = packetsEyeTracker.get(0);
                 
-                if (Math.abs(packetTouch.time - packetEye.time) < maxDifference) {
+                
                     
-                    long startTop = packetImage.posTop + imageHeight / 4;
-                    long startLeft = packetImage.posLeft + imageWidth / 4;
-                    
-                    boolean isTouchCenter = checkIfInside(startTop, startLeft, imageWidth / 2, 
-                            imageHeight / 2, packetTouch.posTop, packetTouch.posLeft);
-                    boolean isEyeCenter = checkIfInside(startTop, startLeft, 
-                            imageWidth / 2, imageHeight / 2, 
-                            packetEye.posTop, packetEye.posLeft);
-                    if (isTouchCenter) {
-                        scoreTouch += pointCenter;
-                    }
-                    if (isEyeCenter) {
-                        scoreEye += pointCenter;
-                    }
-                    
-                    if (!isTouchCenter || !isEyeCenter) {
-                        
-                        if (!isTouchCenter) {
-                            boolean isTouchInside = checkIfInside(packetImage.posTop, packetImage.posLeft, 
-                                    imageWidth, imageHeight, packetTouch.posTop, packetTouch.posLeft);
-                            
-                            if (isTouchInside) {
-                                scoreTouch += pointInside;
-                            }
-                            else {
-                                if (checkIfInside(packetImage.posTop - imageHeight / 4, packetImage.posLeft - imageWidth / 4, 
-                                        imageWidth + imageWidth / 2, imageHeight + imageHeight / 2, 
-                                        packetTouch.posTop, packetTouch.posLeft)) {
-                                    scoreTouch += pointNear;
-                                }
-                            }
-                        }
-                        
-                        if (!isEyeCenter) {
-                            boolean isEyeInside = checkIfInside(packetImage.posTop, packetImage.posLeft, 
-                                    imageWidth, imageHeight, packetEye.posTop, packetEye.posLeft);
-                            
-                            if (isEyeInside) {
-                                scoreEye += pointInside;
-                            }
-                            else {
-                                if (checkIfInside(packetImage.posTop - imageHeight / 4, packetImage.posLeft - imageWidth / 4, 
-                                        imageWidth + imageWidth / 2, imageHeight + imageHeight / 2, 
-                                        packetEye.posTop, packetEye.posLeft)) {
-                                    scoreEye += pointNear;
-                                }
-                            }
-                        }
-                    }
-                    
-                    totalPacketsEye++; totalPacketsTouch++;
-                    packetsEyeTracker.remove(0); packetsImage.remove(0);
-                    packetsTouch.remove(0);
+                long startTop = packetImage.posTop + imageHeight / 4;
+                long startLeft = packetImage.posLeft + imageWidth / 4;
+
+                boolean isTouchCenter = checkIfInside(startTop, startLeft, imageWidth / 2, 
+                        imageHeight / 2, packetTouch.posTop, packetTouch.posLeft);
+                boolean isEyeCenter = checkIfInside(startTop, startLeft, 
+                        imageWidth / 2, imageHeight / 2, 
+                        packetEye.posTop, packetEye.posLeft);
+                if (isTouchCenter) {
+                    scoreTouch += pointCenter;
                 }
-                else {
-                    if (packetTouch.time < packetEye.time) {
-                        // uso solo pacchetto relativo a tocco
-                        if (checkIfInside(packetImage.posTop + imageHeight / 2, packetImage.posLeft + imageWidth / 2, imageWidth / 2, 
-                            imageHeight / 2, packetTouch.posTop, packetTouch.posLeft)) {
-                            
-                            scoreTouch += pointCenter;
+                if (isEyeCenter) {
+                    scoreEye += pointCenter;
+                }
+
+                if (!isTouchCenter || !isEyeCenter) {
+
+                    if (!isTouchCenter) {
+                        boolean isTouchInside = checkIfInside(packetImage.posTop, packetImage.posLeft, 
+                                imageWidth, imageHeight, packetTouch.posTop, packetTouch.posLeft);
+
+                        if (isTouchInside) {
+                            scoreTouch += pointInside;
                         }
                         else {
-                            
-                            if (checkIfInside(packetImage.posTop, packetImage.posLeft, 
-                                    imageWidth, imageHeight, packetTouch.posTop, packetTouch.posLeft)) {
-                                
-                                scoreTouch += pointInside;
-                            }
-                            else if (checkIfInside(packetImage.posTop - imageHeight / 4, packetImage.posLeft - imageWidth / 4, 
-                                        imageWidth + imageWidth / 2, imageHeight + imageHeight / 2, 
-                                        packetTouch.posTop, packetTouch.posLeft)) {
-                                
+                            if (checkIfInside(packetImage.posTop - imageHeight / 4, packetImage.posLeft - imageWidth / 4, 
+                                    imageWidth + imageWidth / 2, imageHeight + imageHeight / 2, 
+                                    packetTouch.posTop, packetTouch.posLeft)) {
                                 scoreTouch += pointNear;
                             }
                         }
-                        
-                        totalPacketsTouch++;
-                        packetsImage.remove(0);
-                        packetsTouch.remove(0);
                     }
-                    else {
-                        // non posso dare alcuna valutazione, ho solo la vista 
-                        // che però non può essere valutata
-                        
-                        packetsEyeTracker.remove(0);
+
+                    if (!isEyeCenter) {
+                        boolean isEyeInside = checkIfInside(packetImage.posTop, packetImage.posLeft, 
+                                imageWidth, imageHeight, packetEye.posTop, packetEye.posLeft);
+
+                        if (isEyeInside) {
+                            scoreEye += pointInside;
+                        }
+                        else {
+                            if (checkIfInside(packetImage.posTop - imageHeight / 4, packetImage.posLeft - imageWidth / 4, 
+                                    imageWidth + imageWidth / 2, imageHeight + imageHeight / 2, 
+                                    packetEye.posTop, packetEye.posLeft)) {
+                                scoreEye += pointNear;
+                            }
+                        }
                     }
                 }
+
+                totalPacketsEye++; totalPacketsTouch++;
+                packetsEyeTracker.remove(0); packetsImage.remove(0);
+                packetsTouch.remove(0);
             }
             
             DecimalFormat twoDigits = new DecimalFormat();
             twoDigits.setMaximumFractionDigits(2);
-            
+
             scoreTouch = (scoreTouch / totalPacketsTouch) * 100;
             scoreEye = (scoreEye / totalPacketsEye) * 100;
-            
+
             scoreTouch = Double.parseDouble(twoDigits.format(scoreTouch).replace(",", "."));
             scoreEye = Double.parseDouble(twoDigits.format(scoreEye).replace(",", "."));
             System.out.println("Score touch: " + scoreTouch);
             System.out.println("Score eye: " + scoreEye);
-            
+
             dbManager.insertResultsCatchMeGame(visitID, scoreTouch, scoreEye);
         }
         catch(FileNotFoundException exc) {
@@ -222,6 +188,9 @@ public class CatchMePerformanceAnalyzer extends Thread {
         }
         catch(IOException exc) {
             System.out.println("IOException in CatchMePerformanceAnalyzer");
+            System.out.println(exc.toString());
+        }
+        catch(Exception exc) {
             System.out.println(exc.toString());
         }
         
@@ -242,28 +211,34 @@ public class CatchMePerformanceAnalyzer extends Thread {
     public static void main(String args[]) {
         
         String directory = System.getProperty("user.dir");
+        System.out.println(directory);
         String separator = File.separator;
         
         String fileImage = directory//.concat(separator).concat("WebsocketServer")
-                .concat(separator).concat("archivio_visite").concat(separator)
+                .concat(separator)/*.concat("archivio_visite").concat(separator)
                 .concat("1").concat(separator).concat("2012-8-28-11-2-99")
-                .concat(separator).concat("InputImage.txt");
+                .concat(separator).concat("InputImage.txt");*/
+                .concat(args[0]);
         
         String fileEye = directory//.concat(separator).concat("WebsocketServer")
-                .concat(separator).concat("archivio_visite").concat(separator)
-                .concat("1").concat(separator).concat("2012-8-28-11-2-99")
-                .concat(separator).concat("InputEyeTracking.txt");
+                .concat(separator)/*.concat("archivio_visite").concat(separator)
+                .concat("1").concat(separator).concat("2012-8-28-11-2-99")*/
+                .concat(args[1]);
         
         String fileTouch = directory//.concat(separator).concat("WebsocketServer")
-                .concat(separator).concat("archivio_visite").concat(separator)
-                .concat("1").concat(separator).concat("2012-8-28-11-2-99")
-                .concat(separator).concat("InputTouch.txt");
+                .concat(separator)/*.concat("archivio_visite").concat(separator)
+                .concat("1").concat(separator).concat("2012-8-28-11-2-99")*/
+                .concat(args[2]);
         
         String fileSpecs = directory//.concat(separator).concat("WebsocketServer")
-                .concat(separator).concat("archivio_visite").concat(separator)
-                .concat("1").concat(separator).concat("2012-8-28-11-2-99")
-                .concat(separator).concat("GameSpecs.ini");
+                .concat(separator)/*.concat("archivio_visite").concat(separator)
+                .concat("1").concat(separator).concat("2012-8-28-11-2-99")**/
+                .concat(args[3]);
         
-        //new CatchMePerformanceAnalyzer(fileImage, fileEye, fileTouch, fileSpecs, new Long(250)).start();
+        int visitID = new Integer(args[4]);
+        
+        CatchMePerformanceAnalyzer.dbManager = new DatabaseManager();
+        
+        new CatchMePerformanceAnalyzer(fileImage, fileEye, fileTouch, fileSpecs, visitID).start();
     }
 }

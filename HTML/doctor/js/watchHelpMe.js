@@ -328,10 +328,10 @@ var HelpMeNamespace = {
 		context = canvasObject.getContext('2d');
 		context.lineWidth = 3;
 		
-		drawingSettings.mirinoEye = $('<img class="mirino" src="images/eye.png" />').appendTo('#screenPreview')
+		drawingSettings.mirinoEye = $('<img class="mirino" src="images/eye-new.png" />').appendTo('#screenPreview')
 		.css({
-			width: Math.floor(getScreenWidth() * 0.015),
-			height: Math.floor(getScreenWidth() * 0.015)
+			width: Math.floor(getScreenWidth() * 0.05),
+			height: Math.floor(getScreenWidth() * 0.05)
 		});
 	},
 	
