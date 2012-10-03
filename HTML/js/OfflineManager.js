@@ -186,6 +186,8 @@ var OfflineNamespace = {
 		
 		directoryEntry.getFile('packets.txt', {}, function(fileEntry) {
 			
+			console.log(fileEntry);
+			
 			fileEntry.file(function(filePackets) {
 				
 				var readerPackets = new FileReader();
@@ -194,7 +196,7 @@ var OfflineNamespace = {
 					
 					var packets = JSON.stringify(this.result);
 					
-					console.log(packets);
+					//console.log(packets);
 					
 					$.ajax({
 						url: 'server/OfflinePackets.php',

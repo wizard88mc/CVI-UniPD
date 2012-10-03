@@ -16,64 +16,17 @@ Remove this if you use the .htaccess -->
 
 <script>
 
-window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+$.ajax({
+	url:'server/GetGameSettingsCatchMe.php',
+	data: {
+		patientID: "1"
+	},
+	type: "POST",
+	success: function(message) {
+		console.log(message);
+	}
+})
 
-window.webkitStorageInfo.requestQuota(window.PERSISTENT, 5*1024*1024, function(grantedBytes) {
-	
-	window.requestFileSystem(window.PERSISTENT, grantedBytes, onInitFs); 
-}, function(e) {
-	console.log(e)
-});
-
-function toArray(list) {
-  return Array.prototype.slice.call(list || [], 0);
-}
-
-function listResults(entries) {
-  // Document fragments can improve performance since they're only appended
-  // to the DOM once. Only one browser reflow occurs.
-  var fragment = document.createDocumentFragment();
-
-  entries.forEach(function(entry, i) {
-  	
-  	console.log(entry.name);
-  });
-}
-
-function onInitFs(fs) {
-
-	fs.root.getDirectory('offline_visits/1/', {}, function(directoryEntry) {
-	
-	var dirReader = directoryEntry.createReader();
-  var entries = [];
-
-  // Call the reader.readEntries() until no more results are returned.
-  var readEntries = function() {
-     dirReader.readEntries (function(results) {
-      if (!results.length) {
-        listResults(entries.sort());
-      } else {
-        entries = entries.concat(toArray(results));
-        readEntries();
-      }
-    });
-  };
-
-  readEntries(); // Start reading dirs.	
-	})
-  
-
-}
-
-/*function onInitFs(fs) {
-	
-	fs.root.getDirectory('offline_visits', {create: true}, function(dirEntry) {
-		
-		console.log(dirEntry);
-	}, function(error) {
-		console.log(error);
-	});
-}*/
 </script>
 
 </head>

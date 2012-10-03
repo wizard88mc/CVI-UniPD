@@ -263,7 +263,7 @@ initializePage: function() {
 	var divChooseOldPatient = $('<div id="divChooseOldPatient"></div>');
 	divChooseOldPatient.addClass('ui-corner-all');
 	divChooseOldPatient.appendTo('#divMainContent');
-	$('<h3>Seleziona un paziente tra quelli già presenti</h3>').addClass('ui-widget-header').appendTo(divChooseOldPatient);
+	$('<h3>Seleziona un bambino tra quelli già presenti</h3>').addClass('ui-widget-header').appendTo(divChooseOldPatient);
 	$('<select id="selectPatient"></select>').appendTo(divChooseOldPatient);
 	NewVisitNamespace.getListOfPatients();
 	
@@ -360,7 +360,7 @@ initializePage: function() {
 												
 							$(optionToAdd).appendTo('#selectPatient');
 							
-							$('<div id="dialogInsertOk" title="Inserimento Avvenuto"><p>Operazione completata</p><p>Il nuovo paziente è già selezionato nell\'elenco a sinistra.</p></div>')
+							$('<div id="dialogInsertOk" title="Inserimento Avvenuto"><p>Operazione completata</p><p>Il nuovo bambino è già selezionato nell\'elenco a sinistra.</p></div>')
 								.appendTo('#divNewPatient');
 							var width = getScreenHeight() * 0.6;
 							$('#dialogInsertOk').dialog({

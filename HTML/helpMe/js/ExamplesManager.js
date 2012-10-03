@@ -117,11 +117,11 @@ this.loadImage = function() {
 
         if (exampleManager.currentExample.soundBefore != null) {
             var soundBefore = $('<audio id="soundBefore"></audio>').appendTo('#divSounds');
-            $('<source src="sounds/' + exampleManager.currentExample.soundBefore + '"/>').appendTo(soundBefore);
+            utilsNamespace.addSoundSource(soundBefore, exampleManager.currentExample.soundBefore);
         }
         if (exampleManager.currentExample.soundAfter != null) {
             var soundAfter = $('<audio id="soundAfter"></audio>').appendTo('#divSounds');
-            $('<source src="sounds/' + exampleManager.currentExample.soundAfter + '" />').appendTo(soundAfter);
+            utilsNamespace.addSoundSource(soundAfter, exampleManager.currentExample.soundAfter);
         }
 
         setTimeout(function() {

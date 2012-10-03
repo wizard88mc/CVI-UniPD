@@ -151,11 +151,11 @@ function secondStepPage() {
 						.css('margin', 'auto')
 						.css('padding-bottom', '2.0em');
 						
-	var buttonManagePatients = $('<button id="managePatients">Gestione Pazienti</button>').button();
+	var buttonManagePatients = $('<button id="managePatients">Gestione Bambini</button>').button();
 	buttonManagePatients.click(managePatients);
 	var buttonDoctorClient = $('<button id="doctorClient">Schermo Dottore</button>').button();
 	buttonDoctorClient.click(doctorClient);
-	var buttonPatientClient = $('<button id="patientClient">Schermo paziente</button>').button();
+	var buttonPatientClient = $('<button id="patientClient">Schermo Bambino</button>').button();
 	buttonPatientClient.click(patientClient);
 	
 	buttonManagePatients.appendTo(divSceltaOperazione);

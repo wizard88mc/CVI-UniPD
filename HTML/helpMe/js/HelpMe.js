@@ -326,9 +326,9 @@ function gameIsEnded() {
 }
 
 function manageOnCloseWebsocket(e) {
+
     console.log("Websocket works offline");
 
-    //TODO: da rimuovere a regime
     window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
 
     window.webkitStorageInfo.requestQuota(window.PERSISTENT, 10*1024*1024, function(grantedBytes) {
@@ -343,7 +343,19 @@ function manageOnCloseWebsocket(e) {
 }
 
 function localFileSystemInitializationComplete() {
-    OfflineNamespace.initFolderForGame();
+
+if (getFromSessionStorage("permission") == "PATIENT") {
+		
+		if (getFromSessionStorage("patientID")) {
+			patientID = getFromSessionStorage("patientID");
+		}
+		else {
+			patientID = "1";
+		}
+		
+		// richiesta delle impostazioni di gioco
+		// anche per la presentazione???
+	}
 }
 
 function folderForOfflineSavingCreated() {

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listOfImages>
+<image id="1" imageName="Bugs Bunny intero" fileName="bugs_bunny.png" dimensions="448x785" />
+<image id="2" imageName="Bugs Bunny 2" fileName="bugs_bunny_target.png" dimensions="300x400" />
+<image id="3" imageName="Faccia Paperino" fileName="paperino.png" dimensions="193x201" />
+<image id="4" imageName="Pluto lingua" fileName="pluto_lingua.png" dimensions="191x235" />
+</listOfImages>

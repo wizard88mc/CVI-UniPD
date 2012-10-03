@@ -167,7 +167,8 @@ istantiateLevel: function(level) {
     // ho immagini a disposizione, costruisco livello definendo array
 
     var audio = $('<audio id="audioLevel"></audio>').appendTo('#divSounds');
-    $('<source src="sounds/' + level.sound + '" />').appendTo(audio);
+    utilsNamespace.addSoundSource(audio, level.sound);
+    
     gameManager.maxTimeObjectOnScreen = Number(level.maxTimeImage) * 1000;
 
 },
@@ -179,6 +180,11 @@ istantiateLevel: function(level) {
         imageObjectOnScreen.element.remove();
         
         gameManager.packetWithResults.FIRST_RESPONSE_TIME = 0;
+    },
+    
+    addSoundSource: function(element, sourceFileName) {
+    	$('<source src="sounds/' + sourceFileName + '.mp3" />').appendTo(element);
+    	$('<source src="sounds/' + sourceFileName + '.ogg" />').appendTo(element);
     }
 
 };

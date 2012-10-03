@@ -302,6 +302,15 @@ setGameSettings: function(data) {
 		gameSettings.downMovement = true;
 		$('#divNoMovements').hide();
 	}
+	if (data.START_CENTER == "1") {
+		$('#startFromCenter').attr('checked', 'checked');
+		gameSettings.startFromCenter = true;
+	}
+	if (data.MIX_MOVEMENTS == "1") {
+		$('#mixMovements').attr('checked', 'checked');
+		gameSettings.mixMovements = true;
+	}
+	
 	
 	var divSpeed = $('<div id="divSpeed"></div>');
 	divSpeed.addClass('ui-widget-content ui-corner-all');

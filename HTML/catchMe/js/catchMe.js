@@ -9,6 +9,8 @@ var identificationType = "GAME_CLIENT";
 var gameIdentification = "CATCH_ME";
 var patientID = "";
 var stringForOfflineFile = "";
+var packetsIntoOfflineString = 0;
+var timerWriter = null;
 
 function presentationComplete() {
 	
@@ -996,7 +998,7 @@ animationEndMovement: function() {
  */
 animationEndGame: function() {
 	console.log("Animazione fine gioco + ritorno stato iniziale");
-	location.replace('../patient/index.html');
+	//location.replace('../patient/index.html');
 }}
 
 $('document').ready(function(e) {
@@ -1045,7 +1047,6 @@ function localFileSystemInitializationComplete() {
 			success: function(message) {
 				
 				CatchMeNamespace.defineGame(message);
-				gameManager.sensibility = 1000 / 10;
 				OfflineNamespace.initFolderForGame();
 			}
 			
@@ -1100,15 +1101,29 @@ function manageWriteOffline(data) {
 	// if pacchetto.type == "STOP_GAME" finito gioco
 	
 	stringForOfflineFile = stringForOfflineFile + data + "\n";
+	packetsIntoOfflineString++;
+	
+	if (packetsIntoOfflineString > 50) {
+		var bb = new Blob([stringForOfflineFile], {type: 'text/plain'});
+		
+		packetsIntoOfflineString = 0;
+		stringForOfflineFile = "";
+		
+		offlineObjectManager.fileWriterPackets.seek(offlineObjectManager.fileWriterPackets.length);
+		
+		offlineObjectManager.fileWriterPackets.write(bb);
+	}
 	
 	if ((JSON.parse(data)).TYPE == "STOP_GAME") {
 		
-		var bb = new Blob([stringForOfflineFile + '\n'], {type: 'text/plain'});
+		var bb = new Blob([stringForOfflineFile], {type: 'text/plain'});
 
 	    try {
+	    	offlineObjectManager.fileWriterPackets.seek(offlineObjectManager.fileWriterPackets.length);
 	    	offlineObjectManager.fileWriterPackets.write(bb);
 	    }
 	    catch(error) {
+	    	offlineObjectManager.fileWriterPackets.seek(offlineObjectManager.fileWriterPackets.length);
 	    	offlineObjectManager.fileWriterPackets.write(bb);
 	    }
 	}
