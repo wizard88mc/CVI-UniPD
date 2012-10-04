@@ -14,12 +14,31 @@ function Sacco() {
         position: 'absolute',
         top: this.drawingPosition.top,
         left: this.drawingPosition.left,
-        'background-color': '#800000',
-        'z-index': 100
+        //'background-color': '#800000',
+        'background-image': 'url(images/sacco_completo.png)',
+        'background-size': '100% 100%',
+        'z-index': 1
     });
+    
+    this.secondElement = $('<div id="divSaccoMezzo"></div>');
+    this.secondElement.css({
+    	width: this.width + 'px',
+        height: this.height + 'px',
+        position: 'absolute',
+        top: this.drawingPosition.top,
+        left: this.drawingPosition.left,
+        //'background-color': '#800000',
+        'background-image': 'url(images/sacco_mezzo.png)',
+        'background-size': '100% 100%',
+        'z-index': 100
+    })
     
     this.reset = function() {
     	this.element.css({
+    		top: this.drawingPosition.top
+    	});
+    	
+    	this.secondElement.css({
     		top: this.drawingPosition.top
     	});
     }

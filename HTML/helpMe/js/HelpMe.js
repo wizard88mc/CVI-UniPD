@@ -117,8 +117,9 @@ function initGame() {
 	});
 
     sacco = new Sacco();
-    sacco.element.appendTo('#divMainContent');
-    sacco.element.addClass('saccoTransition');
+    sacco.element.appendTo('#divMainContent').addClass('saccoTransition');
+    
+    sacco.secondElement.appendTo('#divMainContent').addClass('saccoTransition');
 
     cestino = new Cestino();
     cestino.element.appendTo('#divMainContent');
@@ -421,7 +422,7 @@ function manageWriteOffline(data) {
 		
 		offlineObjectManager.fileWriterPackets.seek(offlineObjectManager.fileWriterPackets.length);
 
-	    var bb = new Blob([stringForOfflineGameloca], {type: 'text/plain'});
+	    var bb = new Blob([stringForOfflineGame], {type: 'text/plain'});
 
 	    offlineObjectManager.fileWriterPackets.write(bb);
 	    
