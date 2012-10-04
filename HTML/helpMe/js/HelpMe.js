@@ -12,7 +12,9 @@ var presentationManager = null;
 var port = 8001;
 var gameIdentification = "HELP_ME";
 var identificationType = 'GAME_CLIENT';
-var patientID = '1';
+var patientID = "1";
+var playingWithoutWebSocket = false;
+var stringForOfflineGame = "";
 var gameID = -1;
 
 function presentationComplete() {
@@ -92,11 +94,18 @@ function allExamplesCompleted() {
     $('#divSounds #soundAfter').remove();
     $('#imgArrow').remove();
     
-    var packetToSend = {
-    	'TYPE': 'PRESENTATION_COMPLETE'
-    };
     
-    websocket.send(JSON.stringify(packetToSend));
+    if (!playingWithoutWebSocket) {
+	    var packetToSend = {
+	    	'TYPE': 'PRESENTATION_COMPLETE'
+	    };
+	    
+	    websocket.send(JSON.stringify(packetToSend));
+    }
+    else {
+    	OfflineNamespace.initFolderForGame();
+    }
+    
 }
 
 function initGame() {
@@ -328,6 +337,7 @@ function gameIsEnded() {
 function manageOnCloseWebsocket(e) {
 
     console.log("Websocket works offline");
+    playingWithoutWebSocket = true;
 
     window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
 
@@ -344,7 +354,7 @@ function manageOnCloseWebsocket(e) {
 
 function localFileSystemInitializationComplete() {
 
-if (getFromSessionStorage("permission") == "PATIENT") {
+	if (getFromSessionStorage("permission") == "PATIENT") {
 		
 		if (getFromSessionStorage("patientID")) {
 			patientID = getFromSessionStorage("patientID");
@@ -354,7 +364,21 @@ if (getFromSessionStorage("permission") == "PATIENT") {
 		}
 		
 		// richiesta delle impostazioni di gioco
-		// anche per la presentazione???
+		
+		$.ajax({
+			url: '../server/GetLevelsHelpMe.php',
+			type: "POST",
+			data: {
+				patientID: patientID
+			},
+			success: function(data) {
+				livelliGioco = JSON.parse(data);
+				
+				presentationManager = new PresentationManager();
+				presentationManager.createElements();
+			}
+			
+		});
 	}
 }
 
@@ -367,10 +391,17 @@ function folderForOfflineSavingCreated() {
             offlineObjectManager.fileWriterPackets = fileWriter;
 
             websocket.send = manageWriteOffline;
+            
+            var firstPacket = {
+            	"GAME": gameIdentification,
+            	"PATIENT_ID": patientID
+            };
+                
+            websocket.send(JSON.stringify(firstPacket));
 
-            presentationComplete();
+           // presentationComplete();
             //utilsNamespace.retrieveLevels();
-            gameManager.timeToStart = new Date().getTime() + 1000;
+            gameManager.timeToStart = new Date().getTime() + 5000;
             allInfosRetrieved();
 
         }, function(error) {
@@ -381,13 +412,21 @@ function folderForOfflineSavingCreated() {
 }
 
 function manageWriteOffline(data) {
+	
+	stringForOfflineGame = stringForOfflineGame + data + "\n";
+	
+	var object = JSON.parse(data);
+	
+	if (object.SUBTYPE == "SESSION_RESULTS" || object.TYPE == "STOP_GAME"){
+		
+		offlineObjectManager.fileWriterPackets.seek(offlineObjectManager.fileWriterPackets.length);
 
-    offlineObjectManager.fileWriterPackets.seek(offlineObjectManager.fileWriterPackets.length);
+	    var bb = new Blob([stringForOfflineGameloca], {type: 'text/plain'});
 
-    var bb = new Blob([data + "\r\n"], {type: 'text/plain'});
-
-    offlineObjectManager.fileWriterPackets.write(bb);
-
+	    offlineObjectManager.fileWriterPackets.write(bb);
+	    
+	    stringForOfflineGame = "";
+	}
 }
 
 function readFile() {

@@ -20,9 +20,6 @@ function Cestino() {
 		position: 'absolute',
 		left: this.left + 'px',
 		top: this.top + 'px',
-		background: 'url(images/bin.png)',
-		'background-size': '100% 100%',
-		'background-repeat': 'no-repeat',
 		'z-index': '100',
 		display: 'none'
 	});

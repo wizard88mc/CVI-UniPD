@@ -1,7 +1,6 @@
 <?php
 require_once("DBParameters.php");
 
-$gameID = $_POST['gameID'];
 $patientID = $_POST['patientID'];
 
 $baseQuery = "SELECT FileLevels

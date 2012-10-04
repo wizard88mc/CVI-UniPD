@@ -1,4 +1,4 @@
-	offlineObjectManager = new Object();
+offlineObjectManager = new Object();
 offlineObjectManager.folderWhereWrite = null;
 offlineObjectManager.rootDirectoryEntry = null;
 offlineObjectManager.arrayOfflineVisits = new Array();
@@ -149,7 +149,7 @@ var OfflineNamespace = {
     	
     	for (index in offlineObjectManager.arrayOfflineVisits) {
     		
-    		var patientID = offlineObjectManager.arrayOfflineVisits[index].name;
+    		/*var patientID = offlineObjectManager.arrayOfflineVisits[index].name;
     		var subfolders = [];
     		var dirReader = offlineObjectManager.arrayOfflineVisits[index].createReader(); 
     		
@@ -170,11 +170,11 @@ var OfflineNamespace = {
 		    	});
 		  	};
 		
-			readEntries();
+			readEntries();*/
     		
-    		/*offlineObjectManager.arrayOfflineVisits[index].removeRecursively(function() {
+    		offlineObjectManager.arrayOfflineVisits[index].removeRecursively(function() {
     			console.log("Folder rimossa");
-    		});*/
+    		});
     	}
     }, 
     
@@ -186,7 +186,7 @@ var OfflineNamespace = {
 		
 		directoryEntry.getFile('packets.txt', {}, function(fileEntry) {
 			
-			console.log(fileEntry);
+			//console.log(fileEntry);
 			
 			fileEntry.file(function(filePackets) {
 				
@@ -196,7 +196,7 @@ var OfflineNamespace = {
 					
 					var packets = JSON.stringify(this.result);
 					
-					//console.log(packets);
+					console.log(packets);
 					
 					$.ajax({
 						url: 'server/OfflinePackets.php',

@@ -149,9 +149,7 @@ var frameAnimatorNamespace = {
                 TOUCH: [Math.round(gameManager.touchManagerObject.position.left), Math.round(gameManager.touchManagerObject.position.top)]
             };
 
-            if (websocket != null) {
-                websocket.send(JSON.stringify(packetPositions));
-            }
+            websocket.send(JSON.stringify(packetPositions));
 
             gameManager.lastTimeMessageSent = time;
         }
