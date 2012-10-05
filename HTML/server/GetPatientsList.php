@@ -5,7 +5,7 @@ $doctorID = $_POST['doctorID'];
 
 $querySelect = "SELECT ID, Name, Surname, DateOfBirth FROM Patients WHERE DoctorID = $doctorID ORDER BY Surname ASC, Name ASC";
 
-$resultQuery = mysqli_query($connection, $querySelect) or die(mysqli_error());
+$resultQuery = mysqli_query($connection, $querySelect) or die(mysqli_error($connection));
 
 $arrayPatients = array();
 

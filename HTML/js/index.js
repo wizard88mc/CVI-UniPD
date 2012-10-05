@@ -143,6 +143,8 @@ function secondStepPage() {
 		removeFromSessionStorage("logged");
 		removeFromSessionStorage("doctorName");
 		removeFromSessionStorage("doctorSurname");
+		removeFromSessionStorage("doctorID");
+		removeFromSessionStorage("permission")
 		location.replace('index.html');
 	})
 	

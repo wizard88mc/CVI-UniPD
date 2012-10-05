@@ -37,9 +37,8 @@ var touchManagerNamespace = {
             gameManager.packetWithResults.COMPLETION_TIME = new Date().getTime() - gameManager.startTimeObjectOnScreen;
         }
         
-        if (imageObjectOnScreen.center.top > cestino.top && 
-        		imageObjectOnScreen.center.top < cestino.top + cestino.height &&
-        		imageObjectOnScreen.center.left < cestino.width) {
+        if (imageObjectOnScreen.element.position().left + Math.round(imageObjectOnScreen.width / 4) <= 
+        	cestino.width ) {
         	
         	imageObjectOnScreen.moveInsideCestino = true;
         	gameManager.packetWithResults.COMPLETION_TIME = new Date().getTime() - gameManager.startTimeObjectOnScreen;

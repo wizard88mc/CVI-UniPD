@@ -35,8 +35,13 @@ function manageOfflineCatchMePackets($packets, $folderForFiles, $visitID, $conne
 			$leftCenterImage = $imagePosition[0] + $imageWidth / 2;
 			$topCenterImage = $imagePosition[1] + $imageHeight / 2;
 			
-			$distanceTouch = round(sqrt(pow($touchPosition[0] - $leftCenterImage, 2) +
-				pow($touchPosition[1] - $topCenterImage, 2)));
+			$distanceTouch = -1;
+			
+			if ($touchPosition[0] != -1 && $touchPosition[1] != -1) {
+			
+				$distanceTouch = round(sqrt(pow($touchPosition[0] - $leftCenterImage, 2) +
+					pow($touchPosition[1] - $topCenterImage, 2)));
+			}
 				
 			$stringDelta = "(" . $time . "," . $distanceTouch . ",-1,"
 				. $imagePosition[0] . "," . $imagePosition[1] . ","

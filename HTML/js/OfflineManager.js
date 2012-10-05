@@ -149,7 +149,7 @@ var OfflineNamespace = {
     	
     	for (index in offlineObjectManager.arrayOfflineVisits) {
     		
-    		/*var patientID = offlineObjectManager.arrayOfflineVisits[index].name;
+    		var patientID = offlineObjectManager.arrayOfflineVisits[index].name;
     		var subfolders = [];
     		var dirReader = offlineObjectManager.arrayOfflineVisits[index].createReader(); 
     		
@@ -170,11 +170,11 @@ var OfflineNamespace = {
 		    	});
 		  	};
 		
-			readEntries();*/
+			readEntries();
     		
-    		offlineObjectManager.arrayOfflineVisits[index].removeRecursively(function() {
+    		/*offlineObjectManager.arrayOfflineVisits[index].removeRecursively(function() {
     			console.log("Folder rimossa");
-    		});
+    		});*/
     	}
     }, 
     

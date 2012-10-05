@@ -375,8 +375,11 @@ function localFileSystemInitializationComplete() {
 			success: function(data) {
 				livelliGioco = JSON.parse(data);
 				
-				presentationManager = new PresentationManager();
-				presentationManager.createElements();
+				// x saltare presentazione
+				/*presentationManager = new PresentationManager();
+				presentationManager.createElements();*/
+				initGame();
+				allExamplesCompleted();
 			}
 			
 		});

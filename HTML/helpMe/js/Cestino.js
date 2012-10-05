@@ -3,17 +3,11 @@ function Cestino() {
 	
 	this.element = $('<div id="divCestino"></div>');
 	
-	if (getScreenWidth() > getScreenHeight()) {
-		this.height = getScreenHeight() * 0.5;
-		this.width = this.height;
-	}
-	else {
-		this.width = getScreenWidth() * 0.3;
-		this.height = this.width;
-	}
+	this.height = getScreenHeight();
+	this.width = Math.round(getScreenWidth() / 7);
 	
 	this.left = 0;
-	this.top = getScreenHeight() / 2 - this.height / 2;
+	this.top = 0;
 	this.element.css({
 		width: this.width + 'px',
 		height: this.height + 'px',
@@ -21,6 +15,5 @@ function Cestino() {
 		left: this.left + 'px',
 		top: this.top + 'px',
 		'z-index': '100',
-		display: 'none'
 	});
 }

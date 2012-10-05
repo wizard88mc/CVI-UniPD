@@ -178,13 +178,31 @@ var frameAnimatorNamespace = {
             }
         }
         else if (imageObjectOnScreen.moveInsideCestino) {
-        	imageObjectOnScreen.moveObjectIntoCestino(delta);
-        	
-        	if (imageObjectOnScreen.drawingPosition.left + imageObjectOnScreen.width < cestino.width / 2) {
         		
-        		window.cancelRequestAnimationFrame(gameManager.currentAnimationFrame);
-        		timeExpired(true);
-        	}
+    		window.cancelRequestAnimationFrame(gameManager.currentAnimationFrame);
+    		
+    		imageObjectOnScreen.element.one('transitionend webkitTransitionEnd oTransitionEnd', function() {
+    			
+    			timeExpired(true);
+    		})
+    		
+    		imageObjectOnScreen.element.css({
+        		'transition': 'all 2s linear',
+        		'-moz-transition': 'all 2s linear',
+        		'-webkit-transition': 'all 2s linear',
+        		'-o-transition': 'all 2s linear'
+        	});
+        	
+        	imageObjectOnScreen.element.css({
+        		width: '0px',
+        		height: '0px',
+        		left: '0px',
+        		top: imageObjectOnScreen.center.top,
+        		'-webkit-transform': 'rotate(720deg)',
+        		'-moz-transform': 'rotate(720deg)',
+        		'-o-transform': 'rotate(720deg)',
+        		'transform': 'rotate(720deg)'
+        	});
         }
     },
     

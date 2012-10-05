@@ -74,17 +74,17 @@ if ($fileDelta != 0) {
 		if (count($components) > 1) {
 		
 			$informations = array(
-				"DELTA_TOUCH" => str_replace($replace, "", $components[1]),
-				"DELTA_EYE" => str_replace($replace, "", $components[2]),
-				"IMG_LEFT" => str_replace($replace, "", $components[3]),
-				"IMG_RIGHT" => str_replace($replace, "", $components[4]),
-				"MOVEMENT" => str_replace($replace, "", $components[5]),
-				"IMAGE_POS" => array(str_replace($replace, "", $componentsImage[2]), 
-								str_replace($replace, "", $componentsImage[1])),
-				"TOUCH_POS" => array(str_replace($replace, "", $componentsTouch[2]),
-								str_replace($replace, "", $componentsTouch[1])),
-				"EYES_POS" => array(str_replace($replace, "", $componentsEyes[2]),
-								str_replace($replace, "", $componentsEyes[1]))
+				"DELTA_TOUCH" => (int)str_replace($replace, "", $components[1]),
+				"DELTA_EYE" => (int)str_replace($replace, "", $components[2]),
+				"IMG_LEFT" => (int)str_replace($replace, "", $components[3]),
+				"IMG_RIGHT" => (int)str_replace($replace, "", $components[4]),
+				"MOVEMENT" => (int)str_replace($replace, "", $components[5]),
+				"IMAGE_POS" => array((int)str_replace($replace, "", $componentsImage[2]), 
+								(int)str_replace($replace, "", $componentsImage[1])),
+				"TOUCH_POS" => array((int)str_replace($replace, "", $componentsTouch[2]),
+								(int)str_replace($replace, "", $componentsTouch[1])),
+				"EYES_POS" => array((int)str_replace($replace, "", $componentsEyes[2]),
+								(int)str_replace($replace, "", $componentsEyes[1]))
 			);
 			
 			$time = $components[0];
@@ -94,7 +94,7 @@ if ($fileDelta != 0) {
 	}
 }
 
-echo json_encode($arrayResult);
+echo json_encode($arrayResult, JSON_NUMERIC_CHECK);
 
 
 
