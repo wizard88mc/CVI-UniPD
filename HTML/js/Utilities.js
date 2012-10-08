@@ -97,7 +97,7 @@ function saveInLocalStorage(key, value) {
 	}
 }
 
-function getFormLocalStorage(key) {
+function getFromLocalStorage(key) {
 	
 	if (localStorage == null) {
 		return getCookie(key);
@@ -222,6 +222,14 @@ function cacheIsChecking() {
 
 function cacheIsDownloading() {
 	console.log("downloading");
+}
+
+function checkForLocalStorageIfFolder(folder) {
+	
+	var pattern = /^\d_\d{4}_\d+_\d+_\d+_\d+_\d+/i;
+	var isCorrect = pattern.test(folder);
+	
+	return isCorrect;
 }
 
 	

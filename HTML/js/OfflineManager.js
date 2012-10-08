@@ -43,7 +43,7 @@ var OfflineNamespace = {
     initFolderForGame: function() {
 
         var date = new Date();
-        var folderGame = date.getFullYear() + '_' + date.getMonth() + '_' + date.getDate() + '_' + date.getHours() + '_'
+        var folderGame = date.getFullYear() + '_' + (date.getMonth() + 1) + '_' + date.getDate() + '_' + date.getHours() + '_'
             + date.getMinutes() + '_' + date.getSeconds();
 
         folderGame = patientID + '/' + folderGame;
@@ -117,7 +117,12 @@ var OfflineNamespace = {
     		buttons: {
     			"Invia ora": function() {
     				
-					OfflineNamespace.iterateOnPatients();
+    				if (window.requestFileSystem) {
+    					OfflineNamespace.iterateOnPatients();
+    				}
+    				else {
+    					OfflineNamespace.sendFromLocalStorage();
+    				}
     			},
     			"Non inviare": function() {
     				$(this).remove();
@@ -222,6 +227,32 @@ var OfflineNamespace = {
 				readerPackets.readAsText(filePackets);
 			})
 		})
+    },
+    
+    sendFromLocalStorage: function() {
+    	
+    	for (var i = 0; i < localStorage.length; i++) {
+    		
+    		var folder = localStorage.key(i);
+
+    		if (checkForLocalStorageIfFolder(folder)) {
+    			
+    			var packets = JSON.stringify(localStorage.getItem(folder));
+    			
+    			$.ajax({
+    				url: 'server/OfflinePackets.php',
+    				type: "POST",
+    				data: {
+    					packets: packets,
+    					folderName: folder
+    				},
+    				success: function(message) {
+    					console.log(message);
+    				}
+    			})
+    		}
+    	
+    	}
     },
     
     anotherVisitSend: function() {

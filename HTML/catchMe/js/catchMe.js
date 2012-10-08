@@ -11,6 +11,7 @@ var patientID = "";
 var stringForOfflineFile = "";
 var packetsIntoOfflineString = 0;
 var timerWriter = null;
+var folderNameLocalStorage = "";
 
 function presentationComplete() {
 	
@@ -170,7 +171,7 @@ createTransitionCSS: function(time, endPosition) {
 				.css('transition-duration', time + 's')
 				.css('transition-timing-function', 'linear')
 				.css('-moz-transition', 'left ' + time + 's, top ' 
-					+ time + ', -moz-transform ' + time + 's')
+					+ time + 's, -moz-transform ' + time + 's')
 				.css('-moz-transition-timing-function', 'linear')
 				.css('-webkit-transition', 'left ' + time + 's, top ' 
 						+ time + 's, -webkit-transform ' + time + 's')
@@ -1010,18 +1011,30 @@ $('document').ready(function(e) {
 
 function manageOnCloseWebsocket(e) {
     console.log("Websocket works offline");
+    
+    websocket = new Object();
+    websocket.send = function() {};
+    websocket.close = function() {};
 
     window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
 
-    window.webkitStorageInfo.requestQuota(window.PERSISTENT, 10*1024*1024, function(grantedBytes) {
-
-        window.requestFileSystem(window.PERSISTENT, grantedBytes, OfflineNamespace.initFs, function(error) {
-            console.log("No space received");
-        })
-    }, function(error) {
-        console.log("No space allowed");
-        console.log(error);
-    });
+    if (window.requestFileSystem) {
+	    window.webkitStorageInfo.requestQuota(window.PERSISTENT, 10*1024*1024, function(grantedBytes) {
+	
+	        window.requestFileSystem(window.PERSISTENT, grantedBytes, OfflineNamespace.initFs, function(error) {
+	            console.log("No space received");
+	        })
+	    }, function(error) {
+	        console.log("No space allowed");
+	        console.log(error);
+	    });
+    }
+    else {
+    	console.log("No storage filesystem");
+    	
+    	localFileSystemInitializationComplete();
+    	
+    }
 }
 
 function localFileSystemInitializationComplete() {
@@ -1035,6 +1048,8 @@ function localFileSystemInitializationComplete() {
 			patientID = "1";
 		}
 		
+		console.log("sending");
+		
 		$.ajax({
 			url:'../server/GetGameSettingsCatchMe.php',
 			data: {
@@ -1047,12 +1062,44 @@ function localFileSystemInitializationComplete() {
 			success: function(message) {
 				
 				CatchMeNamespace.defineGame(message);
-				OfflineNamespace.initFolderForGame();
+				
+				if (window.requestFileSystem) {
+					websocket.send = manageWriteOffline;
+					
+					OfflineNamespace.initFolderForGame();
+				}
+				else {
+					// funzione settaggio parametri
+					// per salvataggio in localStorage
+					websocket.send = manageWriteWithLocalStorage;
+					
+					offlineSavingWithLocalStorage();
+				}
 			}
 			
 		});
 	}
     
+}
+
+function sendPacketsGameDefinitionOffline() {
+	
+	var firstPacket = {
+        	"GAME": gameIdentification,
+        	"PATIENT_ID": patientID
+        };
+        
+        websocket.send(JSON.stringify(firstPacket));
+        
+        var secondPacket = {
+    		"TYPE": "READY_TO_PLAY", 
+    		IMAGE_WIDTH: gameSettings.effectiveImageWidth,
+    		IMAGE_HEIGHT: gameSettings.effectiveImageHeight,
+    		SCREEN_WIDTH: getScreenWidth(),
+    		SCREEN_HEIGHT: getScreenHeight()
+    	};
+
+        websocket.send(JSON.stringify(secondPacket));
 }
 
 function folderForOfflineSavingCreated() {
@@ -1063,25 +1110,8 @@ function folderForOfflineSavingCreated() {
         fileEntry.createWriter(function(fileWriter) {
 
             offlineObjectManager.fileWriterPackets = fileWriter;
-
-            websocket.send = manageWriteOffline;
             
-            var firstPacket = {
-            	"GAME": gameIdentification,
-            	"PATIENT_ID": patientID
-            };
-            
-            websocket.send(JSON.stringify(firstPacket));
-            
-            var secondPacket = {
-        		"TYPE": "READY_TO_PLAY", 
-        		IMAGE_WIDTH: gameSettings.effectiveImageWidth,
-        		IMAGE_HEIGHT: gameSettings.effectiveImageHeight,
-        		SCREEN_WIDTH: getScreenWidth(),
-        		SCREEN_HEIGHT: getScreenHeight()
-        	};
-
-            websocket.send(JSON.stringify(secondPacket));
+            sendPacketsGameDefinitionOffline();
             
             gameManager.timeToStart = new Date().getTime() + 5000;
             CatchMeNamespace.startGame();
@@ -1096,6 +1126,25 @@ function folderForOfflineSavingCreated() {
     })
 }
 
+// costruire cartella in localStorage con nome giusto
+function offlineSavingWithLocalStorage() {
+	
+	var today = new Date();
+	var folder = patientID + "_" + today.getFullYear() + "_"
+		+ (today.getMonth() + 1) + "_" + today.getDate() + "_"
+		+ today.getHours() + "_" + today.getMinutes() + "_"
+		+ today.getSeconds();
+	
+	folderNameLocalStorage = folder;
+	
+	saveInLocalStorage(folderNameLocalStorage, "");
+	
+	sendPacketsGameDefinitionOffline();
+	
+	gameManager.timeToStart = new Date().getTime() + 5000;
+	CatchMeNamespace.startGame();
+}
+
 function manageWriteOffline(data) {
 
 	// if pacchetto.type == "STOP_GAME" finito gioco
@@ -1103,7 +1152,7 @@ function manageWriteOffline(data) {
 	stringForOfflineFile = stringForOfflineFile + data + "\n";
 	packetsIntoOfflineString++;
 	
-	if (packetsIntoOfflineString > 50) {
+	if (packetsIntoOfflineString > 250) {
 		var bb = new Blob([stringForOfflineFile], {type: 'text/plain'});
 		
 		packetsIntoOfflineString = 0;
@@ -1128,6 +1177,29 @@ function manageWriteOffline(data) {
 	    }
 	}
 
+}
+
+function manageWriteWithLocalStorage(data) {
+
+	stringForOfflineFile = stringForOfflineFile + data + "\n";
+	packetsIntoOfflineString++;
+	
+	if (packetsIntoOfflineString > 250) {
+		var stringAlreadyInserted = getFromLocalStorage(folderNameLocalStorage);
+		
+		saveInLocalStorage(folderNameLocalStorage, stringAlreadyInserted + stringForOfflineFile);
+		
+		packetsIntoOfflineString = 0;
+		stringForOfflineFile = "";
+	}
+	
+	if ((JSON.parse(data)).TYPE == "STOP_GAME") { 
+		
+		var stringAlreadyInserted = getFromLocalStorage(folderNameLocalStorage);
+		
+		saveInLocalStorage(folderNameLocalStorage, stringAlreadyInserted + stringForOfflineFile);
+		
+	}
 }
 
 function readFile() {

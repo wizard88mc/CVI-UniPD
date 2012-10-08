@@ -198,6 +198,26 @@ function localFileSystemInitializationComplete() {
 	
 }
 
+function checkLocalStorageForOfflineExercises() {
+	
+	var count = 0;
+	for (var i = 0; i < localStorage.length; i++) {
+		
+		//var pattern = new RegExp("\d+_\d{4}_\d+_\d+_\d+_\d+_\d+", "gi");
+		
+		
+		var folder = localStorage.key(i);
+		
+		if (checkForLocalStorageIfFolder(folder)) {
+			count = count + 1;
+		}
+	}
+	
+	if (count > 0) {
+		OfflineNamespace.someVisitsToSend();
+	}
+}
+
 function loginIncorrect() {
 	removeFromLocalStorage("username");
 	removeFromLocalStorage("password");
@@ -262,11 +282,11 @@ $(document).ready(function(e) {
 		
 		$('td:.label').css('text-align', 'right');
 		
-		if (getFormLocalStorage("username") != "") {
-			$('#username').attr({'value': getFormLocalStorage('username')});
+		if (getFromLocalStorage("username") != "") {
+			$('#username').attr({'value': getFromLocalStorage('username')});
 		}
-		if (getFormLocalStorage("password") != "") {
-			$('#password').attr({'value': getFormLocalStorage('password')});
+		if (getFromLocalStorage("password") != "") {
+			$('#password').attr({'value': getFromLocalStorage('password')});
 		}
 		
 		$('<div id="divButtonLogin" class="alignCenter"><button id="buttonLogin">Login</button></div>').appendTo(divPage);
@@ -275,16 +295,22 @@ $(document).ready(function(e) {
 		//$('#buttonLogin').click(secondStepPage);
 		
 		window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+		
+		if (window.requestFileSystem) {
 
-	    window.webkitStorageInfo.requestQuota(window.PERSISTENT, 10*1024*1024, function(grantedBytes) {
-	
-	        window.requestFileSystem(window.PERSISTENT, grantedBytes, OfflineNamespace.initFs, function(error) {
-	            console.log("No space received");
-	        })
-	    }, function(error) {
-	        console.log("No space allowed");
-	        console.log(error);
-	    });
+		    window.webkitStorageInfo.requestQuota(window.PERSISTENT, 10*1024*1024, function(grantedBytes) {
+		
+		        window.requestFileSystem(window.PERSISTENT, grantedBytes, OfflineNamespace.initFs, function(error) {
+		            console.log("No space received");
+		        })
+		    }, function(error) {
+		        console.log("No space allowed");
+		        console.log(error);
+		    });
+		}
+		else {
+			checkLocalStorageForOfflineExercises();
+		}
 		
 	}
 });
