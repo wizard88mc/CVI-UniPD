@@ -121,13 +121,13 @@ $arrayToSend = array(
 	"UP_MOV" => $movements['UpMovement'],
 	"DOWN_MOV" => $movements['DownMovement'],
 	"SPEED" => $row["Speed"],
-	"START_CENTER" => $row["StartFromCenter"],
-	"MIX_MOVEMENTS" => $row["MixMovements"],
+	"START_CENTER" => (int)$row["StartFromCenter"],
+	"MIX_MOVEMENTS" => (int)$row["MixMovements"],
 	"BACK_COLOR" => $row["BackgroundColor"],
 	"IMG_COLOR" => $row["ImageColor"],
-	"CHANGE_IMG_COLOR" => $row["ChangeImageColor"],
+	"CHANGE_IMG_COLOR" => (int)$row["ChangeImageColor"],
 	"IMG_SPECS" => array("IMG_ID" => $imageID, "IMG_NAME" => $imageName, "IMG_FILE" => $imageFile),
-	"IMG_WIDTH" => $row['ImageWidth'],
+	"IMG_WIDTH" => (int)$row['ImageWidth'],
 	"CANVAS_DIMENSIONS" => $imageDimensions
 );
 

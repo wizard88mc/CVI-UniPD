@@ -1,0 +1,35 @@
+* {
+	margin: 0em;
+	padding: 0em;
+}
+
+#divMainContent {
+	max-width: 1024px;
+	margin: auto;
+	background-color: #FFF;
+	margin-top: 0em;
+	text-align: center;
+	padding-bottom: 1.0em;
+}
+
+h1 {
+	color: darkblue;
+}
+
+h1.title {
+	padding: 0.4em;
+	font-size: 2.7em;
+}
+
+div.buttonForGame {
+	width: 30%;
+	vertical-align: middle;
+	text-align: center;
+	padding-top: 1.5em;
+	padding-bottom: 1.5em;
+	font-size: 1.5em;
+	margin: 1.0em;
+	margin-top: 2.0em;
+	margin-bottom: 3.0em;
+	cursor: pointer;
+}

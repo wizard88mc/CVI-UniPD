@@ -15,6 +15,8 @@ var identificationType = 'GAME_CLIENT';
 var patientID = "1";
 var playingWithoutWebSocket = false;
 var stringForOfflineGame = "";
+var totalPacketsIntoStringForOffline = 0;
+var folderNameLocalStorage = "";
 var gameID = -1;
 
 function presentationComplete() {
@@ -103,7 +105,12 @@ function allExamplesCompleted() {
 	    websocket.send(JSON.stringify(packetToSend));
     }
     else {
-    	OfflineNamespace.initFolderForGame();
+    	if (!playingWithoutWebSocket) {
+    		OfflineNamespace.initFolderForGame();
+    	}
+    	else {
+    		offlineSavingWithLocalStorage();
+    	}
     }
     
 }
@@ -339,18 +346,31 @@ function manageOnCloseWebsocket(e) {
 
     console.log("Websocket works offline");
     playingWithoutWebSocket = true;
+    
+    websocket = new Object();
+	websocket.send = function() {};
+	websocket.close = function() {
+		websocket = null;
+	}
 
     window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
 
-    window.webkitStorageInfo.requestQuota(window.PERSISTENT, 10*1024*1024, function(grantedBytes) {
-
-        window.requestFileSystem(window.PERSISTENT, grantedBytes, OfflineNamespace.initFs, function(error) {
-            console.log("No space received");
-        })
-    }, function(error) {
-        console.log("No space allowed");
-        console.log(error);
-    });
+    if (window.requestFileSystem){
+	    window.webkitStorageInfo.requestQuota(window.PERSISTENT, 10*1024*1024, function(grantedBytes) {
+	
+	        window.requestFileSystem(window.PERSISTENT, grantedBytes, OfflineNamespace.initFs, function(error) {
+	            console.log("No space received");
+	        })
+	    }, function(error) {
+	        console.log("No space allowed");
+	        console.log(error);
+	    });
+    }
+    else {
+    	console.log("No storage supported");
+    	
+    	localFileSystemInitializationComplete();
+    }
 }
 
 function localFileSystemInitializationComplete() {
@@ -415,6 +435,26 @@ function folderForOfflineSavingCreated() {
     })
 }
 
+function offlineSavingWithLocalStorage() {
+	
+	folderNameLocalStorage = OfflineNamespace.createFolderForOfflineWithLocalStorage();
+	
+	gameManager.timeToStart = new Date().getTime() + 5000;
+	
+	websocket.send = manageWriteOfflineWithLocalStorage;
+	
+	var firstPacket = {
+    	"GAME": gameIdentification,
+    	"PATIENT_ID": patientID
+    };
+        
+    websocket.send(JSON.stringify(firstPacket));
+    
+    gameManager.timeToStart = new Date().getTime() + 3000;
+    allInfosRetrieved();
+    
+}
+
 function manageWriteOffline(data) {
 	
 	stringForOfflineGame = stringForOfflineGame + data + "\n";
@@ -430,6 +470,31 @@ function manageWriteOffline(data) {
 	    offlineObjectManager.fileWriterPackets.write(bb);
 	    
 	    stringForOfflineGame = "";
+	}
+}
+
+function manageWriteOfflineWithLocalStorage(data) {
+
+	stringForOfflineGame = stringForOfflineGame + data + "\n";
+	totalPacketsIntoStringForOffline++;
+	
+	var packet = JSON.parse(data);
+	
+	if (totalPacketsIntoStringForOffline > 250 || packet.SUBTYPE == "SESSION_RESULTS" ) {
+		
+		var stringAlreadyInserted = getFromLocalStorage(folderNameLocalStorage);
+		
+		saveInLocalStorage(folderNameLocalStorage, stringAlreadyInserted + stringForOfflineGame);
+		stringForOfflineGame = "";
+		totalPacketsIntoStringForOffline = 0;
+	}
+	
+	
+	if (packet.TYPE == "STOP_GAME") {
+		
+		var stringAlreadyInserted = getFromLocalStorage(folderNameLocalStorage);
+		saveInLocalStorage(folderNameLocalStorage, stringAlreadyInserted + stringForOfflineGame);
+		
 	}
 }
 

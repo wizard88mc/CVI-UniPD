@@ -99,13 +99,11 @@ this.getSystemSounds = function() {
 
     var divSounds = $('<div id="divSounds"></div>').appendTo('body');
 
-    var goodAnswer = $('<audio id="audioGoodAnswer"></audio>');
-    $('<source src="sounds/sound_prova.mp3" />').appendTo(goodAnswer);
-    goodAnswer.appendTo(divSounds);
+    var goodAnswer = $('<audio id="audioGoodAnswer"></audio>').appendTo(divSounds);
+    utilsNamespace.addSoundSource(goodAnswer, "sound_prova");
 
-    var badAnswer = $('<audio id="audioBadAnswer"></audio>');
-    $('<source src="sounds/sound_prova.mp3" />').appendTo(badAnswer);
-    badAnswer.appendTo(divSounds);
+    var badAnswer = $('<audio id="audioBadAnswer"></audio>').appendTo(divSounds);
+    utilsNamespace.addSoundSource(badAnswer, "sound_prova");
 
     $('#divSounds').children().on('ended', function() {
 
@@ -115,13 +113,11 @@ this.getSystemSounds = function() {
         setTimeout(manageImageObjectsLevel, 1000);
     });
     
-    var soundFrenata = $('<audio id="audioFrenata"></audio>');
-    $('<source src="sounds/frenata.mp3" />').appendTo(soundFrenata);
-    soundFrenata.appendTo(divSounds);
+    var soundFrenata = $('<audio id="audioFrenata"></audio>').appendTo(divSounds);
+    utilsNamespace.addSoundSource(soundFrenata, "frenata");
     
-    var introductionSound = $('<audio id="audioIntroduzione"></audio>');
-    $('<source src="sounds/sound_prova.mp3" />').appendTo(introductionSound);
-    introductionSound.appendTo(divSounds);
+    var introductionSound = $('<audio id="audioIntroduzione"></audio>').appendTo(divSounds);
+    utilsNamespace.addSoundSource(introductionSound, "sound_prova");
 }
 
 }

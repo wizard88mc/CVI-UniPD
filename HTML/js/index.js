@@ -117,6 +117,8 @@ function loginCorrect(data) {
 	else if (data.PERMISSION == 'PATIENT') {
 		setSessionStorage("permission", "PATIENT");
 		setSessionStorage("patientID", data.ID);
+		setSessionStorage("patientName", data.NAME);
+		setSessionStorage("patientSurname", data.SURNAME);
 		location.replace('patient/index.html');
 	}
 }

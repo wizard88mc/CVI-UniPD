@@ -118,6 +118,7 @@ retrieveLevels: function(fileName) {
 
 istantiateLevel: function(level) {
 
+	console.log(level);
     var distrattori = [];
     var target = [];
     var targetFamily = level.targetFamily;
@@ -183,8 +184,8 @@ istantiateLevel: function(level) {
     },
     
     addSoundSource: function(element, sourceFileName) {
-    	$('<source src="sounds/' + sourceFileName + '.mp3" />').appendTo(element);
     	$('<source src="sounds/' + sourceFileName + '.ogg" />').appendTo(element);
+    	$('<source src="sounds/' + sourceFileName + '.mp3" />').appendTo(element);
     }
 
 };

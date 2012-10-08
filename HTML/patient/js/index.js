@@ -73,7 +73,7 @@ function putInWaitingToStart() {
 
 $('document').ready(function(e) {
 
-	setSessionStorage("permission", "DOCTOR");
+	//setSessionStorage("permission", "DOCTOR");
 	
 	if (getFromSessionStorage("permission") == "DOCTOR") {
 		
@@ -81,5 +81,33 @@ $('document').ready(function(e) {
 	}
 	else if (getFromSessionStorage("permission") == "PATIENT") {
 		var patientID = getFromSessionStorage("patientID");
+		
+		var patientName = getFromSessionStorage("patientName");
+		var patientSurname = getFromSessionStorage("patientSurname");
+		
+		$('#body').css({
+			height: getScreenHeight()
+		});
+		
+		$('#divMainContent').addClass('ui-corner-all');
+		
+		$('<h1>Ciao ' + patientName + "</h1>").addClass("title").appendTo('#divMainContent');
+		$("<h1>A cosa giochiamo oggi???</h1>").appendTo('#divMainContent');
+		
+		var divCatchMe = $('<div id="buttonCatchMe">Prendimi!</div>')
+			.addClass('buttonForGame').appendTo('#divMainContent');
+		var divHelpMe = $('<div id="buttonHelpMe">Aiutami!</div>')
+			.addClass('buttonForGame').appendTo('#divMainContent');
+		
+		divCatchMe.button();
+		divHelpMe.button();
+		
+		divCatchMe.on('click', function() {
+			location.replace('../catchMe/');
+		})
+		divHelpMe.on('click', function() {
+			location.replace('../helpMe/')
+		})
+		
 	}
 });

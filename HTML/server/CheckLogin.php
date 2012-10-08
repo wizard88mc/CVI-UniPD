@@ -29,6 +29,8 @@ else {
 		$arrayResults = array(
 			"CORRECT" => "true",
 			"ID" => $result["ID"],
+			"NAME" => $result["Name"],
+			"SURNAME" => $result["Surname"],
 			"PERMISSION" => "PATIENT"
 		);
 	}

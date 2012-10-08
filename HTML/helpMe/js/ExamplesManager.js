@@ -69,7 +69,7 @@ this.loadImage = function() {
 
                 var imageFileName = $(this).attr('image');
                 var withHelp = $(this).attr('withHelp') == "true";
-                var insertInto = $(this).attr('insertIntoSacco') == "true";
+                var insertInto = $(this).attr('insertIntoBag') == "true";
                 var soundBefore = $(this).attr('soundBefore');
                 if (soundBefore === undefined) {
                     soundBefore = null;

@@ -266,5 +266,19 @@ var OfflineNamespace = {
     			//TODO mostrare dialog che informa avvenuto invio
     		});
     	}
+    },
+    
+    createFolderForOfflineWithLocalStorage: function() {
+    	
+    	var today = new Date();
+    	var folder = patientID + "_" + today.getFullYear() + "_"
+    		+ (today.getMonth() + 1) + "_" + today.getDate() + "_"
+    		+ today.getHours() + "_" + today.getMinutes() + "_"
+    		+ today.getSeconds();
+    	
+    	saveInLocalStorage(folder, "");
+    	
+    	return folder;
+    	
     }
 };

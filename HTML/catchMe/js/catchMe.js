@@ -1129,15 +1129,7 @@ function folderForOfflineSavingCreated() {
 // costruire cartella in localStorage con nome giusto
 function offlineSavingWithLocalStorage() {
 	
-	var today = new Date();
-	var folder = patientID + "_" + today.getFullYear() + "_"
-		+ (today.getMonth() + 1) + "_" + today.getDate() + "_"
-		+ today.getHours() + "_" + today.getMinutes() + "_"
-		+ today.getSeconds();
-	
-	folderNameLocalStorage = folder;
-	
-	saveInLocalStorage(folderNameLocalStorage, "");
+	folderNameLocalStorage = OfflineNamespace.createFolderForOfflineWithLocalStorage();
 	
 	sendPacketsGameDefinitionOffline();
 	
