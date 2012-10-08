@@ -77,6 +77,7 @@ $('document').ready(function(e) {
 	
 	if (getFromSessionStorage("permission") == "DOCTOR") {
 		
+		$('#divMainContent').css('padding', '0em');
 		openWebSocket(port);
 	}
 	else if (getFromSessionStorage("permission") == "PATIENT") {

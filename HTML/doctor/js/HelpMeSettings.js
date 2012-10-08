@@ -3,6 +3,7 @@ var listOfLevels = [];
 var listOfLevelTipologies = [];
 var listOfImages = [];
 var familySound = new Object();
+var divTabs = null;
 
 function ImageGame(ID,name, fileName) {
 	this.imageID = ID;
@@ -142,7 +143,6 @@ var HelpMeSettingsNamespace = {
 	
 	buildMaxTimeSelect: function(timeDefined) {
 		
-		console.log(timeDefined);
 		var select = $('<select class="selectMaxTime"></select>');
 		if (timeDefined == null) {
 			$('<option value=""></option>').attr('selected', 'selected').appendTo(select);
@@ -381,6 +381,7 @@ var HelpMeSettingsNamespace = {
 				$('<td><img class="imgPreview" /></td>').appendTo(row);
 				
 				HelpMeSettingsNamespace.makeRowSelectable(row);
+				
 			}
 			
 			for (var i = 0; i < elements[1]; i++) {
@@ -406,9 +407,11 @@ var HelpMeSettingsNamespace = {
 			$('#tabsLevels').tabs("add", link, label, indexToInsert + 1);
 			
 			HelpMeSettingsNamespace.updateLabelsTabs();
+			
+			divTabs.tabs("option", 'selected', (indexToInsert + 1));
 		})
 		
-		var divTabs = $('<div id="tabsLevels"></div>').appendTo(divContainerAll);
+		divTabs = $('<div id="tabsLevels"></div>').appendTo(divContainerAll);
 		divTabs.css({
 			float: 'left',
 			width: '60%',

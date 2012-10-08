@@ -152,7 +152,7 @@ defineGame: function(settings) {
 	gameSettings.changeImageColor = Boolean(settings.changeImageColor || settings.CHANGE_IMG_COLOR);
 	gameSettings.percentualImageWidth = Number(settings.percentualImageWidth || settings.IMG_WIDTH);
 	
-	var dimensions = (settings.canvasDimensions || settings.CANVAS_DIMENSIONS).split("x");
+	var dimensions = (settings.canvasSize || settings.CANVAS_SIZE).split("x");
 	canvasSettings.width = Number(dimensions[0]);
 	canvasSettings.height = Number(dimensions[1]);
 	canvasSettings.fileName = settings.imageFileName || settings.IMG_SPECS.IMG_FILE;

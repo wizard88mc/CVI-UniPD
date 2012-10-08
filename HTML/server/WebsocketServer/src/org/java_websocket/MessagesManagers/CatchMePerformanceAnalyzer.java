@@ -85,7 +85,6 @@ public class CatchMePerformanceAnalyzer extends Thread {
                         Long.parseLong(infoTouch[1]),
                         Long.parseLong(infoTouch[2])));
             }
-            System.out.println("Punto 1");
             
             while ((line = readerFileEyeTracker.readLine()) != null) {
                 
@@ -97,7 +96,6 @@ public class CatchMePerformanceAnalyzer extends Thread {
                         Long.parseLong(infoEye[1]), 
                         Long.parseLong(infoEye[2])));
             }
-            System.out.println("Punto 2");
             
             // Ho tutti i pacchetti pronti, devo lavorare a coppie
             int totalPackets = Math.min(packetsEyeTracker.size(), packetsImage.size());

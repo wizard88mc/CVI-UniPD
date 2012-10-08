@@ -118,7 +118,6 @@ requestGameSettings: function() {
 	$('#imgGoBack').off('click');
 	$('#imgGoBack').on('click', function() {
 		
-		console.log('click');
 		NewVisitNamespace.initializePage();
 		$(this).off('click');
 		$(this).on('click', function() {
@@ -358,9 +357,9 @@ setGameSettings: function(data) {
 		// Modifico anche il canvas di preview con le dimensioni del nuovo oggetto
 		var image = aviableImages[newImageID];
 		
-		var dimensions = (image.DIMENSIONS).split('x');
-		canvasSettings.width = dimensions[0];
-		canvasSettings.height = dimensions[1];
+		var size = (image.SIZE).split('x');
+		canvasSettings.width = size[0];
+		canvasSettings.height = size[1];
 		
 		var canvas = $('#imageExample')[0];
 		canvas.width = canvasSettings.width;
@@ -375,7 +374,7 @@ setGameSettings: function(data) {
 	aviableImages[data.IMG_SPECS.IMG_ID] = {
 			'NAME': data.IMG_SPECS.IMG_NAME, 
 			'FILENAME': data.IMG_SPECS.IMG_FILE, 
-			'DIMENSIONS': data.CANVAS_DIMENSIONS};
+			'SIZE': data.CANVAS_SIZE};
 	
 	gameSettings.imageFileName = data.IMG_SPECS.IMG_FILE;
 	$('<img id="imgPreview" src="../catchMe/images/' + gameSettings.imageFileName + '" alt="Preview" />').appendTo(divImage);
@@ -390,7 +389,7 @@ setGameSettings: function(data) {
 		aviableImages[imageID] = {
 			'NAME': otherImages[imageID].IMG_NAME, 
 			'FILENAME': otherImages[imageID].IMG_FILE,
-			'DIMENSIONS': otherImages[imageID].IMG_DIMS};
+			'SIZE': otherImages[imageID].IMG_SIZE};
 		$(stringOption).appendTo($('#selectImage'))
 	}
 	
@@ -398,9 +397,9 @@ setGameSettings: function(data) {
 		$('#divBadContrast').hide();
 	}
 	
-	var dimensions = (data.CANVAS_DIMENSIONS).split('x');
-	canvasSettings.width = dimensions[0];
-	canvasSettings.height = dimensions[1];
+	var size = (data.CANVAS_SIZE).split('x');
+	canvasSettings.width = size[0];
+	canvasSettings.height = size[1];
 	
 	var divDimensions = $('<div id="divDimensions"></div>');
 	divDimensions.addClass('ui-widget-content ui-corner-all');
@@ -505,7 +504,7 @@ personalizationComplete: function() {
 	
 	console.log(gameSettings);
 	
-	gameSettings.canvasDimensions = aviableImages[gameSettings.imageID].DIMENSIONS;
+	gameSettings.canvasSize = aviableImages[gameSettings.imageID].SIZE;
 	
 	var settingsToSend = {
 		rightMovement: gameSettings.rightMovement,
@@ -543,13 +542,13 @@ personalizationComplete: function() {
 	};
 	websocket.send(JSON.stringify(packetToSend));
 	
-	var packetSession = {
+	/*var packetSession = {
 		'TYPE': 'SESSION_SPECS',
 		'PATIENT_ID': patientID,
 		'GAME_ID': gameIdentification
 	};
 			
-	websocket.send(JSON.stringify(packetSession));
+	websocket.send(JSON.stringify(packetSession));*/
 	
 	$.getScript('js/watchCatchMe.js')
 		.done(function(data, textStatus) {

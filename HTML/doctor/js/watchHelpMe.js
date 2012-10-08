@@ -97,7 +97,7 @@ var HelpMeNamespace = {
 						$(this).remove();
 						console.log("Starting");
 						
-						$('#divMainContent > h1').text('Prendimi!');
+						$('#divMainContent > h1').text('Aiutami!');
 						
 						var packetToSend = {
 							'TYPE': 'START_GAME',

@@ -14,9 +14,9 @@ function retrieveImageInfo($imageID, $others) {
 		
 		$imageName = (string)$attributes['imageName'][0];
 		$fileName = (string)$attributes['fileName'][0];
-		$dimensions = (string)$attributes['dimensions'][0];
+		$size = (string)$attributes['size'][0];
 		
-		return array($imageID, $imageName, $fileName, $dimensions);
+		return array($imageID, $imageName, $fileName, $size);
 	}
 	else {
 		
@@ -31,12 +31,12 @@ function retrieveImageInfo($imageID, $others) {
 			$imageID = (int)$attributes['id'][0];
 			$imageName = (string)$attributes['imageName'][0];
 			$fileName = (string)$attributes['fileName'][0];
-			$dimensions = (string)$attributes['dimensions'][0];
+			$size = (string)$attributes['size'][0];
 			
 			$arrayImages[$imageID] = array(
 					"IMG_NAME" => $imageName,
 					"IMG_FILE" => $fileName,
-					"IMG_DIMS" => $dimensions
+					"IMG_SIZE" => $size
 				);
 		}
 		
@@ -110,7 +110,7 @@ if (strpos($row['Movements'], 'B') !== false) {
 	$movements['DownMovement'] = 1;
 }
 
-list($imageID, $imageName, $imageFile, $imageDimensions) = retrieveImageInfo($row['ImageID'], false);
+list($imageID, $imageName, $imageFile, $imageSize) = retrieveImageInfo($row['ImageID'], false);
 
 //print_r($row['StartFromCenter'] == "1" ? true : false);
 
@@ -128,7 +128,7 @@ $arrayToSend = array(
 	"CHANGE_IMG_COLOR" => (int)$row["ChangeImageColor"],
 	"IMG_SPECS" => array("IMG_ID" => $imageID, "IMG_NAME" => $imageName, "IMG_FILE" => $imageFile),
 	"IMG_WIDTH" => (int)$row['ImageWidth'],
-	"CANVAS_DIMENSIONS" => $imageDimensions
+	"CANVAS_SIZE" => $imageSize
 );
 
 //print_r($arrayToSend);
