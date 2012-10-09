@@ -11,13 +11,13 @@ var frameAnimatorNamespace = {
 	        if (!tubo.goBack) {
 	            if (tubo.incremenentHeight(delta)) {
 	                tubo.goBack = true;
-	                window.cancelRequestAnimationFrame(gameManager.currentAnimationFrame);
+	                window.cancelAnimationFrame(gameManager.currentAnimationFrame);
 	                gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerIngressoImmagine);
 	            }
 	        }
 	        else {
 	            if (tubo.decrementHeight(delta)) {
-	                window.cancelRequestAnimationFrame(gameManager.currentAnimationFrame);
+	                window.cancelAnimationFrame(gameManager.currentAnimationFrame);
 	                frameAnimatorNamespace.startRealGame();
 	            }
 	        }
@@ -40,7 +40,7 @@ var frameAnimatorNamespace = {
         	if (imageObjectOnScreen.center.top < imageObjectOnScreen.targetCenter.top && 
         			imageObjectOnScreen.center.left < imageObjectOnScreen.targetCenter.left) {
         		
-        		window.cancelRequestAnimationFrame(gameManager.currentAnimationFrame);
+        		window.cancelAnimationFrame(gameManager.currentAnimationFrame);
                 gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.startRealGame);
         	}
 	        gameManager.timeLastFrame = time;
@@ -162,7 +162,7 @@ var frameAnimatorNamespace = {
 	        }
 	
 	        if (imageObjectOnScreen.drawingPosition.top > sacco.center.top) {
-	            window.cancelRequestAnimationFrame(gameManager.currentAnimationFrame);
+	            window.cancelAnimationFrame(gameManager.currentAnimationFrame);
 	            imageObjectOnScreen.element.remove();
 	
 	            ExampleNamespace.exampleCompleted();
@@ -199,7 +199,7 @@ var frameAnimatorNamespace = {
             //barraTempo.timeIsPassing(elapsedTime / gameManager.maxTimeObjectOnScreen);
 
             if (elapsedTime >= gameManager.maxTimeObjectOnScreen) {
-                window.cancelRequestAnimationFrame(gameManager.currentAnimationFrame);
+                window.cancelAnimationFrame(gameManager.currentAnimationFrame);
                 // devo richiamare funzione per fine tempo
                 timeExpired(false);
             }
@@ -211,13 +211,13 @@ var frameAnimatorNamespace = {
             imageObjectOnScreen.moveObjectIntoSacco(delta);
             if (imageObjectOnScreen.drawingPosition.top > sacco.drawingPosition.top) {
 
-                window.cancelRequestAnimationFrame(gameManager.currentAnimationFrame);
+                window.cancelAnimationFrame(gameManager.currentAnimationFrame);
                 objectInsertedIntoSacco();
             }
         }
         else if (imageObjectOnScreen.moveInsideCestino) {
         		
-    		window.cancelRequestAnimationFrame(gameManager.currentAnimationFrame);
+    		window.cancelAnimationFrame(gameManager.currentAnimationFrame);
     		
     		imageObjectOnScreen.element.one('transitionend webkitTransitionEnd oTransitionEnd', function() {
     			
@@ -280,7 +280,7 @@ var frameAnimatorNamespace = {
 	                presentationManager.timeLastFrame = currentTime;
 	            }
 	            else {
-	                window.cancelRequestAnimationFrame(presentationManager.currentAnimationFrame);
+	                window.cancelAnimationFrame(presentationManager.currentAnimationFrame);
 	                
 	                
 	                presentationManager.gnomo.currentScale = presentationManager.gnomo.targetScale;
@@ -353,7 +353,7 @@ var frameAnimatorNamespace = {
                 presentationManager.gnomo.drawElement();
             }
             else {
-                window.webkitCancelRequestAnimationFrame(presentationManager.currentAnimationFrame);
+                window.cancelAnimationFrame(presentationManager.currentAnimationFrame);
                 $('#audioIntroduzione').on('ended', function() {
                     console.log("Completed");
                     $('#divMainContent').children().css({
@@ -391,7 +391,7 @@ var frameAnimatorNamespace = {
 				presentationManager.gnomo.element.css({'z-index': 1});
             	presentationManager.slitta.element.css({'z-index': 2});
             	
-            	window.cancelRequestAnimationFrame(presentationManager.currentAnimationFrame);
+            	window.cancelAnimationFrame(presentationManager.currentAnimationFrame);
             	presentationManager.totalDistanceTop = 0;
             	presentationManager.totalDistanceLeft = presentationManager.slitta.left + presentationManager.slitta.width;
             	presentationManager.timeToPerformMovement = 1000;
@@ -428,7 +428,7 @@ var frameAnimatorNamespace = {
 				presentationManager.slitta.drawElement();
 				
 				
-				window.cancelRequestAnimationFrame(presentationManager.currentAnimationFrame);
+				window.cancelAnimationFrame(presentationManager.currentAnimationFrame);
 				presentationManager.totalDistanceTop = - presentationManager.slitta.top + presentationManager.slitta.height;
 				presentationManager.totalDistanceLeft = getScreenWidth() - presentationManager.slitta.left + presentationManager.slitta.width;
 				presentationManager.totalScaleFactorIncrease = 0 - (presentationManager.slitta.currentScale);
@@ -459,7 +459,7 @@ var frameAnimatorNamespace = {
 			}
 			else {
 				
-				window.cancelRequestAnimationFrame(presentationManager.currentAnimationFrame);
+				window.cancelAnimationFrame(presentationManager.currentAnimationFrame);
 				gameIsEnded();
 			}
 			

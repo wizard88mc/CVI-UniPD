@@ -75,6 +75,7 @@ function presentationComplete() {
 
 function allInfosRetrieved() {
 
+	console.log("allInfosRetrieved");
     gameManager.divMainContent.on('mousedown', function(event) {
         $(this).on('mousemove', touchManagerNamespace.touchOnDiv);
     });
@@ -91,28 +92,36 @@ function allInfosRetrieved() {
 }
 
 function allExamplesCompleted() {
-	gameManager.isAnExample = false;
-    $('#divSounds #soundBefore').remove();
-    $('#divSounds #soundAfter').remove();
-    $('#imgArrow').remove();
-    
-    
-    if (!playingWithoutWebSocket) {
-	    var packetToSend = {
-	    	'TYPE': 'PRESENTATION_COMPLETE'
-	    };
+	console.log("allExamplesCompelted");
+	try{
+		
+		gameManager.isAnExample = false;
+	    $('#divSounds #soundBefore').remove();
+	    $('#divSounds #soundAfter').remove();
+	    $('#imgArrow').remove();
 	    
-	    websocket.send(JSON.stringify(packetToSend));
-    }
-    else {
-    	if (!playingWithoutWebSocket) {
-    		OfflineNamespace.initFolderForGame();
-    	}
-    	else {
-    		offlineSavingWithLocalStorage();
-    	}
-    }
-    
+	    
+	    if (!playingWithoutWebSocket) {
+		    var packetToSend = {
+		    	'TYPE': 'PRESENTATION_COMPLETE'
+		    };
+		    
+		    websocket.send(JSON.stringify(packetToSend));
+	    }
+	    else {
+	    	if (window.requestFileSystem) {
+	    		console.log(OfflineNamespace);
+	    		OfflineNamespace.initFolderForGame();
+	    	}
+	    	else {
+	    		offlineSavingWithLocalStorage();
+	    	}
+	    }
+	}
+	catch(error) {
+		console.log("error in allExamplesCompleted");
+		console.log(error);
+	}
 }
 
 function initGame() {
@@ -136,6 +145,7 @@ function initGame() {
 
 function manageLevels(repeatLevel) {
 
+	console.log("manageLevels");
     if (repeatLevel) {
         gameManager.currentLevelRepetition++;
 
@@ -389,6 +399,7 @@ function localFileSystemInitializationComplete() {
 		}
 		
 		// richiesta delle impostazioni di gioco
+		console.log("Sending request");
 		
 		$.ajax({
 			url: '../server/GetLevelsHelpMe.php',
@@ -397,13 +408,22 @@ function localFileSystemInitializationComplete() {
 				patientID: patientID
 			},
 			success: function(data) {
+				
 				livelliGioco = JSON.parse(data);
 				
 				// x saltare presentazione
 				/*presentationManager = new PresentationManager();
 				presentationManager.createElements();*/
-				initGame();
-				allExamplesCompleted();
+				try {
+					//initGame();
+					//allExamplesCompleted();
+					presentationManager = new PresentationManager();
+					presentationManager.createElements();
+				}
+				catch(error) {
+					console.log("Errore in localFileSystemInitializationComplete");
+					console.log(error);
+				}
 			}
 			
 		});
@@ -441,6 +461,8 @@ function folderForOfflineSavingCreated() {
 
 function offlineSavingWithLocalStorage() {
 	
+	console.log("offlineSavingWithLocalStorage");
+	console.log(websocket);
 	folderNameLocalStorage = OfflineNamespace.createFolderForOfflineWithLocalStorage();
 	
 	gameManager.timeToStart = new Date().getTime() + 5000;

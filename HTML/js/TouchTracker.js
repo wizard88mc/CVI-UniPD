@@ -43,6 +43,7 @@ function resetTouch() {
  * @param {Object} touch
  */
 function touchTouch(e, touch) {
+	e.preventDefault();
 	if (touchManager.event == '') {
 		touchManager.event = 'T';
 		addTouchInformations(touch);	
@@ -57,6 +58,7 @@ function touchTouch(e, touch) {
  * @param {Object} touch
  */
 function touchMove(e, touch) {
+	e.preventDefault();
 	touchManager.event = 'M';
 	addTouchInformations(touch);
 }
@@ -71,6 +73,7 @@ function touchMove(e, touch) {
  */
 
 function touchUp(e, touch) {
+	e.preventDefault();
 	touchManager.event = 'R';
 	
 }

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 05, 2012 at 02:28 PM
+-- Generation Time: Oct 09, 2012 at 02:38 PM
 -- Server version: 5.5.24-log
 -- PHP Version: 5.3.13
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `CatchMeEvaluation` (
   `EyeEvaluation` float DEFAULT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `IDVisit` (`IDVisit`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=312 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=315 ;
 
 --
 -- Dumping data for table `CatchMeEvaluation`
@@ -95,7 +95,10 @@ INSERT INTO `CatchMeEvaluation` (`ID`, `IDVisit`, `TouchEvaluation`, `EyeEvaluat
 (308, 347, 23.53, 0),
 (309, 348, 7.28, 0),
 (310, 350, 7.28, 0),
-(311, 351, 23.53, 0);
+(311, 351, 23.53, 0),
+(312, 352, 38.24, 0),
+(313, 354, 29.17, 0),
+(314, 355, 13.57, 0);
 
 -- --------------------------------------------------------
 
@@ -340,7 +343,7 @@ CREATE TABLE IF NOT EXISTS `MachinesOffset` (
   `Offset` varchar(500) COLLATE utf8_unicode_ci NOT NULL,
   `DateOffsetCalculation` date NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene tutti i valori di offset calcolati per le macchine utilizzate' AUTO_INCREMENT=133 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene tutti i valori di offset calcolati per le macchine utilizzate' AUTO_INCREMENT=137 ;
 
 --
 -- Dumping data for table `MachinesOffset`
@@ -451,7 +454,11 @@ INSERT INTO `MachinesOffset` (`ID`, `Offset`, `DateOffsetCalculation`) VALUES
 (129, '1.0,-0.7', '2012-09-30'),
 (130, '1.0,-0.7', '2012-09-30'),
 (131, '1.0,0.7', '2012-10-01'),
-(132, '1.0,-0.7', '2012-10-03');
+(132, '1.0,-0.7', '2012-10-03'),
+(133, '1.0,-0.7', '2012-10-07'),
+(134, '1.0,-0.7', '2012-10-07'),
+(135, '1.0,-0.7', '2012-10-07'),
+(136, '1.0,-0.7', '2012-10-08');
 
 -- --------------------------------------------------------
 
@@ -479,7 +486,7 @@ CREATE TABLE IF NOT EXISTS `Patients` (
 --
 
 INSERT INTO `Patients` (`ID`, `DoctorID`, `Name`, `Surname`, `Sex`, `DateOfBirth`, `Gravity`, `Username`, `Password`) VALUES
-(1, 1, 'Matteo', 'Ciman', 'M', NULL, 'M', NULL, NULL),
+(1, 1, 'Matteo', 'Ciman', 'M', NULL, 'M', 'matteo.ciman', '610e2c278a8d33efcaade795132b2867'),
 (2, 1, 'Mario', 'Rossi', 'M', NULL, 'M', NULL, NULL),
 (3, 0, 'Pinco', 'Pallo', 'F', '2012-07-10', 'M', NULL, NULL),
 (4, 1, 'Paperino', 'Paolino', 'M', '2012-09-03', 'M', 'paperino.paolino', '7f241383606400698f7d0dd533d7f02f');
@@ -499,7 +506,7 @@ CREATE TABLE IF NOT EXISTS `Visits` (
   `Folder` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `IsAtHome` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=352 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=356 ;
 
 --
 -- Dumping data for table `Visits`
@@ -842,7 +849,11 @@ INSERT INTO `Visits` (`ID`, `Date`, `IDPatient`, `IDGame`, `Folder`, `IsAtHome`)
 (348, '2012-10-03', 1, 1, 'archivio_visite/1/2012-10-03-18-22-348/', 1),
 (349, '2012-10-04', 1, 2, 'archivio_visite/1/2012-10-04-19-1-349/', 1),
 (350, '2012-10-03', 1, 1, 'archivio_visite/1/2012-10-03-18-22-350/', 1),
-(351, '2012-10-03', 1, 1, 'archivio_visite/1/2012-10-03-18-28-351/', 1);
+(351, '2012-10-03', 1, 1, 'archivio_visite/1/2012-10-03-18-28-351/', 1),
+(352, '2012-10-05', 1, 1, 'archivio_visite/1/2012-10-05-17-48-352/', 1),
+(353, '2012-10-07', 1, 1, 'archivio_visite/1/2012-10-7-11-12-353/', 0),
+(354, '0000-00-00', 1, 1, 'archivio_visite/1/1-2012-10-8-1-354/', 1),
+(355, '2012-10-08', 1, 1, 'archivio_visite/1/2012-10-8-18-17-355/', 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

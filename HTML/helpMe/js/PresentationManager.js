@@ -35,7 +35,7 @@ function GnomoElement(){
     }
     
     this.calculateTargetDimensions = function() {
-        this.targetWidth = getScreenWidth() / 20;
+        this.targetWidth = getScreenWidth() / 10;
         
         this.targetHeight = this.targetWidth / this.ratioDimensions;
         
