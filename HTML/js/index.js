@@ -148,7 +148,7 @@ function secondStepPage() {
 		removeFromSessionStorage("doctorID");
 		removeFromSessionStorage("permission")
 		location.replace('index.html');
-	})
+	});
 	
 	var divSceltaOperazione = $('<div id="divSceltaOperazione"></div>');
 	divSceltaOperazione.css('width', '70%')
@@ -204,9 +204,6 @@ function checkLocalStorageForOfflineExercises() {
 	
 	var count = 0;
 	for (var i = 0; i < localStorage.length; i++) {
-		
-		//var pattern = new RegExp("\d+_\d{4}_\d+_\d+_\d+_\d+_\d+", "gi");
-		
 		
 		var folder = localStorage.key(i);
 		
@@ -294,7 +291,6 @@ $(document).ready(function(e) {
 		$('<div id="divButtonLogin" class="alignCenter"><button id="buttonLogin">Login</button></div>').appendTo(divPage);
 		$('#buttonLogin').button();
 		$('#buttonLogin').click(checkLogin);
-		//$('#buttonLogin').click(secondStepPage);
 		
 		window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
 		

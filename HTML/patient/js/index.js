@@ -105,10 +105,22 @@ $('document').ready(function(e) {
 		
 		divCatchMe.on('click', function() {
 			location.replace('../catchMe/');
-		})
+		});
 		divHelpMe.on('click', function() {
 			location.replace('../helpMe/')
-		})
+		});
+		
+		var logout = $('<img id="buttonLogout" src="images/esci.png" alt="Logout" />').appendTo('#divMainContent');
+		
+		logout.on('click', function() {
+			
+			removeFromSessionStorage("logged");
+			removeFromSessionStorage("patientName");
+			removeFromSessionStorage("patientSurname");
+			removeFromSessionStorage("patientID");
+			removeFromSessionStorage("permission")
+			location.replace('../index.html');
+		});
 		
 	}
 });

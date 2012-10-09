@@ -1,5 +1,6 @@
 *.rar
 *.zip
+*.jar
 HTML/server/WebsocketServer/archivio_visite
 HTML/server/WebsocketServer/build
 HTML/server/WebsocketServer/dist
@@ -7,3 +8,4 @@ HTML/server/WebsocketServer/doc
 HTML/server/WebsocketServer/nb_project
 HTML/server/WebsocketServer/build.xml
 HTML/server/WebsocketServer/manifest.xml
+HTML/server/WebsocketServer/src/org/java_websocket/util/DatabaseManager.java

@@ -248,7 +248,11 @@ function levelComplete() {
         else {
             manageLevels(true);
         }
-    })
+    });
+    
+    sacco.secondElement.css({
+    	top: getScreenHeight()
+    });
     
 }
 
