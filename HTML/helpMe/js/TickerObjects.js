@@ -97,10 +97,48 @@ var frameAnimatorNamespace = {
                 }
             }
             else {
-                setTimeout(function() {
+                /*setTimeout(function() {
 
                     ExampleNamespace.exampleCompleted();
-                }, 1000);
+                }, 1000);*/
+            	
+            	imageObjectOnScreen.element.one('transitionend webkitTransitionEnd oTransitionEnd', function() {
+        			
+            		imageObjectOnScreen.element.one('transitionend webkitTransitionEnd oTransitionEnd', function() {
+            			
+            			ExampleManager.exampleCompleted();
+            		})
+            		
+            		imageObjectOnScreen.element.css({
+                		'transition': 'all 2s linear',
+                		'-moz-transition': 'all 2s linear',
+                		'-webkit-transition': 'all 2s linear',
+                		'-o-transition': 'all 2s linear'
+                	});
+                	
+                	imageObjectOnScreen.element.css({
+                		width: '0px',
+                		height: '0px',
+                		left: '0px',
+                		top: imageObjectOnScreen.center.top,
+                		'-webkit-transform': 'rotate(720deg)',
+                		'-moz-transform': 'rotate(720deg)',
+                		'-o-transform': 'rotate(720deg)',
+                		'transform': 'rotate(720deg)'
+                	});
+        		})
+        		
+        		imageObjectOnScreen.element.css({
+            		'transition': 'left 2s linear',
+            		'-moz-transition': 'left 2s linear',
+            		'-webkit-transition': 'left 2s linear',
+            		'-o-transition': 'left 2s linear'
+            	});
+            	
+            	imageObjectOnScreen.element.css({
+            		left: cestino.width + 'px',
+            	});
+            	
             }
         }
     },

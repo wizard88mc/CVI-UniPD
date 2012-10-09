@@ -60,9 +60,9 @@ anotherImageRetrieved: function() {
     	//ExampleNamespace.prepareExamples();
         //presentationManager = new PresentationManager();
         //presentationManager.createElements();
-        
-        
         //ExampleNamespace.prepareExamples();
+    	
+    	
     	openWebSocket(port);
     }
 },
@@ -118,7 +118,6 @@ retrieveLevels: function(fileName) {
 
 istantiateLevel: function(level) {
 
-	console.log(level);
     var distrattori = [];
     var target = [];
     var targetFamily = level.targetFamily;
