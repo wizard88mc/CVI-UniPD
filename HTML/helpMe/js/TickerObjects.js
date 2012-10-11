@@ -106,8 +106,8 @@ var frameAnimatorNamespace = {
         			
             		imageObjectOnScreen.element.one('transitionend webkitTransitionEnd oTransitionEnd', function() {
             			
-            			ExampleManager.exampleCompleted();
-            		})
+            			ExampleNamespace.exampleCompleted();
+            		});
             		
             		imageObjectOnScreen.element.css({
                 		'transition': 'all 2s linear',
@@ -287,10 +287,7 @@ var frameAnimatorNamespace = {
 	                presentationManager.gnomo.width = presentationManager.gnomo.targetWidth;
 	                presentationManager.gnomo.height = presentationManager.gnomo.targetHeight;
 	                
-	                var screenPart = getScreenHeight() / 4;
-	                var half = screenPart / 2;
-	                var positionInPart = half - presentationManager.gnomo.height / 2;
-	                presentationManager.gnomo.top = screenPart * 2 + positionInPart;
+	                presentationManager.gnomo.top = (getScreenHeight() * 0.7) - presentationManager.gnomo.height; 
 	                
 	                presentationManager.slitta.currentScale = presentationManager.slitta.targetScale;
 	                presentationManager.slitta.width = presentationManager.slitta.targetWidth;
@@ -327,7 +324,7 @@ var frameAnimatorNamespace = {
             if (distance > 0) {
 
                 if (distance < 100 && distance > 30) {
-                    $('#audioFrenata').get(0).play();
+                    $('#divSounds #audioFrenata').get(0).play();
                     presentationManager.timeToPerformMovement = 
                         (distance * 500);
                     presentationManager.distanceModified = true;

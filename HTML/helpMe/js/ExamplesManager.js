@@ -15,7 +15,7 @@ this.loadOtherImages = function() {
 
     this.arrowImage = new Image();
     this.arrowImage.onload = ExampleNamespace.imageForExampleLoaded;
-    this.arrowImage.src = 'images/down_arrow.jpg';
+    this.arrowImage.src = 'images/down_arrow.png';
 };
 
 this.reduceArrowHeight = function(delta) {

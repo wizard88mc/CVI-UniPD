@@ -39,6 +39,11 @@ function GnomoElement(){
         
         this.targetHeight = this.targetWidth / this.ratioDimensions;
         
+        if (this.targetHeight > getScreenHeight() / 2) {
+        	this.targetWidth = Math.round(this.targetWidth * 2 / 3);
+        	this.targetHeight = Math.round(this.targetHeight * 2 / 3);
+        }
+        
         this.targetScale = this.targetWidth / this.image.naturalWidth;
         
     }

@@ -368,12 +368,16 @@ startGame: function() {
 	/**
 	 * Registro gli eventi per la gestione del tocco
 	 */
-	$('body').on('tapone', touchTouch)
-			.on('swipemove', touchMove)
-			.on('swipeone', touchUp);
+	$('body').on('touchstart touchmove', function(e) {
+		e.preventDefault();
+	});
+	$('body').on('mousedown touchstart', touchTouch)
+			.on('mousemove touchmove', touchMove)
+			.on('mouseup touchend', touchUp);
 	
-	$('#image').on('tapone swipemove swipeone mouseover', function() {
+	$('#image').on('mousemove touchmove touchstart mousedown', function(e) {
 
+		e.preventDefault();
 		var time = new Date().getTime();
 		if (time - gameManager.lastTimePlayedGoodSound > 5000) {
 			$('#divSounds #soundOnImage').get(0).play();
@@ -395,11 +399,11 @@ startGame: function() {
 	$('<img src="../images/close.png" alt="Chiudi" />').appendTo($('#divCloseGame'));
 	$('#divCloseGame img').css('width', '40%').css('visibility', 'hidden');
 	
-	$('#divCloseGame').click(function(event) {
+	$('#divCloseGame').on('click touchstart', function(event) {
 		
 		$('#divCloseGame img').css('visibility', 'visible');
 		timeCloseIconShowed = new Date().getTime();
-		$('#divCloseGame img').click(function(event) {
+		$('#divCloseGame img').on('click touchstart', function(event) {
 			
 			gameManager.gameInAction = false;
 			var packetToSend = { TYPE: 'STOP_GAME'};

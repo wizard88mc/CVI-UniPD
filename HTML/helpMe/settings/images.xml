@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <imageMaterials>
     <family type="animali" audioFile="sound_prova">
-        <image id="1" name="Oca" fileName="oca.jpg" />
+        <image id="1" name="Oca" fileName="oca.png" />
         <image id="2" name="Asino" fileName="asino.png" />
         <image id="3" name="Coniglio" fileName="coniglio.png" />
         <image id="4" name="Gallina" fileName="gallina.png" />
-        <image id="5" name="Gatto" fileName="gatto.jpg" />
+        <image id="5" name="Gatto" fileName="gatto.png" />
         <image id="6" name="Maiale" fileName="maiale.png" />
         <image id="7" name="Tartaruga" fileName="tartaruga.png" />
     </family>
