@@ -37,10 +37,10 @@ function manageOfflineCatchMePackets($packets, $folderForFiles, $visitID, $conne
 			
 			$distanceTouch = -1;
 			
-			if ($touchPosition[0] != -1 && $touchPosition[1] != -1) {
+			if ((int)$touchPosition[0] != -1 && (int)$touchPosition[1] != -1) {
 			
-				$distanceTouch = round(sqrt(pow($touchPosition[0] - $leftCenterImage, 2) +
-					pow($touchPosition[1] - $topCenterImage, 2)));
+				$distanceTouch = round(sqrt(pow((int)$touchPosition[0] - $leftCenterImage, 2) +
+					pow((int)$touchPosition[1] - $topCenterImage, 2)));
 			}
 				
 			$stringDelta = "(" . $time . "," . $distanceTouch . ",-1,"
@@ -79,11 +79,6 @@ function manageOfflineCatchMePackets($packets, $folderForFiles, $visitID, $conne
 	
 	$stringToRemove = "WebsocketServer" . DIRECTORY_SEPARATOR;
 	
-	/*$fileNameInputEyeTracking = str_replace($stringToRemove, "", $fileNameInputEyeTracking);
-	$fileNameInputImage = str_replace($stringToRemove, "", $fileNameInputImage);
-	$fileNameInputTouch = str_replace($stringToRemove, "", $fileNameInputTouch);
-	$fileNameSettings = str_replace($stringToRemove, "", $fileNameSettings);*/
-	
 	// invocazione di codice java per
 	// far partire performance analyzer di catchMe
 	
@@ -91,7 +86,7 @@ function manageOfflineCatchMePackets($packets, $folderForFiles, $visitID, $conne
 	
 	$parameters = "$fileNameInputImage $fileNameInputEyeTracking $fileNameInputTouch $fileNameSettings $visitID";
 	
-	exec("java -jar WebsocketServer" . DIRECTORY_SEPARATOR . "dist\WebSocketServer.jar $parameters", $array);
+	exec("java -jar WebsocketServer" . DIRECTORY_SEPARATOR . "dist" . DIRECTORY_SEPARATOR  . "WebSocketServer.jar $parameters", $array);
 	
 	print_r($array);
 }

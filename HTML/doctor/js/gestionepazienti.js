@@ -32,13 +32,18 @@ function drawCatchMeTable(visits) {
 
 	var table = $('<table id="tableVisitsCatchMe"></table>');
 	$('<caption>Gioco Prendimi!</caption>').addClass('ui-widget-header').appendTo(table);
-	$('<thead><tr><th>Data</th><th>Valutazione Vista</th><th>Valutazione Tocco</th><th>Visualizza Grafo</th></tr></thead>').addClass('ui-widget-header').appendTo(table);
+	var thead = $('<thead></thead>').addClass('ui-widget-header').appendTo(table);
+	$('<tr>').appendTo(thead);
+	$('<th>Data</th>').appendTo(thead);
+	$('<th>Valutazione Vista</th>').appendTo(thead);
+	$('<th>Valutazione Tocco</th>').appendTo(thead);
+	$('<th>Casa/Studio</th>').addClass('smallColumn').appendTo(thead);
+	$('<th>Visualizza Grafico</th>').appendTo(thead);
 			
 	var body;
 	if (visits.length > 0) {
 		
-		body = $('<tbody></tbody>');
-			body.appendTo(table);
+		body = $('<tbody>').appendTo(table);
 	}
 			
 	for (element in visits) {
@@ -57,10 +62,20 @@ function drawCatchMeTable(visits) {
 			visits[element].TOUCH_EVAL = touchEval;
 		}
 				
-		var row = $('<tr></tr>');
+		var row = $('<tr>');
 		$('<td>'+data+'</td>').appendTo(row);
 		$('<td>'+eyeEval+'</td>').appendTo(row);
 		$('<td>'+touchEval+'</td>').appendTo(row);
+		
+		if (visits[element].IS_AT_HOME == true) {
+			var image = $('<img src="images/home.png" alt="Visita a casa" />');
+			image.appendTo($('<td>').appendTo(row));
+		}
+		else {
+			var image = $('<img src="images/hospital.png" alt="Visita in studio" />');
+			image.appendTo($('<td>').appendTo(row));
+		}
+		
 		var image = $('<img src="../images/navigate-right.png" alt="Visualizza grafo" />')
 				.addClass('watchButton');
 							
@@ -103,14 +118,20 @@ function drawHelpMeTable(visits) {
 
 	var table = $('<table id="tableVisitsHelpMe"></table>');
 	$('<caption>Gioco Aiutami!</caption>').addClass('ui-widget-header').appendTo(table);
-	$('<thead><tr><th>Data</th><th>First Response Time (ms)</th><th>Completion Time (ms)</th><th>Ris. Corrette</th><th>Ris. Errate</th><th>Visualizza Esercizio</th></tr></thead>')
-		.addClass('ui-widget-header').appendTo(table);
+	var thead = $('<thead>').addClass('ui-widget-header').appendTo(table);
+	$('<tr>').appendTo(thead);
+	$('<th>Data</th>').appendTo(thead);
+	$('<th>T. Risposta (ms)</th>').appendTo(thead);
+	$('<th>T. Completamento (ms)</th>').appendTo(thead);
+	$('<th>Ris. Corrette</th>').appendTo(thead);
+	$('<th>Ris. Errate</th>').appendTo(thead);
+	$('<th>Casa/Studio</th>').addClass('smallColumn').appendTo(thead);
+	$('<th>Dettagli</th>').appendTo(thead);
 			
 	var body;
 	if (visits.length > 0) {
 		
-		body = $('<tbody></tbody>');
-			body.appendTo(table);
+		body = $('<tbody>').appendTo(table);
 	}
 			
 	for (element in visits) {
@@ -122,12 +143,22 @@ function drawHelpMeTable(visits) {
 		var correct = visits[element].CORRECT_ANSWERS;
 		var wrong = visits[element].WRONG_ANSWERS;
 				
-		var row = $('<tr></tr>');
+		var row = $('<tr>');
 		$('<td>'+data+'</td>').appendTo(row);
 		$('<td>'+firstResponseTime+'</td>').appendTo(row);
 		$('<td>'+completionTime+'</td>').appendTo(row);
 		$('<td>'+correct+'</td>').appendTo(row);
 		$('<td>'+wrong+'</td>').appendTo(row);
+		
+		if (visits[element].IS_AT_HOME == true) {
+			var image = $('<img src="images/home.png" alt="Visita a casa" />');
+			image.appendTo($('<td>').appendTo(row));
+		}
+		else {
+			var image = $('<img src="images/hospital.png" alt="Visita in studio" />');
+			image.appendTo($('<td>').appendTo(row));
+		}
+		
 		var image = $('<img src="../images/navigate-right.png" alt="Visualizza esercizi" />')
 				.addClass('watchButton');
 							
@@ -137,7 +168,7 @@ function drawHelpMeTable(visits) {
 			makeRequestForExercisesStory(id);
 		});
 
-		var cell = $('<td></td>');
+		var cell = $('<td>');
 		image.appendTo(cell);
 		$('<input type="hidden" name="visitID" value="' + visitID + '" />').appendTo(cell);
 		cell.appendTo(row);
@@ -385,6 +416,7 @@ function drawGraph(differentValues) {
 			
 			var eye = parseInt(objectInfo.DELTA_EYE);
 			var touch = parseInt(objectInfo.DELTA_TOUCH);
+			console.log(touch);
 			
 			if (eye > touch && eye > maxY) {
 				if (eye > maxY) {

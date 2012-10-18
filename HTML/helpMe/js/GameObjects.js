@@ -117,7 +117,7 @@ this.getSystemSounds = function() {
     utilsNamespace.addSoundSource(soundFrenata, "frenata");
     
     var introductionSound = $('<audio id="audioIntroduzione"></audio>').appendTo(divSounds);
-    utilsNamespace.addSoundSource(introductionSound, "sound_prova");
+    utilsNamespace.addSoundSource(introductionSound, "introduzione");
 }
 
 }

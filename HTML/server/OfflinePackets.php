@@ -12,6 +12,7 @@ $array = explode("\n", $packets);
 $firstPacket = json_decode($array[0], true);
 
 list($year, $month, $day, $hour, $minutes, $seconds) = explode('_', $folderNameClient);
+$month = ((int)$month) + 1;
 
 $gameIdentification = $firstPacket['GAME'];
 

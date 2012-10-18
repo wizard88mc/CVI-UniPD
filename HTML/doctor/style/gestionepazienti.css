@@ -103,6 +103,10 @@ caption {
 	
 }
 
+table .smallColumn {
+	width: 15%;
+}
+
 .watchButton {
 	cursor: pointer; 
 }

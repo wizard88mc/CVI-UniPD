@@ -94,7 +94,7 @@ if ($fileDelta != 0) {
 	}
 }
 
-echo json_encode($arrayResult, JSON_NUMERIC_CHECK);
+echo json_encode($arrayResult);
 
 
 

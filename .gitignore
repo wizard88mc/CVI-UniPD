@@ -1,6 +1,9 @@
 *.rar
 *.zip
 *.jar
+*.mp3
+*.ogg
+*.wma
 HTML/server/WebsocketServer/archivio_visite
 HTML/server/WebsocketServer/build
 HTML/server/WebsocketServer/dist
