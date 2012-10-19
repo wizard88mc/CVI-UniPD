@@ -97,7 +97,15 @@ this.loadImage = function() {
 
         initGame();
         gameManager.isAnExample = true;
-        ExampleNamespace.iterateOnExamples();
+        var introductionSound = $('<audio id="audioIntroduzione"></audio>').appendTo(divSounds);
+        utilsNamespace.addSoundSource(introductionSound, "introduzione");
+        
+        introductionSound.on('ended', function() {
+        	
+        	$(this).remove();
+        	ExampleNamespace.iterateOnExamples();
+        }).get(0).play();
+        
     }
 },
 
@@ -114,6 +122,7 @@ this.loadImage = function() {
 
         $('#divSounds #soundBefore').remove();
         $('#divSounds #soundAfter').remove();
+        $('#imgArrow').remove();
 
         if (exampleManager.currentExample.soundBefore != null) {
             var soundBefore = $('<audio id="soundBefore"></audio>').appendTo('#divSounds');
@@ -139,16 +148,17 @@ this.loadImage = function() {
 
     exampleCompleted: function() {
 
-    if ($('#divSounds #soundAfter').length > 0) {
-        $('#divSounds #soundAfter').on('ended', function() {
-
-            imageObjectOnScreen.element.remove();
-            ExampleNamespace.iterateOnExamples();
-        }).get(0).play();
-    }
-    else {
-        imageObjectOnScreen.element.remove();
-        ExampleNamespace.iterateOnExamples();
-    }
-}
+    
+	    if ($('#divSounds #soundAfter').length > 0) {
+	        $('#divSounds #soundAfter').on('ended', function() {
+	
+	            imageObjectOnScreen.element.remove();
+	            ExampleNamespace.iterateOnExamples();
+	        }).get(0).play();
+	    }
+	    else {
+	        imageObjectOnScreen.element.remove();
+	        ExampleNamespace.iterateOnExamples();
+	    }
+	}
 }

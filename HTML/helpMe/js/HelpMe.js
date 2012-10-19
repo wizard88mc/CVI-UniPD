@@ -279,16 +279,21 @@ function objectInsertedIntoSacco() {
 
         gameManager.packetWithResults.RIGHT_ANSWER = true;
         // Visualizzo immagine e suono corretto
-        $('#audioGoodAnswer').get(0).play();
         gameManager.imageRightAnswer.show();
+        
+        // scelgo tra tutti i suoni a disposizione di risposta
+        // positiva uno a caso e lo riproduco
 
     }
     else { // Non era oggetto target: ERRORE
 
         gameManager.packetWithResults.RIGHT_ANSWER = false;
-        $('#audioBadAnswer').get(0).play();
-        gameManager.imageBadAnswer.show();
         gameManager.levelCompletedCorrectly = false;
+        
+        gameManager.imageBadAnswer.show();
+        // scelgo tra tutti i suoni a diposizione uno 
+        // per la risposta sbagliata
+        
     }
 
     websocket.send(JSON.stringify(gameManager.packetWithResults))
@@ -515,7 +520,6 @@ function manageWriteOfflineWithLocalStorage(data) {
 		totalPacketsIntoStringForOffline = 0;
 	}
 	
-	
 	if (packet.TYPE == "STOP_GAME") {
 		
 		var stringAlreadyInserted = getFromLocalStorage(folderNameLocalStorage);
@@ -551,7 +555,8 @@ function presentationEnded() {
 
 $('document').ready(function() {
 
-    gameManager.divMainContent = $('#divMainContent').width(getScreenWidth()).height(getScreenHeight()).css('overflow', 'hidden');
+    gameManager.divMainContent = $('#divMainContent').width(getScreenWidth())
+    	.height(getScreenHeight()).css('overflow', 'hidden');
 
     gameManager.getSystemImages();
     gameManager.getSystemSounds();

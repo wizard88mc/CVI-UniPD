@@ -101,43 +101,56 @@ var frameAnimatorNamespace = {
 
                     ExampleNamespace.exampleCompleted();
                 }, 1000);*/
-            	
-            	imageObjectOnScreen.element.one('transitionend webkitTransitionEnd oTransitionEnd', function() {
-        			
-            		imageObjectOnScreen.element.one('transitionend webkitTransitionEnd oTransitionEnd', function() {
-            			
-            			ExampleNamespace.exampleCompleted();
-            		});
             		
-            		imageObjectOnScreen.element.css({
-                		'transition': 'all 2s linear',
-                		'-moz-transition': 'all 2s linear',
-                		'-webkit-transition': 'all 2s linear',
-                		'-o-transition': 'all 2s linear'
-                	});
-                	
-                	imageObjectOnScreen.element.css({
-                		width: '0px',
-                		height: '0px',
-                		left: '0px',
-                		top: imageObjectOnScreen.center.top,
-                		'-webkit-transform': 'rotate(720deg)',
-                		'-moz-transform': 'rotate(720deg)',
-                		'-o-transform': 'rotate(720deg)',
-                		'transform': 'rotate(720deg)'
-                	});
-        		})
+        		var objectTransition = function() {            		
+	            	imageObjectOnScreen.element.one('transitionend webkitTransitionEnd oTransitionEnd', function() {
+	        			
+	            		imageObjectOnScreen.element.one('transitionend webkitTransitionEnd oTransitionEnd', function() {
+	            			
+	            			ExampleNamespace.exampleCompleted();
+	            		});
+	            		
+	            		imageObjectOnScreen.element.css({
+	                		'transition': 'all 2s linear',
+	                		'-moz-transition': 'all 2s linear',
+	                		'-webkit-transition': 'all 2s linear',
+	                		'-o-transition': 'all 2s linear'
+	                	});
+	                	
+	                	imageObjectOnScreen.element.css({
+	                		width: '0px',
+	                		height: '0px',
+	                		left: '0px',
+	                		top: imageObjectOnScreen.center.top,
+	                		'-webkit-transform': 'rotate(720deg)',
+	                		'-moz-transform': 'rotate(720deg)',
+	                		'-o-transform': 'rotate(720deg)',
+	                		'transform': 'rotate(720deg)'
+	                	});
+	        		});
+	            	
+	            	imageObjectOnScreen.element.css({
+	            		'transition': 'left 2s linear',
+	            		'-moz-transition': 'left 2s linear',
+	            		'-webkit-transition': 'left 2s linear',
+	            		'-o-transition': 'left 2s linear'
+	            	});
+	            	
+	            	imageObjectOnScreen.element.css({
+	            		left: cestino.width + 'px',
+	            	});
+        		}
         		
-        		imageObjectOnScreen.element.css({
-            		'transition': 'left 2s linear',
-            		'-moz-transition': 'left 2s linear',
-            		'-webkit-transition': 'left 2s linear',
-            		'-o-transition': 'left 2s linear'
-            	});
-            	
-            	imageObjectOnScreen.element.css({
-            		left: cestino.width + 'px',
-            	});
+        		if ($('#divSounds #soundBefore').length > 0) {
+        			
+        			$('#divSounds #soundBefore').on('ended', function() {
+        				
+        				objectTransition();
+        			}).get(0).play();
+        		}
+        		else {
+        			objectTransition();
+        		}
             	
             }
         }
@@ -351,18 +364,23 @@ var frameAnimatorNamespace = {
             }
             else {
                 window.cancelAnimationFrame(presentationManager.currentAnimationFrame);
-                $('#audioIntroduzione').on('ended', function() {
-                    console.log("Completed");
-                    $('#divMainContent').children().css({
-                    	visibility: 'hidden'
-                    });
-                    presentationEnded();
+                //$('#audioIntroduzione').on('ended', function() {
+                  //  console.log("Completed");
+                    setTimeout(function() {
+                    	$('#divMainContent').children().css({
+                        	visibility: 'hidden'
+                        });
+                    	
+                    	$('#divSounds #audioFrenata').remove();
+                        presentationEnded();
+                    }, 1500);
+                    
                     /*setTimeout(function() {
                     	presentationManager.timeLastFrame = new Date().getTime();	
                     	presentationManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.gnomoReturnsOnSlitta);
                     });*/
                     //ExampleNamespace.prepareExamples();
-                }).get(0).play();
+                //}).get(0).play();
             }
         }
     }

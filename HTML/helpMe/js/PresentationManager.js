@@ -155,6 +155,9 @@ function PresentationManager() {
     this.totalHeightIncrease = 0;
     this.totalScaleFactorIncrease = 0;
     this.timeToPerformMovement = 2000;
+    
+    var soundFrenata = $('<audio id="audioFrenata"></audio>').appendTo('#divSounds');
+    utilsNamespace.addSoundSource(soundFrenata, "frenata");
 
 this.loadComplete = function() {
     presentationManager.imagesLoaded++;

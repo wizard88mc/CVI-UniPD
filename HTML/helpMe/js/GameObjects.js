@@ -99,13 +99,23 @@ this.getSystemSounds = function() {
 
     var divSounds = $('<div id="divSounds"></div>').appendTo('body');
 
-    var goodAnswer = $('<audio id="audioGoodAnswer"></audio>').appendTo(divSounds);
-    utilsNamespace.addSoundSource(goodAnswer, "sound_prova");
+    var goodAnswers = $('<div id="soundsGoodAnswer"></div>').appendTo(divSounds);
+    var badAnswers = $('<div id="soundsBadAnswer"></div>').appendTo(divSounds);
+    
+    // array with the name of the files to play in case of 
+    // good answer or bad answer
+    var goodSounds = ["bene", "molto_bene", "continua_cosi"];
+    var badSounds = ["intruso"];
+    
+    for (x in goodAnswers) {
+    	utilsNamespace.addSoundSource($('<audio>').appendTo(goodAnswers), goodSounds[x]);
+    }
+    
+    for (x in badSounds) {
+        utilsNamespace.addSoundSource($('<audio>').appendTo(badAnswers), "sound_prova");
+    }
 
-    var badAnswer = $('<audio id="audioBadAnswer"></audio>').appendTo(divSounds);
-    utilsNamespace.addSoundSource(badAnswer, "sound_prova");
-
-    $('#divSounds').children().on('ended', function() {
+    $('#divSounds audio').on('ended', function() {
 
         console.log("Sound ended");
         utilsNamespace.resetGame();
@@ -113,11 +123,6 @@ this.getSystemSounds = function() {
         setTimeout(manageImageObjectsLevel, 1000);
     });
     
-    var soundFrenata = $('<audio id="audioFrenata"></audio>').appendTo(divSounds);
-    utilsNamespace.addSoundSource(soundFrenata, "frenata");
-    
-    var introductionSound = $('<audio id="audioIntroduzione"></audio>').appendTo(divSounds);
-    utilsNamespace.addSoundSource(introductionSound, "introduzione");
 }
 
 }
