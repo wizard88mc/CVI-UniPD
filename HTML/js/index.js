@@ -119,6 +119,7 @@ function loginCorrect(data) {
 		setSessionStorage("patientID", data.ID);
 		setSessionStorage("patientName", data.NAME);
 		setSessionStorage("patientSurname", data.SURNAME);
+		setSessionStorage("patientSex", data.SEX);
 		location.replace('patient/index.html');
 	}
 }

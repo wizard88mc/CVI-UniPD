@@ -1,24 +1,4 @@
 
-/*if (!window.requestAnimationFrame) {
-	window.requestAnimationFrame = (window.requestAnimationFrame ||
-									window.webkitRequestAnimationFrame || 
-                                        window.mozRequestAnimationFrame || 
-                                        window.oRequestAnimationFrame || 
-                                        window.msRequestAnimationFrame ||
-                                        function(callback) {
-                                            return window.setTimeout(callback, 1000 / 60);
-                                        });
-}
-
-window.cancelRequestAnimationFrame = (function() {
-
-    return window.cancelRequestAnimationFrame ||
-        window.webkitCancelRequestAnimationFrame ||
-        window.mozCancelRequestAnimationFrame ||
-        window.oCancelRequestAnimationFrame ||
-        window.msCancelRequestAnimationFrame
-})();*/
-
 (function() {
     var lastTime = 0;
     var vendors = ['ms', 'moz', 'webkit', 'o'];
@@ -60,6 +40,13 @@ getImagesFromSettings: function() {
             $(xml).find('family').each(function() {
                 var family = $(this).attr('type');
                 var audioFile = $(this).attr('audioFile');
+                var audioBagCompleted = $(this).attr('audioBagReady');
+                var audioObjectNotInserted = $(this).attr('audioObjectNotInserted');
+                
+                var sounds = {"audioFile": audioFile, "audioBagCompleted": audioBagCompleted,
+                		"audioObjectNotInserted": audioObjectNotInserted};
+                
+                familySound[family] = sounds;
 
                 immaginiADisposizione[family] = new Array();
 
@@ -122,7 +109,9 @@ retrieveLevels: function(fileName) {
         		})
         		
         		livelliGioco.push(new Level(type, targetsAndDistracters[0], targetsAndDistracters[1],
-	        				targetFamily, sequenceOfImages, familySound[targetFamily] , maxTime));
+	        				targetFamily, sequenceOfImages, familySound[targetFamily]['audioFile'], 
+	        				familySound[targetFamily]['audioBagCompleted'], 
+	        				familySound[targetFamily]['audioObjectNotInserted'], maxTime));
 	        		
         	});
         	
@@ -192,8 +181,14 @@ istantiateLevel: function(level) {
 
     // ho immagini a disposizione, costruisco livello definendo array
 
-    var audio = $('<audio id="audioLevel"></audio>').appendTo('#divSounds');
-    utilsNamespace.addSoundSource(audio, level.sound);
+    utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioLevel').appendTo('#divSounds'), 
+    		level.sound);
+    
+    utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioBagComplete').appendTo('#divSounds'),
+    		level.soundBagComplete);
+    
+    utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioObjectNotInserted').appendTo('#divSounds'),
+    		level.soundObjectNotInserted);
     
     gameManager.maxTimeObjectOnScreen = Number(level.maxTimeImage) * 1000;
 

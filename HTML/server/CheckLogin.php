@@ -20,7 +20,7 @@ if ($queryResult->num_rows > 0) {
 }
 else {
 	
-	$queryCheckLogin = "SELECT ID, Name, Surname FROM Patients WHERE Username = '$username' AND Password = '$password'";
+	$queryCheckLogin = "SELECT ID, Name, Surname, Sex FROM Patients WHERE Username = '$username' AND Password = '$password'";
 	
 	$queryResult = mysqli_query($connection, $queryCheckLogin) or die ("Mysql Error: " . mysqli_error($connection));
 	
@@ -31,6 +31,7 @@ else {
 			"ID" => $result["ID"],
 			"NAME" => $result["Name"],
 			"SURNAME" => $result["Surname"],
+			"SEX" => $result["Sex"],
 			"PERMISSION" => "PATIENT"
 		);
 	}

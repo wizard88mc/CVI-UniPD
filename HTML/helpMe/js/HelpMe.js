@@ -3,6 +3,7 @@ var sacco = null;
 var cestino = null;
 var imageObjectOnScreen = null;
 var immaginiADisposizione = {};
+var familySound = {};
 var livelliGioco = [];
 var oggettiPerLivello = [];
 var gameManager = new GameManager();
@@ -92,7 +93,7 @@ function allInfosRetrieved() {
 }
 
 function allExamplesCompleted() {
-	console.log("allExamplesCompelted");
+	
 	try{
 		
 		gameManager.isAnExample = false;
@@ -139,13 +140,13 @@ function initGame() {
 
     cestino = new Cestino();
     cestino.element.appendTo('#divMainContent');
-    //barraTempo = new BarraTempo();
-    //barraTempo.element.appendTo('#divMainContent');
+   
 }
 
 function manageLevels(repeatLevel) {
 
 	console.log("manageLevels");
+	gameManager.gameInProgress = false;
     if (repeatLevel) {
         gameManager.currentLevelRepetition++;
 
@@ -186,24 +187,33 @@ function manageLevels(repeatLevel) {
 	        gameManager.gameInProgress = false;
     	}
         
-        $('#divSacco').remove();
-        
-        $('body').css({
-        	'background-image': 'url(images/ZZ10042.jpg)'
-        });
-        
-        presentationManager.gnomo.element.css({
-        	'visibility': 'visible'
-        });
-        presentationManager.slitta.element.css({
-        	'visibility': 'visible'
-        });
-        
-        var time = new Date().getTime();
-        presentationManager.timeLastFrame = time + 1000;
-        presentationManager.currentAnimationFrame = 
-        	window.requestAnimationFrame(frameAnimatorNamespace.gnomoReturnsOnSlitta);
-        
+    	$('#divSounds #sledCanLeave').on('ended', function() {
+    		
+    		$('#divSacco').remove();
+    		$('#divSaccoMezzo').remove();
+            
+            $('body').css({
+            	'background-image': 'url(images/ZZ10042.jpg)'
+            });
+            
+            presentationManager.gnomo.element.css({
+            	'visibility': 'visible'
+            });
+            presentationManager.slitta.element.css({
+            	'visibility': 'visible'
+            });
+            
+            
+            setTimeout(function() {
+	            $('#divSounds #gnomoSaysGoodbye').on('ended', function() {
+	            	var time = new Date().getTime();
+	                presentationManager.timeLastFrame = time + 1000;
+	                presentationManager.currentAnimationFrame = 
+	                	window.requestAnimationFrame(frameAnimatorNamespace.gnomoReturnsOnSlitta);
+	            }).get(0).play();
+            }, 1000);
+    	
+    	}).get(0).play();
     }
 }
 
@@ -266,6 +276,20 @@ function levelComplete() {
     
 }
 
+function reproduceGoodAnswerSound() {
+	
+	var numberOfElements = $('#divSounds #soundsGoodAnswer audio').length;
+	
+	$('#divSounds #soundsGoodAnswer audio').get(Math.floor(Math.random() * numberOfElements)).play();
+}
+
+function reproduceBadAnswerSound() {
+	
+	var numberOfElements = $('#divSounds #soundsBadAnswer audio').length;
+	
+	$('#divSounds #soundsBadAnswer audio').get(Math.floor(Math.random() * numberOfElements)).play();
+}
+
 /**
  * Function chiamata quando un oggetto è stato inserito nel sacco
  */
@@ -283,7 +307,7 @@ function objectInsertedIntoSacco() {
         
         // scelgo tra tutti i suoni a disposizione di risposta
         // positiva uno a caso e lo riproduco
-
+        reproduceGoodAnswerSound();
     }
     else { // Non era oggetto target: ERRORE
 
@@ -293,7 +317,7 @@ function objectInsertedIntoSacco() {
         gameManager.imageBadAnswer.show();
         // scelgo tra tutti i suoni a diposizione uno 
         // per la risposta sbagliata
-        
+        reproduceBadAnswerSound();
     }
 
     websocket.send(JSON.stringify(gameManager.packetWithResults))
@@ -317,17 +341,19 @@ function timeExpired(intoBin) {
     if (gameManager.currentImage.target) {
 
         gameManager.packetWithResults.RIGHT_ANSWER = false;
-        $('#audioBadAnswer').get(0).play();
         gameManager.imageBadAnswer.show();
         gameManager.levelCompletedCorrectly = false;
+        
+        $('#divSounds #audioObjectNotInserted').get(0).play();
+        
     }
     else {
         // Non ha inserito un oggetto non target
         // dentro il sacco: corretto
 
         gameManager.packetWithResults.RIGHT_ANSWER = true;
-        $('#audioGoodAnswer').get(0).play();
         gameManager.imageRightAnswer.show();
+        reproduceGoodAnswerSound();
     }
 
     websocket.send(JSON.stringify(gameManager.packetWithResults))
@@ -358,7 +384,12 @@ function waitingToStart(message) {
 function gameIsEnded() {
 	
 	websocket.close();
-	setTimeout(location.replace('../patient/index.html'), 2000);
+	
+	setTimeout(function() {
+		// suono che fa complimenti al bambino per il suo comportamento??
+		location.replace('../patient/index.html')
+	}, 2000);
+	
 }
 
 function manageOnCloseWebsocket(e) {
@@ -420,8 +451,8 @@ function localFileSystemInitializationComplete() {
 				/*presentationManager = new PresentationManager();
 				presentationManager.createElements();*/
 				try {
-					//initGame();
-					//allExamplesCompleted();
+					/*initGame();
+					allExamplesCompleted();*/
 					presentationManager = new PresentationManager();
 					presentationManager.createElements();
 				}

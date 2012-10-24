@@ -26,7 +26,7 @@ function GameManager() {
 
 this.getSystemImages = function() {
 
-    $('<div id="divSystemImages"></div>').appendTo('body');
+    $('<div>').attr('id', 'divSystemImages').appendTo('body');
 
     var imageGoodAnswer = new Image();
     imageGoodAnswer.onload = function() {
@@ -97,25 +97,34 @@ this.getSystemImages = function() {
 
 this.getSystemSounds = function() {
 
-    var divSounds = $('<div id="divSounds"></div>').appendTo('body');
+    var divSounds = $('<div>').attr('id','divSounds').appendTo('body');
 
-    var goodAnswers = $('<div id="soundsGoodAnswer"></div>').appendTo(divSounds);
-    var badAnswers = $('<div id="soundsBadAnswer"></div>').appendTo(divSounds);
+    var goodAnswers = $('<div>').attr('id', 'soundsGoodAnswer').appendTo(divSounds);
+    var badAnswers = $('<div>').attr('id', 'soundsBadAnswer').appendTo(divSounds);
     
     // array with the name of the files to play in case of 
     // good answer or bad answer
-    var goodSounds = ["bene", "molto_bene", "continua_cosi"];
-    var badSounds = ["intruso"];
+    var goodSounds = new Array("bene", "molto_bene", "continua_cosi");
+    var badSounds = new Array("intruso");
     
-    for (x in goodAnswers) {
+    if (getFromSessionStorage("patientSex") == "M") {
+    	goodSounds.push("bravo");
+    	goodSounds.push("bravissimo");
+    }
+    else if (getFromSessionStorage("patientSex") == "F") {
+    	goodSounds.push("brava");
+    	goodSounds.push("bravissima");
+    }
+    
+    for (x in goodSounds) {
     	utilsNamespace.addSoundSource($('<audio>').appendTo(goodAnswers), goodSounds[x]);
     }
     
     for (x in badSounds) {
-        utilsNamespace.addSoundSource($('<audio>').appendTo(badAnswers), "sound_prova");
+        utilsNamespace.addSoundSource($('<audio>').appendTo(badAnswers), badSounds[x]);
     }
 
-    $('#divSounds audio').on('ended', function() {
+    $('#divSounds div audio').on('ended', function() {
 
         console.log("Sound ended");
         utilsNamespace.resetGame();
@@ -123,6 +132,11 @@ this.getSystemSounds = function() {
         setTimeout(manageImageObjectsLevel, 1000);
     });
     
+    utilsNamespace.addSoundSource($('<audio>').attr('id', 'gnomoSaysGoodbye').appendTo(divSounds),
+    	"saluto_elfo_fine");
+    
+    utilsNamespace.addSoundSource($('<audio>').attr('id', 'sledCanLeave').appendTo(divSounds),
+    	"slitta_puo_partire");
 }
 
 }

@@ -34,9 +34,21 @@ div.buttonForGame {
 	cursor: pointer;
 }
 
-#buttonLogout {
+#buttonExit {
 	display: block;
 	margin: auto;
-	height: 4em;
+	height: 2.5em;
+	width: 30%;
+	background-color: #F00;
+	color: #FFF;
+	font-weight: bold;
+	font-size: 1.1em;
+	border-top-left-radius: 15% 50%;
+	border-bottom-left-radius: 15% 50%;
+	border-top-right-radius: 15% 50%;
+	border-bottom-right-radius: 15% 50%;
 	cursor: pointer;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	border: 0em;
 }

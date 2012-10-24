@@ -110,7 +110,8 @@ $('document').ready(function(e) {
 			location.replace('../helpMe/')
 		});
 		
-		var logout = $('<img id="buttonLogout" src="images/esci.png" alt="Logout" />').appendTo('#divMainContent');
+		var logout = $('<button>').attr('id', 'buttonExit')
+			.text('Esci').appendTo('#divMainContent');
 		
 		logout.on('click', function() {
 			
@@ -119,6 +120,7 @@ $('document').ready(function(e) {
 			removeFromSessionStorage("patientSurname");
 			removeFromSessionStorage("patientID");
 			removeFromSessionStorage("permission")
+			removeFromSessionStorage("patientSex");
 			location.replace('../index.html');
 		});
 		
