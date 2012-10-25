@@ -63,6 +63,10 @@ var frameAnimatorNamespace = {
                 stop: touchManagerNamespace.touchEnd
                 });
 
+            // devo aggiungere gestione evento mouseMove +
+            // mouselick x il sacco mezzo e nel caso in cui
+            // la posizione del mouse sia dentro oggetto giro 
+            // evento a suo gestore (evento deve essere tocco + sposto)
             gameManager.startTimeObjectOnScreen = new Date().getTime();
             gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.realGameManager);
             //});

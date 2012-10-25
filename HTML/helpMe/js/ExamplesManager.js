@@ -97,7 +97,7 @@ this.loadImage = function() {
 
         initGame();
         gameManager.isAnExample = true;
-        var introductionSound = $('<audio id="audioIntroduzione"></audio>').appendTo(divSounds);
+        var introductionSound = $('<audio>').attr('id', 'audioIntroduzione').appendTo(divSounds);
         utilsNamespace.addSoundSource(introductionSound, "introduzione");
         
         introductionSound.on('ended', function() {
@@ -125,18 +125,16 @@ this.loadImage = function() {
         $('#imgArrow').remove();
 
         if (exampleManager.currentExample.soundBefore != null) {
-            var soundBefore = $('<audio id="soundBefore"></audio>').appendTo('#divSounds');
-            utilsNamespace.addSoundSource(soundBefore, exampleManager.currentExample.soundBefore);
+            utilsNamespace.addSoundSource($('<audio>').attr('id', 'soundBefore').appendTo('#divSounds'), 
+            		exampleManager.currentExample.soundBefore);
         }
         if (exampleManager.currentExample.soundAfter != null) {
-            var soundAfter = $('<audio id="soundAfter"></audio>').appendTo('#divSounds');
-            utilsNamespace.addSoundSource(soundAfter, exampleManager.currentExample.soundAfter);
+            utilsNamespace.addSoundSource($('<audio>').attr('id', 'soundAfter').appendTo('#divSounds'), 
+            		exampleManager.currentExample.soundAfter);
         }
 
-        setTimeout(function() {
-        	gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerIngressoImmagine);
-            gameManager.timeLastFrame = new Date().getTime();
-        }, 1000);
+    	gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerIngressoImmagine);
+        gameManager.timeLastFrame = new Date().getTime()
         
     }
     else {

@@ -23,8 +23,6 @@ var touchManagerNamespace = {
     },
 
     touchEnd: function(event, ui) {
-        // valutare se oggetto si colloca all'interno
-        // del sacco
 
         gameManager.touchManagerObject.position.left = -1;
         gameManager.touchManagerObject.position.center = -1;

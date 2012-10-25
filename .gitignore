@@ -1,8 +1,8 @@
 *.rar
 *.zip
 *.jar
-'HTML/helpMe/sounds/ELFO GIOCO VOCE DEF ok 2 parte.mp3'
-'HTML/helpMe/sounds/ELFO GIOCO VOCE DEF ok.mp3'
+HTML/helpMe/sounds/ELFO GIOCO VOCE DEF ok 2 parte.mp3
+HTML/helpMe/sounds/ELFO GIOCO VOCE DEF ok.mp3
 HTML/server/WebsocketServer/archivio_visite
 HTML/server/WebsocketServer/build
 HTML/server/WebsocketServer/dist

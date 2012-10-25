@@ -135,7 +135,6 @@ function initGame() {
 
     sacco = new Sacco();
     sacco.element.appendTo('#divMainContent').addClass('saccoTransition');
-    
     sacco.secondElement.appendTo('#divMainContent').addClass('saccoTransition');
 
     cestino = new Cestino();
@@ -143,10 +142,14 @@ function initGame() {
    
 }
 
+function resetLevel() {
+	
+	sacco.reset();
+	$('#divSounds #audioLevel, #divSounds #audioBagComplete, #divSounds #audioObjectNotInserted').remove();
+}
+
 function manageLevels(repeatLevel) {
 
-	console.log("manageLevels");
-	gameManager.gameInProgress = false;
     if (repeatLevel) {
         gameManager.currentLevelRepetition++;
 
@@ -164,7 +167,8 @@ function manageLevels(repeatLevel) {
 
     if (gameManager.levelIndex < livelliGioco.length && gameManager.gameInProgress) {
     	
-    	sacco.reset();
+    	resetLevel();
+    	
         gameManager.currentLevel = livelliGioco[gameManager.levelIndex];
 
         utilsNamespace.istantiateLevel(gameManager.currentLevel);
@@ -233,8 +237,6 @@ function manageImageObjectsLevel() {
 
         gameManager.packetWithResults.IS_TARGET = gameManager.currentImage.target;
         gameManager.packetWithResults.OBJECT_NAME = gameManager.currentImage.name;
-        //tubo.reset();
-        //barraTempo.reset();
 
         gameManager.timeLastFrame = new Date().getTime();
         gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerIngressoImmagine);
@@ -451,10 +453,10 @@ function localFileSystemInitializationComplete() {
 				/*presentationManager = new PresentationManager();
 				presentationManager.createElements();*/
 				try {
-					/*initGame();
-					allExamplesCompleted();*/
-					presentationManager = new PresentationManager();
-					presentationManager.createElements();
+					initGame();
+					allExamplesCompleted();
+					/*presentationManager = new PresentationManager();
+					presentationManager.createElements();*/
 				}
 				catch(error) {
 					console.log("Errore in localFileSystemInitializationComplete");

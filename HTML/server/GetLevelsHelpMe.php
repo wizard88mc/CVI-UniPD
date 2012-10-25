@@ -1,6 +1,6 @@
 <?php 
 
-function getFamilySound($family) {
+function getFamilyAudios($family) {
 	
 	$fileXML = ".." . DIRECTORY_SEPARATOR . "helpMe" . DIRECTORY_SEPARATOR
 		 . "settings" . DIRECTORY_SEPARATOR . "images.xml";
@@ -11,9 +11,11 @@ function getFamilySound($family) {
 	
 	$attributes = $targetFamily[0]->attributes();
 	
-	$sound = (string)$attributes["audioFile"][0];
+	$audio = (string)$attributes["audioFile"][0];
+	$audioBagComplete = (string)$attributes["audioBagReady"][0];
+	$audioObjectNotInserted = (string)$attributes["audioObjectNotInserted"][0];
 	
-	return $sound;
+	return array($audio, $audioBagComplete, $audioObjectNotInserted);
 	
 }
 
@@ -60,13 +62,18 @@ foreach($xml->level as $level) {
 		$arrayImages[] = $imageLevel;
 	}
 	
+	list($audio, $audioBagComplete, $audioObjectNotInserted) =
+		getFamilyAudios($targetFamily);
+	
 	$arrayLevel = array(
 			"type" => $levelType, 
 			"numberOfTargets" => $elements[0],
 			"numberOfDistracters" => $elements[1],
 			"targetFamily" => $targetFamily,
 			"sequence" => $arrayImages,
-			"sound" => getFamilySound($targetFamily),
+			"sound" => $audio,
+			"soundBagComplete" =>$audioBagComplete, 
+			"soundObjectNotInserted" => $audioObjectNotInserted,
 			"maxTimeImage" => $maxTime
 		);
 	

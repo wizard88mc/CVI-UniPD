@@ -179,8 +179,7 @@ istantiateLevel: function(level) {
     	oggettiPerLivello.push(objectImage);
     }
 
-    // ho immagini a disposizione, costruisco livello definendo array
-
+    // adding audios specific for the level
     utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioLevel').appendTo('#divSounds'), 
     		level.sound);
     
@@ -189,6 +188,12 @@ istantiateLevel: function(level) {
     
     utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioObjectNotInserted').appendTo('#divSounds'),
     		level.soundObjectNotInserted);
+    
+    $('#divSounds #audioObjectNotInserted').on('ended', function() {
+    	utilsNamespace.resetGame();
+
+        setTimeout(manageImageObjectsLevel, 1000);
+    });
     
     gameManager.maxTimeObjectOnScreen = Number(level.maxTimeImage) * 1000;
 
