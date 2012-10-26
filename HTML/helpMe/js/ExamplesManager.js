@@ -100,10 +100,22 @@ this.loadImage = function() {
         var introductionSound = $('<audio>').attr('id', 'audioIntroduzione').appendTo(divSounds);
         utilsNamespace.addSoundSource(introductionSound, "introduzione");
         
+        utilsNamespace.addSoundSource($('<audio>').attr('id', 'secondIntroduction').appendTo(divSounds), 
+        		'introduzione_seconda_parte');
+        
         introductionSound.on('ended', function() {
         	
+        	sacco.element.one('transitionend webkitTransitionEnd oTransitionEnd', function() {
+        		
+        		$('#divSounds #secondIntroduction').on('ended', function() {
+            		$(this).remove();
+                	ExampleNamespace.iterateOnExamples();
+            	}).get(0).play();
+        	});
+        	
+        	sacco.moveInside();
+        	
         	$(this).remove();
-        	ExampleNamespace.iterateOnExamples();
         }).get(0).play();
         
     }

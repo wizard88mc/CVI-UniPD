@@ -80,6 +80,7 @@ anotherImageRetrieved: function() {
     }
 },
 
+// NON UTILIZZATO
 retrieveLevels: function(fileName) {
 
 	$.ajax({

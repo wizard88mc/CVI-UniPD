@@ -262,14 +262,10 @@ function levelComplete() {
     sacco.element.css({
     	top: getScreenHeight()
     }).one('transitionend webkitTransitionEnd oTransitionEnd', function() {
-    	if (gameManager.levelCompletedCorrectly) {
-
+    
     		// livello completato correttamente
-            manageLevels(false);
-        }
-        else {
-            manageLevels(true);
-        }
+        manageLevels(!gameManager.levelCompletedCorrectly);
+    
     });
     
     sacco.secondElement.css({
@@ -453,10 +449,10 @@ function localFileSystemInitializationComplete() {
 				/*presentationManager = new PresentationManager();
 				presentationManager.createElements();*/
 				try {
-					initGame();
-					allExamplesCompleted();
-					/*presentationManager = new PresentationManager();
-					presentationManager.createElements();*/
+					/*initGame();
+					allExamplesCompleted();*/
+					presentationManager = new PresentationManager();
+					presentationManager.createElements();
 				}
 				catch(error) {
 					console.log("Errore in localFileSystemInitializationComplete");
