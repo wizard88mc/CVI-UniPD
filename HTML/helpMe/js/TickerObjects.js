@@ -262,14 +262,71 @@ var frameAnimatorNamespace = {
     },
     
     functionMoveGnomo: function(currentTime) {
-	    presentationManager.currentAnimationFrame = 
+    
+    	var transition = 'width 5s linear, height 5s linear, left 5s linear, top 5s linear';
+    	
+    	presentationManager.slitta.element.css({
+    		'transition': transition,
+    		'-webkit-transition': transition
+    	});
+    	
+    	presentationManager.gnomo.element.css({
+    		'transition': transition,
+    		'-webkit-transition': transition
+    	});
+    	
+    	presentationManager.gnomo.element.css({
+    		width: presentationManager.firstPoint.gnomo.width,
+    		height: presentationManager.firstPoint.gnomo.height,
+    		left: presentationManager.firstPoint.gnomo.left,
+    		top: presentationManager.firstPoint.gnomo.top
+    	});
+    	
+    	presentationManager.slitta.element.on('transitionend webkitTransitionEnd', function(event) {
+    		
+    		event.stopPropagation();
+    		if (event.originalEvent.propertyName === "left") {
+    			
+    			$(this).off('transitionend webkitTransitionEnd');
+    			
+    			presentationManager.gnomo.element.css({
+    				width: presentationManager.secondPoint.gnomo.width,
+    				height: presentationManager.secondPoint.gnomo.height,
+    				left: presentationManager.secondPoint.gnomo.left,
+    				top: presentationManager.secondPoint.gnomo.top
+    			});
+    			
+    			presentationManager.slitta.element.attr('src', presentationManager.slitta.imageFileBack);
+    			presentationManager.slitta.element.on('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
+    				
+    				event.stopPropagation();
+    				if (event.originalEvent.propertyName === "left") {
+    					
+    					$(this).off('transitionend webkitTransitionEnd oTransitionEnd');
+    					frameAnimatorNamespace.moveGnomoToCenter();
+    				}
+    			}).css({
+    				width: presentationManager.secondPoint.slitta.width,
+    				height: presentationManager.secondPoint.slitta.height,
+    				left: presentationManager.secondPoint.slitta.left,
+    				top: presentationManager.secondPoint.slitta.top
+    			});
+    		}
+    		
+    	}).css({
+    		width: presentationManager.firstPoint.slitta.width,
+    		height: presentationManager.firstPoint.slitta.height,
+    		top: presentationManager.firstPoint.slitta.top,
+    		left: presentationManager.firstPoint.slitta.left
+    	});
+    	
+	    /*presentationManager.currentAnimationFrame = 
 	        window.requestAnimationFrame(frameAnimatorNamespace.functionMoveGnomo);
 	    
 	    var delta = currentTime - presentationManager.timeLastFrame;
 	    if (delta > 1000 / 50) {
 	        if (!presentationManager.gnomo.moveRight) {
-	            if (presentationManager.slitta.left + presentationManager.slitta.width * 2
-	                > 0) {	                
+	            if (presentationManager.slitta.left > presentationManager.firstPoint.slitta.left) {	                
 	                presentationManager.gnomo.increaseDimensions(delta);
 	                presentationManager.gnomo.moveElement(true, delta);
 	                presentationManager.slitta.increaseDimensions(delta);
@@ -281,6 +338,14 @@ var frameAnimatorNamespace = {
 	            else {
 	                presentationManager.gnomo.moveRight = true;
 	                presentationManager.slitta.element.attr('src', presentationManager.slitta.imageFileBack);
+	                presentationManager.slitta.left = presentationManager.firstPoint.slitta.left;
+	                presentationManager.slitta.top = presentationManager.firstPoint.slitta.top;
+	                presentationManager.slitta.width = presentationManager.firstPoint.slitta.width;
+	                presentationManager.slitta.height = presentationManager.firstPoint.slitta.height;
+	                presentationManager.gnomo.left = presentationManager.firstPoint.gnomo.left;
+	                presentationManager.gnomo.top = presentationManager.firstPoint.gnomo.top;
+	                presentationManager.gnomo.width = presentationManager.firstPoint.gnomo.width;
+	                presentationManager.gnomo.height = presentationManager.firstPoint.gnomo.height;
 	                presentationManager.totalDistanceLeft = getScreenWidth() + presentationManager.slitta.left;
 	            }
 	        }
@@ -323,12 +388,95 @@ var frameAnimatorNamespace = {
 	                    window.requestAnimationFrame(frameAnimatorNamespace.moveGnomoToCenter);
 	            }
 	        }
-	    }
+	    }*/
 	},
-
-    moveGnomoToCenter: function(time) {
+    moveGnomoToCenter: function() {
     
-    presentationManager.currentAnimationFrame = 
+    	presentationManager.slitta.element.attr('src', presentationManager.slitta.imageFile);
+    	
+    	presentationManager.slitta.element.css({
+    		transition: 'all 1s linear',
+    		'-webkit-transition': 'all 1s linear'
+    	});
+    	presentationManager.gnomo.element.css({
+    		transition: 'all 1s linear',
+    		'-webkit-transition': 'all 1s linear'
+    	});
+    	
+    	presentationManager.gnomo.element.css({
+    		width: presentationManager.thirdPoint.gnomo.width,
+    		height: presentationManager.thirdPoint.gnomo.height,
+    		left: presentationManager.thirdPoint.gnomo.left,
+    		top: presentationManager.thirdPoint.gnomo.top
+    	});
+    	
+    	presentationManager.slitta.element.on('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
+    		
+    		if (event.originalEvent.propertyName === "top") {
+    			
+    			$(this).off('transitionend webkitTransitionEnd oTransitionEnd');
+    			
+    			var transition = 'all 3s ease-out';
+    	    	
+    	    	presentationManager.slitta.element.css({
+    	    		transition: transition,
+    	    		'-webkit-transition': transition
+    	    	});
+    	    	presentationManager.gnomo.element.css({
+    	    		transition: transition,
+    	    		'-webkit-transition': transition
+    	    	});
+    	    	
+    	    	presentationManager.gnomo.element.css({
+    	    		width: presentationManager.fourthPoint.gnomo.width,
+    	    		height: presentationManager.fourthPoint.gnomo.height,
+    	    		left: presentationManager.fourthPoint.gnomo.left,
+    	    		top: presentationManager.fourthPoint.gnomo.top
+    	    	});
+    	    	
+    	    	presentationManager.slitta.element.on('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
+    	    		
+    	    		if (event.originalEvent.propertyName === "left") {
+    	    			$(this).off('transitionend webkitTransitionEnd oTransitionEnd');
+    	    			
+    	    			console.log("Ended");
+    	    			/*var transition = 'all 0.5s linear';
+    	    			
+    	    			presentationManager.gnomo.element.css({
+    	    				transition: transition,
+    	    				'-webkit-transition': transition
+    	    			});
+    	    			
+    	    			presentationManager.gnomo.element.on('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
+    	    				
+    	    				if (event.originalEvent.propertyName === "top") {
+    	    					
+    	    					$(this).off('transitionEnd webkitTransitionEnd oTransitionEnd');
+    	    					console.log("Arrived");
+    	    				}
+    	    			}).css({
+    	    				top: presentationManager.fifthPoint.gnomo.top,
+    	    				'z-index': 10
+    	    			})*/
+    	    			
+    	    		}
+    	    	}).css({
+    	    		width: presentationManager.fourthPoint.slitta.width,
+    	    		height: presentationManager.fourthPoint.slitta.height,
+    	    		left: presentationManager.fourthPoint.slitta.left,
+    	    		top: presentationManager.fourthPoint.slitta.top
+    	    	});
+    			
+    		}
+    		
+    	}).css({
+    		width: presentationManager.thirdPoint.slitta.width,
+    		height: presentationManager.thirdPoint.slitta.height,
+    		left: presentationManager.thirdPoint.slitta.left,
+    		top: presentationManager.thirdPoint.slitta.top
+    	});
+    	
+    /*presentationManager.currentAnimationFrame = 
         window.requestAnimationFrame(frameAnimatorNamespace.moveGnomoToCenter);
     
     var delta = time - presentationManager.timeLastFrame;
@@ -385,9 +533,9 @@ var frameAnimatorNamespace = {
                     });*/
                     //ExampleNamespace.prepareExamples();
                 //}).get(0).play();
-            }
+     /*       }
         }
-    }
+    }*/
 }, 
 
 	gnomoReturnsOnSlitta: function(time) {

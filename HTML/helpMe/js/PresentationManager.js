@@ -1,4 +1,24 @@
-function GnomoElement(){
+function DestinationPoint(factorDecreaseDimensions, factorForTopGnomo, moveToLeft) {
+	this.gnomo = new Object();
+	this.slitta = new Object();
+	this.factorDecreaseDimensions = factorDecreaseDimensions;
+    this.gnomo.width = presentationManager.gnomo.targetWidth / this.factorDecreaseDimensions;
+    this.gnomo.height = presentationManager.gnomo.targetHeight / this.factorDecreaseDimensions;
+    this.slitta.width = presentationManager.slitta.targetWidth / this.factorDecreaseDimensions;
+    this.slitta.height = presentationManager.slitta.targetHeight / this.factorDecreaseDimensions;
+    this.gnomo.top = getScreenHeight() / factorForTopGnomo;
+    if (moveToLeft) {
+	    this.slitta.left = 0 - this.slitta.width;
+    }
+    else {
+    	this.slitta.left = getScreenWidth() + this.slitta.width / 2;
+    }
+    this.gnomo.left = this.slitta.left + 
+		(this.slitta.width - this.gnomo.width) / 2;
+    this.slitta.top = this.gnomo.top + this.gnomo.height * (3 / 4);
+}
+
+function GnomoElement() {
     this.element = null;
     this.imageFile = 'images/folletto.fw.png';
     this.ratioDimensions = 0;
@@ -14,7 +34,6 @@ function GnomoElement(){
         presentationManager.loadComplete();
     }
     this.image.src = this.imageFile;
-    
     
     this.width = 0;
     this.height = 0;
@@ -187,6 +206,33 @@ this.buildPresentation = function() {
     this.slitta.element = $(this.slitta.image);
     this.slitta.drawElement();
     this.slitta.element.appendTo('#divMainContent');
+    
+    this.firstPoint = new DestinationPoint(4, 6, true);
+   
+    this.secondPoint = new DestinationPoint(2, 3, false);
+    
+    this.thirdPoint = new DestinationPoint(1, 1, true);
+    this.thirdPoint.slitta.left = -this.thirdPoint.slitta.left + getScreenWidth();
+    this.thirdPoint.gnomo.left = this.thirdPoint.slitta.left + (this.thirdPoint.slitta.width + this.thirdPoint.gnomo.left);
+    if (this.thirdPoint.slitta.top + this.thirdPoint.slitta.height > getScreenHeight()) {
+    	
+    	var newPosition = getScreenHeight() - (this.thirdPoint.slitta.height + this.thirdPoint.slitta.height / 2);
+    	var difference = this.thirdPoint.slitta.top - newPosition;
+    	this.thirdPoint.gnomo.top = this.thirdPoint.gnomo.top - difference;
+    	this.thirdPoint.slitta.top = newPosition;
+    }
+    
+    this.fourthPoint = new DestinationPoint(1, 1, true);
+    this.fourthPoint.slitta.top = this.thirdPoint.slitta.top;
+    this.fourthPoint.gnomo.top = this.thirdPoint.gnomo.top;
+    this.fourthPoint.slitta.left = Math.round(getScreenWidth() / 2 - this.fourthPoint.slitta.width / 2);
+    var difference = this.thirdPoint.slitta.left - this.fourthPoint.slitta.left;
+    this.fourthPoint.gnomo.left = this.thirdPoint.gnomo.left - difference;
+    
+    this.fifthPoint = new DestinationPoint(1, 1, true);
+    this.fifthPoint.gnomo.left = this.fourthPoint.gnomo.left;
+    this.fifthPoint.gnomo.top = this.fourthPoint.gnomo.top + 
+    	(this.fourthPoint.slitta.top - (this.fourthPoint.gnomo.top + this.fourthPoint.gnomo.height)) / 2;
     
     this.totalScaleFactorIncrease = this.slitta.targetScale / 6;
     this.totalDistanceTop = getScreenHeight() / 6;
