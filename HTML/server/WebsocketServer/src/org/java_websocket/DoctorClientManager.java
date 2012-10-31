@@ -46,7 +46,7 @@ public class DoctorClientManager extends BaseManager {
         }
         else if (packet.get("TYPE").equals("IDENTIFICATION")) {
             
-            if (checkClientType((String)packet.get("response"))) {
+            if (checkClientType((String)packet.get("RESPONSE"))) {
                 System.out.println("Identification complete: " + clientType);
                 clientConnected = sender;
                 JSONObject packetToSend = new JSONObject();

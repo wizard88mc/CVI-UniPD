@@ -177,7 +177,7 @@ public class EyeTrackerSimulator extends Thread {
                 else if (packet.get("TYPE").equals("IDENTIFICATION")) {
                     System.out.println("EYE_TRACKER: Identification");
                     
-                    packet.put("response", "EyeTrackerClient");
+                    packet.put("RESPONSE", "EyeTrackerClient");
                     clientConnecter.send(packet.toJSONString());
                 }
                 else if (packet.get("TYPE").equals("IDENTIFICATION_COMPLETE")) {

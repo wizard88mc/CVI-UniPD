@@ -29,8 +29,37 @@ var frameAnimatorNamespace = {
     // tenendola nascosta fino a quando non supera il tubo e poi ingrandendola
     // fino a quando non arriva al centro dello schermo
     managerIngressoImmagine: function(time) {
-
-        gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerIngressoImmagine);
+    	
+    	var transition = 'all ' + imageObjectOnScreen.timeForMovingToCenter / 1000 +'s linear';
+    	
+    	//console.log(imageObjectOnScreen.element.position());
+    	//	console.log(imageObjectOnScreen.targetPoint);
+    	
+    	imageObjectOnScreen.element.on('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
+    		
+    		if (event.originalEvent.propertyName === "left") {
+    			
+    			$(this).off('transitionend webkitTransitionEnd oTransitionEnd');
+    			$(this).css({
+    				transition: 'none',
+    				'-webkit-transition': 'none'
+    			});
+    			
+    			imageObjectOnScreen.arrivedAtCenter();
+    			
+    			frameAnimatorNamespace.startRealGame();
+    		}
+    	}).css({
+    		transition: transition,
+    		'-webkit-transition': transition,
+    		width: imageObjectOnScreen.targetWidth,
+    		height: imageObjectOnScreen.targetHeight, 
+    		left: imageObjectOnScreen.targetPoint.left,
+    		top: imageObjectOnScreen.targetPoint.top
+    	});
+    	
+    	
+        /*gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerIngressoImmagine);
 
         var delta = time - gameManager.timeLastFrame;
         if (delta > 1000 / 25) {
@@ -40,11 +69,12 @@ var frameAnimatorNamespace = {
         	if (imageObjectOnScreen.center.top < imageObjectOnScreen.targetCenter.top && 
         			imageObjectOnScreen.center.left < imageObjectOnScreen.targetCenter.left) {
         		
+        		imageObjectOnScreen.scaleObject(0);
         		window.cancelAnimationFrame(gameManager.currentAnimationFrame);
                 gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.startRealGame);
         	}
 	        gameManager.timeLastFrame = time;
-        }
+        }*/
     },
 
     // visualizza barra del tempo di gioco +
@@ -61,7 +91,7 @@ var frameAnimatorNamespace = {
                 start: touchManagerNamespace.touchStart,
                 drag: touchManagerNamespace.touchMove,
                 stop: touchManagerNamespace.touchEnd
-                });
+            });
 
             // devo aggiungere gestione evento mouseMove +
             // mouselick x il sacco mezzo e nel caso in cui
@@ -211,6 +241,7 @@ var frameAnimatorNamespace = {
 
         // riduce la dimensione della barra in relazione al tempo passato ed a quello massimo di attesa
         if (!imageObjectOnScreen.moveInsideSacco && !imageObjectOnScreen.moveInsideCestino) {
+        	
             var elapsedTime = time - gameManager.startTimeObjectOnScreen;
 
             //barraTempo.timeIsPassing(elapsedTime / gameManager.maxTimeObjectOnScreen);
@@ -439,25 +470,58 @@ var frameAnimatorNamespace = {
     	    		if (event.originalEvent.propertyName === "left") {
     	    			$(this).off('transitionend webkitTransitionEnd oTransitionEnd');
     	    			
-    	    			console.log("Ended");
-    	    			/*var transition = 'all 0.5s linear';
-    	    			
-    	    			presentationManager.gnomo.element.css({
-    	    				transition: transition,
-    	    				'-webkit-transition': transition
-    	    			});
-    	    			
-    	    			presentationManager.gnomo.element.on('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
+    	    			setTimeout(function() {
     	    				
-    	    				if (event.originalEvent.propertyName === "top") {
-    	    					
-    	    					$(this).off('transitionEnd webkitTransitionEnd oTransitionEnd');
-    	    					console.log("Arrived");
-    	    				}
-    	    			}).css({
-    	    				top: presentationManager.fifthPoint.gnomo.top,
-    	    				'z-index': 10
-    	    			})*/
+    	    				var transition = 'all 0.1s linear';
+        	    			
+        	    			presentationManager.gnomo.element.css({
+        	    				transition: transition,
+        	    				'-webkit-transition': transition
+        	    			});
+        	    			
+        	    			presentationManager.gnomo.element.on('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
+        	    				
+        	    				if (event.originalEvent.propertyName === "top") {
+        	    					
+        	    					$(this).off('transitionend webkitTransitionEnd oTransitionEnd');
+        	    					
+        	    					var transition = 'all 0.2s linear';
+        	    					
+        	    					presentationManager.gnomo.element.css({
+        	    						transition: transition,
+        	    						'-webkit-transition': transition
+        	    					});
+        	    					
+        	    					presentationManager.gnomo.element.on('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
+        	    						
+        	    						if (event.originalEvent.propertyName === "top") {
+        	    							
+        	    							presentationManager.slitta.element.css({
+        	    								transition: 'none',
+        	    								'-webkit-transition': 'none'
+        	    							});
+        	    							
+        	    							setTimeout(function() {
+        	    		                    	$('#divMainContent').children().css({
+        	    		                        	visibility: 'hidden'
+        	    		                        });
+        	    		                    	
+        	    		                    	$('#divSounds #audioFrenata').remove();
+        	    		                        presentationEnded();
+        	    		                    }, 1500);
+        	    						}
+        	    						
+        	    					}).css({
+        	    						top: presentationManager.sixthPoint.gnomo.top
+        	    					});
+        	    					
+        	    				}
+        	    			}).css({
+        	    				top: presentationManager.fifthPoint.gnomo.top,
+        	    				'z-index': 10
+        	    			});
+        	    			
+    	    			}, 1000);
     	    			
     	    		}
     	    	}).css({

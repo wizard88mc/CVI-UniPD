@@ -51,7 +51,7 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
             
             // identificazione del client
             System.out.println("Verifica identità client");
-            boolean correctClient = checkClientType((String)packet.get("response"));
+            boolean correctClient = checkClientType((String)packet.get("RESPONSE"));
             
             if (correctClient) {
                 

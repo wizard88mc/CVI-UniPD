@@ -16,7 +16,7 @@ function handlePresentation(message) {
 	
 	if (packet.TYPE == 'IDENTIFICATION') {
 		console.log("Sending back identification response");
-		packet.response = identificationType;
+		packet.RESPONSE = identificationType;
 		
 		websocket.send(JSON.stringify(packet));
 	}

@@ -233,6 +233,12 @@ this.buildPresentation = function() {
     this.fifthPoint.gnomo.left = this.fourthPoint.gnomo.left;
     this.fifthPoint.gnomo.top = this.fourthPoint.gnomo.top + 
     	(this.fourthPoint.slitta.top - (this.fourthPoint.gnomo.top + this.fourthPoint.gnomo.height)) / 2;
+    this.fifthPoint.slitta.top = this.fourthPoint.slitta.top;
+    
+    this.sixthPoint = new DestinationPoint(1, 1, true);
+    this.sixthPoint.gnomo.top = this.fifthPoint.slitta.top + this.fifthPoint.slitta.height +
+    	(getScreenHeight() - (this.fifthPoint.slitta.top + this.fifthPoint.slitta.height)) / 2 - 
+    	this.fifthPoint.gnomo.height;
     
     this.totalScaleFactorIncrease = this.slitta.targetScale / 6;
     this.totalDistanceTop = getScreenHeight() / 6;

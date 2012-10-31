@@ -239,7 +239,8 @@ function manageImageObjectsLevel() {
         gameManager.packetWithResults.OBJECT_NAME = gameManager.currentImage.name;
 
         gameManager.timeLastFrame = new Date().getTime();
-        gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerIngressoImmagine);
+        //gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerIngressoImmagine);
+        setTimeout(frameAnimatorNamespace.managerIngressoImmagine, 500);
     }
     else {
         // livello completato
@@ -449,10 +450,10 @@ function localFileSystemInitializationComplete() {
 				/*presentationManager = new PresentationManager();
 				presentationManager.createElements();*/
 				try {
-					/*initGame();
-					allExamplesCompleted();*/
-					presentationManager = new PresentationManager();
-					presentationManager.createElements();
+					initGame();
+					allExamplesCompleted();
+					/*presentationManager = new PresentationManager();
+					presentationManager.createElements();*/
 				}
 				catch(error) {
 					console.log("Errore in localFileSystemInitializationComplete");

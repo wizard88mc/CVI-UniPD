@@ -126,15 +126,15 @@ this.loadImage = function() {
     exampleManager.indexCurrentExample++;
 
     if (exampleManager.indexCurrentExample < exampleManager.examples.length) {
+    	
+    	$('#divSounds #soundBefore').remove();
+        $('#divSounds #soundAfter').remove();
+        $('#imgArrow').remove();
 
         exampleManager.currentExample = exampleManager.examples[exampleManager.indexCurrentExample];
 
         imageObjectOnScreen = new ImageObjectOnScreen(exampleManager.currentExample);
         imageObjectOnScreen.element.appendTo('#divMainContent');
-
-        $('#divSounds #soundBefore').remove();
-        $('#divSounds #soundAfter').remove();
-        $('#imgArrow').remove();
 
         if (exampleManager.currentExample.soundBefore != null) {
             utilsNamespace.addSoundSource($('<audio>').attr('id', 'soundBefore').appendTo('#divSounds'), 
