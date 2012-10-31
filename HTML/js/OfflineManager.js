@@ -102,10 +102,10 @@ var OfflineNamespace = {
     
     someVisitsToSend: function() {
     	
-    	var dialog = $('<div id="divDialogAskToSendVisits"></div>').appendTo('body')
-    		.attr('title', 'Inviare visite salvate?');
+    	var dialog = $('<div>').attr('id', 'divDialogAskToSendVisits')
+    		.attr('title', 'Inviare visite salvate?').appendTo('body');
     	
-    	$('<p>Ci sono delle visite non ancora salvate. Inviarle ora?</p>')
+    	$('<p>').text('Ci sono delle visite non ancora salvate. Inviarle ora?')
     		.appendTo(dialog);
     	
     	var width = getScreenWidth() * 0.4;
@@ -116,6 +116,25 @@ var OfflineNamespace = {
     		width: width,
     		buttons: {
     			"Invia ora": function() {
+    				
+    				var dialog = $('<div>').attr('id', 'divDialogSendingVisits')
+      				.attr('title', 'Invio in corso').addClass('alignCenter').appendTo('body');
+        	
+	      			$('<p>').addClass('alignLeft').text('Sto spedendo le visite salvate...')
+	      				.appendTo(dialog);
+	      			
+	      			$('<img>').attr('src', 'images/preloader.gif').attr('alt', 'In spedizione')
+	      				.attr('id', 'imgPreloaderSendigOfflineVisits').appendTo(dialog);
+	      			
+	      			var width = getScreenWidth() * 0.5;
+	      	    	dialog.dialog({
+	      	    		modal: true,
+	      	    		resizable: false,
+	      	    		draggable: false,
+	      	    		width: width
+	      	    	});
+	      	    	
+	      	    	$(this).remove();
     				
     				if (window.requestFileSystem) {
     					OfflineNamespace.iterateOnPatients();
@@ -128,7 +147,7 @@ var OfflineNamespace = {
     				$(this).remove();
     			}
     		}
-    	})	
+    	});
     }, 
     
     retrieveSubfolders: function(directoryEntry) {
@@ -170,7 +189,6 @@ var OfflineNamespace = {
 		      				
 		      				OfflineNamespace.workWithOfflineFolder(subfolders[secondIndex]);
 		      			}
-		      			//OfflineNamespace.workWithOfflineFolder(subfolders[0]);
 		      		}
 		    	});
 		  	};
@@ -191,8 +209,6 @@ var OfflineNamespace = {
 		
 		directoryEntry.getFile('packets.txt', {}, function(fileEntry) {
 			
-			//console.log(fileEntry);
-			
 			fileEntry.file(function(filePackets) {
 				
 				var readerPackets = new FileReader();
@@ -200,8 +216,6 @@ var OfflineNamespace = {
 				readerPackets.onloadend = function(e) {
 					
 					var packets = JSON.stringify(this.result);
-					
-					console.log(packets);
 					
 					$.ajax({
 						url: 'server/OfflinePackets.php',
@@ -218,6 +232,7 @@ var OfflineNamespace = {
 									
 									OfflineNamespace.anotherVisitSend();
 								});*/
+								OfflineNamespace.anotherVisitSend();
 							}
 						}
 						
@@ -231,6 +246,8 @@ var OfflineNamespace = {
     
     sendFromLocalStorage: function() {
     	
+    	var arrayFolderDelete = new Array();
+    	
     	for (var i = 0; i < localStorage.length; i++) {
     		
     		var folder = localStorage.key(i);
@@ -238,6 +255,8 @@ var OfflineNamespace = {
     		if (checkForLocalStorageIfFolder(folder)) {
     			
     			var packets = JSON.stringify(localStorage.getItem(folder));
+    			
+    			arrayFolderDelete.push(folder);
     			
     			$.ajax({
     				url: 'server/OfflinePackets.php',
@@ -247,24 +266,63 @@ var OfflineNamespace = {
     					folderName: folder
     				},
     				success: function(message) {
-    					console.log(message);
+
+    					if (message == "completed") {
+    						OfflineNamespace.anotherVisitSend();
+    					}
     				}
     			})
     		}
     	
     	}
+    	
+    	for (index in arrayFolderDelete) {
+    		
+    		localStorage.removeItem(arrayFolderDelete[index]);
+    	}
     },
     
     anotherVisitSend: function() {
     	
-    	offlineObjectManager.visitsSent++;
-    	//TODO modificare valore della barra totale di un dialog che mostra stato avanzamento
-    	
-    	if (offlineObjectManager.visitsSent == offlineObjectManager.arrayOfflineVisits.length) {
+    	var createDialogAllVisitsSent = function() {
+    		$('#divDialogSendingVisits').dialog("destroy").remove();
     		
-    		offlineObjectManager.rootDirectoryEntry.removeRecursively(function() {
-    			//TODO mostrare dialog che informa avvenuto invio
-    		});
+    		var dialog = $('<div>').attr('id', 'divDialogSendingComplete')
+				.attr('title', 'Completato!').addClass('alignCenter').appendTo('body');
+	
+  			$('<p>').addClass('alignLeft').text('Tutte le visite sono state spedite!!')
+  				.appendTo(dialog);
+  			
+  			var width = getScreenWidth() * 0.4;
+  	    	dialog.dialog({
+  	    		modal: true,
+  	    		resizable: false,
+  	    		draggable: false,
+  	    		width: width,
+  	    		buttons: {
+  	    			"Chiudi": function() {
+  	    				$(this).dialog("close");
+  	    				$(this).remove();
+  	    			}
+  	    		}
+  	    	});
+    	}
+    	
+    	if (window.requestFileSystem) {
+	    	offlineObjectManager.visitsSent++;
+	    	//TODO modificare valore della barra totale di un dialog che mostra stato avanzamento
+	    	
+	    	if (offlineObjectManager.visitsSent == offlineObjectManager.arrayOfflineVisits.length) {
+	    		
+	    		offlineObjectManager.rootDirectoryEntry.removeRecursively(function() {
+	    			
+	    			createDialogAllVisitsSent();
+	    			console.log("Visits deleted");
+	    		});
+	    	}
+    	}
+    	else {
+    		createDialogAllVisitsSent();
     	}
     },
     

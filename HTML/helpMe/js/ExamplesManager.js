@@ -145,8 +145,9 @@ this.loadImage = function() {
             		exampleManager.currentExample.soundAfter);
         }
 
-    	gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerIngressoImmagine);
+    	//gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerIngressoImmagine);
         gameManager.timeLastFrame = new Date().getTime()
+        setTimeout(frameAnimatorNamespace.managerIngressoImmagine, 500);
         
     }
     else {

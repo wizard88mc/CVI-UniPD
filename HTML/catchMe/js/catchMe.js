@@ -157,8 +157,14 @@ defineGame: function(settings) {
 	canvasSettings.height = Number(dimensions[1]);
 	canvasSettings.fileName = settings.imageFileName || settings.IMG_SPECS.IMG_FILE;
 	
-	$('<div id="divSounds"></div>').appendTo('body');
-	insertSound('soundOnImage', 'good_image');
+	var divSounds = $('<div>').attr('id', 'divSounds').appendTo('body');
+	
+	var arraySounds = ['good_image', 'bene', 'molto_bene', 'continua_cosi'];
+	
+	for (index in arraySounds) {
+		
+		addSoundSource($('<audio>').addClass('soundGreetings').appendTo(divSounds), arraySounds[index]);
+	}
 	
 	CatchMeNamespace.buildAnimations();
 },
@@ -380,23 +386,30 @@ startGame: function() {
 		e.preventDefault();
 		var time = new Date().getTime();
 		if (time - gameManager.lastTimePlayedGoodSound > 5000) {
-			$('#divSounds #soundOnImage').get(0).play();
+			
+			var number = $('#divSounds audio').length;
+			
+			var index = Math.floor(Math.random() * number);
+			console.log(index);
+			$('#divSounds audio').get(index).play();
+			
 			gameManager.lastTimePlayedGoodSound = time;
 		}
 	})
 	
-	$('<div id="divCloseGame"></div>').appendTo($('body'));
-	$('#divCloseGame').css('position','absolute')
-						.css('width','10%')
-						.css('left', '90%')
-						.css('top', '0')
-						.css('height', '3em')
-						.css('background-color', 'inherit')
-						.css('text-align', 'center')
-						.css('z-index', '3');
+	$('<div>').attr('id', 'divCloseGame').appendTo('body')
+		.css({
+			'position':'absolute',
+			width: '10%',
+			left: '90%',
+			top: '0',
+			height: '3em',
+			'background-color': 'inherit',
+			'text-align': 'center',
+			'z-index': '3'
+		});
 						
-						
-	$('<img src="../images/close.png" alt="Chiudi" />').appendTo($('#divCloseGame'));
+	$('<img>').attr('src', '../images/close.png').attr('alt', 'Chiudi').appendTo('#divCloseGame');
 	$('#divCloseGame img').css('width', '40%').css('visibility', 'hidden');
 	
 	$('#divCloseGame').on('click touchstart', function(event) {
@@ -1002,12 +1015,13 @@ animationEndMovement: function() {
  * creates the animation to perform at the end of the game
  */
 animationEndGame: function() {
+	
 	console.log("Animazione fine gioco + ritorno stato iniziale");
-	//location.replace('../patient/index.html');
+	
+	setTimeout(location.replace('../patient/index.html'), 2000);
 }}
 
 $('document').ready(function(e) {
-	
 	
 	openWebSocket(port);
 });

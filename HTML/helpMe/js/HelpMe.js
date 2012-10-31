@@ -450,10 +450,10 @@ function localFileSystemInitializationComplete() {
 				/*presentationManager = new PresentationManager();
 				presentationManager.createElements();*/
 				try {
-					initGame();
-					allExamplesCompleted();
-					/*presentationManager = new PresentationManager();
-					presentationManager.createElements();*/
+					/*initGame();
+					allExamplesCompleted();*/
+					presentationManager = new PresentationManager();
+					presentationManager.createElements();
 				}
 				catch(error) {
 					console.log("Errore in localFileSystemInitializationComplete");

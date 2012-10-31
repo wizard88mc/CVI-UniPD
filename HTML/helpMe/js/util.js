@@ -75,7 +75,6 @@ anotherImageRetrieved: function() {
         //presentationManager.createElements();
         //ExampleNamespace.prepareExamples();
     	
-    	
     	openWebSocket(port);
     }
 },
@@ -210,8 +209,8 @@ istantiateLevel: function(level) {
     },
     
     addSoundSource: function(element, sourceFileName) {
-    	$('<source src="sounds/' + sourceFileName + '.ogg" type="audio/ogg" preload="auto"></audio>').appendTo(element);
-    	$('<source src="sounds/' + sourceFileName + '.mp3" type="audio/mpeg" preload="auto"></audio>').appendTo(element);
+    	$('<source src="sounds/' + sourceFileName + '.ogg" type="audio/ogg" preload="auto" />').appendTo(element);
+    	$('<source src="sounds/' + sourceFileName + '.mp3" type="audio/mpeg" preload="auto" />').appendTo(element);
     }
 
 };

@@ -28,7 +28,8 @@ function checkLogin(e) {
 	else {
 		
 		if (navigator.onLine) {
-			var divDialog = $('<div id="dialogLogin" title="Attendere.."><p>Login in corso. . .</p></div>');
+			var divDialog = $('<div>').attr('id', 'dialogLogin').attr('title', 'Attendere..');
+			$('<p>').text('Login in corso').appendTo(divDialog);
 			
 			divDialog.appendTo(divPage);
 			
@@ -100,6 +101,8 @@ function managePatients(e) {
 
 function loginCorrect(data) {
 	
+	setSessionStorage("logged", "true");
+	
 	if (data.PERMISSION == 'DOCTOR') {
 		doctorID = data.ID;
 		doctorName = data.NAME;
@@ -109,8 +112,6 @@ function loginCorrect(data) {
 		setSessionStorage("doctorSurname", doctorSurname);
 		setSessionStorage("permission", "DOCTOR");
 		setSessionStorage("doctorID", doctorID);
-		
-		setSessionStorage("logged", "true");
 		
 		secondStepPage();
 	}
@@ -136,10 +137,10 @@ function secondStepPage() {
 	
 	divPage.css('width', '80%').css('text-align', 'center');
 	
-	var title = $('<h2 id="welcomeDoctor">Bentornato Dott. '+ doctorName + ' ' + doctorSurname + '</h2>').appendTo(divPage);
+	var title = $('<h2>').attr('id', 'welcomeDoctor').text('Bentornato Dott. '+ doctorName + ' ' + doctorSurname).appendTo(divPage);
 	
 	
-	var logout = $('<img id="buttonLogout" src="images/logout.png" alt="Logout" />').appendTo(title);
+	var logout = $('<img>').attr('id', 'buttonLogout').attr('src', 'images/logout.png').attr('alt', 'Logout').appendTo(title);
 	
 	logout.on('click', function() {
 		
@@ -151,16 +152,17 @@ function secondStepPage() {
 		location.replace('index.html');
 	});
 	
-	var divSceltaOperazione = $('<div id="divSceltaOperazione"></div>');
-	divSceltaOperazione.css('width', '70%')
-						.css('margin', 'auto')
-						.css('padding-bottom', '2.0em');
+	var divSceltaOperazione = 
+		$('<div>').attr('id', 'divSceltaOperazione')
+		.css('width', '70%')
+		.css('margin', 'auto')
+		.css('padding-bottom', '2.0em');
 						
-	var buttonManagePatients = $('<button id="managePatients">Gestione Bambini</button>').button();
+	var buttonManagePatients = $('<button>').attr('id', 'managePatients').text('Gestione Bambini').button();
 	buttonManagePatients.click(managePatients);
-	var buttonDoctorClient = $('<button id="doctorClient">Schermo Dottore</button>').button();
+	var buttonDoctorClient = $('<button>').attr('id', 'doctorClient').text('Schermo Dottore').button();
 	buttonDoctorClient.click(doctorClient);
-	var buttonPatientClient = $('<button id="patientClient">Schermo Bambino</button>').button();
+	var buttonPatientClient = $('<button>').attr('id', 'patientClient').text('Schermo Bambino').button();
 	buttonPatientClient.click(patientClient);
 	
 	buttonManagePatients.appendTo(divSceltaOperazione);
@@ -224,8 +226,9 @@ function loginIncorrect() {
 	
 	$('#dialogLogin').dialog("destroy").remove();
 	
-	$('<div id="dialogErrorLogin" title="Errore!"><p>Username e password inseriti non corretti. </p></div>')
-		.appendTo(divPage);
+	$('<p>').text('Username e password inseriti non corretti. ').appendTo(
+			$('<div>').attr('id', 'dialogErrorLogin').attr('title', 'Errore!')
+			.appendTo(divPage));
 		
 	var width = getScreenWidth() * 0.5;
 		
@@ -233,10 +236,10 @@ function loginIncorrect() {
 		modal: true, 
 		width: width,
 		buttons: {
-				Ok: function() {
-					$(this).dialog("close");
-					$(this).remove();
-				}
+			Ok: function() {
+				$(this).dialog("close");
+				$(this).remove();
+			}
 		}, 
 		resizable: false,
 		draggable: false
@@ -271,12 +274,12 @@ $(document).ready(function(e) {
 		
 		builtHeader();
 		
-		var tableLogin = $('<table id="tableLogin"><tbody></tbody></table>');
+		var tableLogin = $('<table>').attr('id', 'tableLogin');
+		$('<tbody>').appendTo(tableLogin);
+		tableLogin.appendTo(divPage);
 		
 		$('<tr id="usernameRow"><td class="label">Username: </td><td><input type="text" id="username" name="username" /></td></tr>').appendTo(tableLogin);
 		$('<tr id="passwordRow"><td class="label">Password: </td><td><input type="password" id="password" name="password" /></td></tr>').appendTo(tableLogin);
-		
-		tableLogin.appendTo(divPage);
 		
 		$('input').addClass('inputText');
 		
@@ -289,7 +292,9 @@ $(document).ready(function(e) {
 			$('#password').attr({'value': getFromLocalStorage('password')});
 		}
 		
-		$('<div id="divButtonLogin" class="alignCenter"><button id="buttonLogin">Login</button></div>').appendTo(divPage);
+		$('<button>').attr('id', 'buttonLogin').text('Login').appendTo(
+				$('<div>').attr('id', 'divButtonLogin').addClass('alignCenter').appendTo(divPage));
+		
 		$('#buttonLogin').button();
 		$('#buttonLogin').click(checkLogin);
 		

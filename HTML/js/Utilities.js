@@ -209,11 +209,10 @@ function checkColorContrast(backgroundColor, foregroundColor) {
 	return totalSum > 500; 
 }
 
-function insertSound(soundID, fileName) {
+function addSoundSource(element, sourceFileName) {
 	
-	var sound = $('<audio></audio>').attr('id', soundID).appendTo('#divSounds');
-	$('<source src="sounds/' + fileName + '.mp3" />').appendTo(sound);
-	$('<source src="sounds/' + fileName + '.ogg" />').appendTo(sound);
+	$('<source src="sounds/' + sourceFileName + '.ogg" type="audio/ogg" preload="auto" />').appendTo(element);
+	$('<source src="sounds/' + sourceFileName + '.mp3" type="audio/mpeg" preload="auto" />').appendTo(element);
 }
 
 function cacheIsChecking() {

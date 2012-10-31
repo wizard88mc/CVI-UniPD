@@ -35,7 +35,9 @@ $patientID = $firstPacket['PATIENT_ID'];
 $queryInsertNewVisit = "INSERT INTO Visits(Date, IDPatient, IDGame, IsAtHome)
 VALUES ('$dateForDB', $patientID, $gameID, 1)";
 
-mysqli_query($connection, $queryInsertNewVisit) or die(mysqli_error($connection));
+echo "completed";
+
+/*mysqli_query($connection, $queryInsertNewVisit) or die(mysqli_error($connection));
 $visitId = mysqli_insert_id($connection);
 
 $folderWhereSave = "$year-$month-$day-$hour-$minutes-$visitId";
@@ -64,5 +66,5 @@ else if ($gameIdentification == "CATCH_ME") {
 	manageOfflineCatchMePackets($array, $folderToCreate, $visitId, $connection);
 }
 
-echo "completed";
+echo "completed";*/
 ?>

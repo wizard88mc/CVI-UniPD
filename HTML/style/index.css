@@ -55,3 +55,9 @@
 	vertical-align: middle;
 	cursor: pointer;
 }
+
+#imgPreloaderSendigOfflineVisits {
+	margin: auto;
+	margin-top: 0.5em;
+	width: 10%;
+}
