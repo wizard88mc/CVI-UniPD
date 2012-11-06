@@ -1,7 +1,11 @@
 package org.java_websocket;
 
 import java.net.UnknownHostException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import org.java_websocket.MessagesManagers.BaseMessagesManager;
 import org.java_websocket.util.TimeSyncCalculator;
@@ -74,6 +78,63 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
             sendPacketOffsetCalculation();
             System.out.println("StartOffsetCalculation");
         }
+        else if (packet.get("TYPE").equals("MACHINE_ID")) {
+                
+            if ((String)packet.get("ID") != null) {
+                machineID = new Integer((String)packet.get("ID"));
+            }
+                
+            ArrayList result = dbManager.getMachineOffset(machineID);
+                
+            if (result.isEmpty()) {
+                    
+                JSONObject packetStartCalcultation = new JSONObject();
+                packetStartCalcultation.put("TYPE", "OFFSET_CALCULATION");
+                packetStartCalcultation.put("TODO", "true");
+                packetStartCalcultation.put("MANDATORY", "true");
+
+                clientConnected.send(packetStartCalcultation.toJSONString());
+            }
+            else {
+                // creo data e verifico se va bene oppure no
+                try {
+                    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    Date dateCalculation = (Date)formatter.parse((String)result.get(1));
+                    Date today = new Date();
+
+                    long difference = today.getTime()
+                            - dateCalculation.getTime();
+
+                    long maxDifference = (long)1000 * 60 * 60 * 24 * 31;
+
+                    if (difference > maxDifference) {
+
+                        JSONObject packetMaybeCalculation = new JSONObject();
+                        packetMaybeCalculation.put("TYPE", "OFFSET_CALCULATION");
+                        packetMaybeCalculation.put("TODO", "true");
+                        packetMaybeCalculation.put("MANDATORY", "false");
+
+                        clientConnected.send(packetMaybeCalculation.toJSONString());
+                    }
+                    else {
+
+                        JSONObject packetAlreadySync = new JSONObject();
+                        packetAlreadySync.put("TYPE", "OFFSET_CALCULATION");
+                        packetAlreadySync.put("TODO", "false");
+
+                        clientConnected.send(packetAlreadySync.toJSONString());
+                    }
+                }
+                catch(ParseException exc) {
+                    System.out.println(exc.toString());
+                }
+
+                String[] components = ((String)result.get(0)).split(",");
+                valuea12 = Double.parseDouble(components[0]);
+                valueb12 = Double.parseDouble(components[1]);
+
+            }
+        }
         else {
             return false;
         }
@@ -87,12 +148,14 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
         System.out.println("Error in socket " + exc.getMessage() + exc.toString());
         exc.printStackTrace();
         clientConnected = null;
+        machineID = 0;
     }
     
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         System.out.println(clientType + " disconnected");
         clientConnected = null;
+        machineID = 0;
     }
     
     private void sendPacketOffsetCalculation() {
@@ -123,12 +186,19 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
                 System.out.println("Errore format: " + exc.toString());
             }
             
-            int machineID = dbManager.insertNewMachineOffset(valuea12 + "," + valueb12);
+            int newMachineID = dbManager.insertNewMachineOffset(valuea12 + "," + valueb12, machineID);
 
             JSONObject packetToSend = new JSONObject();
-            packetToSend.put("TYPE", "OFFSET_CALCULATION_COMPLETE");
-            packetToSend.put("MACHINE_ID", machineID);
-
+                packetToSend.put("TYPE", "OFFSET_CALCULATION_COMPLETE");
+            
+            if (machineID == 0) {
+                
+                packetToSend.put("MACHINE_ID", newMachineID);
+            }
+            else {
+                packetToSend.put("MACHINE_ID", machineID);
+            }
+            
             System.out.println("Invio pacchetto fine calcolo offset");
             clientConnected.send(packetToSend.toJSONString());
         }

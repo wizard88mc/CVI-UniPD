@@ -44,25 +44,7 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
             }
             else if (packet.get("TYPE").equals("READY_TO_PLAY")) {
                 
-                if (!offsetCalculated)  {
-                    int machineID = new Integer((String)packet.get("MACHINE_ID"));
-                    // recupero valore dell'offset da DB 
-                    String dbValue = dbManager.getMachineOffset(machineID);
-                    String[] components = dbValue.split(",");
-                    valuea12 = Double.parseDouble(components[0]);
-                    valueb12 = Double.parseDouble(components[1]);
-
-                }
-                
                 System.out.println("Eye_Tracker_Manager READY TO START");
-
-                /*System.out.println("Richiesta calcolo tempo partenza");
-
-                long timeToStart = managerReady();
-                if (timeToStart != -1) {
-                    System.out.println("Sto spedendo ora partenza");
-                    comunicateStartTime(timeToStart);
-                }*/
             }
         }
         return true;

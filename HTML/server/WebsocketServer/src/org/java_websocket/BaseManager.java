@@ -20,6 +20,7 @@ public abstract class BaseManager extends WebSocketServer {
     protected String clientType = null;
     protected static ServerManager serverManager;
     protected WebSocket clientConnected = null;
+    protected int machineID = 0;
     public static DatabaseManager dbManager = null;
     protected static BaseMessagesManager messageManager;
     protected static IPADClientManager patientManager = null;
@@ -37,10 +38,12 @@ public abstract class BaseManager extends WebSocketServer {
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         System.out.println("Opening connection in " + clientType + " Manager");
+        
         JSONObject message = new JSONObject();
         message.put("TYPE", "IDENTIFICATION");
-        System.out.println("Sending identification request");
         conn.send(message.toJSONString());
+        
+        System.out.println("Sending identification request");
     }
     
     public boolean checkClientType(String answer) {

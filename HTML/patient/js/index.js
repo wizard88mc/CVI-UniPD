@@ -21,6 +21,7 @@ function presentationComplete() {
 			if (data.TODO == "true") {
 				
 				if (data.MANDATORY == "true") {
+					
 					var dialog = $('<div>').attr('id', 'dialogAskSynch').attr('title', 'Sincronizzazione').appendTo('#divMainContent');
 					$('<p>').text('Computer non ancora sincronizzato con il server. Eseguire sincronizzazione ora?').appendTo(dialog);
 					$('<p>').text('Attenzione: se non si effettua sincronizzazione non sarà possibile giocare..').appendTo(dialog);
@@ -36,18 +37,17 @@ function presentationComplete() {
 								$(this).remove();
 								startSynchronization();
 								
-								$('<p>').text('Sincronizzazione in corso. Attendere.').appendTo(
-									$('<div>').attr('id', 'dialogWait')
-										.attr('title', 'Attendere')><p>Sincronizzazione in corso. Attendere.</p></div>')
-										.appendTo('#divMainContent')
-										.dialog({
-											modal: true,
-											draggable: false,
-											resizable: false,
-											width: (getScreenWidth() * 0.4),
-										});
-								);
-							}, 
+								$('<p>').text('Sincronizzazione in corso. Attendere.')
+								.appendTo($('<div>').attr('id', 'dialogWait')
+										.attr('title', 'Attendere')
+										.appendTo('#divMainContent'));
+								$('#dialogWait').dialog({
+										modal: true,
+										draggable: false,
+										resizable: false,
+										width: (getScreenWidth() * 0.4),
+									});
+							},
 							"Indietro": function() {
 								$(this).dialog("close");
 								$(this).remove();
@@ -55,6 +55,45 @@ function presentationComplete() {
 							}
 						}
 					});
+				}
+				// The synchronization is not mandatory, the physician
+				// can decide if sync another time or not
+				else {
+					
+					var dialog = $('<div>').attr('id', 'dialogAskSynch').attr('title', 'Sincronizzazione').appendTo('#divMainContent');
+					$('<p>').text('Il computer non è stato sincronizzato recentemente e sarebbe opportuno effettuarla per avere dati più precisi.').appendTo(dialog);
+					$('<p>').text('Sincronizzare nuovamente?').appendTo(dialog);
+					dialog.dialog({
+						modal: true,
+						resizable: false,
+						draggable: false,
+						closeOnEscape: false,
+						width: (getScreenWidth() * 0.5),
+						buttons: {
+							"Esegui": function() {
+								$(this).dialog("close");
+								$(this).remove();
+								startSynchronization();
+								
+								$('<p>').text('Sincronizzazione in corso. Attendere.')
+								.appendTo($('<div>').attr('id', 'dialogWait')
+										.attr('title', 'Attendere')
+										.appendTo('#divMainContent'));
+								$('#dialogWait').dialog({
+										modal: true,
+										draggable: false,
+										resizable: false,
+										width: (getScreenWidth() * 0.4),
+									});
+							},
+							"Non sincronizzare": function() {
+								$(this).dialog("close");
+								$(this).remove();
+								putInWaitingToStart();
+							}
+						}
+					});
+					
 				}
 			}
 			else {
@@ -115,12 +154,12 @@ $('document').ready(function(e) {
 		
 		$('#divMainContent').addClass('ui-corner-all');
 		
-		$('<h1>Ciao ' + patientName + "</h1>").addClass("title").appendTo('#divMainContent');
-		$("<h1>A cosa giochiamo oggi???</h1>").appendTo('#divMainContent');
+		$('<h1>').text('Ciao ' + patientName).addClass("title").appendTo('#divMainContent');
+		$('<h1>').text('A cosa giochiamo oggi???').appendTo('#divMainContent');
 		
-		var divCatchMe = $('<div id="buttonCatchMe">Prendimi!</div>')
+		var divCatchMe = $('<div>').attr('id', 'buttonCatchMe').text('Prendimi!')
 			.addClass('buttonForGame').appendTo('#divMainContent');
-		var divHelpMe = $('<div id="buttonHelpMe">Aiutami!</div>')
+		var divHelpMe = $('<div>').attr('id', 'buttonHelpMe').text('Aiutami!')
 			.addClass('buttonForGame').appendTo('#divMainContent');
 		
 		divCatchMe.button();

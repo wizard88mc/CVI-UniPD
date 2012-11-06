@@ -127,7 +127,7 @@ requestGameSettings: function() {
 	})
 	
 	$('<div>').attr('id', 'divHeaderSettings').appendTo('#divMainContent');
-	$('<h1>').text('Impostazioni di gioco').appendTo(''#divHeaderSettings');
+	$('<h1>').text('Impostazioni di gioco').appendTo('#divHeaderSettings');
 	$('#divHeaderSettings').addClass('ui-widget-header ui-corner-all')
 		.css({
 			width: '50%',
@@ -199,7 +199,7 @@ setGameSettings: function(data) {
 	backgroundPicker.setColor(data.BACK_COLOR);
 	
 	var divColoreImmagine = $('<div>').attr('id', 'divColoreImmagine')
-		.addClass('ui-widget-content ui-corner-all');
+		.addClass('ui-widget-content ui-corner-all')
 		.appendTo(divLeft);
 	
 	paragraph = $('<p>').text('Colore immagine')

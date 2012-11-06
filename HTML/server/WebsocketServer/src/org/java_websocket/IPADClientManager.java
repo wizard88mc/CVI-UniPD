@@ -10,7 +10,12 @@ package org.java_websocket;
  */
 
 import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import org.java_websocket.Messages.OnlyImageGameDataPacket;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -68,30 +73,6 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                 
                 doctorManager.sendPacket(packet);
             }
-            else if (packetType.equals("MACHINE_ID")) {
-                
-                String machineID = (String)packet.get("ID");
-                
-                ArrayList result = dbManager.getMachineOffset(machineID);
-                
-                if (result.isEmpty()) {
-                    
-                    JSONObject packetStartCalcultation = new JSONObject();
-                    packetStartCalcultation.put("TYPE", "OFFSET_CALCULATION");
-                    packetStartCalcultation.put("TODO", "true");
-                    packetStartCalcultation.put("MANDATORY", "true");
-                    
-                    clientConnected.send(packetStartCalcultation.toJSONString());
-                }
-                else {
-                    // creo data e verifico se va bene oppure no
-                    JSONObject packetAlreadySync = new JSONObject();
-                    packetAlreadySync.put("TYPE", "OFFSET_CALCULATION");
-                    packetAlreadySync.put("TODO", "false");
-                    
-                    clientConnected.send(packetAlreadySync.toJSONString());
-                }
-            }
             else if (packetType.equals("READY_TO_PLAY")) {                     
 
                 if (packet.containsKey("IMAGE_WIDTH")) {
@@ -116,7 +97,7 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                 
                  // se non ho appena calcolato il valore di offset (offsetCalculated == false)
                 // recupero il valore di offset dal mio DB
-                if (!offsetCalculated)  {
+                /*if (!offsetCalculated)  {
                     int machineID = new Integer((String)packet.get("MACHINE_ID"));
                     // recupero valore dell'offset da DB 
                     String dbValue = dbManager.getMachineOffset(machineID);
@@ -125,7 +106,7 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                         valuea12 = Double.parseDouble(components[0]);
                         valueb12 = Double.parseDouble(components[1]);
                     }
-                }
+                }*/
             }
         }
 
