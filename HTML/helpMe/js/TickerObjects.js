@@ -1,91 +1,58 @@
+var eventEndAnimation = 'transitionend webkitTransitionEnd oTransitionEnd';
 
 var frameAnimatorNamespace = {
 
-	// Si occupa di far entrare il tubo all'interno dello schermo a partire dall'alto
-	// e successivamente, una volta arrivato in posizione, si occupa di farlo tornare indietro
-    managerMovimentoTubo: function(time) {
-
-        gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerMovimentoTubo);
-        var delta = time - gameManager.timeLastFrame; 
-        if (delta > 30) {
-	        if (!tubo.goBack) {
-	            if (tubo.incremenentHeight(delta)) {
-	                tubo.goBack = true;
-	                window.cancelAnimationFrame(gameManager.currentAnimationFrame);
-	                gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerIngressoImmagine);
-	            }
-	        }
-	        else {
-	            if (tubo.decrementHeight(delta)) {
-	                window.cancelAnimationFrame(gameManager.currentAnimationFrame);
-	                frameAnimatorNamespace.startRealGame();
-	            }
-	        }
-	        gameManager.timeLastFrame = time;
-        }
-    },
-
-    // si occupa di gestire l'ingresso dell'immagine all'interno dello schermo
-    // tenendola nascosta fino a quando non supera il tubo e poi ingrandendola
-    // fino a quando non arriva al centro dello schermo
-    managerIngressoImmagine: function(time) {
+    /**
+     * 
+     * defines the transition that moves the image from
+     * the red machine of the environment to the center
+     * of the screen, changing its positions and its
+     * size
+     */ 
+    managerIngressoImmagine: function() {
     	
-    	var transition = 'all ' + imageObjectOnScreen.timeForMovingToCenter / 1000 +'s linear';
+    	var transition = 'all ' + imageObjectOnScreen.timeForMovingToCenter + 's linear';
+    	
+    	addTransitionSpecifications(imageObjectOnScreen.element, transition);
     	
     	//console.log(imageObjectOnScreen.element.position());
     	//	console.log(imageObjectOnScreen.targetPoint);
     	
-    	imageObjectOnScreen.element.on('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
+    	imageObjectOnScreen.element.on(eventEndAnimation, function(event) {
     		
     		if (event.originalEvent.propertyName === "left") {
     			
-    			$(this).off('transitionend webkitTransitionEnd oTransitionEnd');
-    			$(this).css({
-    				transition: 'none',
-    				'-webkit-transition': 'none'
-    			});
+    			$(this).off(eventEndAnimation);
+    			
+    			addTransitionSpecifications(imageObjectOnScreen.element, 'none');
     			
     			imageObjectOnScreen.arrivedAtCenter();
     			
-    			frameAnimatorNamespace.startRealGame();
+    			frameAnimatorNamespace.imageInTheCenterOfTheScreen();
     		}
     	}).css({
-    		transition: transition,
-    		'-webkit-transition': transition,
     		width: imageObjectOnScreen.targetWidth,
     		height: imageObjectOnScreen.targetHeight, 
     		left: imageObjectOnScreen.targetPoint.left,
     		top: imageObjectOnScreen.targetPoint.top
     	});
-    	
-    	
-        /*gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerIngressoImmagine);
-
-        var delta = time - gameManager.timeLastFrame;
-        if (delta > 1000 / 25) {
-        	
-        	imageObjectOnScreen.moveObject(delta, false);
-        	imageObjectOnScreen.scaleObject(delta);
-        	if (imageObjectOnScreen.center.top < imageObjectOnScreen.targetCenter.top && 
-        			imageObjectOnScreen.center.left < imageObjectOnScreen.targetCenter.left) {
-        		
-        		imageObjectOnScreen.scaleObject(0);
-        		window.cancelAnimationFrame(gameManager.currentAnimationFrame);
-                gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.startRealGame);
-        	}
-	        gameManager.timeLastFrame = time;
-        }*/
     },
 
-    // visualizza barra del tempo di gioco +
-    // registra eventi tocco +
-    // inizia requestAnimationFrame per il gioco
-    startRealGame: function() {
+    /**
+     * if the current image is not for example, it attaches
+     * the mouse events to the corresponding functions,
+     * otherwise it decide if it has to move the example
+     * inside the bag or not, and to reproduce the
+     * corresponding sounds
+     */
+    imageInTheCenterOfTheScreen: function() {
 
-    	// Se non è un esempio faccio entrare la barra del tempo
-    	// + registro eventi per gestire tocco sull'immagine
+    	/**
+    	 * If it is not an example, attaches the
+    	 * mouse events to the corresponding functions
+    	 * and starts the game
+    	 */ 
         if (!gameManager.isAnExample) {
-            //barraTempo.element.fadeIn(1500, function(){
 
             imageObjectOnScreen.element.draggable({
                 start: touchManagerNamespace.touchStart,
@@ -99,10 +66,14 @@ var frameAnimatorNamespace = {
             // evento a suo gestore (evento deve essere tocco + sposto)
             gameManager.startTimeObjectOnScreen = new Date().getTime();
             gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.realGameManager);
-            //});
         }
         else {
 
+        	/**
+        	 * Manages the example, if it has to insert it into the
+        	 * bag or not, with or without the arrow showing a small
+        	 * help for the children
+        	 */
             if (exampleManager.currentExample.insertIntoSacco) {
                 if (exampleManager.currentExample.withHelp) {
                     exampleManager.arrow = $(exampleManager.arrowImage).attr('id', 'imgArrow').appendTo('#divMainContent');
@@ -121,54 +92,48 @@ var frameAnimatorNamespace = {
 
                     $('#divSounds #soundBefore').on('ended', function() {
                     	gameManager.timeLastFrame = new Date().getTime();
-                        gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.moveExampleIntoSacco);
+                        
+                    	frameAnimatorNamespace.moveExampleIntoBag();
                     }).get(0).play();
 
                 }
                 else {
                 	gameManager.timeLastFrame = new Date().getTime();
-                    gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.moveExampleIntoSacco);
+                    
+                	frameAnimatorNamespace.moveExampleIntoBag();
                 }
             }
+            /**
+             * The example has to go to the bin on the left of
+             * the screen
+             */
             else {
-                /*setTimeout(function() {
-
-                    ExampleNamespace.exampleCompleted();
-                }, 1000);*/
             		
+            	// Defines the transition for the example from its 
+            	// position to the bin
+            	
         		var objectTransition = function() {            		
-	            	imageObjectOnScreen.element.one('transitionend webkitTransitionEnd oTransitionEnd', function() {
+	            	imageObjectOnScreen.element.one(eventEndAnimation, function() {
 	        			
-	            		imageObjectOnScreen.element.one('transitionend webkitTransitionEnd oTransitionEnd', function() {
+	            		imageObjectOnScreen.element.one(eventEndAnimation, function() {
 	            			
 	            			ExampleNamespace.exampleCompleted();
 	            		});
 	            		
-	            		imageObjectOnScreen.element.css({
-	                		'transition': 'all 2s linear',
-	                		'-moz-transition': 'all 2s linear',
-	                		'-webkit-transition': 'all 2s linear',
-	                		'-o-transition': 'all 2s linear'
-	                	});
+	            		addTransitionSpecifications(imageObjectOnScreen.element, 'all 2s linear');
 	                	
 	                	imageObjectOnScreen.element.css({
 	                		width: '0px',
 	                		height: '0px',
 	                		left: '0px',
-	                		top: imageObjectOnScreen.center.top,
-	                		'-webkit-transform': 'rotate(720deg)',
-	                		'-moz-transform': 'rotate(720deg)',
-	                		'-o-transform': 'rotate(720deg)',
-	                		'transform': 'rotate(720deg)'
+	                		top: imageObjectOnScreen.center.top
 	                	});
+	                	
+	                	addTransformSpecifications(imageObjectOnScreen.element, 'rotate(720deg)');
+	                	
 	        		});
 	            	
-	            	imageObjectOnScreen.element.css({
-	            		'transition': 'left 2s linear',
-	            		'-moz-transition': 'left 2s linear',
-	            		'-webkit-transition': 'left 2s linear',
-	            		'-o-transition': 'left 2s linear'
-	            	});
+	            	addTransitionSpecifications(imageObjectOnScreen.element, 'left 2s linear');
 	            	
 	            	imageObjectOnScreen.element.css({
 	            		left: cestino.width + 'px',
@@ -190,9 +155,53 @@ var frameAnimatorNamespace = {
         }
     },
 
-    moveExampleIntoSacco: function(time) {
-
-        gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.moveExampleIntoSacco);
+    /**
+     * 
+     * Moves the example inside the bag
+     */
+    moveExampleIntoBag: function() {
+    	
+    	var time = 3;
+    	var transition = 'all ' + time + 's linear';
+    	
+    	var finalTopObject = sacco.center.top;
+    	
+    	addTransitionSpecifications(imageObjectOnScreen.element, transition);
+    	
+    	imageObjectOnScreen.element.on(eventEndAnimation, function(event) {
+    		
+    		if (event.originalEvent.propertyName === "top") {
+    			
+    			imageObjectOnScreen.element.off(eventEndAnimation);
+    			imageObjectOnScreen.element.remove();
+    			
+	            ExampleNamespace.exampleCompleted();
+    		}
+    	}).css({
+    		top: finalTopObject
+    	});
+    	
+    	if (exampleManager.arrow != null) {
+    		
+    		var transitionArrow = 'all ' + time * 2 / 3 + 's linear';
+    		var finalTopArrow = exampleManager.arrow.position().top + exampleManager.arrow.height();
+    		
+    		addTransitionSpecifications(exampleManager.arrow, transitionArrow);
+    		
+    		exampleManager.arrow.on(eventEndAnimation, function(event) {
+    			
+    			if (event.originalEvent.propertyName === "height") {
+    				
+    				exampleManager.arrow.remove();
+	                exampleManager.arrow = null;
+    			}
+    		}).css({
+    			height: '0px',
+    			top: finalTopArrow
+    		});
+    	}
+    	
+        /*gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.moveExampleIntoBag);
 
         var delta = time - gameManager.timeLastFrame;
         if (delta > 1000 / 50) {
@@ -203,23 +212,23 @@ var frameAnimatorNamespace = {
 	        	exampleManager.reduceArrowHeight(delta);
 	
 	            if (exampleManager.arrow.height() < 0) {
-	                exampleManager.arrow.remove();
-	                exampleManager.arrow = null;
+	                
 	            }
 	        }
 	
 	        if (imageObjectOnScreen.drawingPosition.top > sacco.center.top) {
 	            window.cancelAnimationFrame(gameManager.currentAnimationFrame);
-	            imageObjectOnScreen.element.remove();
-	
-	            ExampleNamespace.exampleCompleted();
+	            
 	        }
 	        gameManager.timeLastFrame = time; 
-        }
+        }**/
     },
 
-    // ticker che si occupa della gestione del gioco mentre c'è immagine
-    // che deve essere inserita nel sacco
+    /**
+     * Works during the game, sending a packet with all the informations
+     * every maxSensibility milliseconds, and checks if the time is expired
+     */
+
     realGameManager: function(time) {
 
         gameManager.currentAnimationFrame = 
@@ -239,12 +248,9 @@ var frameAnimatorNamespace = {
             gameManager.lastTimeMessageSent = time;
         }
 
-        // riduce la dimensione della barra in relazione al tempo passato ed a quello massimo di attesa
         if (!imageObjectOnScreen.moveInsideSacco && !imageObjectOnScreen.moveInsideCestino) {
         	
             var elapsedTime = time - gameManager.startTimeObjectOnScreen;
-
-            //barraTempo.timeIsPassing(elapsedTime / gameManager.maxTimeObjectOnScreen);
 
             if (elapsedTime >= gameManager.maxTimeObjectOnScreen) {
                 window.cancelAnimationFrame(gameManager.currentAnimationFrame);
@@ -267,44 +273,30 @@ var frameAnimatorNamespace = {
         		
     		window.cancelAnimationFrame(gameManager.currentAnimationFrame);
     		
-    		imageObjectOnScreen.element.one('transitionend webkitTransitionEnd oTransitionEnd', function() {
+    		imageObjectOnScreen.element.one(eventEndAnimation, function() {
     			
     			timeExpired(true);
     		})
     		
-    		imageObjectOnScreen.element.css({
-        		'transition': 'all 2s linear',
-        		'-moz-transition': 'all 2s linear',
-        		'-webkit-transition': 'all 2s linear',
-        		'-o-transition': 'all 2s linear'
-        	});
+    		addTransitionSpecifications(imageObjectOnScreen.element, 'all 2s linear');
         	
         	imageObjectOnScreen.element.css({
         		width: '0px',
         		height: '0px',
         		left: '0px',
-        		top: imageObjectOnScreen.center.top,
-        		'-webkit-transform': 'rotate(720deg)',
-        		'-moz-transform': 'rotate(720deg)',
-        		'-o-transform': 'rotate(720deg)',
-        		'transform': 'rotate(720deg)'
+        		top: imageObjectOnScreen.center.top
         	});
+        	
+        	addTransformSpecifications(imageObjectOnScreen.element, 'rotate(720deg)');
         }
     },
     
     functionMoveGnomo: function(currentTime) {
     
-    	var transition = 'width 5s linear, height 5s linear, left 5s linear, top 5s linear';
+    	var transition = 'all ' + presentationManager.timeToPerformMovement + 's linear';
     	
-    	presentationManager.slitta.element.css({
-    		'transition': transition,
-    		'-webkit-transition': transition
-    	});
-    	
-    	presentationManager.gnomo.element.css({
-    		'transition': transition,
-    		'-webkit-transition': transition
-    	});
+    	addTransitionSpecifications(presentationManager.slitta.element, transition);
+    	addTransitionSpecifications(presentationManager.gnomo.element, transition);
     	
     	presentationManager.gnomo.element.css({
     		width: presentationManager.firstPoint.gnomo.width,
@@ -313,12 +305,11 @@ var frameAnimatorNamespace = {
     		top: presentationManager.firstPoint.gnomo.top
     	});
     	
-    	presentationManager.slitta.element.on('transitionend webkitTransitionEnd', function(event) {
+    	presentationManager.slitta.element.on(eventEndAnimation, function(event) {
     		
-    		event.stopPropagation();
     		if (event.originalEvent.propertyName === "left") {
     			
-    			$(this).off('transitionend webkitTransitionEnd');
+    			$(this).off(eventEndAnimation);
     			
     			presentationManager.gnomo.element.css({
     				width: presentationManager.secondPoint.gnomo.width,
@@ -328,12 +319,12 @@ var frameAnimatorNamespace = {
     			});
     			
     			presentationManager.slitta.element.attr('src', presentationManager.slitta.imageFileBack);
-    			presentationManager.slitta.element.on('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
+    			
+    			presentationManager.slitta.element.on(eventEndAnimation, function(event) {
     				
-    				event.stopPropagation();
     				if (event.originalEvent.propertyName === "left") {
     					
-    					$(this).off('transitionend webkitTransitionEnd oTransitionEnd');
+    					$(this).off(eventEndAnimation);
     					frameAnimatorNamespace.moveGnomoToCenter();
     				}
     			}).css({
@@ -350,89 +341,16 @@ var frameAnimatorNamespace = {
     		top: presentationManager.firstPoint.slitta.top,
     		left: presentationManager.firstPoint.slitta.left
     	});
-    	
-	    /*presentationManager.currentAnimationFrame = 
-	        window.requestAnimationFrame(frameAnimatorNamespace.functionMoveGnomo);
-	    
-	    var delta = currentTime - presentationManager.timeLastFrame;
-	    if (delta > 1000 / 50) {
-	        if (!presentationManager.gnomo.moveRight) {
-	            if (presentationManager.slitta.left > presentationManager.firstPoint.slitta.left) {	                
-	                presentationManager.gnomo.increaseDimensions(delta);
-	                presentationManager.gnomo.moveElement(true, delta);
-	                presentationManager.slitta.increaseDimensions(delta);
-	                presentationManager.slitta.moveElement();
-	                presentationManager.gnomo.drawElement();
-	                presentationManager.slitta.drawElement();
-	                presentationManager.timeLastFrame = currentTime;
-	            }
-	            else {
-	                presentationManager.gnomo.moveRight = true;
-	                presentationManager.slitta.element.attr('src', presentationManager.slitta.imageFileBack);
-	                presentationManager.slitta.left = presentationManager.firstPoint.slitta.left;
-	                presentationManager.slitta.top = presentationManager.firstPoint.slitta.top;
-	                presentationManager.slitta.width = presentationManager.firstPoint.slitta.width;
-	                presentationManager.slitta.height = presentationManager.firstPoint.slitta.height;
-	                presentationManager.gnomo.left = presentationManager.firstPoint.gnomo.left;
-	                presentationManager.gnomo.top = presentationManager.firstPoint.gnomo.top;
-	                presentationManager.gnomo.width = presentationManager.firstPoint.gnomo.width;
-	                presentationManager.gnomo.height = presentationManager.firstPoint.gnomo.height;
-	                presentationManager.totalDistanceLeft = getScreenWidth() + presentationManager.slitta.left;
-	            }
-	        }
-	        else {
-	            
-	            if (presentationManager.slitta.left < getScreenWidth()) {
-	            	
-	            	presentationManager.gnomo.increaseDimensions(delta);
-	                presentationManager.gnomo.moveElement(false, delta);
-	                presentationManager.slitta.increaseDimensions(delta);
-	                presentationManager.slitta.moveElement();
-	                presentationManager.gnomo.drawElement();
-	                presentationManager.slitta.drawElement();
-	                presentationManager.timeLastFrame = currentTime;
-	            }
-	            else {
-	                window.cancelAnimationFrame(presentationManager.currentAnimationFrame);
-	                
-	                
-	                presentationManager.gnomo.currentScale = presentationManager.gnomo.targetScale;
-	                presentationManager.gnomo.width = presentationManager.gnomo.targetWidth;
-	                presentationManager.gnomo.height = presentationManager.gnomo.targetHeight;
-	                
-	                presentationManager.gnomo.top = (getScreenHeight() * 0.7) - presentationManager.gnomo.height; 
-	                
-	                presentationManager.slitta.currentScale = presentationManager.slitta.targetScale;
-	                presentationManager.slitta.width = presentationManager.slitta.targetWidth;
-	                presentationManager.slitta.height = presentationManager.slitta.targetHeight;
-	                presentationManager.slitta.moveElement();
-	                presentationManager.slitta.element.attr('src', presentationManager.slitta.imageFile);
-	                
-	                presentationManager.gnomo.drawElement();
-	                presentationManager.slitta.drawElement();
-	                
-	                presentationManager.totalDistanceTop = 0;
-	                presentationManager.totalDistanceLeft = presentationManager.slitta.left + 
-	                	presentationManager.slitta.width;
-	                
-	                presentationManager.currentAnimationFrame = 
-	                    window.requestAnimationFrame(frameAnimatorNamespace.moveGnomoToCenter);
-	            }
-	        }
-	    }*/
 	},
+	
     moveGnomoToCenter: function() {
     
     	presentationManager.slitta.element.attr('src', presentationManager.slitta.imageFile);
     	
-    	presentationManager.slitta.element.css({
-    		transition: 'all 1s linear',
-    		'-webkit-transition': 'all 1s linear'
-    	});
-    	presentationManager.gnomo.element.css({
-    		transition: 'all 1s linear',
-    		'-webkit-transition': 'all 1s linear'
-    	});
+    	var transition = 'all ' + presentationManager.timeToPerformMovement / 2 + 's ease-out';
+    	
+    	addTransitionSpecifications(presentationManager.slitta.element, transition);
+    	addTransitionSpecifications(presentationManager.gnomo.element, transition);
     	
     	presentationManager.gnomo.element.css({
     		width: presentationManager.thirdPoint.gnomo.width,
@@ -441,22 +359,16 @@ var frameAnimatorNamespace = {
     		top: presentationManager.thirdPoint.gnomo.top
     	});
     	
-    	presentationManager.slitta.element.on('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
+    	presentationManager.slitta.element.on(eventEndAnimation, function(event) {
     		
     		if (event.originalEvent.propertyName === "top") {
     			
-    			$(this).off('transitionend webkitTransitionEnd oTransitionEnd');
+    			$(this).off(eventEndAnimation);
     			
-    			var transition = 'all 3s ease-out';
+    			var transition = 'all ' + presentationManager.timeToperformMovement / 2 +'s ease-out';
     	    	
-    	    	presentationManager.slitta.element.css({
-    	    		transition: transition,
-    	    		'-webkit-transition': transition
-    	    	});
-    	    	presentationManager.gnomo.element.css({
-    	    		transition: transition,
-    	    		'-webkit-transition': transition
-    	    	});
+    			addTransitionSpecifications(presentationManager.slitta.element, transition);
+    			addTransitionSpecifications(presentationManager.gnomo.element, transition);
     	    	
     	    	presentationManager.gnomo.element.css({
     	    		width: presentationManager.fourthPoint.gnomo.width,
@@ -465,41 +377,36 @@ var frameAnimatorNamespace = {
     	    		top: presentationManager.fourthPoint.gnomo.top
     	    	});
     	    	
-    	    	presentationManager.slitta.element.on('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
+    	    	presentationManager.slitta.element.on(eventEndAnimation, function(event) {
     	    		
     	    		if (event.originalEvent.propertyName === "left") {
-    	    			$(this).off('transitionend webkitTransitionEnd oTransitionEnd');
+    	    			
+    	    			$(this).off(eventEndAnimation);
     	    			
     	    			setTimeout(function() {
     	    				
     	    				var transition = 'all 0.1s linear';
         	    			
-        	    			presentationManager.gnomo.element.css({
-        	    				transition: transition,
-        	    				'-webkit-transition': transition
-        	    			});
+    	    				addTransitionSpecifications(presentationManager.gnomo.element, transition);
         	    			
-        	    			presentationManager.gnomo.element.on('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
+        	    			presentationManager.gnomo.element.on(eventEndAnimation, function(event) {
         	    				
         	    				if (event.originalEvent.propertyName === "top") {
         	    					
-        	    					$(this).off('transitionend webkitTransitionEnd oTransitionEnd');
+        	    					$(this).off(eventEndAnimation);
         	    					
         	    					var transition = 'all 0.2s linear';
         	    					
-        	    					presentationManager.gnomo.element.css({
-        	    						transition: transition,
-        	    						'-webkit-transition': transition
-        	    					});
+        	    					addTransitionSpecifications(presentationManager.gnomo.element, transition);
         	    					
-        	    					presentationManager.gnomo.element.on('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
+        	    					presentationManager.gnomo.element.on(eventEndAnimation, function(event) {
         	    						
         	    						if (event.originalEvent.propertyName === "top") {
         	    							
-        	    							presentationManager.slitta.element.css({
-        	    								transition: 'none',
-        	    								'-webkit-transition': 'none'
-        	    							});
+        	    							presentationManager.gnomo.element.off(eventEndAnimation);
+        	    							
+        	    							addTransitionSpecifications(presentationManager.slitta.element, 'none');
+        	    							addTransitionSpecifications(presentationManager.gnomo.element, 'none');
         	    							
         	    							setTimeout(function() {
         	    		                    	$('#divMainContent').children().css({
@@ -508,6 +415,7 @@ var frameAnimatorNamespace = {
         	    		                    	
         	    		                    	$('#divSounds #audioFrenata').remove();
         	    		                        presentationEnded();
+        	    		                        
         	    		                    }, 1500);
         	    						}
         	    						
@@ -539,163 +447,97 @@ var frameAnimatorNamespace = {
     		left: presentationManager.thirdPoint.slitta.left,
     		top: presentationManager.thirdPoint.slitta.top
     	});
-    	
-    /*presentationManager.currentAnimationFrame = 
-        window.requestAnimationFrame(frameAnimatorNamespace.moveGnomoToCenter);
-    
-    var delta = time - presentationManager.timeLastFrame;
-    if (delta > 1000 / 50) {
-        if (!presentationManager.gnomo.arrivedToCenter) {
-
-            var distance = presentationManager.gnomo.left - 
-                (getScreenWidth() / 2 - presentationManager.gnomo.width / 2);
-            
-            if (distance > 0) {
-
-                if (distance < 100 && distance > 30) {
-                    $('#divSounds #audioFrenata').get(0).play();
-                    presentationManager.timeToPerformMovement = 
-                        (distance * 500);
-                    presentationManager.distanceModified = true;
-                }
-                
-                presentationManager.gnomo.moveElement(true, delta)
-                presentationManager.slitta.moveElement();
-                presentationManager.gnomo.drawElement();
-                presentationManager.slitta.drawElement();
-                presentationManager.timeLastFrame = time;
-            }
-            else {
-                presentationManager.gnomo.arrivedToCenter = true;
-                time += 500;
-                presentationManager.timeLastFrame = time;
-            }
-        }
-        else {
-            presentationManager.gnomo.element.css({'z-index': 3});
-            if (presentationManager.angleForJump < Math.PI) {
-                presentationManager.angleForJump += 0.3;
-                presentationManager.gnomo.top += Math.sin(presentationManager.angleForJump) * 10;
-                presentationManager.gnomo.drawElement();
-            }
-            else {
-                window.cancelAnimationFrame(presentationManager.currentAnimationFrame);
-                //$('#audioIntroduzione').on('ended', function() {
-                  //  console.log("Completed");
-                    setTimeout(function() {
-                    	$('#divMainContent').children().css({
-                        	visibility: 'hidden'
-                        });
-                    	
-                    	$('#divSounds #audioFrenata').remove();
-                        presentationEnded();
-                    }, 1500);
-                    
-                    /*setTimeout(function() {
-                    	presentationManager.timeLastFrame = new Date().getTime();	
-                    	presentationManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.gnomoReturnsOnSlitta);
-                    });*/
-                    //ExampleNamespace.prepareExamples();
-                //}).get(0).play();
-     /*       }
-        }
-    }*/
 }, 
 
 	gnomoReturnsOnSlitta: function(time) {
 		
-		presentationManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.gnomoReturnsOnSlitta);
+		var transition = 'all 0.2s linear';
 		
-		$('#divMainContent').children().css({
-			visibility: 'visible'
+		addTransitionSpecifications(presentationManager.gnomo.element, transition);
+		
+		presentationManager.gnomo.element.on(eventEndAnimation, function(event) {
+			
+			if (event.originalEvent.propertyName === "top") {
+				
+				presentationManager.gnomo.element.off(eventEndAnimation);
+				
+				var transition = 'all 0.1s linear';
+				
+				addTransitionSpecifications(presentationManager.gnomo.element, transition);
+				
+				presentationManager.gnomo.element.on(eventEndAnimation, function(event) {
+					
+					if (event.originalEvent.propertyName === "top") {
+						
+						presentationManager.gnomo.element.off(eventEndAnimation);
+						frameAnimatorNamespace.moveSlittaOutside();
+					}
+				}).css({
+					top: presentationManager.fourthPoint.gnomo.top,
+					'z-index': 0
+				});
+			}
+		}).css({
+			top: presentationManager.fifthPoint.gnomo.top
 		});
 		
-		var delta = time - presentationManager.timeLastFrame; 
-		if (delta > 1000 / 50) {
-			
-			if (presentationManager.angleForJump > 0) {
-				presentationManager.angleForJump -= 0.3;
-				presentationManager.gnomo.top -= Math.sin(presentationManager.angleForJump) * 10;
-				presentationManager.gnomo.drawElement();
-			}
-			else {
-				presentationManager.gnomo.element.css({'z-index': 1});
-            	presentationManager.slitta.element.css({'z-index': 2});
-            	
-            	window.cancelAnimationFrame(presentationManager.currentAnimationFrame);
-            	presentationManager.totalDistanceTop = 0;
-            	presentationManager.totalDistanceLeft = presentationManager.slitta.left + presentationManager.slitta.width;
-            	presentationManager.timeToPerformMovement = 1000;
-            	
-            	// Attendo 1 secondo prima di far partire la slitta
-            	presentationManager.timeLastFrame = new Date().getTime() + 1000;
-            	presentationManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.moveSlittaOutside)
-            	
-			}
-		}
 	},
 	
-	moveSlittaOutside: function(time) {
+	moveSlittaOutside: function() {
 		
-		presentationManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.moveSlittaOutside);
+		var transition = 'all ' + presentationManager.timeToPerformMovement / 2 + 's ease-in';
 		
-		var delta = time - presentationManager.timeLastFrame;
-		if (delta > 1000 / 50) {
-			if (presentationManager.slitta.left + presentationManager.slitta.width > 0) {
+		addTransitionSpecifications(presentationManager.gnomo.element, transition);
+		addTransitionSpecifications(presentationManager.slitta.element, transition);
+		
+		presentationManager.gnomo.element.css({
+			left: presentationManager.pointSlittaOutsideForAway.gnomo.left
+		});
+		
+		presentationManager.slitta.element.on(eventEndAnimation, function(event) {
+			
+			if (event.originalEvent.propertyName === "left") {
 				
-				presentationManager.gnomo.moveElement(true, delta);
-				presentationManager.slitta.moveElement();
-				presentationManager.gnomo.drawElement();
-				presentationManager.slitta.drawElement();
-			}
-			else {
-				
-				presentationManager.gnomo.top = getScreenHeight() / 3;
-				presentationManager.gnomo.currentScale = presentationManager.gnomo.currentScale / 4;
-				presentationManager.slitta.currentScale = presentationManager.slitta.currentScale / 4;
-				
-				presentationManager.slitta.moveElement();
-				presentationManager.gnomo.drawElement();
-				presentationManager.slitta.drawElement();
-				
-				
-				window.cancelAnimationFrame(presentationManager.currentAnimationFrame);
-				presentationManager.totalDistanceTop = - presentationManager.slitta.top + presentationManager.slitta.height;
-				presentationManager.totalDistanceLeft = getScreenWidth() - presentationManager.slitta.left + presentationManager.slitta.width;
-				presentationManager.totalScaleFactorIncrease = 0 - (presentationManager.slitta.currentScale);
-				presentationManager.slitta.element.attr('src', presentationManager.slitta.imageFileBack);
-				presentationManager.timeLastFrame = new Date().getTime();
-				presentationManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.moveSlittaToCenterForAway);
+				presentationManager.slitta.element.off(eventEndAnimation);
+				frameAnimatorNamespace.moveSlittaAway();
 			}
 			
-			presentationManager.timeLastFrame = time;
-		}
+		}).css({
+			left: presentationManager.pointSlittaOutsideForAway.slitta.left
+		});
+		
 	},
 	
-	moveSlittaToCenterForAway: function(time) {
+	moveSlittaAway: function() {
 		
-		presentationManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.moveSlittaToCenterForAway);
+		var transition = 'all ' + presentationManager.timeToPerformMovement / 2 + 's linear';
 		
-		var delta = time - presentationManager.timeLastFrame;
-		if (delta > 1000 / 50) {
+		presentationManager.slitta.element.attr('src', presentationManager.slitta.imageFileBack);
+		
+		addTransitionSpecifications(presentationManager.gnomo.element, transition);
+		addTransitionSpecifications(presentationManager.slitta.element, transition);
+		
+		presentationManager.gnomo.element.css({
+			width: presentationManager.pointSlittaAway.gnomo.width,
+			height: presentationManager.pointSlittaAway.gnomo.height,
+			left: presentationManager.pointSlittaAway.gnomo.left,
+			top: presentationManager.pointSlittaAway.gnomo.top
+		});
+		
+		presentationManager.slitta.element.on(eventEndAnimation, function(event) {
 			
-			if (presentationManager.slitta.left <= getScreenWidth()) {
-			
-				presentationManager.gnomo.increaseDimensions(delta);
-				presentationManager.gnomo.moveElement(false, delta);
-				presentationManager.slitta.increaseDimensions(delta);
-				presentationManager.slitta.moveElement();
-				presentationManager.gnomo.drawElement();
-				presentationManager.slitta.drawElement();
-			}
-			else {
+			if (event.originalEvent.propertyName === "top") {
 				
-				window.cancelAnimationFrame(presentationManager.currentAnimationFrame);
+				presentationManager.slitta.element.off(eventEndAnimation);
 				gameIsEnded();
 			}
 			
-			presentationManager.timeLastFrame = time;
-		}
+		}).css({
+			width: presentationManager.pointSlittaAway.slitta.width,
+			height: presentationManager.pointSlittaAway.slitta.height,
+			top: presentationManager.pointSlittaAway.slitta.top,
+			left: presentationManager.pointSlittaAway.slitta.left
+		});
 	}
 
 };

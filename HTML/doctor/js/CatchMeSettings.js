@@ -126,15 +126,17 @@ requestGameSettings: function() {
 		
 	})
 	
-	$('<div id="divHeaderSettings"></div>').appendTo($('#divMainContent'));
-	$('<h1>Impostazioni di gioco</h1>').appendTo($('#divHeaderSettings'));
+	$('<div>').attr('id', 'divHeaderSettings').appendTo('#divMainContent');
+	$('<h1>').text('Impostazioni di gioco').appendTo(''#divHeaderSettings');
 	$('#divHeaderSettings').addClass('ui-widget-header ui-corner-all')
 		.css({
 			width: '50%',
 			margin: 'auto'
 		});
 	
-	$('<div id="waitingParameters" title="Recupero informazioni"><p>Sto recuperando le impostazioni di gioco...</p></div>').appendTo($('#divMainContent'));
+	$('<p>').text('Sto recuperando le impostazioni di gioco...')
+		.appendTo($('<div>').attr('id', 'waitingParameters').attr('title', 'Recupero informazioni').appendTo($('#divMainContent')));
+	
 	$('#waitingParameters').dialog({
 		modal: true,
 		draggable: false,
@@ -165,21 +167,23 @@ requestGameSettings: function() {
 
 setGameSettings: function(data) {
 	
-	var divLeft = $('<div id="divLeft"></div>');
-	divLeft.addClass('leftSide alignLeft');
-	divLeft.appendTo($('#divMainContent'));
-	var divColoreSfondo = $('<div id="divColoreSfondo"></div>');
-	divColoreSfondo.addClass('ui-widget-content ui-corner-all alignLeft');
+	var divLeft = $('<div>').attr('id', 'divLeft')
+		.addClass('leftSide alignLeft')
+		.appendTo('#divMainContent');
 	
-	var paragraph = $('<p>Colore di sfondo</p>');
-	paragraph.addClass('ui-state-default ui-corner-all ui-helper-clearfix');
-	$('<span class="ui-icon ui-icon-pencil"></span>').prependTo(paragraph);
+	var divColoreSfondo = $('<div>').attr('id', 'divColoreSfondo')
+		.addClass('ui-widget-content ui-corner-all alignLeft');
+	
+	var paragraph = $('<p>').text('Colore di sfondo')
+		.addClass('ui-state-default ui-corner-all ui-helper-clearfix');
+	
+	$('<span>').addClass('ui-icon ui-icon-pencil').prependTo(paragraph);
+	
 	paragraph.appendTo(divColoreSfondo);
 	
 	divColoreSfondo.appendTo(divLeft);
 	
-	// inserire picker per colore di sfondo
-	$('<div id="backgroundColor"></div>').appendTo(divColoreSfondo);
+	$('<div>').attr('id', 'backgroundColor').appendTo(divColoreSfondo);
 	var backgroundPicker = $.farbtastic('#backgroundColor');
 	
 	backgroundPicker.linkTo(function(color) {
@@ -189,18 +193,19 @@ setGameSettings: function(data) {
 		CatchMeSettingsNamespace.verifyColorContrast();
 	});
 		
-	$('<div id="previewBackgroundColor"></div>').appendTo(divColoreSfondo);
+	$('<div>').attr('id', 'previewBackgroundColor').appendTo(divColoreSfondo);
 	$('#previewBackgroundColor').height(divColoreSfondo.height() / 2);
 					
 	backgroundPicker.setColor(data.BACK_COLOR);
 	
-	var divColoreImmagine = $('<div id="divColoreImmagine"></div>');
-	divColoreImmagine.addClass('ui-widget-content ui-corner-all');
-	divColoreImmagine.appendTo(divLeft);
+	var divColoreImmagine = $('<div>').attr('id', 'divColoreImmagine')
+		.addClass('ui-widget-content ui-corner-all');
+		.appendTo(divLeft);
 	
-	paragraph = $('<p>Colore immagine</p>');
-	paragraph.addClass('ui-state-default ui-corner-all ui-helper-clearfix');
-	$('<span class="ui-icon ui-icon-pencil"></span>').prependTo(paragraph);
+	paragraph = $('<p>').text('Colore immagine')
+		.addClass('ui-state-default ui-corner-all ui-helper-clearfix');
+	
+	$('<span>').addClass('ui-icon ui-icon-pencil').prependTo(paragraph);
 	paragraph.appendTo(divColoreImmagine);
 	
 	$('<input type="checkbox" id="changeForegroundColor" name="changeForegroundColor" checked="checked"><label for="changeForegroundColor">Cambia colore dell\'immagine</label>').appendTo(divColoreImmagine);

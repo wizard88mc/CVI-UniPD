@@ -231,5 +231,23 @@ function checkForLocalStorageIfFolder(folder) {
 	return isCorrect;
 }
 
+function addTransitionSpecifications(element, transition) {
 	
+	element.css({
+		transition: transition,
+		'webkit-transition': transition,
+		'-moz-transition': transition,
+		'-o-transition': transition
+	});
+}
+
+function addTransformSpecifications(element, trasform) {
+	
+	element.css({
+		transform: transform,
+		'-webkit-transform': transform,
+		'-moz-transform': transform,
+		'-o-transform': transform
+	});
+}
 

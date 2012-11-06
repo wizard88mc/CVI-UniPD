@@ -173,7 +173,7 @@ function PresentationManager() {
     this.totalWidthIncrease = 0;
     this.totalHeightIncrease = 0;
     this.totalScaleFactorIncrease = 0;
-    this.timeToPerformMovement = 2000;
+    this.timeToPerformMovement = 5;
     
     utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioFrenata').appendTo('#divSounds'), 
     		"frenata");
@@ -239,6 +239,20 @@ this.buildPresentation = function() {
     this.sixthPoint.gnomo.top = this.fifthPoint.slitta.top + this.fifthPoint.slitta.height +
     	(getScreenHeight() - (this.fifthPoint.slitta.top + this.fifthPoint.slitta.height)) / 2 - 
     	this.fifthPoint.gnomo.height;
+    
+    this.pointSlittaOutsideForAway = new DestinationPoint(1, 1, true);
+    this.pointSlittaOutsideForAway.gnomo.top = this.sixthPoint.gnomo.top;
+    this.pointSlittaOutsideForAway.slitta.top = this.fifthPoint.slitta.top;
+    
+    this.pointSlittaAway = new DestinationPoint(1, 1, false);
+    this.pointSlittaAway.gnomo.width = 0;
+    this.pointSlittaAway.gnomo.height = 0;
+    this.pointSlittaAway.slitta.width = 0;
+    this.pointSlittaAway.slitta.height = 0;
+    this.pointSlittaAway.gnomo.top = 0;
+    this.pointSlittaAway.gnomo.left = getScreenWidth();
+    this.pointSlittaAway.slitta.top = 0;
+    this.pointSlittaAway.slitta.left = getScreenWidth();
     
     this.totalScaleFactorIncrease = this.slitta.targetScale / 6;
     this.totalDistanceTop = getScreenHeight() / 6;

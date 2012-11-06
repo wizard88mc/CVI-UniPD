@@ -2,42 +2,65 @@ var port = 8001;
 var identificationType = "GAME_CLIENT";
 
 function presentationComplete() {
+
+	var machineID = checkAlreadySync();
 	
-	if (checkAlreadySync() != null) {
-		putInWaitingToStart();
-	}
-	else {
-		var dialog = $('<div id="dialogAskSynch" title="Sincronizzazione"></div>').appendTo('#divMainContent');
-		$('<p>Computer non ancora sincronizzato con il server. Eseguire sincronizzazione ora?</p>').appendTo(dialog);
-		$('<p>Attenzione: se non si effettua sincronizzazione non sarà possibile giocare..</p>').appendTo(dialog);
-		dialog.dialog({
-			modal: true,
-			resizable: false,
-			draggable: false,
-			closeOnEscape: false,
-			width: (getScreenWidth() * 0.5),
-			buttons: {
-				"Esegui": function() {
-					$(this).dialog("close");
-					$(this).remove();
-					startSynchronization();
-					
-					$('<div id="dialogWait" title="Attendere"><p>Sincronizzazione in corso. Attendere.</p></div>')
-					.appendTo('#divMainContent')
-					.dialog({
+	var message = {
+		TYPE: "MACHINE_ID",
+		ID: machineID
+	};
+	
+	websocket.send(JSON.stringify(message));
+	
+	websocket.onmessage = function(message) {
+		
+		var data = JSON.parse(message.data);
+		
+		if (data.TYPE == "OFFSET_CALCULATION") {
+			
+			if (data.TODO == "true") {
+				
+				if (data.MANDATORY == "true") {
+					var dialog = $('<div>').attr('id', 'dialogAskSynch').attr('title', 'Sincronizzazione').appendTo('#divMainContent');
+					$('<p>').text('Computer non ancora sincronizzato con il server. Eseguire sincronizzazione ora?').appendTo(dialog);
+					$('<p>').text('Attenzione: se non si effettua sincronizzazione non sarà possibile giocare..').appendTo(dialog);
+					dialog.dialog({
 						modal: true,
-						draggable: false,
 						resizable: false,
-						width: (getScreenWidth() * 0.4),
-					})
-				}, 
-				"Indietro": function() {
-					$(this).dialog("close");
-					$(this).remove();
-					location.replace("../index.html");
+						draggable: false,
+						closeOnEscape: false,
+						width: (getScreenWidth() * 0.5),
+						buttons: {
+							"Esegui": function() {
+								$(this).dialog("close");
+								$(this).remove();
+								startSynchronization();
+								
+								$('<p>').text('Sincronizzazione in corso. Attendere.').appendTo(
+									$('<div>').attr('id', 'dialogWait')
+										.attr('title', 'Attendere')><p>Sincronizzazione in corso. Attendere.</p></div>')
+										.appendTo('#divMainContent')
+										.dialog({
+											modal: true,
+											draggable: false,
+											resizable: false,
+											width: (getScreenWidth() * 0.4),
+										});
+								);
+							}, 
+							"Indietro": function() {
+								$(this).dialog("close");
+								$(this).remove();
+								location.replace("../index.html");
+							}
+						}
+					});
 				}
 			}
-		});
+			else {
+				putInWaitingToStart();
+			}
+		}
 	}
 }
 

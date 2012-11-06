@@ -10,9 +10,8 @@ package org.java_websocket;
  */
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import org.java_websocket.Messages.OnlyImageGameDataPacket;
-import org.java_websocket.MessagesManagers.CatchMeMessagesManager;
-import org.java_websocket.MessagesManagers.HelpMeMessagesManager;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
@@ -69,7 +68,30 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                 
                 doctorManager.sendPacket(packet);
             }
-            
+            else if (packetType.equals("MACHINE_ID")) {
+                
+                String machineID = (String)packet.get("ID");
+                
+                ArrayList result = dbManager.getMachineOffset(machineID);
+                
+                if (result.isEmpty()) {
+                    
+                    JSONObject packetStartCalcultation = new JSONObject();
+                    packetStartCalcultation.put("TYPE", "OFFSET_CALCULATION");
+                    packetStartCalcultation.put("TODO", "true");
+                    packetStartCalcultation.put("MANDATORY", "true");
+                    
+                    clientConnected.send(packetStartCalcultation.toJSONString());
+                }
+                else {
+                    // creo data e verifico se va bene oppure no
+                    JSONObject packetAlreadySync = new JSONObject();
+                    packetAlreadySync.put("TYPE", "OFFSET_CALCULATION");
+                    packetAlreadySync.put("TODO", "false");
+                    
+                    clientConnected.send(packetAlreadySync.toJSONString());
+                }
+            }
             else if (packetType.equals("READY_TO_PLAY")) {                     
 
                 if (packet.containsKey("IMAGE_WIDTH")) {

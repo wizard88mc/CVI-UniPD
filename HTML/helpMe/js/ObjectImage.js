@@ -1,7 +1,7 @@
 
 function ImageObjectOnScreen(currentImage) {
 
-    this.element = $('<canvas></canvas>');
+    this.element = $('<canvas>');
     var context = this.element.get(0).getContext('2d');
     this.imageElement = currentImage.image;
     this.element.get(0).width = currentImage.image.naturalWidth;
@@ -47,7 +47,7 @@ function ImageObjectOnScreen(currentImage) {
         'z-index': 5
     });
     
-    this.timeForMovingToCenter = 2000;
+    this.timeForMovingToCenter = 2;
     this.timeForMovingIntoSacco = 3000;
     
 
@@ -109,7 +109,7 @@ this.moveObject = function(delta, intoSacco) {
         });
 	};
 	
-	this.moveObjectIntoCestino = function(delta) {
+	/*this.moveObjectIntoCestino = function(delta) {
 		
 		if (!this.dimensionsAlreadyReduced) {
 			this.dimensionsAlreadyReduced = true;
@@ -155,9 +155,9 @@ this.moveObject = function(delta, intoSacco) {
             top: this.drawingPosition.top,
             left: this.drawingPosition.left
         });
-	}
+	}*/
 
-    this.scaleObject = function(delta) {
+    /*this.scaleObject = function(delta) {
 
     	if (delta != 0) {
 	    	var scale = (delta * this.targetScale / this.timeForMovingToCenter);
@@ -181,7 +181,7 @@ this.moveObject = function(delta, intoSacco) {
             left: this.drawingPosition.left
         });
 
-    }
+    }*/
 
     this.moveCenter = function(x, y) {
         this.center.x = x;

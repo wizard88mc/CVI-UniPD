@@ -165,6 +165,7 @@ function manageLevels(repeatLevel) {
         gameManager.levelCompletedCorrectly = true;
     }
 
+    gameManager.gameInProgress = false;
     if (gameManager.levelIndex < livelliGioco.length && gameManager.gameInProgress) {
     	
     	resetLevel();
@@ -210,10 +211,9 @@ function manageLevels(repeatLevel) {
             
             setTimeout(function() {
 	            $('#divSounds #gnomoSaysGoodbye').on('ended', function() {
-	            	var time = new Date().getTime();
-	                presentationManager.timeLastFrame = time + 1000;
-	                presentationManager.currentAnimationFrame = 
-	                	window.requestAnimationFrame(frameAnimatorNamespace.gnomoReturnsOnSlitta);
+	                
+	                frameAnimatorNamespace.gnomoReturnsOnSlitta();
+	                
 	            }).get(0).play();
             }, 1000);
     	
@@ -229,7 +229,8 @@ function manageImageObjectsLevel() {
     if (gameManager.indexImageObject < oggettiPerLivello.length) {
         gameManager.currentImage = oggettiPerLivello[gameManager.indexImageObject];
 
-        // istanzio oggetto visualizzato sullo schermo
+        // instantiation of a new object on the screen
+        
         imageObjectOnScreen = new ImageObjectOnScreen(gameManager.currentImage);
         imageObjectOnScreen.element.appendTo(gameManager.divMainContent);
 
@@ -239,11 +240,10 @@ function manageImageObjectsLevel() {
         gameManager.packetWithResults.OBJECT_NAME = gameManager.currentImage.name;
 
         gameManager.timeLastFrame = new Date().getTime();
-        //gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerIngressoImmagine);
+        
         setTimeout(frameAnimatorNamespace.managerIngressoImmagine, 500);
     }
     else {
-        // livello completato
 
         levelComplete();
     }
@@ -251,7 +251,6 @@ function manageImageObjectsLevel() {
 
 function levelComplete() {
 
-    // Livello completato
     gameManager.indexImageObject = -1;
     
     var packetEndLevel = {
@@ -263,10 +262,8 @@ function levelComplete() {
     sacco.element.css({
     	top: getScreenHeight()
     }).one('transitionend webkitTransitionEnd oTransitionEnd', function() {
-    
-    		// livello completato correttamente
-        manageLevels(!gameManager.levelCompletedCorrectly);
-    
+    	
+    	manageLevels(!gameManager.levelCompletedCorrectly);
     });
     
     sacco.secondElement.css({
@@ -290,32 +287,31 @@ function reproduceBadAnswerSound() {
 }
 
 /**
- * Function chiamata quando un oggetto è stato inserito nel sacco
+ * Function called when an object is inserted inside
+ * the bag
  */
 function objectInsertedIntoSacco() {
 
     $('#divMainContent div').hide();
     imageObjectOnScreen.element.remove();
 
-    // E' oggetto target: CORRETTO
+    // It's a target object: CORRECT
     if (gameManager.currentImage.target) {
 
         gameManager.packetWithResults.RIGHT_ANSWER = true;
-        // Visualizzo immagine e suono corretto
+        
         gameManager.imageRightAnswer.show();
         
-        // scelgo tra tutti i suoni a disposizione di risposta
-        // positiva uno a caso e lo riproduco
         reproduceGoodAnswerSound();
     }
-    else { // Non era oggetto target: ERRORE
+    // Not a target object: MISTAKE
+    else { 
 
         gameManager.packetWithResults.RIGHT_ANSWER = false;
         gameManager.levelCompletedCorrectly = false;
         
         gameManager.imageBadAnswer.show();
-        // scelgo tra tutti i suoni a diposizione uno 
-        // per la risposta sbagliata
+        
         reproduceBadAnswerSound();
     }
 
@@ -323,8 +319,8 @@ function objectInsertedIntoSacco() {
 }
 
 /**
- * Function chiamata quando un oggetto non viene inserito dentro il sacco entro
- * il tempo massimo a disposizione
+ * Function called when an object is inserted
+ * inside the bin or when the time expires
  */
 function timeExpired(intoBin) {
 
@@ -335,8 +331,8 @@ function timeExpired(intoBin) {
     	gameManager.packetWithResults.COMPLETION_TIME = gameManager.maxTimeObjectOnScreen;
     }
 
-    // Non ha inserito un oggetto target all'interno
-    // del sacco: ERRORE
+    // Target object not inserted: MISTAKE
+    
     if (gameManager.currentImage.target) {
 
         gameManager.packetWithResults.RIGHT_ANSWER = false;
@@ -346,9 +342,8 @@ function timeExpired(intoBin) {
         $('#divSounds #audioObjectNotInserted').get(0).play();
         
     }
+    // Not a target object: CORRECT
     else {
-        // Non ha inserito un oggetto non target
-        // dentro il sacco: corretto
 
         gameManager.packetWithResults.RIGHT_ANSWER = true;
         gameManager.imageRightAnswer.show();
