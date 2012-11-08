@@ -208,7 +208,14 @@ setGameSettings: function(data) {
 	$('<span>').addClass('ui-icon ui-icon-pencil').prependTo(paragraph);
 	paragraph.appendTo(divColoreImmagine);
 	
-	$('<input type="checkbox" id="changeForegroundColor" name="changeForegroundColor" checked="checked"><label for="changeForegroundColor">Cambia colore dell\'immagine</label>').appendTo(divColoreImmagine);
+	$('<input>').attr('type', 'checkbox').attr('id', 'changeForegroundColor')
+		.attr('name', 'changeForegroundColor').attr('checked', 'checked').appendTo(divColoreImmagine);
+	
+	$('<label>').attr('for', 'changeForegroundColor')
+		.text('Cambia colore dell\'immagine').appendTo(divColoreImmagine);
+
+	//$('<input type="checkbox" id="changeForegroundColor" name="changeForegroundColor" checked="checked" /><label for="changeForegroundColor"></label>').appendTo(divColoreImmagine);
+	
 	$('#changeForegroundColor').change(function() {
 		gameSettings.changeImageColor = !gameSettings.changeImageColor;
 		
@@ -222,8 +229,9 @@ setGameSettings: function(data) {
 		}
 	});
 	
-	$('<div class="colorPickerContainer"></div>').appendTo(divColoreImmagine);
-	$('<div id="imageColor"></div>').appendTo($('#divColoreImmagine > .colorPickerContainer'));
+	$('<div>').addClass('colorPickerContainer').appendTo(divColoreImmagine);
+	
+	$('<div>').attr('id', 'imageColor').appendTo('#divColoreImmagine > .colorPickerContainer');
 	var imagePicker = $.farbtastic('#imageColor');
 	imagePicker.linkTo(function(color) {
 		gameSettings.foregroundColor = color;
@@ -231,13 +239,13 @@ setGameSettings: function(data) {
 		CatchMeSettingsNamespace.verifyColorContrast();
 	});
 		
-	$('<div id="previewImageColor"></div>').appendTo($('#divColoreImmagine > .colorPickerContainer'));
+	$('<div>').attr('id', 'previewImageColor').appendTo('#divColoreImmagine > .colorPickerContainer');
 	$('#previewImageColor').height(divColoreImmagine.height() / 2);
 					
 	imagePicker.setColor(data.IMG_COLOR);
 	
-	$('<div id="divBadContrast" class="ui-state-error ui-corner-all"></div>').appendTo(divLeft);
-	$('<p><span class="ui-icon ui-icon-alert"></span>Attenzione: il contrasto tra colore di sfondo e dell\'immagine è troppo basso.</p>').appendTo($('#divBadContrast'));
+	$('<div>').attr('id', 'divBadContrast').addClass('ui-state-error ui-corner-all').appendTo(divLeft);
+	$('<p><span class="ui-icon ui-icon-alert"></span>Attenzione: il contrasto tra colore di sfondo e dell\'immagine è troppo basso.</p>').appendTo('#divBadContrast');
 	
 	if (data.CHANGE_IMG_COLOR == '0') {
 		gameSettings.changeImageColor = false;
@@ -246,27 +254,39 @@ setGameSettings: function(data) {
 		$('#divBadContrast').fadeOut(500);
 	}
 	
-	var divRight = $('<div id="divRight"></div>');
-	divRight.addClass('rightSide alignLeft');
-	divRight.appendTo($('#divMainContent'));
+	var divRight = $('<div>').attr('id', 'divRight')
+		.addClass('rightSide alignLeft')
+		.appendTo('#divMainContent');
 	
-	var divMovimenti = $('<div id="divMovimenti"></div>');
-	divMovimenti.addClass('ui-widget-content ui-corner-all');
-	divMovimenti.appendTo(divRight);
+	var divMovimenti = $('<div>').attr('id', 'divMovimenti')
+		.addClass('ui-widget-content ui-corner-all')
+		.appendTo(divRight);
 	
-	paragraph = $('<p>Gestione movimenti</p>');
-	paragraph.addClass('ui-state-default ui-corner-all ui-helper-clearfix');
-	$('<span class="ui-icon ui-icon-pencil"></span>').prependTo(paragraph);
-	paragraph.appendTo(divMovimenti);
+	paragraph = $('<p>').text('Gestione movimenti')
+		.addClass('ui-state-default ui-corner-all ui-helper-clearfix')
+		.appendTo(divMovimenti);
+	
+	$('<span>').addClass('ui-icon ui-icon-pencil').prependTo(paragraph);
 		
-	$('<input type="checkbox" id="rightMovement" name="rightMovement" /><label for="rightMovement">Movimento verso destra</label><br />').appendTo(divMovimenti);
-	$('#rightMovement').change(function() {
-		gameSettings.rightMovement = !gameSettings.rightMovement;
+	$('<input>').attr('type', 'checkbox').attr('id', 'rightMovement')
+		.attr('name', 'rightMovement').appendTo(divMovimenti)
+		..change(function() {
+			gameSettings.rightMovement = !gameSettings.rightMovement;
+		});
+	
+	$('<label').attr('for', 'rightMovement').text('Movimento verso destra').appendTo(divMovimenti);
+	$('<br />').appendTo(divMovimenti);
+	
+	$('<input>').attr('type', 'checkbox').attr('id', 'leftMovement')
+		.attr('name', 'leftMovement').appendTo(divMovimenti)
+		.change(function() {
+			gameSettings.leftMovement = !gameSettings.leftMovement;
 	});
-	$('<input type="checkbox" id="leftMovement" name="leftMovement" /><label for="leftMovement">Movimento verso sinistra</label><br />').appendTo(divMovimenti);
-	$('#leftMovement').change(function() {
-		gameSettings.leftMovement = !gameSettings.leftMovement;
-	});
+	
+	$('<label>').attr('for', 'leftMovement').text('Movimento verso sinistra').appendTo(divMovimenti);
+	$('<br />').appendTo(divMovimenti);
+	
+	$('#leftMovement')
 	$('<input type="checkbox" id="upMovement" name="upMovement" /><label for="upMovement">Movimento verso l\'alto</label><br />').appendTo(divMovimenti);
 	$('#upMovement').change(function() {
 		gameSettings.upMovement = !gameSettings.upMovement;

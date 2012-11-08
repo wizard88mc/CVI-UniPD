@@ -377,7 +377,7 @@ initializePage: function() {
 							$('<p>').text('Operazione completata').appendTo(dialog);
 							$('<p>').text('Il nuovo bambino è già selezionato nell\'elenco a sinistra.').appendTo(dialog);
 							
-							var width = getScreenHeight() * 0.6;
+							var width = getScreenWidth() * 0.4;
 							dialog.dialog({
 								modal: true, 
 								draggable: false,
@@ -448,16 +448,12 @@ initializePage: function() {
 		}
 	})
 	
-	var divButtons = $('<div>').attr('id', 'divButtons');
-	var buttonStart = $('<button>').attr('id', 'buttonStart').text('Comincia').button();
-	//var buttonReturn = $('<button id="buttonBack">Indietro</button>').button();
-	buttonStart.click(NewVisitNamespace.startNewGame);
-	//buttonReturn.click(NewVisitNamespace.returnToIndex);
-	divButtons.addClass('alignCenter');
-	buttonStart.appendTo(divButtons);
-	//buttonReturn.appendTo(divButtons);
+	var divButtons = $('<div>').attr('id', 'divButtons')
+		.addClass('alignCenter').appendTo('#divMainContent');
 	
-	divButtons.appendTo('#divMainContent');
+	$('<button>').attr('id', 'buttonStart').text('Comincia')
+		.button().click(NewVisitNamespace.startNewGame).appendTo(divButtons);
+	
 
 }
 }
