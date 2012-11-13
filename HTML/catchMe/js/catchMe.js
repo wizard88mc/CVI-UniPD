@@ -258,6 +258,11 @@ putInWaiting: function() {
 	websocket.send(JSON.stringify(packetToSend));
 },
 
+trainingComplete: function() {
+	
+	websocket.onmessage = CatchMeNamespace.waitingToStart;
+}
+
 waitingToStart: function(message) {
 	
 	var packet = JSON.parse(message.data);
@@ -289,6 +294,10 @@ waitingToStart: function(message) {
 			};
 			// devo recuperare istruzioni per disegnare
 			CatchMeNamespace.startGame();
+		}
+		else if (packet.TYPE == "START_TRAINING") {
+			
+			websocket.onmessage = TrainingExamplesNamespace.messageManager;
 		}
 		else {
 			console.log("Bad message received during game");

@@ -270,7 +270,7 @@ setGameSettings: function(data) {
 		
 	$('<input>').attr('type', 'checkbox').attr('id', 'rightMovement')
 		.attr('name', 'rightMovement').appendTo(divMovimenti)
-		..change(function() {
+		.change(function() {
 			gameSettings.rightMovement = !gameSettings.rightMovement;
 		});
 	
@@ -286,25 +286,43 @@ setGameSettings: function(data) {
 	$('<label>').attr('for', 'leftMovement').text('Movimento verso sinistra').appendTo(divMovimenti);
 	$('<br />').appendTo(divMovimenti);
 	
-	$('#leftMovement')
-	$('<input type="checkbox" id="upMovement" name="upMovement" /><label for="upMovement">Movimento verso l\'alto</label><br />').appendTo(divMovimenti);
-	$('#upMovement').change(function() {
-		gameSettings.upMovement = !gameSettings.upMovement;
+	$('<input>').attr('type', 'checkbox').attr('id', 'upMovement')
+		.attr('name', 'upMovement').appendTo(divMovimenti)
+		.change(function() {
+			gameSettings.upMovement = !gameSettings.upMovement;
 	});
-	$('<input type="checkbox" id="downMovement" name="downMovement" /><label for="downMovement">Movimento verso il basso</label><br /><br />').appendTo(divMovimenti);
-	$('#downMovement').change(function() {
-		gameSettings.downMovement = !gameSettings.downMovement;
+	
+	$('<label>').attr('for', 'upMovement').text('Movimento verso l\'alto').appendTo(divMovimenti);
+	$('<br />').appendTo(divMovimenti);
+	
+	$('<input>').attr('type', 'checkbox').attr('id', 'downMovement')
+		.attr('name', 'downMovement').appendTo(divMovimenti)
+		.change(function() {
+			gameSettings.downMovement = !gameSettings.downMovement;
 	});
-	$('<input type="checkbox" id="startFromCenter" name="startFromCenter" /><label for="startFromCenter">Ricomincia sempre dal centro</label><br />').appendTo(divMovimenti);
-	$('#startFromCenter').change(function() {
-		gameSettings.startFromCenter = !gameSettings.startFromCenter;
+	
+	$('<label>').attr('for', 'downMovement').text('Movimento verso il basso').appendTo(divMovimenti);
+	$('<br /><br />').appendTo(divMovimenti);
+	
+	$('<input>').attr('type', 'checkbox').attr('id', 'startFromCenter')
+		.attr('name', 'startFromCenter').appendTo(divMovimenti)
+		.change(function() {
+			gameSettings.startFromCenter = !gameSettings.startFromCenter;
+	});
+	
+	$('<label>').attr('for', 'startFromCenter').text('Ricomincia sempre dal centro').appendTo(divMovimenti);
+	$('<br />').appendTo(divMovimenti);
+	
+	$('<input>').attr('type', 'checkbox').attr('id', 'mixMovements')
+		.attr('name', 'mixMovements').appendTo(divMovimenti)
+		.change(function() {
+			gameSettings.mixMovements = !gameSettings.mixMovements;
 	})
-	$('<input type="checkbox" id="mixMovements" name="mixMovements" /><label for="mixMovements">Combina movimenti</label>').appendTo(divMovimenti);
-	$('#mixMovements').change(function() {
-		gameSettings.mixMovements = !gameSettings.mixMovements;
-	})
-	$('<div id="divNoMovements" class="ui-state-error ui-corner-all"></div>').appendTo(divMovimenti);
-	$('<p><span class="ui-icon ui-icon-alert"></span>Attenzione: nessun movimento selezionato</p>').appendTo($('#divNoMovements'));
+	
+	$('<label>').attr('for', 'mixMovements').text('Combina movimenti').appendTo(divMovimenti);
+	
+	$('<div>').attr('id', 'divNoMovements').addClass('ui-state-error ui-corner-all').appendTo(divMovimenti);
+	$('<p><span class="ui-icon ui-icon-alert"></span>Attenzione: nessun movimento selezionato</p>').appendTo('#divNoMovements');
 	
 	if (data.RIGHT_MOV == "1") {
 		$('#rightMovement').attr('checked', 'checked');
@@ -336,39 +354,43 @@ setGameSettings: function(data) {
 	}
 	
 	
-	var divSpeed = $('<div id="divSpeed"></div>');
-	divSpeed.addClass('ui-widget-content ui-corner-all');
-	divSpeed.appendTo(divRight);
+	var divSpeed = $('<div>').attr('id', 'divSpeed')
+		.addClass('ui-widget-content ui-corner-all')
+		.appendTo(divRight);
 	
-	paragraph = $('<p>Velocità spostamento</p>');
-	paragraph.addClass('ui-state-default ui-corner-all ui-helper-clearfix');
-	$('<span class="ui-icon ui-icon-pencil"></span>').prependTo(paragraph);
-	paragraph.appendTo(divSpeed);
+	paragraph = $('<p>').text('Velocità spostamento')
+		.addClass('ui-state-default ui-corner-all ui-helper-clearfix')
+		.appendTo(divSpeed);
+	$('<span>').addClass('ui-icon ui-icon-pencil').prependTo(paragraph);
 	
 	gameSettings.speed = data.SPEED;
 	
-	$('<div class="divContainerSlider"><input id="sliderSpeed" type="slider" name="speed" /></div>').appendTo(divSpeed);
-	$('<span id="labelSpeed"></span>').appendTo(divSpeed);
-	$('#sliderSpeed').attr('value', gameSettings.speed)
-	$('#sliderSpeed').slider({
-		from: 1, to: 10, step: 1, format: {format: '#'},
-		onstatechange: CatchMeSettingsNamespace.updateLabelSpeed
-	});
+	$('<input>').attr('id', 'sliderSpeed').attr('type', 'slider')
+		.attr('name', 'speed')
+		.attr('value', gameSettings.speed)
+		.slider({
+			from: 1, to: 10, step: 1, format: {format: '#'},
+			onstatechange: CatchMeSettingsNamespace.updateLabelSpeed
+	}).appendTo($('<div>').addClass('divContainerSlider').appendTo(divSpeed))
 	
-	var divImage = $('<div id="divImage"></div>');
-	divImage.appendTo(divRight);
-	divImage.addClass('ui-widget-content ui-corner-all');
+	$('<span>').attr('id', 'labelSpeed').appendTo(divSpeed);
 	
-	paragraph = $('<p>Immagine in movimento</p>');
-	paragraph.addClass('ui-state-default ui-corner-all ui-helper-clearfix');
-	$('<span class="ui-icon ui-icon-pencil"></span>').prependTo(paragraph);
-	paragraph.appendTo(divImage);
+	var divImage = $('<div>').attr('id', 'divImage')
+		.addClass('ui-widget-content ui-corner-all')
+		.appendTo(divRight);
 	
-	$('<select name="selectImage" id="selectImage"></select>').appendTo(divImage);
+	paragraph = $('<p>').text('Immagine in movimento')
+		.addClass('ui-state-default ui-corner-all ui-helper-clearfix')
+		paragraph.appendTo(divImage);
+	
+	$('<span>').addClass('ui-icon ui-icon-pencil').prependTo(paragraph);
+	
+	$('<select>').attr('name', 'selectImage').attr('id', 'selectImage').appendTo(divImage);
+	
 	var stringOption = '<option value="' + data.IMG_SPECS.IMG_ID + '" selected="selected"">' + data.IMG_SPECS.IMG_NAME + 
 						'</option>';
 						
-	$(stringOption).appendTo($('#selectImage'));
+	$(stringOption).appendTo('#selectImage');
 	
 	gameSettings.imageID = data.IMG_SPECS.IMG_ID;
 	
@@ -402,7 +424,8 @@ setGameSettings: function(data) {
 			'SIZE': data.CANVAS_SIZE};
 	
 	gameSettings.imageFileName = data.IMG_SPECS.IMG_FILE;
-	$('<img id="imgPreview" src="../catchMe/images/' + gameSettings.imageFileName + '" alt="Preview" />').appendTo(divImage);
+	$('<img>').attr('id', 'imgPreview').attr('src', '../catchMe/images/' + gameSettings.imageFileName)
+		.attr('alt', 'Preview').appendTo(divImage);
 	
 	var otherImages = data.OTHER_IMG;
 	
@@ -426,26 +449,32 @@ setGameSettings: function(data) {
 	canvasSettings.width = size[0];
 	canvasSettings.height = size[1];
 	
-	var divDimensions = $('<div id="divDimensions"></div>');
-	divDimensions.addClass('ui-widget-content ui-corner-all');
-	divDimensions.appendTo(divLeft);
+	var divDimensions = $('<div>').attr('id', 'divDimensions')
+		.addClass('ui-widget-content ui-corner-all')
+		.appendTo(divLeft);
 	
-	paragraph = $('<p>Dimensione immagine</p>');
-	paragraph.addClass('ui-state-default ui-corner-all ui-helper-clearfix');
-	$('<span class="ui-icon ui-icon-pencil"></span>').prependTo(paragraph);
+	paragraph = $('<p>').text('Dimensione immagine')
+		.addClass('ui-state-default ui-corner-all ui-helper-clearfix');
+	
+	$('<span>').addClass('ui-icon ui-icon-pencil').prependTo(paragraph);
+	
 	paragraph.appendTo(divDimensions);
 	
-	$('<div class="divContainerSlider"><input type="slider" id="sliderDimensions" name="dimensions" /></div>').appendTo(divDimensions);
+	$('<input>').attr('type', 'slider').attr('id', 'sliderDimensions')
+		.attr('name', 'dimensions').appendTo($('<div>').addClass('divContainerSlider').appendTo(divDimensions));
 	
-	$('<div id="exampleDimensions"></div>').appendTo(divDimensions);
-	$('#exampleDimensions').css('border', '1px solid #000')
-							.css('background-color', gameSettings.backgroundColor);
+	$('<div>').attr('id', 'exampleDimensions').appendTo(divDimensions)
+		.css({
+			border: '1px solid #000',
+			'background-color': gameSettings.backgroundColor
+		});
+	
 	var ratio = Math.ceil(screenWidth / $('#divDimensions').width());
 	
 	$('#exampleDimensions').width(Math.floor(screenWidth / ratio));
 	$('#exampleDimensions').height(Math.floor(screenHeight / ratio));
 	
-	$('<canvas id="imageExample"></canvas>').appendTo($('#exampleDimensions'));
+	$('<canvas>').attr('id', 'imageExample').appendTo('#exampleDimensions');
 	var canvas = $('#imageExample')[0];
 	canvas.width = canvasSettings.width;
 	canvas.height = canvasSettings.height;
@@ -455,19 +484,19 @@ setGameSettings: function(data) {
 	gameSettings.percentualImageWidth = data.IMG_WIDTH;
 	$('#imageExample').css('width', gameSettings.percentualImageWidth + '%');
 	
-	$('#sliderDimensions').attr('value', gameSettings.percentualImageWidth);
-	$('#sliderDimensions').slider({
-		from: 5, to: 80, step: 1,
-		format: {format: '##'}, skin: 'plastic', 
-		onstatechange: CatchMeSettingsNamespace.updateCanvasPreview
+	$('#sliderDimensions').attr('value', gameSettings.percentualImageWidth)
+		.slider({
+			from: 5, to: 80, step: 1,
+			format: {format: '##'}, skin: 'plastic', 
+			onstatechange: CatchMeSettingsNamespace.updateCanvasPreview
 	});
 	
 	
-	$('<div id="divButtons"></div>').appendTo($('#divMainContent'));
-	$('#divButtons').addClass('ui-widget-content ui-corner-all');
+	$('<div>').attr('id', 'divButtons').appendTo('#divMainContent')
+		.addClass('ui-widget-content ui-corner-all');
 	
-	$('<button id="buttonStart">Comincia!</button>').appendTo($('#divButtons'));
-	$('#buttonStart').button()
+	$('<button>').attr('id=', 'buttonStart').text('Comincia!')
+		.appendTo('#divButtons').button()
 		.click(function(){
 			gameSettings.rightMovement = $('#rightMovement').is(':checked');
 			gameSettings.leftMovement = $('#leftMovement').is(':checked');

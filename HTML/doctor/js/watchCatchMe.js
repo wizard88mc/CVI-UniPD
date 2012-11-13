@@ -29,12 +29,12 @@ var CatchMeNamespace = {
 			
 			$('#divMainContent div').remove();
 			
-			$('<div id="divGrafo"></div>').appendTo('#divMainContent');
-			$('#divGrafo').css({
-				width: '90%',
-				margin: 'auto',
-				padding: '1.0em'
-			})
+			$('<div>').attr('id', 'divGrafo').appendTo('#divMainContent')
+				.css({
+					width: '90%',
+					margin: 'auto',
+					padding: '1.0em'
+			});
 			CatchMeNamespace.prepareChart();
 			
 			//timing = setInterval(CatchMeNamespace.updateChart, 5000);
