@@ -152,42 +152,44 @@ var CatchMeNamespace = {
 			}
 		});
 		
-		$('<div id="divManager"></div>').appendTo('#divMainContent');
+		$('<div>').attr('id', 'divManager').appendTo('#divMainContent');
 		
-		$('<div id="divSliderSpeed"></div>').appendTo('#divManager');
-		$('<h1>Modifica velocità</h1>').appendTo('#divSliderSpeed');
-		$('#divSliderSpeed h1').css({
-			margin: '0em',
-			'margin-bottom': '0.5em',
-			'font-size': '1.5em'
-		});
-		$('<input id="sliderSpeed" type="slider" name="sliderSpeed" />').appendTo('#divSliderSpeed');
-		$('<span id="labelSpeed"></span>').appendTo('#divSliderSpeed');
+		$('<div>').attr('id', 'divSliderSpeed').appendTo('#divManager');
+		$('<h1>').text('Modifica velocità').appendTo('#divSliderSpeed')
+			.css({
+				margin: '0em',
+				'margin-bottom': '0.5em',
+				'font-size': '1.5em'
+			});
+		
+		$('<input>').attr('id', 'sliderSpeed').attr('type', 'slider')
+			.attr('name', 'sliderSpeed').appendTo('#divSliderSpeed');
+		
+		$('<span>').attr('id', 'labelSpeed').appendTo('#divSliderSpeed');
 		
 		$('#divSliderSpeed').css('visibility', 'hidden');
 		
-		$('<div id="buttonSendSpeed"></div>').appendTo('#divSliderSpeed');
-		$('#buttonSendSpeed').button({
-			label: 'Invia Modifica',
-			disabled: true
-		});
-		$('#buttonSendSpeed').click(function() {
+		$('<div>').attr('id', 'buttonSendSpeed').appendTo('#divSliderSpeed')
+			.button({
+				label: 'Invia Modifica',
+				disabled: true
+			}).click(function() {
 			
-			var speed = $('#sliderSpeed').attr('value');
-			var packet = {'TYPE': 'CHANGE_SPEED', 'NEW_SPEED' : speed};
-			
-			websocket.send(JSON.stringify(packet));
-			currentSpeedValue = speed;
-			$(this).button("disable");
-		});
+				var speed = $('#sliderSpeed').attr('value');
+				var packet = {'TYPE': 'CHANGE_SPEED', 'NEW_SPEED' : speed};
+				
+				websocket.send(JSON.stringify(packet));
+				currentSpeedValue = speed;
+				$(this).button("disable");
+			});
 		
-		var divArrows = $('<div id="arrowsMoveGraph"></div>').css({
+		var divArrows = $('<div>').attr('id', 'arrowsMoveGraph')
+		.css({
 			float: 'left',
 			width: '30%',
 			'margin-left': '5%',
 			'margin-top': '2.0em'
-			});
-		divArrows.appendTo('#divManager');
+			}).appendTo('#divManager');
 		
 		
 		var leftArrow = $('<img>').attr('id', 'leftArrow').attr('alt', 'Muovi grafico a sinistra')
@@ -195,16 +197,18 @@ var CatchMeNamespace = {
 			.appendTo(divArrows)
 			.click(function(e) {
 			
-			e.preventDefault();
-			grafo.pan({left: -1000});
+				e.preventDefault();
+				grafo.pan({left: -1000});
 		});
 			
-		var rightArrow = $('<img id="rightArrow" class="arrow" src="../images/rightarrow.png" alt="Muovi grafo verso destra" />');
-		rightArrow.appendTo(divArrows);
-		rightArrow.click(function(e) {
-			e.preventDefault();
-			grafo.pan({left: 1000});
-		});
+		var rightArrow = $('<img>').attr('id', 'rightArrow')
+			.addClass('arrow').attr('src', '../images/rightarrow.png')
+			.attr('alt', 'Muovi grafo verso destra')
+			.appendTo(divArrows)
+			.click(function(e) {
+				e.preventDefault();
+				grafo.pan({left: 1000});
+			});
 		
 		$('<div>').attr('id', 'buttonStopGame').appendTo('#divManager')
 			.css({

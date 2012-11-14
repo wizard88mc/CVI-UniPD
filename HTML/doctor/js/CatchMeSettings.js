@@ -134,24 +134,12 @@ requestGameSettings: function() {
 			margin: 'auto'
 		});
 	
-	$('<p>').text('Sto recuperando le impostazioni di gioco...')
-		.appendTo($('<div>').attr('id', 'waitingParameters').attr('title', 'Recupero informazioni').appendTo($('#divMainContent')));
-	
-	$('#waitingParameters').dialog({
-		modal: true,
-		draggable: false,
-		closeOnEscape: false,
-		resizable: false,
-		open: function() {
-			$('a.ui-dialog-titlebar-close').hide();
-		}
-	});
-	
 	$.ajax({
-		url: '../server/GetGameSettingsCatchMe.php',
+		url: SERVER_ADDRESS + '/server/GetGameSettingsCatchMe.php',
 		type: 'POST',
 		data: {gameID: gameID, patientID: patientID},
 		success: function(message) {
+			
 			$('#waitingParameters').dialog("close");
 			$('#waitingParameters').remove();
 			
@@ -577,7 +565,7 @@ personalizationComplete: function() {
 	};
 	
 	$.ajax({
-		url: '../server/SaveLevelsCatchMe.php',
+		url: SERVER_ADDRESS + '/server/SaveLevelsCatchMe.php',
 		type: 'POST',
 		data: {
 			patientID: patientID,
@@ -606,16 +594,18 @@ personalizationComplete: function() {
 	
 	$('#divMainContent > h1').text('Prendimi!');
 	
-	$.getScript('js/watchCatchMe.js')
+	websocket.onmessage = CatchMeNamespace.entryFunction;
+	
+	/*$.getScript('js/watchCatchMe.js')
 		.done(function(data, textStatus) {
 			console.log("CatchMe loaded");
-			websocket.onmessage = CatchMeNamespace.entryFunction;			
+						
 		})
 		.fail(function(jqxhr, settings, exception) {
 			console.log("Error loading file catchMe");
 			console.log(jqxhr);
 			console.log(settings);
 			console.log(exception);
-		});
+		});*/
 }
 }

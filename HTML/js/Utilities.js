@@ -6,6 +6,9 @@
 
 window.URL = window.URL || window.webkitURL;
 
+SERVER_ADDRESS = 'http://ciman.math.unipd.it';
+SERVER_ADDRESS = 'localhost/CVI/HTML'
+
 function Point() {
 	this.top = -1;
 	this.left = -1;

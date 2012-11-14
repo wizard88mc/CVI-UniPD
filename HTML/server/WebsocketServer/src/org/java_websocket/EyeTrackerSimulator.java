@@ -189,7 +189,7 @@ public class EyeTrackerSimulator extends Thread {
                     
                     JSONObject packetToSend = new JSONObject();
                     packetToSend.put("TYPE", "MACHINE_ID");
-                    packetToSend.put("DATA", "");
+                    packetToSend.put("DATA", "189");
                     
                     clientConnecter.send(packetToSend.toJSONString());
                 }
@@ -198,7 +198,7 @@ public class EyeTrackerSimulator extends Thread {
                 }
                 else if (packet.get("TYPE").equals("TRAINING_SESSION")) {
                     
-                    packet.put("DATA", "true");
+                    packet.put("DATA", "false");
                     clientConnecter.send(packet.toJSONString());
                 }
                 else if (packet.get("TYPE").equals("OFFSET_CALCULATION")) {

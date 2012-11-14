@@ -263,7 +263,7 @@ function savePatientVisits(patientID) {
 		$('#imgPreloaderMiddle').fadeIn(1000, function() {
 			
 			$.ajax({
-				url: '../server/GetPatientVisits.php',
+				url: SERVER_ADDRESS + '/server/GetPatientVisits.php',
 				type: 'POST',
 				data: {patientID: patientID},
 				success: function(message, status) {
@@ -301,7 +301,7 @@ function makeRequestForGraphData(visitID) {
 			$('#imgPreloaderMiddle').fadeIn('fast', function() {
 				
 				$.ajax({
-					url: '../server/GetGraphData.php',
+					url: SERVER_ADDRESS + '/server/GetGraphData.php',
 					type: 'POST', 
 					data: {visitID: visitID},
 					success: function(data) {
@@ -337,7 +337,7 @@ function makeRequestForExercisesStory(visitID) {
 			$('#imgPreloaderMiddle').fadeIn('fast', function() {
 				
 				$.ajax({
-					url: '../server/GetHelpMeDetailsData.php',
+					url: SERVER_ADDRESS + '/server/GetHelpMeDetailsData.php',
 					type: 'POST', 
 					data: {visitID: visitID},
 					success: function(data) {
@@ -586,7 +586,7 @@ $('document').ready(function() {
 	$('<option value=""> - - - </option>').appendTo('#selectPatient');
 	$('<td><img id="imgPreloaderPatients" src="../images/preloader.gif" alt="In Attesa" /></td>').appendTo(row);
 	$.ajax({
-		url:'../server/GetPatientsList.php',
+		url: SERVER_ADDRESS + '/server/GetPatientsList.php',
 		type: 'POST',
 		data: {
 			doctorID: doctorID

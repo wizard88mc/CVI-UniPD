@@ -1079,7 +1079,7 @@ function localFileSystemInitializationComplete() {
 		console.log("sending");
 		
 		$.ajax({
-			url:'../server/GetGameSettingsCatchMe.php',
+			url: SERVER_ADDRESS + '/server/GetGameSettingsCatchMe.php',
 			data: {
 				patientID : patientID,
 				onlySettings: true

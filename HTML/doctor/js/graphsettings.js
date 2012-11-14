@@ -26,7 +26,7 @@ var opzioniGrafo = {
 
 function createTooltip(posX, posY, time, scaleFactor) {
 	
-	var divContent = $('<div id="tooltip"></div>');
+	var divContent = $('<div>').attr('id', 'tooltip');
 	var left = posX + 5;
 	
 	if (tooltipObject['tooltipWidth'] + left > getScreenWidth()) {

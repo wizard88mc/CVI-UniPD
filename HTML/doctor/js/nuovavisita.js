@@ -23,7 +23,7 @@ startNewGame: function() {
 	
 	if (patientID == "" || gameID == "") {
 		
-		var errorsList = $('<ul></ul>');
+		var errorsList = $('<ul>');
 		errorsList.css('list-style-position', 'inside');
 		if (patientID == "") {
 			$('<li>').text('Nessun paziente scelto').appendTo(errorsList);
@@ -64,7 +64,7 @@ startNewGame: function() {
 getListOfPatients: function() {
 	
 	$.ajax({
-		url: '../server/GetPatientsList.php',
+		url: SERVER_ADDRESS + '/server/GetPatientsList.php',
 		type: 'POST',
 		data: {
 			'doctorID': doctorID
@@ -95,7 +95,7 @@ getListOfPatients: function() {
 getListOfGames: function() {
 	
 	$.ajax({
-		url: '../server/GetGamesList.php', 
+		url: SERVER_ADDRESS + '/server/GetGamesList.php', 
 		success: function(message) {
 			
 			var arrayOfGames = JSON.parse(message);
@@ -118,10 +118,24 @@ getListOfGames: function() {
 
 goToGame: function() {
 	
+	$('<p>').text('Sto recuperando le impostazioni di gioco...')
+		.appendTo($('<div>').attr('id', 'waitingParameters')
+				.attr('title', 'Recupero informazioni').appendTo('#divMainContent'));
+
+	$('#waitingParameters').dialog({
+		modal: true,
+		draggable: false,
+		closeOnEscape: false,
+		resizable: false,
+		open: function() {
+			$('a.ui-dialog-titlebar-close').hide();
+		}
+	});
+	
 	gameFolder = arrayOfFoldersGames[gameID];
 	
 	$.ajax({
-		url: '../server/GetGameIdentification.php',
+		url: SERVER_ADDRESS + '/server/GetGameIdentification.php',
 		type: 'POST',
 		data: {
 			gameID: gameID
@@ -201,6 +215,9 @@ goToGame: function() {
 },
 
 noServerWorking: function() {
+	
+	$('#waitingParameters').dialog("close");
+	$('waitingParamenter').remove();
 	
 	$('<p>').text('Attenzione: Server non attivato o non funzionante. Verificare e riprovare')
 		.appendTo($('<div>').attr('id', 'divDialogServerNotWorking').attr('title', 'Attenzione').appendTo('#divMainContent'));
@@ -353,7 +370,7 @@ initializePage: function() {
 				var sex = $('input:radio[name=sex]:checked').val();
 				
 				$.ajax({
-					url: '../server/AddNewPatient.php',
+					url: SERVER_ADDRESS + '/server/AddNewPatient.php',
 					type: "POST",
 					data: {
 						name: patientName, surname: patientSurname, 

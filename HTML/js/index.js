@@ -52,7 +52,7 @@ function checkLogin(e) {
 			})
 			
 			$.ajax({
-				url: 'server/CheckLogin.php',
+				url: SERVER_ADDRESS + '/server/CheckLogin.php',
 				type: 'POST',
 				data: {username: username, password: password},
 				success: function(message) {

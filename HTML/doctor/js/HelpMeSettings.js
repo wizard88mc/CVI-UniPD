@@ -81,12 +81,12 @@ var HelpMeSettingsNamespace = {
 		var select = $('<select></select>');
 		
 		if (imageID == -1) {
-			$('<option value=""></option>').attr('selected', 'selected').appendTo(select);
+			$('<option>').attr('value', "").attr('selected', 'selected').appendTo(select);
 		}
 		
 		for (var family in imagesFamily ) {
 
-			var group = $('<optgroup label="'+family+'"></optgroup>').appendTo(select);
+			var group = $('<optgroup>').attr('label', family).appendTo(select);
 			var familyImages = imagesFamily[family];
 			
 			for (var index in familyImages) {
@@ -122,10 +122,10 @@ var HelpMeSettingsNamespace = {
 	
 	buildSelectTargetFamily: function(targetFamily) {
 		
-		var select = $('<select class="selectTargetFamily"></select>');
+		var select = $('<select>').addClass('class', 'selectTargetFamily');
 		
 		if (targetFamily == null) {
-			$('<option value=""></option>').attr('selected', 'selected').appendTo(select);
+			$('<option>').attr('value', '').attr('selected', 'selected').appendTo(select);
 		}
 		
 		for (var family in imagesFamily) {
@@ -143,9 +143,9 @@ var HelpMeSettingsNamespace = {
 	
 	buildMaxTimeSelect: function(timeDefined) {
 		
-		var select = $('<select class="selectMaxTime"></select>');
+		var select = $('<select>').addClass('selectMaxTime');
 		if (timeDefined == null) {
-			$('<option value=""></option>').attr('selected', 'selected').appendTo(select);
+			$('<option>').attr('value', '').attr('selected', 'selected').appendTo(select);
 		}
 		
 		for (var i = 20; i <= 40; i += 1) {
@@ -246,7 +246,7 @@ var HelpMeSettingsNamespace = {
 	    	            // o di default oppure quelle specifiche per il bambino
 	            		$.ajax({
 	    	            	type: "POST",
-	    	            	url: "../server/GetGameSettingsHelpMe.php",
+	    	            	url: SERVER_ADDRESS + "/server/GetGameSettingsHelpMe.php",
 	    	            	data: {
 	    	            		patientID: patientID,
 	    	            		gameID: gameID
@@ -328,27 +328,28 @@ var HelpMeSettingsNamespace = {
 			NewVisitNamespace.initializePage();
 		})
 		
-		var divContainerAll = $('<div id="divContainerAll"></div>').appendTo('#divMainContent');
-		divContainerAll.css({
-			width: '90%',
-			margin: 'auto'
-		});
+		var divContainerAll = $('<div>').attr('id', 'divContainerAll').appendTo('#divMainContent')
+			.css({
+				width: '90%',
+				margin: 'auto'
+			});
 		
-		$('<div id="divNewLevel"></div>').appendTo(divContainerAll).addClass('ui-widget-content ui-corner-all');
-		$('<label for="selectNewLevel" class="label">Inserisci nuovo livello: </label>').appendTo('#divNewLevel')
+		$('<div>').attr('id', 'divNewLevel').appendTo(divContainerAll).addClass('ui-widget-content ui-corner-all');
+		$('<label>').attr('for', 'selectNewLevel').addClass('label')
+		.text('Inserisci nuovo livello: ').appendTo('#divNewLevel')
 			.css({
 				padding: '0.5em',
 				'vertical-align': 'middle'
 			});
-		$('<select id="selectNewLevel"></select>').appendTo('#divNewLevel');
+		$('<select>').attr('id', 'selectNewLevel').appendTo('#divNewLevel');
 		
 		for (var index in listOfLevelTipologies) {
-			$('<option></option>').attr('value', listOfLevelTipologies[index])
+			$('<option>').attr('value', listOfLevelTipologies[index])
 				.text(listOfLevelTipologies[index])
 				.appendTo('#selectNewLevel');
 		}
 		
-		$('<div id="buttonAddLevel">Aggiungi livello</div>').appendTo('#divNewLevel').button();
+		$('<div>').attr('id', 'buttonAddLevel').text('Aggiungi livello').appendTo('#divNewLevel').button();
 		
 		$('#buttonAddLevel').on('click', function() {
 			
@@ -359,26 +360,29 @@ var HelpMeSettingsNamespace = {
 			
 			var link = "#level" + indexLevel;
 			var levelTitle = HelpMeSettingsNamespace.buildLevelTitle(indexLevel, elements[0], elements[1]);
-			var divLevel = $('<div id="level'+indexLevel+'"><h2>'+levelTitle+'</h2></div>');
-			divLevel.appendTo('#tabsLevels');
+			var divLevel = $('<div>').attr('id', 'level'+indexLevel)
+				.appendTo('#tabsLevels');
+			$('<h2>').text(levelTitle).appendTo(divLevel);
 			
 			var select = HelpMeSettingsNamespace.buildSelectTargetFamily();
-			select.appendTo($('<div class="divSelectTargetFamily">Famiglia target: </div>').appendTo(divLevel));
+			select.appendTo($('<div>').addClass('divSelectTargetFamily').text('Famiglia target: ')).appendTo(divLevel));
 			
 			var selectTime = HelpMeSettingsNamespace.buildMaxTimeSelect();
-			selectTime.appendTo($('<div class="divSelectMaxTime">Tempo massimo immagine: </div>').appendTo(divLevel));
+			selectTime.appendTo($('<div>').addClass('divSelectMaxTime').text('Tempo massimo immagine: ').appendTo(divLevel));
 			
-			var table = $('<table class="tableLevel"></table>').appendTo(divLevel);
+			var table = $('<table>').addClass('tableLevel').appendTo(divLevel);
 			
 			for (var i = 0; i < elements[0]; i++) {
 				
 				var selectImage = HelpMeSettingsNamespace.buildSelectImages(-1);
 				
-				var row = $('<tr><td class="columnImageType">T</td><td class="columnImageSelect"></td></tr>').appendTo(table)
+				var row = $('<tr></tr>').appendTo(table)
 					.addClass('ui-widget-content');
+				$('<td>').addClass('columnImageType').text('T').appendTo(row);
+				$('<td>').addClass('columnImageSelect').appendTo(row);
 				selectImage.appendTo(row.children('td').last());
 				
-				$('<td><img class="imgPreview" /></td>').appendTo(row);
+				$('<img>').addClass('imgPreview').appendTo($('<td>').appendTo(row));
 				
 				HelpMeSettingsNamespace.makeRowSelectable(row);
 				
@@ -387,17 +391,19 @@ var HelpMeSettingsNamespace = {
 			for (var i = 0; i < elements[1]; i++) {
 				var selectImage = HelpMeSettingsNamespace.buildSelectImages(-1);
 				
-				var row = $('<tr><td class="columnImageType">D</td><td class="columnImageSelect"></td></tr>').appendTo(table)
+				var row = $('<tr>').appendTo(table)
 					.addClass('ui-widget-content');
+				$('<td>').addClass('columnImageType').text('D').appendTo(row);
+				$('<td>').addClass('columnImageSelect').appendTo(row);
 				selectImage.appendTo(row.children('td').last());
 				
-				$('<td><img class="imgPreview" /></td>').appendTo(row);
+				$('<img>').addClass('imgPreview').appendTo($('<td>').appendTo(row));
 				HelpMeSettingsNamespace.makeRowSelectable(row);
 			}
 			
-			$('<input type="hidden" name="levelType" />').attr('value', valueLevel).appendTo(divLevel);
-			$('<input type="hidden" name="numberTargets" />').attr('value', elements[0]).appendTo(divLevel);
-			$('<input type="hidden" name="numberDistracters" />').attr('value', elements[1]).appendTo(divLevel);
+			$('<input>').attr('type', 'hidden').attr('name', 'levelType').attr('value', valueLevel).appendTo(divLevel);
+			$('<input>').attr('type', 'hidden').attr('name', 'numberTargets').attr('value', elements[0]).appendTo(divLevel);
+			$('<input>').attr('type', 'hidden').attr('name', 'numberDistracters').attr('value', elements[1]).appendTo(divLevel);
 			
 			var lastSimilarLevel = divLevel.prevAll('div[id^="level"]:has(input[name="levelType"][value="'+valueLevel+'"])').first();
 			divLevel.insertAfter(lastSimilarLevel);
@@ -411,14 +417,14 @@ var HelpMeSettingsNamespace = {
 			divTabs.tabs("option", 'selected', (indexToInsert + 1));
 		})
 		
-		divTabs = $('<div id="tabsLevels"></div>').appendTo(divContainerAll);
-		divTabs.css({
-			float: 'left',
-			width: '60%',
-			padding: '1.0em'
-		});
+		divTabs = $('<div>').attr('id', 'tabsLevels').appendTo(divContainerAll)
+			.css({
+				float: 'left',
+				width: '60%',
+				padding: '1.0em'
+			});
 		
-		$('<ul id="menuTabs"></ul>').appendTo(divTabs);
+		$('<ul>').attr('id', 'menuTabs').appendTo(divTabs);
 		
 		for (var index in listOfLevels) {
 			
@@ -461,18 +467,19 @@ var HelpMeSettingsNamespace = {
 				HelpMeSettingsNamespace.makeRowSelectable(row);
 			}
 			
-			$('<input type="hidden" name="levelType" />').attr('value', currentLevel.type).appendTo(divLevel);
-			$('<input type="hidden" name="numberTargets" />').attr('value', currentLevel.numberOfTargets).appendTo(divLevel);
-			$('<input type="hidden" name="numberDistracters" />').attr('value', currentLevel.numberOfDistracters).appendTo(divLevel);
+			$('<input>').attr('type', 'hidden').attr('name', 'levelType').attr('value', currentLevel.type).appendTo(divLevel);
+			$('<input>').attr('type', 'hidden').attr('name', 'numberTargets').attr('value', currentLevel.numberOfTargets).appendTo(divLevel);
+			$('<input>').attr('type', 'hidden').attr('name', 'numberDistracters').attr('value', currentLevel.numberOfDistracters).appendTo(divLevel);
 		}
 		
-		var divButtons = $('<div id="buttons"></div>').appendTo(divContainerAll);
-		divButtons.addClass('ui-widget-content ui-corner-all')
-			.css({
-				float: 'right',
-				width: '33%',
-			});
-		$('<div id="buttonMoveUp">&uarr;</div>').appendTo(divButtons).button();
+		var divButtons = $('<div>').attr('id', 'buttons').appendTo(divContainerAll)
+			.addClass('ui-widget-content ui-corner-all')
+				.css({
+					float: 'right',
+					width: '33%',
+				});
+		
+		$('<div>').attr('id', 'buttonMoveUp').text('&uarr;').appendTo(divButtons).button();
 		$('#buttonMoveUp').on('click', function() {
 			var rowSelected = $('tr.ui-selected');
 			var rowIndex = rowSelected.parent().children().index(rowSelected);
@@ -481,7 +488,7 @@ var HelpMeSettingsNamespace = {
 				 rowSelected.insertBefore(rowSelected.parent().children().get(rowIndex - 1));
 			 }
 		})
-		$('<idv id="buttonMoveDown">&darr;</div>').appendTo(divButtons).button();
+		$('<idv>').attr('id', 'buttonMoveDown').text('&darr;').appendTo(divButtons).button();
 		$('#buttonMoveDown').on('click', function() {
 			var rowSelected = $('tr.ui-selected');
 			var rowIndex = rowSelected.parent().children().index(rowSelected);
@@ -492,7 +499,7 @@ var HelpMeSettingsNamespace = {
 			}
 		});
 		
-		$('<div id="buttonDeleteLevel">Elimina livello</div>').appendTo(divButtons).button()
+		$('<div>').attr('id', 'buttonDeleteLevel').text('Elimina livello').appendTo(divButtons).button()
 		.on('click', function() {
 			
 			var index = $('#menuTabs').children().index('#menuTabs li[class*="ui-tabs-selected"]');
@@ -502,7 +509,7 @@ var HelpMeSettingsNamespace = {
 			HelpMeSettingsNamespace.updateLabelsTabs();
 		})
 		
-		$('<div id="buttonComplete">Livelli completati</div>').appendTo(divButtons).button()
+		$('<div>').attr('id', 'buttonComplete').text('Livelli completati').appendTo(divButtons).button()
 			.on('click', function() {
 				HelpMeSettingsNamespace.collectLevelsToSend();
 			});
@@ -515,7 +522,7 @@ var HelpMeSettingsNamespace = {
 			'margin-bottom': '0.2em'
 		});
 		
-		$('<div></div>').appendTo(divContainerAll).css({
+		$('<div>').appendTo(divContainerAll).css({
 			clear: 'both'
 		});
 		
@@ -588,7 +595,7 @@ var HelpMeSettingsNamespace = {
 		if (levelsToSend) {
 			$.ajax({
 				type: "POST", 
-				url: "../server/SaveLevelsHelpMe.php",
+				url: SERVER_ADDRESS + "/server/SaveLevelsHelpMe.php",
 				data: {
 					patientID: patientID,
 					levels: JSON.stringify(listOfNewLevels)
@@ -608,34 +615,14 @@ var HelpMeSettingsNamespace = {
 	
 	sendLevelsToClient: function(levels) {
 		
-		console.log(levels);
-		
-		$.getScript('js/watchHelpMe.js')
-		.done(function(data, textStatus) {
-			console.log("HelpMe loaded");
-			websocket.onmessage = HelpMeNamespace.entryFunction;
+		var packetToSend = {
+			TYPE: "GAME_SETTINGS",
+			LEVELS: levels
+		};
 			
-			var packetToSend = {
-				TYPE: "GAME_SETTINGS",
-				LEVELS: levels
-			};
-			
-			websocket.send(JSON.stringify(packetToSend));
-			
-			/*var packetSession = {
-				'TYPE': 'SESSION_SPECS',
-				'PATIENT_ID': patientID,
-				'GAME_ID': gameIdentification
-			};
-						
-			websocket.send(JSON.stringify(packetSession));*/
-		})
-		.fail(function(jqxhr, settings, exception) {
-			console.log("Error loading file catchMe");
-			console.log(jqxhr);
-			console.log(settings);
-			console.log(exception);
-		});
+		websocket.send(JSON.stringify(packetToSend));
+
+		websocket.onmessage = HelpMeNamespace.entryFunction;
 		
 	}
 }

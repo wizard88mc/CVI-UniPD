@@ -218,7 +218,7 @@ var OfflineNamespace = {
 					var packets = JSON.stringify(this.result);
 					
 					$.ajax({
-						url: 'server/OfflinePackets.php',
+						url: SERVER_ADDRESS + '/server/OfflinePackets.php',
 						type: 'POST',
 						data: {
 							packets: packets, 
@@ -259,8 +259,8 @@ var OfflineNamespace = {
     			arrayFolderDelete.push(folder);
     			
     			$.ajax({
-    				url: 'server/OfflinePackets.php',
-    				type: "POST",
+    				url: SERVER_ADDRESS + '/server/OfflinePackets.php',
+    				type: 'POST',
     				data: {
     					packets: packets,
     					folderName: folder
