@@ -1,0 +1,30 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html, body {
+	width: 100%;
+}
+
+body, #divMainContent {
+    overflow: hidden;
+}
+
+.saccoTransition {
+	transition: top 1s;
+	transition-timing-function: linear;
+	-moz-transition: top 1s;
+	-moz-transition-timing-function: linear;
+	-webkit-transition: top 1s;
+	-webkit-transition-timing-function: linear;
+	-o-transition: top 1s;
+	-o-transition-timing-function: linear;
+}
+
+.saccoNoTransition {
+	transition: none;
+	-moz-transition: none;
+	-webkit-transition: none;
+	-o-transition: none;
+}

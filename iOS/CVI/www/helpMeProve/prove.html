@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+
+<title>Aiutami!</title>
+<meta name="description" content="" />
+<meta name="author" content="Matteo Ciman" />
+
+<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+<link rel="stylesheet" href="style/style.css" />
+<script src="../js/jquery-1.7.2.min.js"></script>
+<script src="../js/jquery-ui-1.8.21.custom.min.js"></script>
+<script src="../js/Utilities.js"></script>
+<script src="js/util.js"></script>
+<script src="js/SettingsObjects.js"></script>
+<script src="js/GameObjects.js"></script>
+<script src="js/TickerObjects.js"></script>
+<script src="js/BarraTempo.js"></script>
+<script src="js/Tubo.js"></script>
+<script src="js/Sacco.js"></script>
+<script src="js/ObjectImage.js"></script>
+<script src="js/jquery.ui.touch-punch.min.js"></script>
+<script src="js/TouchEventsManager.js"></script>
+<script src="js/ExamplesManager.js"></script>
+<script>
+
+var tubo = null;
+var sacco = null;
+var stage = null;
+var barraTempo = null;
+var canvas = null;
+var imageObjectOnScreen = null;
+var immaginiADisposizione = {};
+var livelliGioco = [];
+var objectLevelManager = new Object();
+
+var immaginiPartita = [];
+var oggettiPerLivello = [];
+var gameManager = new GameManager();
+
+var currentAnimationFrame = null;
+
+//var exampleManager = new ExamplesManager();
+	
+function initGame() {
+
+    tubo = new Tubo();
+    tubo.element.appendTo('#divMainContent');
+
+    sacco = new Sacco();
+    sacco.element.appendTo('#divMainContent');
+
+    barraTempo = new BarraTempo();
+    barraTempo.element.appendTo('#divMainContent');
+
+}
+
+function levelComplete() {
+
+    console.log("Level complete");
+}
+
+function manageImageObjectsLevel() {
+
+    gameManager.indexImageObject++;
+
+
+    if (gameManager.indexImageObject < oggettiPerLivello.length) {
+        gameManager.currentImageObject = oggettiPerLivello[gameManager.indexImageObject];
+
+        // istanzio oggetto
+        imageObjectOnScreen = new ImageObjectOnScreen(gameManager.currentImageObject);
+        imageObjectOnScreen.element.appendTo('#divMainContent');
+
+        gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerMovimentoTubo);
+
+        /*barraTempo.reset();
+        Ticker.removeAllListeners();
+
+        Ticker.addListener(tickerMoveObjectInsideScreen);*/
+    }
+    else {
+        // livello completato
+
+        levelComplete();
+    }
+}
+
+function manageLevel() {
+
+    gameManager.levelIndex++;
+    gameManager.currentLevel = livelliGioco[gameManager.levelIndex];
+
+    utilsNamespace.istantiateLevel(gameManager.currentLevel);
+
+    console.log("Manage Level complete");
+
+    manageImageObjectsLevel();
+}
+
+/**
+ * Function chiamata quando un oggetto è stato inserito nel sacco
+ */
+function objectInsertedIntoSacco() {
+
+    // E' oggetto target: CORRETTO
+    if (gameManager.currentImageObject.target) {
+
+        // Visualizzo immagine e suono corretto
+        console.log("Risposta esatta");
+        $('#divMainContent div').hide();
+        gameManager.imageRightAnswer.show();
+
+    }
+    else { // Non era oggetto target: ERRORE
+        console.log("Risposta errata");
+    }
+
+    //setTimeout(manageImageObjectsLevel, 2000);
+    //manageImageObjectsLevel();
+}
+
+/**
+ * Function chiamata quando un oggetto viene lasciato fermo per
+ * il tempo massimo a disposizione
+ */
+function timeExpired() {
+
+    console.log("Time is expired");
+
+    /*
+    stage.removeChild(objectImageOnScreen.bitmap);
+    // devo eliminare oggetto dallo stage
+
+    // era oggetto target e non è stato inserito: ERRORE
+    if (gameManager.currentImageObject.target) {
+        console.log("Error");
+    }
+    else { // non era oggetto target, corretto
+        console.log("Corretto");
+    }
+
+    setTimeout(manageImageObjectsLevel, 2000);*/
+}
+
+function allInfosRetrieved() {
+
+    init();
+
+    manageLevel();
+}
+
+function prepareExamples() {
+
+    $.ajax({
+        TYPE: 'GET',
+        url: 'settings/examples.xml',
+        dataType: 'xml',
+        cache: 'false',
+        success: function(xml) {
+
+            exampleManager.totalImagesToRetrieve += $(xml).find('example').length;
+
+            $(xml).find('example').each(function() {
+
+                var imageFileName = $(this).attr('image');
+                var withHelp = $(this).attr('withHelp') == "true";
+                var insertInto = $(this).attr('insertIntoSacco') == "true";
+                console.log(insertInto);
+                var soundBefore = $(this).attr('soundBefore');
+                if (soundBefore === undefined) {
+                    soundBefore = null;
+                }
+                var soundAfter = $(this).attr('soundAfter');
+                if (soundAfter === undefined) {
+                    soundAfter = null;
+                }
+
+                var newExample = new Example(imageFileName, withHelp,insertInto, soundBefore, soundAfter);
+                exampleManager.examples.push(newExample);
+                newExample.loadImage();
+            });
+
+            exampleManager.loadOtherImages();
+        }
+    });
+}
+
+function imageForExampleLoaded() {
+
+    exampleManager.imagesRetrieved++;
+
+    if (exampleManager.imagesRetrieved == exampleManager.totalImagesToRetrieve) {
+
+        // posso iniziare con gli esempi
+        gameManager.isAnExample = true;
+
+        initGame();
+
+        iterateOnExamples();
+    }
+}
+
+function iterateOnExamples() {
+
+    exampleManager.indexCurrentExample++;
+
+    if (exampleManager.indexCurrentExample < exampleManager.examples.length) {
+
+        exampleManager.currentExample = exampleManager.examples[exampleManager.indexCurrentExample];
+
+        imageObjectOnScreen = new ImageObjectOnScreen(exampleManager.currentExample);
+        imageObjectOnScreen.element.appendTo('#divMainContent');
+
+        $('#divSounds #soundBefore').remove();
+        $('#divSounds #soundAfter').remove();
+
+        if (exampleManager.currentExample.soundBefore != null) {
+            var soundBefore = $('<audio id="soundBefore"></audio>').appendTo('#divSounds');
+            $('<source src="sounds/' + exampleManager.currentExample.soundBefore + '"/>').appendTo(soundBefore);
+        }
+        if (exampleManager.currentExample.soundAfter != null) {
+            var soundAfter = $('<audio id="soundAfter"></audio>').appendTo('#divSounds');
+            $('<source src="sounds/' + exampleManager.currentExample.soundAfter + '" />').appendTo(soundAfter);
+        }
+
+        tubo.reset();
+
+        gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerMovimentoTubo);
+    }
+    else {
+        // esempi finiti, sono pronto ad iniziare
+    }
+
+}
+
+function exampleCompleted() {
+
+    if ($('#divSounds #soundAfter').length > 0) {
+        $('#divSounds #soundAfter').on('ended', function() {
+
+            imageObjectOnScreen.element.remove();
+            iterateOnExamples();
+        }).get(0).play();
+    }
+    else {
+        imageObjectOnScreen.element.remove();
+        iterateOnExamples();
+    }
+}
+
+$('document').ready(function() {
+
+    gameManager.divMainContent = $('#divMainContent').width(getScreenWidth()).height(getScreenHeight()).css('overflow', 'hidden');
+    $('<div id="divSounds"></div>').appendTo('body');
+
+    /*gameManager.getSystemImages();
+    gameManager.getSystemSounds();
+    utilsNamespace.getImagesFromSettings();*/
+
+    //prepareExamples();
+    $('body').css({
+    	'background-image': 'url(images/ZZ10042.jpg)',
+    	'background-repeat': 'no-repeat',
+    	'background-size': '100% 100%'
+    });
+	
+})
+</script>
+</head>
+
+<body>
+<div id="divMainContent">
+
+</div>
+
+
+</body>
+</html>
