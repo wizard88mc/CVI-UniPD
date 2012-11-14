@@ -274,7 +274,7 @@ setGameSettings: function(data) {
 			gameSettings.rightMovement = !gameSettings.rightMovement;
 		});
 	
-	$('<label').attr('for', 'rightMovement').text('Movimento verso destra').appendTo(divMovimenti);
+	$('<label>').attr('for', 'rightMovement').text('Movimento verso destra').appendTo(divMovimenti);
 	$('<br />').appendTo(divMovimenti);
 	
 	$('<input>').attr('type', 'checkbox').attr('id', 'leftMovement')
@@ -495,7 +495,7 @@ setGameSettings: function(data) {
 	$('<div>').attr('id', 'divButtons').appendTo('#divMainContent')
 		.addClass('ui-widget-content ui-corner-all');
 	
-	$('<button>').attr('id=', 'buttonStart').text('Comincia!')
+	$('<button>').attr('id', 'buttonStart').text('Comincia!')
 		.appendTo('#divButtons').button()
 		.click(function(){
 			gameSettings.rightMovement = $('#rightMovement').is(':checked');
@@ -603,6 +603,8 @@ personalizationComplete: function() {
 	};
 			
 	websocket.send(JSON.stringify(packetSession));*/
+	
+	$('#divMainContent > h1').text('Prendimi!');
 	
 	$.getScript('js/watchCatchMe.js')
 		.done(function(data, textStatus) {

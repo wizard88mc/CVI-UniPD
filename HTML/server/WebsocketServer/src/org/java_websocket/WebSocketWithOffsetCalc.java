@@ -24,8 +24,9 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
     protected boolean offsetCalculated = false;
     protected boolean endGame = false;
     protected static DoctorClientManager doctorManager = null;
-    protected static IPADClientManager patientManager = null;
+    //protected static IPADClientManager patientManager = null;
     protected TimeSyncCalculator offsetCalculator = new TimeSyncCalculator();
+    protected long timeStartPacket = 0L;
     
     WebSocketWithOffsetCalc(String clientType, int port) throws UnknownHostException {
         super(clientType, port);
@@ -48,6 +49,7 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
             performOffsetCalculation(packet, dateReception);
         }
         else if (packet.get("TYPE").equals("STOP_GAME")) {
+            
             endGame = true;
             serverManager.stopGame(packet);
         }
@@ -55,13 +57,14 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
             
             // identificazione del client
             System.out.println("Verifica identità client");
-            boolean correctClient = checkClientType((String)packet.get("RESPONSE"));
+            boolean correctClient = checkClientType((String)packet.get("DATA"));
             
             if (correctClient) {
                 
                 // Client che richiede connessione è corretto
                 System.out.println("Client Corretto");
                 clientConnected = conn;
+                
                 JSONObject packetToSend = new JSONObject();
                 packetToSend.put("TYPE", "IDENTIFICATION_COMPLETE");
                 clientConnected.send(packetToSend.toJSONString());
@@ -73,15 +76,16 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
         }
         else if (packet.get("TYPE").equals("START_OFFSET_CALCULATION")) {
             
-            System.out.println("Inizio calcolo offset");
+            System.out.println("StartOffsetCalculation");
             offsetCalculated = true;
             sendPacketOffsetCalculation();
-            System.out.println("StartOffsetCalculation");
         }
         else if (packet.get("TYPE").equals("MACHINE_ID")) {
                 
-            if ((String)packet.get("ID") != null) {
-                machineID = new Integer((String)packet.get("ID"));
+            if (packet.get("DATA") != null && 
+                    !packet.get("DATA").equals("")) {
+                
+                machineID = new Integer((String)packet.get("DATA"));
             }
                 
             ArrayList result = dbManager.getMachineOffset(machineID);
@@ -162,7 +166,7 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
         
         JSONObject packetToSend = new JSONObject();
         packetToSend.put("TYPE", "CALCULATING");
-        packetToSend.put("START_SERVER_TIME", System.currentTimeMillis());
+        timeStartPacket = System.currentTimeMillis();
         clientConnected.send(packetToSend.toJSONString());
     }
     
@@ -171,8 +175,7 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
         // eseguo operazione di calcolo, poi nel caso non vada bene
         // rispedisco pacchetto
         boolean operationComplete = offsetCalculator.newPacket(
-                (Long)packet.get("START_SERVER_TIME"), 
-                (Long)packet.get("CLIENT_TIME"), millisecondsReception);
+                timeStartPacket, (Long)packet.get("DATA"), millisecondsReception);
         
         if (operationComplete) {
             
@@ -186,7 +189,8 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
                 System.out.println("Errore format: " + exc.toString());
             }
             
-            int newMachineID = dbManager.insertNewMachineOffset(valuea12 + "," + valueb12, machineID);
+            int newMachineID = dbManager.insertNewMachineOffset(valuea12 + "," + valueb12,
+                    machineID);
 
             JSONObject packetToSend = new JSONObject();
                 packetToSend.put("TYPE", "OFFSET_CALCULATION_COMPLETE");
@@ -203,6 +207,7 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
             clientConnected.send(packetToSend.toJSONString());
         }
         else {
+            
             sendPacketOffsetCalculation();
         }
         

@@ -46,7 +46,7 @@ public class DoctorClientManager extends BaseManager {
         }
         else if (packet.get("TYPE").equals("IDENTIFICATION")) {
             
-            if (checkClientType((String)packet.get("RESPONSE"))) {
+            if (checkClientType((String)packet.get("DATA"))) {
                 System.out.println("Identification complete: " + clientType);
                 clientConnected = sender;
                 JSONObject packetToSend = new JSONObject();
@@ -60,6 +60,7 @@ public class DoctorClientManager extends BaseManager {
             }
         }
         else if (packet.get("TYPE").equals("GAME")) {
+            
             if (patientManager != null) {
                 patientManager.sendPacket(packet);
                 packet.put("RESULT", true);
@@ -83,15 +84,19 @@ public class DoctorClientManager extends BaseManager {
             }
         }
         else if (packet.get("TYPE").equals("GAME_SETTINGS")) {
-            System.out.println("GAME_SETTINGS");
+            
             patientManager.sendPacket(packet);
+            
         }
         else if (packet.get("TYPE").equals("START_PRESENTATION") || 
                 packet.get("TYPE").equals("GO_BACK")) {
+            
             patientManager.sendPacket(packet);
         }
         else if (packet.get("TYPE").equals("START_TRAINING")) {
+            
             eyeTrackerManager.sendPacket(packet);
+            patientManager.sendPacket(packet);
         }
         else if (packet.get("TYPE").equals("SESSION_SPECS")) {
             

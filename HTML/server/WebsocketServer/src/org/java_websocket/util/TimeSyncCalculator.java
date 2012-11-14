@@ -25,6 +25,7 @@ public class TimeSyncCalculator {
             totalPackets++;
             if (totalPackets == MAX_TOTAL_PACKETS_RTT) {
                RTT = RTT / totalPackets;
+               System.out.println(RTT);
                totalPackets = 0;
                calculatingRTT = false;
                return false;

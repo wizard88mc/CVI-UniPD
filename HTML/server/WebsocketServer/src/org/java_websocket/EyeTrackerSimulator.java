@@ -24,6 +24,7 @@ public class EyeTrackerSimulator extends Thread {
     
     public EyeTrackerSimulator(String host, int port) throws Exception {
         
+        //host = "ciman.math.unipd.it";
         this.host = new String().concat("ws://")
                 .concat(host).concat(":").concat(new Integer(port).toString());
         System.out.println("Creating EyeTracker Client"); 
@@ -151,7 +152,7 @@ public class EyeTrackerSimulator extends Thread {
                     
                     //try {
                         //Thread.sleep(200);
-                        packet.put("CLIENT_TIME", System.currentTimeMillis());
+                        packet.put("DATA", System.currentTimeMillis());
                         //Thread.sleep(200);
                     //}
                     //catch(InterruptedException exc) {}
@@ -167,7 +168,8 @@ public class EyeTrackerSimulator extends Thread {
                     //startTime = now + 5000;
                     
                     Executors.newSingleThreadScheduledExecutor()
-                            .schedule(EyeTrackerSimulator.this, startTime - now, TimeUnit.MILLISECONDS);
+                            .schedule(EyeTrackerSimulator.this, startTime - now, 
+                                TimeUnit.MILLISECONDS);
                     /*Executors.newSingleThreadScheduledExecutor()
                             .schedule(EyeTrackerSimulator.this, 5000, TimeUnit.MILLISECONDS);*/
                 }
@@ -177,25 +179,42 @@ public class EyeTrackerSimulator extends Thread {
                 else if (packet.get("TYPE").equals("IDENTIFICATION")) {
                     System.out.println("EYE_TRACKER: Identification");
                     
-                    packet.put("RESPONSE", "EyeTrackerClient");
+                    packet.put("DATA", "EyeTrackerClient");
                     clientConnecter.send(packet.toJSONString());
                 }
                 else if (packet.get("TYPE").equals("IDENTIFICATION_COMPLETE")) {
                     System.out.println("EYE_TRACKER: Identification complete");
                     // Inizio sincronizzazione tempi se non ho salvato da 
                     // qualche parte ID della macchina 
-                    JSONObject packetToSend = new JSONObject();
-                    packetToSend.put("TYPE", "START_OFFSET_CALCULATION");
-                    //clientConnecter.send(packetToSend.toJSONString());
-                    /*packetToSend.put("TYPE", "READY_TO_PLAY");
-                    packetToSend.put("MACHINE_ID", "2");*/
-                    clientConnecter.send(packetToSend.toJSONString());
                     
-                    //altrimenti recupero ID della macchina da impostazioni
-                    // e lo spedisco insieme a pacchetto READY_TO_PLAY
+                    JSONObject packetToSend = new JSONObject();
+                    packetToSend.put("TYPE", "MACHINE_ID");
+                    packetToSend.put("DATA", "");
+                    
+                    clientConnecter.send(packetToSend.toJSONString());
                 }
                 else if (packet.get("TYPE").equals("START_TRAINING")) {
                     EyeTrackerSimulator.this.simulateTraining();
+                }
+                else if (packet.get("TYPE").equals("TRAINING_SESSION")) {
+                    
+                    packet.put("DATA", "true");
+                    clientConnecter.send(packet.toJSONString());
+                }
+                else if (packet.get("TYPE").equals("OFFSET_CALCULATION")) {
+                    
+                    if (packet.get("TODO").equals("true")) {
+                        JSONObject packetToSend = new JSONObject();
+                        packetToSend.put("TYPE", "START_OFFSET_CALCULATION");
+                        
+                        clientConnecter.send(packetToSend.toJSONString());
+                    }
+                    else {
+                        JSONObject packetToSend = new JSONObject();
+                        packetToSend.put("TYPE", "READY_TO_PLAY");
+                        
+                        clientConnecter.send(packetToSend.toJSONString());
+                    }
                 }
                 else if (packet.get("TYPE").equals("OFFSET_CALCULATION_COMPLETE")) {
                     System.out.println("EYE: Fine calcolo offset");

@@ -95,6 +95,11 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                     doctorManager.sendPacket(packet);
                 }
                 
+                JSONObject packetStartTraining = new JSONObject();
+                packetStartTraining.put("TYPE", "TRAINING_SESSION");
+                
+                eyeTrackerManager.sendPacket(packetStartTraining);
+                
                  // se non ho appena calcolato il valore di offset (offsetCalculated == false)
                 // recupero il valore di offset dal mio DB
                 /*if (!offsetCalculated)  {

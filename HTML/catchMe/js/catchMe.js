@@ -261,7 +261,7 @@ putInWaiting: function() {
 trainingComplete: function() {
 	
 	websocket.onmessage = CatchMeNamespace.waitingToStart;
-}
+},
 
 waitingToStart: function(message) {
 	
@@ -297,7 +297,7 @@ waitingToStart: function(message) {
 		}
 		else if (packet.TYPE == "START_TRAINING") {
 			
-			websocket.onmessage = TrainingExamplesNamespace.messageManager;
+			TrainingExamplesNamespace.startTraining();
 		}
 		else {
 			console.log("Bad message received during game");
@@ -310,8 +310,9 @@ waitingToStart: function(message) {
 
 drawCanvas: function() {
 	
-	var canvas = $('<canvas id="image"></canvas>').appendTo($('body'));
-	canvas.css('z-index', '10');
+	var canvas = $('<canvas>').attr('id', 'image')
+		.appendTo('body').css('z-index', '10');
+	
 	canvas[0].width = canvasSettings.width;
 	canvas[0].height = canvasSettings.height;
 	var context = canvas[0].getContext('2d');

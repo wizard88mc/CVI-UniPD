@@ -12,11 +12,9 @@ function handlePresentation(message) {
 	
 	var packet = JSON.parse(message.data);
 	
-	console.log(packet);
-	
 	if (packet.TYPE == 'IDENTIFICATION') {
 		console.log("Sending back identification response");
-		packet.RESPONSE = identificationType;
+		packet.DATA = identificationType;
 		
 		websocket.send(JSON.stringify(packet));
 	}
@@ -33,8 +31,6 @@ function openWebSocket(webPort) {
 	console.log("Start WebSocket");
 	
 	webHost = getAddressForWebsocket();
-	
-	console.log('ws://' + webHost + ':' + webPort);
 	
 	websocket = new WebSocket('ws://' + webHost + ':' + webPort);
 	

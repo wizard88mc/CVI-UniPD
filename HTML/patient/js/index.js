@@ -7,7 +7,7 @@ function presentationComplete() {
 	
 	var message = {
 		TYPE: "MACHINE_ID",
-		ID: machineID
+		DATA: machineID
 	};
 	
 	websocket.send(JSON.stringify(message));

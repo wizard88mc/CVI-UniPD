@@ -26,28 +26,45 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
     @Override
     public boolean onMessage(WebSocket conn, String message) {
         
-        boolean alreadyManaged = super.onMessage(conn, message);
-        JSONObject packet = (JSONObject)JSONValue.parse(message);
-        
-        if (packet.get("TYPE").equals("IDENTIFICATION") && clientConnected != null) {
-            BaseManager.eyeTrackerManager = this;
-        }
-        
-        if (!alreadyManaged) {
-            
-            if (packet.get("TYPE").equals("EYE_TRACKER_DATA")) {
-            
-                synchronized(messageManager.bufferSynchronizer) {
-                    messageManager.messagesEyeTrackerBuffer.add(packet);
-                    messageManager.bufferSynchronizer.notifyAll();
+        try {
+            boolean alreadyManaged = super.onMessage(conn, message);
+            JSONObject packet = (JSONObject)JSONValue.parse(message);
+
+            if (packet.get("TYPE").equals("IDENTIFICATION") && clientConnected != null) {
+                BaseManager.eyeTrackerManager = this;
+            }
+
+            if (!alreadyManaged) {
+
+                if (packet.get("TYPE").equals("EYE_TRACKER_DATA")) {
+
+                    synchronized(messageManager.bufferSynchronizer) {
+                        messageManager.messagesEyeTrackerBuffer.add(packet);
+                        messageManager.bufferSynchronizer.notifyAll();
+                    }
+                }
+                else if (packet.get("TYPE").equals("READY_TO_PLAY")) {
+
+                    System.out.println("Eye_Tracker_Manager READY TO START");
+                }
+                else if (packet.get("TYPE").equals("TRAINING_POSITIONS")) {
+
+                    patientManager.sendPacket(packet);
+                }
+                else if (packet.get("TYPE").equals("TRAINING_SESSION")) {
+                    doctorManager.sendPacket(packet);
                 }
             }
-            else if (packet.get("TYPE").equals("READY_TO_PLAY")) {
-                
-                System.out.println("Eye_Tracker_Manager READY TO START");
-            }
+            return true;
         }
-        return true;
+        catch(Exception err) {
+            System.out.println("***** EXCEPTION ON MESSAGE *****");
+            System.out.println("** Error onMessage eyeTrackerManager ** ");
+            System.out.println(err.toString());
+            err.printStackTrace();
+            System.out.println("***** END EXCEPTION MESSAGE  ***");
+            return true;
+        }
     }
     
 }

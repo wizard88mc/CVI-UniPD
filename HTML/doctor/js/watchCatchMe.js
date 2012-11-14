@@ -14,6 +14,7 @@ currentSpeedValue = -1;
 var CatchMeNamespace = {
 	
 	entryFunction: function(message) {
+		
 		var dataReceived = JSON.parse(message.data);
 		
 		console.log(dataReceived);
@@ -24,8 +25,6 @@ var CatchMeNamespace = {
 			tooltipObject['tooltipHeight'] = dataReceived.SCREEN_HEIGHT * 0.4;
 			tooltipObject['imageWidth'] = dataReceived.IMAGE_WIDTH * 0.4;
 			tooltipObject['imageHeight'] = dataReceived.IMAGE_HEIGHT * 0.4;
-			
-			websocket.onmessage = CatchMeNamespace.manageMessagesGame;
 			
 			$('#divMainContent div').remove();
 			
@@ -40,6 +39,10 @@ var CatchMeNamespace = {
 			//timing = setInterval(CatchMeNamespace.updateChart, 5000);
 			// Mostro un dialog che dice che è tutto a posto,
 			// e di cliccare quando tutto è pronto x iniziare
+		}
+		else if (dataReceived.TYPE == "TRAINING_SESSION" && dataReceived.DATA == "false") {
+			
+			websocket.onmessage = CatchMeNamespace.manageMessagesGame;
 		
 			$('<div id="dialogWaitingToStart" title="Pronto a cominciare"><p>Non appena tutto sarà pronto, cliccare su Ok per iniziare</p></div>').appendTo('#divMainContent');
 			$('#dialogWaitingToStart').dialog({
@@ -51,7 +54,6 @@ var CatchMeNamespace = {
 					Ok: function() {
 						$(this).dialog("remove");
 						$(this).remove();
-						console.log("Starting");
 						
 						$('#divMainContent > h1').text('Prendimi!');
 						
@@ -63,6 +65,34 @@ var CatchMeNamespace = {
 						
 						websocket.send(JSON.stringify(packetToSend));
 						timing = setInterval(CatchMeNamespace.updateChart, 5000);
+					}
+				}
+			});
+		}
+		else if (dataReceived.TYPE == "TRAINING_SESSION" && dataReceived.DATA == "true") {
+			
+			// dialog to start training session
+			$('<p>').text('Necessario iniziare fase di training per il sistema di eye-tracking prima di iniziare il gioco. Cliccare su Ok per iniziare')
+				.appendTo($('<div>').attr('id', 'dialogStartTraining').attr('title', 'Training eye-tracking')
+						.appendTo('#divMainContent')
+				);
+			
+			$('#dialogStartTraining').dialog({
+				modal: true,
+				resizable: false,
+				closeOnEscape: false,
+				draggable: false,
+				width: getScreenWidth() * 0.5,
+				buttons: {
+					Ok: function() {
+						$(this).dialog("remove");
+						$(this).remove();
+						
+						var packetToSend = {
+							'TYPE': 'START_TRAINING',
+						};
+						
+						websocket.send(JSON.stringify(packetToSend));
 					}
 				}
 			});
@@ -160,13 +190,15 @@ var CatchMeNamespace = {
 		divArrows.appendTo('#divManager');
 		
 		
-		var leftArrow = $('<img id="leftArrow" class="arrow" src="../images/leftarrow.png" alt="Muovi grafo a sinistra" />');
-		leftArrow.appendTo(divArrows);
-		leftArrow.click(function(e) {
+		var leftArrow = $('<img>').attr('id', 'leftArrow').attr('alt', 'Muovi grafico a sinistra')
+			.attr('src', '../images/leftarrow.png').addClass('arrow')
+			.appendTo(divArrows)
+			.click(function(e) {
 			
 			e.preventDefault();
 			grafo.pan({left: -1000});
 		});
+			
 		var rightArrow = $('<img id="rightArrow" class="arrow" src="../images/rightarrow.png" alt="Muovi grafo verso destra" />');
 		rightArrow.appendTo(divArrows);
 		rightArrow.click(function(e) {
@@ -174,28 +206,27 @@ var CatchMeNamespace = {
 			grafo.pan({left: 1000});
 		});
 		
-		$('<div id="buttonStopGame"></div>').appendTo('#divManager');
-		$('#buttonStopGame').css({
-			float: 'right',
-			width: '30%',
-			'margin-top': '2.0em'
-		});
-		$('#buttonStopGame').button({
-			label: 'Interrompi gioco'
-		});
-		$('#buttonStopGame').click(function() {
-			var packet = {'TYPE': 'STOP_GAME'};
-			websocket.send(JSON.stringify(packet));
-			
-			$('#divSliderSpeed').css('visibility', 'hidden');
-			$(this).css('visibility', 'hidden');
-			clearInterval(timing);
-			CatchMeNamespace.updateChart();
-		});
+		$('<div>').attr('id', 'buttonStopGame').appendTo('#divManager')
+			.css({
+				float: 'right',
+				width: '30%',
+				'margin-top': '2.0em'
+			})
+			.button({
+				label: 'Interrompi gioco'
+			})
+			.click(function() {
+				var packet = {'TYPE': 'STOP_GAME'};
+				websocket.send(JSON.stringify(packet));
+				
+				$('#divSliderSpeed').css('visibility', 'hidden');
+				$(this).css('visibility', 'hidden');
+				clearInterval(timing);
+				CatchMeNamespace.updateChart();
+			})
+			.css('visibility', 'hidden');
 		
-		$('#buttonStopGame').css('visibility', 'hidden');
-		
-		$('<div></div>').appendTo('#divManager').css('clear', 'both');
+		$('<div>').appendTo('#divManager').css('clear', 'both');
 		
 	},
 	

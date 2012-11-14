@@ -12,7 +12,7 @@ function handleOffsetCalculation(message) {
 	
 	if (packet.TYPE == "CALCULATING") {
 		
-		packet.CLIENT_TIME = new Date().getTime();
+		packet.DATA = new Date().getTime();
 		websocket.send(JSON.stringify(packet));
 	}
 	else if (packet.TYPE == "OFFSET_CALCULATION_COMPLETE") {

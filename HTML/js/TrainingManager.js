@@ -5,6 +5,7 @@ var ImageForTraining = function() {
 		
 		TrainingExamplesNamespace.imageLoaded();
 	}
+	this.image.src = '../images/training_image3.png';
 	this.element = null;
 	this.width = 0;
 	this.height = 0;
@@ -34,7 +35,9 @@ var imageForTraining = null;
 
 var TrainingExamplesNamespace = {
 	
-	startingTraining: function() {
+	startTraining: function() {
+		
+		console.log('Starting training');
 		
 		websocket.onmessage = TrainingExamplesNamespace.messageManager;
 		
@@ -45,29 +48,31 @@ var TrainingExamplesNamespace = {
 		
 		imageForTraining.element = $(imageForTraining.image)
 			.attr('id', 'imageTraining')
-			.appendTo('#divMainContent');
+			.appendTo('body');
 			
 		var aspectRatio = imageForTraining.image.naturalWidth / 
 			imageForTraining.image.naturalHeight;
 		
-		var height = getImageHeight() * 0.3;
+		var height = getScreenHeight() * 0.3;
 		var width = aspectRatio * height;
 		
 		imageForTraining.element.css({
 			opacity: '0',
 			width: width,
-			height: height
+			height: height,
+			position: 'relative'
 		});
 		
 		var center = new Point(getScreenHeight() / 2, getScreenWidth() / 2);
 		
 		imageForTraining.moveObject(center);
 		imageForTraining.drawObject();
-	}
+	},
 
 	messageManager: function(message) {
 		
-		var data = JSON.parse(data);
+		var data = JSON.parse(message.data);
+		console.log(data);
 		
 		if (data.TYPE == "TRAINING_POSITIONS") {
 			
