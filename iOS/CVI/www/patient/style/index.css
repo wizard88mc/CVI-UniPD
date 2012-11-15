@@ -4,51 +4,53 @@
 }
 
 #divMainContent {
-	max-width: 1024px;
-	margin: auto;
-	background-color: #FFF;
+	background-image: url('../images/background_patient.png');
+	background-size: 100% 100%;
 	margin-top: 0em;
 	text-align: center;
-	padding-bottom: 1.0em;
 }
 
 h1 {
-	color: darkblue;
+	color: #000080;
 }
 
 h1.title {
-	padding: 0.4em;
+	padding: 1%;
 	font-size: 2.7em;
 }
 
+#divButtonsGames {
+	position: absolute;
+	width: 100%;
+	top: 35%;
+}
+
 div.buttonForGame {
-	width: 30%;
-	vertical-align: middle;
-	text-align: center;
-	padding-top: 1.5em;
-	padding-bottom: 1.5em;
+	display: inline-block;
+	width: 25%;
+	padding-top: 4%;
+	padding-bottom: 4%;
 	font-size: 1.5em;
 	margin: 1.0em;
-	margin-top: 2.0em;
-	margin-bottom: 2.0em;
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
 	cursor: pointer;
+	color: #000;
+	font-weight: bold;
+	background-image: url("../images/pergamena_background.fw.png");
+	background-size: 100% 100%;
 }
 
 #buttonExit {
-	display: block;
-	margin: auto;
-	height: 2.5em;
-	width: 30%;
-	background-color: #F00;
-	color: #FFF;
-	font-weight: bold;
-	font-size: 1.1em;
-	border-top-left-radius: 15% 50%;
-	border-bottom-left-radius: 15% 50%;
-	border-top-right-radius: 15% 50%;
-	border-bottom-right-radius: 15% 50%;
+	display: inline-block;
+	width: auto;
+	height: auto;
+	position: absolute;
+	top: 5%;
+	right: 2%;
+	padding: 1.0em;
+	background-image: url("../images/close.png");
+	background-size: 100% 100%;
 	cursor: pointer;
-	-webkit-box-shadow: none;
-	box-shadow: none;
 	border: 0em;
 }
