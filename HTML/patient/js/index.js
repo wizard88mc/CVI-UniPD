@@ -152,18 +152,20 @@ $('document').ready(function(e) {
 			height: getScreenHeight()
 		});
 		
-		$('#divMainContent').addClass('ui-corner-all');
+		$('#divMainContent').css('height', getScreenHeight());
 		
 		$('<h1>').text('Ciao ' + patientName).addClass("title").appendTo('#divMainContent');
 		$('<h1>').text('A cosa giochiamo oggi???').appendTo('#divMainContent');
 		
-		var divCatchMe = $('<div>').attr('id', 'buttonCatchMe').text('Prendimi!')
-			.addClass('buttonForGame').appendTo('#divMainContent');
-		var divHelpMe = $('<div>').attr('id', 'buttonHelpMe').text('Aiutami!')
-			.addClass('buttonForGame').appendTo('#divMainContent');
+		var divContainer = $('<div>').attr('id', 'divButtonsGames').appendTo('#divMainContent');
 		
-		divCatchMe.button();
-		divHelpMe.button();
+		var divCatchMe = $('<div>').attr('id', 'buttonCatchMe').text('Prendimi!')
+			.addClass('buttonForGame').appendTo(divContainer);
+		var divHelpMe = $('<div>').attr('id', 'buttonHelpMe').text('Aiutami!')
+			.addClass('buttonForGame').appendTo(divContainer);
+		
+		//divCatchMe.button();
+		//divHelpMe.button();
 		
 		divCatchMe.on('click', function() {
 			location.replace('../catchMe/index.html');
@@ -172,8 +174,8 @@ $('document').ready(function(e) {
 			location.replace('../helpMe/index.html')
 		});
 		
-		var logout = $('<button>').attr('id', 'buttonExit')
-			.text('Esci').appendTo('#divMainContent');
+		var logout = $('<div>').attr('id', 'buttonExit')
+			.appendTo('#divMainContent');
 		
 		logout.on('click', function() {
 			
