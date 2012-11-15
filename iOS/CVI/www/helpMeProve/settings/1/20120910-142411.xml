@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<levels>
+<level targetFamily="animali" type="2x0">
+<image type="T" imageID="2" />
+</level>
+<level targetFamily="animali" type="2x0">
+<image type="T" imageID="2" />
+</level>
+<level targetFamily="macchine" type="1x0">
+<image type="T" imageID="5" />
+</level>
+<level targetFamily="fiori" type="1x0">
+<image type="T" imageID="9" />
+</level>
+</levels>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+
+<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+Remove this if you use the .htaccess -->
+
+<title>prova</title>
+<meta name="description" content="" />
+<meta name="author" content="Matteo" />
+
+<script src="js/jquery-1.7.2.min.js"></script>
+<script src="js/jquery-ui-1.8.20.custom.min.js"></script>
+
+
+<script>
+
+$.ajax({
+	url:'server/GetGameSettingsCatchMe.php',
+	data: {
+		patientID: "1"
+	},
+	type: "POST",
+	success: function(message) {
+		console.log(message);
+	}
+})
+
+</script>
+
+</head>
+
+<body>
+
+</body>
+</html>
