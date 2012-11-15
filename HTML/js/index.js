@@ -51,6 +51,8 @@ function checkLogin(e) {
 				}
 			})
 			
+			var pageAddress = SERVER_ADDRESS + '/server/CheckLogin.php'; 
+			
 			$.ajax({
 				url: SERVER_ADDRESS + '/server/CheckLogin.php',
 				type: 'POST',
@@ -58,6 +60,7 @@ function checkLogin(e) {
 				success: function(message) {
 					
 					var data = JSON.parse(message);
+					console.log(data);
 					
 					if (data.CORRECT == "true") {
 						loginCorrect(data);
@@ -65,10 +68,11 @@ function checkLogin(e) {
 					else {
 						loginIncorrect();
 					}
-				},
+				}/*,
 				error: function(message) {
-					loginIncorrect();
-				}
+					console.log(message);
+					//loginIncorrect();
+				}*/
 			});
 		}
 		else {
@@ -297,6 +301,29 @@ $(document).ready(function(e) {
 		
 		$('#buttonLogin').button();
 		$('#buttonLogin').click(checkLogin);
+		
+		if (!navigator.onLine && !getFromLocalStorage('username') 
+				&& !getFromLocalStorage('password') && !getFromLocalStorage('permission')) {
+			
+			$('<p>').text('Per poter utilizzare l\'applicazione in modalità offline è necessario collegarsi alla rete almeno una volta.').appendTo(
+					$('<div>').attr('id', 'dialogNeverConnected').attr('title', 'Errore!')
+					.appendTo(divPage));
+				
+			var width = getScreenWidth() * 0.5;
+				
+			$('#dialogNeverConnected').dialog({
+				modal: true, 
+				width: width,
+				buttons: {
+					Ok: function() {
+						$(this).dialog("close");
+						$(this).remove();
+					}
+				}, 
+				resizable: false,
+				draggable: false
+			});
+		}
 		
 		window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
 		

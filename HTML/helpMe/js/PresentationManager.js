@@ -174,6 +174,7 @@ function PresentationManager() {
     this.totalHeightIncrease = 0;
     this.totalScaleFactorIncrease = 0;
     this.timeToPerformMovement = 5;
+   // this.timeToPerformMovement = 1;
     
     utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioFrenata').appendTo('#divSounds'), 
     		"frenata");
@@ -207,10 +208,23 @@ this.buildPresentation = function() {
     this.slitta.drawElement();
     this.slitta.element.appendTo('#divMainContent');
     
+    /**
+     * First target point for gnomo, at some height
+     * of the screen on the left
+     */
     this.firstPoint = new DestinationPoint(4, 6, true);
    
+    /**
+     * Second target point for gnomo, at some height
+     * (higher than the first point) of the screen on
+     * the right
+     */
     this.secondPoint = new DestinationPoint(2, 3, false);
     
+    /**
+     * Defines the top position of the gnomo and the slitta
+     * at the end of the presentation
+     */
     this.thirdPoint = new DestinationPoint(1, 1, true);
     this.thirdPoint.slitta.left = -this.thirdPoint.slitta.left + getScreenWidth();
     this.thirdPoint.gnomo.left = this.thirdPoint.slitta.left + (this.thirdPoint.slitta.width + this.thirdPoint.gnomo.left);
@@ -222,6 +236,10 @@ this.buildPresentation = function() {
     	this.thirdPoint.slitta.top = newPosition;
     }
     
+    /**
+     * Point that the gnomo and slitta have to 
+     * arrive to stop down
+     */
     this.fourthPoint = new DestinationPoint(1, 1, true);
     this.fourthPoint.slitta.top = this.thirdPoint.slitta.top;
     this.fourthPoint.gnomo.top = this.thirdPoint.gnomo.top;
@@ -229,12 +247,20 @@ this.buildPresentation = function() {
     var difference = this.thirdPoint.slitta.left - this.fourthPoint.slitta.left;
     this.fourthPoint.gnomo.left = this.thirdPoint.gnomo.left - difference;
     
+    /**
+     * First point that the gnomo has to reach to move
+     * down from the slitta, the gnomo is moving to the
+     * top
+     */
     this.fifthPoint = new DestinationPoint(1, 1, true);
     this.fifthPoint.gnomo.left = this.fourthPoint.gnomo.left;
     this.fifthPoint.gnomo.top = this.fourthPoint.gnomo.top + 
     	(this.fourthPoint.slitta.top - (this.fourthPoint.gnomo.top + this.fourthPoint.gnomo.height)) / 2;
     this.fifthPoint.slitta.top = this.fourthPoint.slitta.top;
     
+    /**
+     * Last point for the gnomo down from the slitta
+     */
     this.sixthPoint = new DestinationPoint(1, 1, true);
     this.sixthPoint.gnomo.top = this.fifthPoint.slitta.top + this.fifthPoint.slitta.height +
     	(getScreenHeight() - (this.fifthPoint.slitta.top + this.fifthPoint.slitta.height)) / 2 - 

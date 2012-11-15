@@ -431,20 +431,21 @@ var HelpMeSettingsNamespace = {
 			index = Number(index);
 			var currentLevel = listOfLevels[index];
 
-			$('<li><a href="#level' + index + '">' + (index + 1) + '</a></li>').appendTo('#menuTabs');
+			$('<a>').attr('href', '#level' + index).text(index + 1).appendTo($('<li>').appendTo('#menuTabs'));
 			
 			var title = HelpMeSettingsNamespace.buildLevelTitle(index, currentLevel.numberOfTargets, currentLevel.numberOfDistracters);
 			
-			var divLevel = $('<div id="level' + index + '"><h2>' + title + '</h2></div>').appendTo(divTabs);
+			var divLevel = $('<div>').attr('id', 'level' + index).appendTo(divTabs); 
+			$('<h2>').text(title).appendTo(divLevel);
 			
 			var select = HelpMeSettingsNamespace.buildSelectTargetFamily(currentLevel.targetFamily);
-			select.appendTo($('<div class="divSelectTargetFamily">Famiglia target: </div>').appendTo(divLevel));
+			select.appendTo($('<div>').addClass('divSelectTargetFamily').text('Famiglia target: ').appendTo(divLevel));
 			
 			var selectTime = HelpMeSettingsNamespace.buildMaxTimeSelect(currentLevel.maxTimeImage);
-			selectTime.appendTo($('<div class="divSelectMaxTime">Tempo massimo immagine: </div>').appendTo(divLevel));
+			selectTime.appendTo($('<div>').addClass('divSelectMaxTime').text('Tempo massimo immagine: ').appendTo(divLevel));
 			
 			var sequenceImages = currentLevel.sequence;
-			var table = $('<table class="tableLevel"></table>').appendTo(divLevel);
+			var table = $('<table>').addClass('tableLevel').appendTo(divLevel);
 			
 			for (var indexImages in sequenceImages) {
 				
@@ -456,8 +457,10 @@ var HelpMeSettingsNamespace = {
 				
 				var selectImage = HelpMeSettingsNamespace.buildSelectImages(image.imageID);
 				
-				var row = $('<tr><td class="columnImageType">'+target+'</td><td class="columnImageSelect"></td></tr>').appendTo(table)
+				var row = $('<tr>').appendTo(table)
 					.addClass('ui-widget-content');
+				$('<td>').addClass('columnImageType').text(target).appendTo(row);
+				$('<td>').addClass('columnImageSelect').appendTo(row);
 				selectImage.appendTo($('td.columnImageSelect').last());
 				
 				$('<img>').addClass('imgPreview')
