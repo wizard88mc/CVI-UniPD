@@ -1,7 +1,7 @@
 
 function Sacco() {
-    this.element = $('<div id="divSacco"></div>');
-    this.secondElement = $('<div id="divSaccoMezzo"></div>');
+    this.element = $('<div>').attr('id', 'divSacco');
+    this.secondElement = $('<div>').attr('id', 'divSaccoMezzo');
     
     	
 	this.width = getScreenWidth() / 5 * 2;
@@ -22,12 +22,14 @@ function Sacco() {
         'z-index': 1
     });
     
+    this.halfBagHeight = this.height * 0.7;
+    this.halfBagTop = getScreenHeight() - this.halfBagHeight;
     
     this.secondElement.css({
     	width: this.width + 'px',
-        height: this.height + 'px',
+        height: this.halfBagHeight + 'px',
         position: 'absolute',
-        top: getScreenHeight(),
+        top: getScreenHeight() + (this.height - this.halfBagHeight),
         left: this.drawingPosition.left,
         'background-image': 'url(images/sacco_mezzo.png)',
         'background-size': '100% 100%',
@@ -40,7 +42,7 @@ function Sacco() {
     		top: this.drawingPosition.top
     	});
     	this.secondElement.css({
-    		top: this.drawingPosition.top
+    		top: this.halfBagTop
     	});
     };
     
@@ -50,7 +52,7 @@ function Sacco() {
     	});
     	
     	this.secondElement.css({
-    		top: this.drawingPosition.top
+    		top: this.halfBagTop
     	});
     }
 

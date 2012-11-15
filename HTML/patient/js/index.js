@@ -166,10 +166,10 @@ $('document').ready(function(e) {
 		divHelpMe.button();
 		
 		divCatchMe.on('click', function() {
-			location.replace('../catchMe/');
+			location.replace('../catchMe/index.html');
 		});
 		divHelpMe.on('click', function() {
-			location.replace('../helpMe/')
+			location.replace('../helpMe/index.html')
 		});
 		
 		var logout = $('<button>').attr('id', 'buttonExit')
