@@ -580,6 +580,7 @@ function presentationEnded() {
 
 $('document').ready(function() {
 
+	console.log("Page loaded");
     gameManager.divMainContent = $('#divMainContent').width(getScreenWidth())
     	.height(getScreenHeight()).css('overflow', 'hidden');
 

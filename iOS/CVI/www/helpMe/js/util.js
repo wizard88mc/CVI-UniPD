@@ -67,6 +67,7 @@ getImagesFromSettings: function() {
 anotherImageRetrieved: function() {
 
     gameManager.imageRetrieved++;
+	debug.log("another image retrieved");
     if (gameManager.totalImageToRetrieve == gameManager.imageRetrieved) {
 
     	// devo aprire connessione e mettermi in attesa
