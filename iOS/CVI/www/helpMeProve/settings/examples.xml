@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<examples>
-    <example image="images/rosa.png" withHelp="true" insertIntoSacco="true" soundBefore="sound_prova.mp3" soundAfter="sound_prova.mp3"/>
-    <example image="images/biscuit.png" withHelp="false" insertIntoSacco="true" soundBefore="sound_prova.mp3" soundAfter="sound_prova.mp3"/>
-    <example image="images/biscuit.png" withHelp="true" insertIntoSacco="false" soundAfter="sound_prova.mp3"/>
-    <example image="images/biscuit.png" withHelp="true" insertIntoSacco="false" soundAfter="sound_prova.mp3"/>
-</examples>
