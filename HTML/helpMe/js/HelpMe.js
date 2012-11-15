@@ -29,8 +29,6 @@ function presentationComplete() {
 		if (data.TYPE == "GAME_SETTINGS") {
 			
 			livelliGioco = data.LEVELS;
-			console.log("Settings received");
-			console.log(livelliGioco);
 			
 			var packetToSend = {
 				'TYPE': 'SCREEN_MEASURES',

@@ -1,6 +1,7 @@
 
 // PageX e pageY di event sono valori interessanti
 var touchManagerNamespace = {
+		
     touchStart: function(event, ui) {
         if (gameManager.packetWithResults.FIRST_RESPONSE_TIME == 0) {
             gameManager.packetWithResults.FIRST_RESPONSE_TIME = new Date().getTime() - gameManager.startTimeObjectOnScreen;

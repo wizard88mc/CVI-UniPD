@@ -325,7 +325,24 @@ var frameAnimatorNamespace = {
     				if (event.originalEvent.propertyName === "left") {
     					
     					$(this).off(eventEndAnimation);
-    					frameAnimatorNamespace.moveGnomoToCenter();
+    					addTransitionSpecifications(presentationManager.slitta.element, 'none');
+    			    	addTransitionSpecifications(presentationManager.gnomo.element, 'none');
+    			    	
+    			    	presentationManager.gnomo.element.css({
+    			    		width: presentationManager.thirdPoint.gnomo.width,
+    			    		height: presentationManager.thirdPoint.gnomo.height,
+    			    		left: presentationManager.thirdPoint.gnomo.left,
+    			    		top: presentationManager.thirdPoint.gnomo.top
+    			    	});
+    			    	presentationManager.slitta.element.css({
+    			    		width: presentationManager.thirdPoint.slitta.width,
+    			    		height: presentationManager.thirdPoint.slitta.height,
+    			    		top: presentationManager.thirdPoint.slitta.top,
+    			    		left: presentationManager.thirdPoint.slitta.left
+    			    	});
+    			    	
+    			    	frameAnimatorNamespace.moveGnomoToCenter();
+    					
     				}
     			}).css({
     				width: presentationManager.secondPoint.slitta.width,
@@ -353,15 +370,15 @@ var frameAnimatorNamespace = {
     	addTransitionSpecifications(presentationManager.gnomo.element, transition);
     	
     	presentationManager.gnomo.element.css({
-    		width: presentationManager.thirdPoint.gnomo.width,
-    		height: presentationManager.thirdPoint.gnomo.height,
-    		left: presentationManager.thirdPoint.gnomo.left,
-    		top: presentationManager.thirdPoint.gnomo.top
+    		width: presentationManager.fourthPoint.gnomo.width,
+    		height: presentationManager.fourthPoint.gnomo.height,
+    		left: presentationManager.fourthPoint.gnomo.left,
+    		top: presentationManager.fourthPoint.gnomo.top
     	});
     	
     	presentationManager.slitta.element.on(eventEndAnimation, function(event) {
     		
-    		if (event.originalEvent.propertyName === "top") {
+    		/*if (event.originalEvent.propertyName === "top") {
     			
     			$(this).off(eventEndAnimation);
     			
@@ -377,7 +394,7 @@ var frameAnimatorNamespace = {
     	    		top: presentationManager.fourthPoint.gnomo.top
     	    	});
     	    	
-    	    	presentationManager.slitta.element.on(eventEndAnimation, function(event) {
+    	    	presentationManager.slitta.element.on(eventEndAnimation, function(event) {*/
     	    		
     	    		if (event.originalEvent.propertyName === "left") {
     	    			
@@ -432,20 +449,20 @@ var frameAnimatorNamespace = {
     	    			}, 1000);
     	    			
     	    		}
-    	    	}).css({
+    	    	/*}).css({
     	    		width: presentationManager.fourthPoint.slitta.width,
     	    		height: presentationManager.fourthPoint.slitta.height,
     	    		left: presentationManager.fourthPoint.slitta.left,
     	    		top: presentationManager.fourthPoint.slitta.top
     	    	});
     			
-    		}
+    		}*/
     		
     	}).css({
-    		width: presentationManager.thirdPoint.slitta.width,
-    		height: presentationManager.thirdPoint.slitta.height,
-    		left: presentationManager.thirdPoint.slitta.left,
-    		top: presentationManager.thirdPoint.slitta.top
+    		width: presentationManager.fourthPoint.slitta.width,
+    		height: presentationManager.fourthPoint.slitta.height,
+    		left: presentationManager.fourthPoint.slitta.left,
+    		top: presentationManager.fourthPoint.slitta.top
     	});
 }, 
 
