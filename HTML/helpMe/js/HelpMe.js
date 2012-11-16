@@ -59,7 +59,7 @@ function presentationComplete() {
 		else if (data.TYPE == 'GO_BACK') {
 			
 			websocket.close();
-			location.replace('../patient/index.html');
+			location.replace(SERVER_ADDRESS + '/patient/index.html');
 		}
 		else if (data.TYPE == "STOP_GAME") {
 			gameManager.gameInProgress = false;
@@ -430,7 +430,7 @@ function localFileSystemInitializationComplete() {
 		console.log("Sending request");
 		
 		$.ajax({
-			url: '../server/GetLevelsHelpMe.php',
+			url: SERVER_ADDRESS + '/server/GetLevelsHelpMe.php',
 			type: "POST",
 			data: {
 				patientID: patientID

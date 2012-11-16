@@ -1,11 +1,11 @@
-datiEyeTracker = [];
-maxEyeTracker =  -1;
-datiTouch = [];
-maxTouch = -1;
-movements = new Object();
-imagePositions = new Object();
-touchPositions = new Object();
-eyesPositions = new Object();
+datiEyeTracker = null;
+maxEyeTracker =  null;
+datiTouch = null;
+maxTouch = null;
+movements = null;
+imagePositions = null;
+touchPositions = null;
+eyesPositions = null;
 
 	
 timing = null;
@@ -43,6 +43,17 @@ var CatchMeNamespace = {
 		else if (dataReceived.TYPE == "TRAINING_SESSION" && dataReceived.DATA == "false") {
 			
 			websocket.onmessage = CatchMeNamespace.manageMessagesGame;
+			
+			datiEyeTracker = [];
+			maxEyeTracker =  -1;
+			datiTouch = [];
+			maxTouch = -1;
+			movements = new Object();
+			imagePositions = new Object();
+			touchPositions = new Object();
+			eyesPositions = new Object();
+			currentSpeedValue = -1;
+			
 		
 			$('<div id="dialogWaitingToStart" title="Pronto a cominciare"><p>Non appena tutto sarà pronto, cliccare su Ok per iniziare</p></div>').appendTo('#divMainContent');
 			$('#dialogWaitingToStart').dialog({

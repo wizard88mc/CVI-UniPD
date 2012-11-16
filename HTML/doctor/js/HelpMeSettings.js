@@ -365,7 +365,7 @@ var HelpMeSettingsNamespace = {
 			$('<h2>').text(levelTitle).appendTo(divLevel);
 			
 			var select = HelpMeSettingsNamespace.buildSelectTargetFamily();
-			select.appendTo($('<div>').addClass('divSelectTargetFamily').text('Famiglia target: ')).appendTo(divLevel));
+			select.appendTo($('<div>').addClass('divSelectTargetFamily').text('Famiglia target: ')).appendTo(divLevel);
 			
 			var selectTime = HelpMeSettingsNamespace.buildMaxTimeSelect();
 			selectTime.appendTo($('<div>').addClass('divSelectMaxTime').text('Tempo massimo immagine: ').appendTo(divLevel));
@@ -376,7 +376,7 @@ var HelpMeSettingsNamespace = {
 				
 				var selectImage = HelpMeSettingsNamespace.buildSelectImages(-1);
 				
-				var row = $('<tr></tr>').appendTo(table)
+				var row = $('<tr>').appendTo(table)
 					.addClass('ui-widget-content');
 				$('<td>').addClass('columnImageType').text('T').appendTo(row);
 				$('<td>').addClass('columnImageSelect').appendTo(row);

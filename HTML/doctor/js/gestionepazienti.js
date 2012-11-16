@@ -186,6 +186,10 @@ function drawHelpMeTable(visits) {
 function drawTable(newTable) {
 	
 	var visits = listOfPatients[currentPatientID];
+	$('#imgGoBack').off('click').on('click', function() {
+		location.replace('../index.html');
+	});
+	
 	
 	if (newTable) {
 		if (visits.CatchMe.length > 0) {
@@ -244,7 +248,7 @@ function savePatientVisits(patientID) {
 	
 	if ($('#divTableContainer').length == 0) {
 		
-		$('<div id="divTableContainer"></div>').appendTo('#divMainContent');
+		$('<div>').attr('id', 'divTableContainer').appendTo('#divMainContent');
 	}
 	
 	if (patientID != '') {
@@ -257,7 +261,9 @@ function savePatientVisits(patientID) {
 		}
 		
 		if ($('#imgPreloaderMiddle').length == 0) {
-			$('<img id="imgPreloaderMiddle" alt="In attesa dati visite" src="../images/preloader.gif" />').appendTo('#divTableContainer');
+			$('<img>').attr('id', 'imgPreloaderMiddle')
+				.attr('alt', 'In attesa dati visite')
+				.attr('src', '../images/preloader.gif').appendTo('#divTableContainer');
 		}
 		
 		$('#imgPreloaderMiddle').fadeIn(1000, function() {
@@ -313,7 +319,8 @@ function makeRequestForGraphData(visitID) {
 							drawGraph(true);
 						}
 						catch(Err) {
-							console.log(data);
+							console.log("Error in makeRequestForGraphData");
+							console.log(Err);
 						}
 					}
 				});
@@ -361,11 +368,20 @@ function makeRequestForExercisesStory(visitID) {
 
 function drawGraph(differentValues) {
 	
+	$('#imgGoBack').off('click');
+	$('#imgGoBack').on('click', function() {
+		
+		$('#divBackButtonContainer, #divGrafo').fadeOut('fast', function() {
+			$('#imgPreloaderMiddle').fadeIn('fast', function() {
+				drawTable(false);	
+			});
+		});
+	});
 	
 	if (differentValues) {
 		
 		if ($('#divGrafo').length == 0) {
-			$('<div id="divGrafo"></div>').appendTo('#divTableContainer');
+			$('<div>').attr('id', 'divGrafo').appendTo('#divTableContainer');
 			$('#divGrafo').height(getScreenHeight() * 0.5);
 			
 			$('#divGrafo').bind('plothover', function(event, pos, item) {
@@ -381,20 +397,6 @@ function drawGraph(differentValues) {
 					
 					$('#tooltip').remove();
 				}
-			});
-			
-			$('#imgGoBack').off('click');
-			$('#imgGoBack').one('click', function() {
-				
-				$(this).on('click', function() {
-					location.replace('../index.html');
-				})
-				
-				$('#divBackButtonContainer, #divGrafo').fadeOut('fast', function() {
-					$('#imgPreloaderMiddle').fadeIn('fast', function() {
-						drawTable(false);	
-					});
-				});
 			});
 		}
 		
@@ -416,7 +418,6 @@ function drawGraph(differentValues) {
 			
 			var eye = parseInt(objectInfo.DELTA_EYE);
 			var touch = parseInt(objectInfo.DELTA_TOUCH);
-			console.log(touch);
 			
 			if (eye > touch && eye > maxY) {
 				if (eye > maxY) {
@@ -475,41 +476,43 @@ function drawGraph(differentValues) {
 
 function drawHelpMeReport(differentValues) {
 	
+	
+	$('#imgGoBack').off('click');
+	$('#imgGoBack').on('click', function() {
+		
+		$('#divBackButtonContainer, #listExercises').fadeOut('fast', function() {
+			$('#imgPreloaderMiddle').fadeIn('fast', function() {
+				drawTable(false);	
+			})
+		});
+	});
+	
 	if (differentValues) {
 		
 		$('#listExercises').remove();
 		
-		var list = $('<dl id="listExercises"></dl>').appendTo('#divTableContainer');
+		var list = $('<dl>').attr('id', 'listExercises').appendTo('#divTableContainer');
 		list.css({
 			display: 'none'
-		});
-		
-		
-		
-		$('#imgGoBack').off('click');
-		$('#imgGoBack').on('click', function() {
-			
-			$(this).off('click');
-			$(this).on('click',function(){
-				location.replace('../index.html');
-			});
-			
-			$('#divBackButtonContainer, #listExercises').fadeOut('fast', function() {
-				$('#imgPreloaderMiddle').fadeIn('fast', function() {
-					drawTable(false);	
-				})
-			});
 		});
 		
 		
 		for(var element in lastDataReceived) {
 			
 			var listOfExercises = lastDataReceived[element];
-			var dataTerm = $('<dt>Famiglia target: ' + element + '</dt>').appendTo(list);
-			var image = $('<img src="../images/show_more.png" alt="Dettagli" />').prependTo(dataTerm);
-			image.on('click', moreDetails);
-			var dd = $('<dd></dd>').css('display', 'none').appendTo(list);
-			var table = $('<table><thead><tr class="ui-widget-header"><th>Nome Oggetto</th><th>Ogg. Target</th><th>FRT (ms)</th><th>CT (ms)</th><th>Risp. Corretta</th></tr></thead></table>').appendTo(dd);
+			var dataTerm = $('<dt>').text('Famiglia target: ' + element).appendTo(list);
+			$('<img>').attr('src', '../images/show_more.png').attr('alt', 'Dettagli')
+				.prependTo(dataTerm).on('click', moreDetails);
+			
+			var dd = $('<dd>').css('display', 'none').appendTo(list);
+			var table = $('<table>').appendTo(dd);
+			$('<thead>').appendTo(table);
+			var row = $('<tr>').addClass('ui-widget-header').appendTo(table);
+			$('<th>').text('Nome Oggetto').appendTo(row);
+			$('<th>').text('Ogg. Target').appendTo(row);
+			$('<th>').text('FRT (ms)').appendTo(row);
+			$('<th>').text('CT (ms)').appendTo(row);
+			$('<th>').text('Risp. Corretta').appendTo(row);
 			
 			var totalNumber = listOfExercises.length;
 			var totalFRT = 0;

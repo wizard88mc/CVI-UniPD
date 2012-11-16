@@ -143,12 +143,12 @@ requestGameSettings: function() {
 			$('#waitingParameters').dialog("close");
 			$('#waitingParameters').remove();
 			
-			try {
+			//try {
 				CatchMeSettingsNamespace.setGameSettings(JSON.parse(message));
-			}
-			catch(error) {
-				console.log(message);
-			}
+			//}
+			//catch(error) {
+				//console.log(message);
+			//}
 		}
 	});
 },
@@ -353,15 +353,29 @@ setGameSettings: function(data) {
 	
 	gameSettings.speed = data.SPEED;
 	
-	$('<input>').attr('id', 'sliderSpeed').attr('type', 'slider')
+	/*var divSliderContainer = $('<div>').addClass('divContainerSlider').appendTo(divSpeed);
+	
+	var slider = $('<input>').attr('id', 'sliderSpeed').attr('type', 'slider')
 		.attr('name', 'speed')
-		.attr('value', gameSettings.speed)
 		.slider({
 			from: 1, to: 10, step: 1, format: {format: '#'},
 			onstatechange: CatchMeSettingsNamespace.updateLabelSpeed
-	}).appendTo($('<div>').addClass('divContainerSlider').appendTo(divSpeed))
+	});
+	slider.attr('value', gameSettings.speed);
+	slider.appendTo(divSliderContainer);
 	
-	$('<span>').attr('id', 'labelSpeed').appendTo(divSpeed);
+	$('<span>').attr('id', 'labelSpeed').appendTo(divSpeed);*/
+	
+	$('<input>').attr('id', 'sliderSpeed').attr('type', 'slider')
+		.attr('name', 'speed')
+		.appendTo($('<div class="divContainerSlider"></div>').appendTo(divSpeed));
+	
+	$('<span id="labelSpeed"></span>').appendTo(divSpeed);
+	$('#sliderSpeed').attr('value', gameSettings.speed)
+	$('#sliderSpeed').slider({
+		from: 1, to: 10, step: 1, format: {format: '#'},
+		onstatechange: CatchMeSettingsNamespace.updateLabelSpeed
+	});
 	
 	var divImage = $('<div>').attr('id', 'divImage')
 		.addClass('ui-widget-content ui-corner-all')
