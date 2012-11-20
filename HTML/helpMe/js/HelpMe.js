@@ -59,7 +59,7 @@ function presentationComplete() {
 		else if (data.TYPE == 'GO_BACK') {
 			
 			websocket.close();
-			location.replace(SERVER_ADDRESS + '/patient/index.html');
+			location.replace('../patient/index.html');
 		}
 		else if (data.TYPE == "STOP_GAME") {
 			gameManager.gameInProgress = false;
@@ -148,6 +148,7 @@ function resetLevel() {
 
 function manageLevels(repeatLevel) {
 
+	console.log(repeatLevel);
     if (repeatLevel) {
         gameManager.currentLevelRepetition++;
 
@@ -163,7 +164,6 @@ function manageLevels(repeatLevel) {
         gameManager.levelCompletedCorrectly = true;
     }
 
-    gameManager.gameInProgress = false;
     if (gameManager.levelIndex < livelliGioco.length && gameManager.gameInProgress) {
     	
     	resetLevel();
@@ -171,7 +171,6 @@ function manageLevels(repeatLevel) {
         gameManager.currentLevel = livelliGioco[gameManager.levelIndex];
 
         utilsNamespace.istantiateLevel(gameManager.currentLevel);
-        gameManager.currentLevelRepetition = 1;
 
         $('#audioLevel').on('ended', function() {
             manageImageObjectsLevel();
@@ -194,6 +193,7 @@ function manageLevels(repeatLevel) {
     		
     		$('#divSacco').remove();
     		$('#divSaccoMezzo').remove();
+    		$('#divCestino').remove();
             
             $('body').css({
             	'background-image': 'url(images/ZZ10042.jpg)'
@@ -205,7 +205,6 @@ function manageLevels(repeatLevel) {
             presentationManager.slitta.element.css({
             	'visibility': 'visible'
             });
-            
             
             setTimeout(function() {
 	            $('#divSounds #gnomoSaysGoodbye').on('ended', function() {
@@ -224,7 +223,7 @@ function manageImageObjectsLevel() {
     gameManager.indexImageObject++;
 
 
-    if (gameManager.indexImageObject < oggettiPerLivello.length) {
+    if (gameManager.indexImageObject < oggettiPerLivello.length && gameManager.gameInProgress) {
         gameManager.currentImage = oggettiPerLivello[gameManager.indexImageObject];
 
         // instantiation of a new object on the screen
@@ -261,23 +260,29 @@ function levelComplete() {
     	top: getScreenHeight()
     }).one('transitionend webkitTransitionEnd oTransitionEnd', function() {
     	
-    	manageLevels(!gameManager.levelCompletedCorrectly);
+    	setTimeout(function() {
+    		manageLevels(!gameManager.levelCompletedCorrectly);
+    	}, 1000);
+    	
     });
     
+    var topSecondElement = getScreenHeight() + 
+    	(sacco.height - sacco.halfBagHeight);
+    
     sacco.secondElement.css({
-    	top: getScreenHeight()
+    	top: topSecondElement 
     });
     
 }
 
-function reproduceGoodAnswerSound() {
+function playGoodAnswerSound() {
 	
 	var numberOfElements = $('#divSounds #soundsGoodAnswer audio').length;
 	
 	$('#divSounds #soundsGoodAnswer audio').get(Math.floor(Math.random() * numberOfElements)).play();
 }
 
-function reproduceBadAnswerSound() {
+function playBadAnswerSound() {
 	
 	var numberOfElements = $('#divSounds #soundsBadAnswer audio').length;
 	
@@ -300,7 +305,7 @@ function objectInsertedIntoSacco() {
         
         gameManager.imageRightAnswer.show();
         
-        reproduceGoodAnswerSound();
+        playGoodAnswerSound();
     }
     // Not a target object: MISTAKE
     else { 
@@ -310,7 +315,7 @@ function objectInsertedIntoSacco() {
         
         gameManager.imageBadAnswer.show();
         
-        reproduceBadAnswerSound();
+        playBadAnswerSound();
     }
 
     websocket.send(JSON.stringify(gameManager.packetWithResults))
@@ -345,7 +350,7 @@ function timeExpired(intoBin) {
 
         gameManager.packetWithResults.RIGHT_ANSWER = true;
         gameManager.imageRightAnswer.show();
-        reproduceGoodAnswerSound();
+        playGoodAnswerSound();
     }
 
     websocket.send(JSON.stringify(gameManager.packetWithResults))
@@ -437,16 +442,17 @@ function localFileSystemInitializationComplete() {
 			},
 			success: function(data) {
 				
+				console.log(data);
 				livelliGioco = JSON.parse(data);
 				
 				// x saltare presentazione
 				/*presentationManager = new PresentationManager();
 				presentationManager.createElements();*/
 				try {
-					/*initGame();
-					allExamplesCompleted();*/
-					presentationManager = new PresentationManager();
-					presentationManager.createElements();
+					initGame();
+					allExamplesCompleted();
+					/*presentationManager = new PresentationManager();
+					presentationManager.createElements();*/
 				}
 				catch(error) {
 					console.log("Errore in localFileSystemInitializationComplete");

@@ -30,15 +30,15 @@ function drawCatchMeTable(visits) {
 		});
 	}
 
-	var table = $('<table id="tableVisitsCatchMe"></table>');
-	$('<caption>Gioco Prendimi!</caption>').addClass('ui-widget-header').appendTo(table);
+	var table = $('<table>').attr('id', 'tableVisitsCatchMe');
+	$('<caption>').text('Gioco Prendimi!').addClass('ui-widget-header').appendTo(table);
 	var thead = $('<thead></thead>').addClass('ui-widget-header').appendTo(table);
 	$('<tr>').appendTo(thead);
-	$('<th>Data</th>').appendTo(thead);
-	$('<th>Valutazione Vista</th>').appendTo(thead);
-	$('<th>Valutazione Tocco</th>').appendTo(thead);
-	$('<th>Casa/Studio</th>').addClass('smallColumn').appendTo(thead);
-	$('<th>Visualizza Grafico</th>').appendTo(thead);
+	$('<th>').text('Data').appendTo(thead);
+	$('<th>').text('Valutazione Vista').appendTo(thead);
+	$('<th>').text('Valutazione Tocco').appendTo(thead);
+	$('<th>').text('Casa/Studio').addClass('smallColumn').appendTo(thead);
+	$('<th>').text('Visualizza Grafico').appendTo(thead);
 			
 	var body;
 	if (visits.length > 0) {
@@ -509,16 +509,19 @@ function drawHelpMeReport(differentValues) {
 			$('<thead>').appendTo(table);
 			var row = $('<tr>').addClass('ui-widget-header').appendTo(table);
 			$('<th>').text('Nome Oggetto').appendTo(row);
-			$('<th>').text('Ogg. Target').appendTo(row);
-			$('<th>').text('FRT (ms)').appendTo(row);
-			$('<th>').text('CT (ms)').appendTo(row);
-			$('<th>').text('Risp. Corretta').appendTo(row);
+			$('<th>').text('Ogg. Target').addClass('smallerColumn').appendTo(row);
+			$('<th>').text('Tempo risposta (ms)').appendTo(row);
+			$('<th>').text('Tempo Completamento (ms)').appendTo(row);
+			$('<th>').text('Risp. Corretta').addClass('smallerColumn').appendTo(row);
 			
 			var totalNumber = listOfExercises.length;
 			var totalFRT = 0;
 			var totalCT = 0;
 			var totalCorrect = 0;
 			var totalIncorrect = 0;
+			
+			var yesImage = $('<img>').attr('src', '../images/correct.png').addClass('imageAnswer');
+			var noImage = $('<img>').attr('src', '../images/incorrect.png').addClass('imageAnswer');
 			
 			
 			for (var index in listOfExercises) {
@@ -529,12 +532,24 @@ function drawHelpMeReport(differentValues) {
 				var ct = parseInt(listOfExercises[index].COMPLETION_TIME);
 				var rightAnswer = listOfExercises[index].RIGHT_ANSWER;
 				
-				var row = $('<tr></tr>').appendTo(table);
-				$('<td>'+objectName+'</td>').appendTo(row);
-				$('<td>'+isTarget+'</td>').appendTo(row);
-				$('<td>'+frt+'</td>').appendTo(row);
-				$('<td>'+ct+'</td>').appendTo(row);
-				$('<td>'+rightAnswer+'</td>').appendTo(row);
+				var row = $('<tr>').appendTo(table);
+				$('<td>').text(objectName).appendTo(row);
+				if (isTarget == "true") {
+					$('<img>').attr('src', '../images/correct.png').addClass('imageAnswer').attr('alt', 'Oggetto target')
+					.appendTo($('<td>').appendTo(row));
+				}
+				else {
+					$('<img>').attr('src', '../images/incorrect.png').addClass('imageAnswer').attr('alt', 'Oggetto non target')
+					.appendTo($('<td>').appendTo(row));
+				}
+				$('<td>').text(frt).appendTo(row);
+				$('<td>').text(ct).appendTo(row);
+				if (rightAnswer == "true") {
+					$('<img>').attr('src', '../images/correct.png').addClass('imageAnswer').attr('alt', 'Risposta corretta').appendTo($('<td>').appendTo(row));
+				}
+				else {
+					$('<img>').attr('src', '../images/incorrect.png').addClass('imageAnswer').attr('alt', 'Risposta corretta').appendTo($('<td>').appendTo(row));
+				}
 				
 				totalFRT += frt;
 				totalCT += ct;
@@ -546,11 +561,12 @@ function drawHelpMeReport(differentValues) {
 				}
 			}
 			
-			var totalsRow = $('<tr></tr>').css('font-weight', 'bold').appendTo(table);
-			$('<td></td><td>Valori medi: </td>').appendTo(totalsRow);
-			$('<td>'+ Math.round(totalFRT / totalNumber) +'</td>').appendTo(totalsRow);
-			$('<td>'+ Math.round(totalCT / totalNumber) +'</td>').appendTo(totalsRow);
-			$('<td>'+ totalCorrect + '/' + totalIncorrect +'</td>').appendTo(totalsRow);
+			var totalsRow = $('<tr>').css('font-weight', 'bold').appendTo(table);
+			$('<td>').appendTo(totalsRow);
+			$('<td>').text('Valori medi: ').appendTo(totalsRow);
+			$('<td>').text(Math.round(totalFRT / totalNumber)).appendTo(totalsRow);
+			$('<td>').text(Math.round(totalCT / totalNumber)).appendTo(totalsRow);
+			$('<td>').text(totalCorrect + '/' + totalIncorrect).appendTo(totalsRow);
 		}
 		
 		$('#imgPreloaderMiddle').fadeOut('normal', function() {
@@ -571,13 +587,16 @@ function drawHelpMeReport(differentValues) {
 $('document').ready(function() {
 	
 	
-	$('<div id="divChooseOptions"></div>').appendTo('#divMainContent');
-	$('<table id="tableSelectOptions"></table>').appendTo('#divChooseOptions');
+	$('<div>').attr('id', 'divChooseOptions').appendTo('#divMainContent');
+	$('<table>').attr('id', 'tableSelectOptions').appendTo('#divChooseOptions');
 	
-	var row = $('<tr></tr>').appendTo('#tableSelectOptions');
-	$('<td class="alignRight"><label for="selectPatient">Seleziona paziente: </label></td>').appendTo(row);
-	$('label[for="selectPatient"]').addClass('label');
-	$('<td><select id="selectPatient" name="selectPatient"></select></td>').appendTo(row);
+	var row = $('<tr>').appendTo('#tableSelectOptions');
+	$('<label>').attr('for', 'selectPatient')
+		.text('Seleziona paziente: ').addClass('label')
+		.appendTo($('<td>').addClass('alignRight').appendTo(row));
+	
+	$('<select>').attr('id', 'selectPatient').attr('name', 'selectPatient')
+	.appendTo($('<td>').appendTo(row));
 	$('#selectPatient').change(function() {
 		
 		if ($('#divTableContainer').children().length > 0) {
@@ -586,8 +605,10 @@ $('document').ready(function() {
 		// far entrare loader middle
 		savePatientVisits($(this).val());
 	});
-	$('<option value=""> - - - </option>').appendTo('#selectPatient');
-	$('<td><img id="imgPreloaderPatients" src="../images/preloader.gif" alt="In Attesa" /></td>').appendTo(row);
+	$('<option>').attr('value', '').text(' - - - ').appendTo('#selectPatient');
+	$('<img>').attr('id', 'imgPreloaderPatients').attr('src', '../images/preloader.gif')
+		.attr('alt', 'In Attesa').appendTo($('<td>').appendTo(row));
+	
 	$.ajax({
 		url: SERVER_ADDRESS + '/server/GetPatientsList.php',
 		type: 'POST',

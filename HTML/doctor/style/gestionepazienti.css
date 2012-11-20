@@ -185,3 +185,12 @@ dd table td {
 	padding-bottom: 0.4em;
 }
 
+table.smallerColumn {
+	width: 17%;
+}
+
+.imageAnswer {
+	width: 15%;
+	vertical-align: center;
+}
+

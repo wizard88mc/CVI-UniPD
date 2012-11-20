@@ -161,8 +161,8 @@ var HelpMeSettingsNamespace = {
 	
 	buildLevelTitle: function(index, targets, distracters) {
 		
-		return 'Livello <span class="levelIndex">' + (index + 1) + '</span> - T: ' + targets 
-		+ ' x D: ' + distracters;
+		return "Livello <span class=\"levelIndex\">" + (index + 1) + "</span> - T: " + targets 
+		+ " x D: " + distracters;
 	},
 	
 	makeRowSelectable: function(row) {
@@ -277,7 +277,7 @@ var HelpMeSettingsNamespace = {
 		console.log(fileName);
 		$.ajax({
 			type: "GET",
-			url: '../helpMe/settings/' + fileName,
+			url: SERVER_ADDRESS + '/helpMe/settings/' + fileName,
 			dataType: "xml",
 	        cache: 'false',
 	        success: function(xml) {
@@ -313,6 +313,9 @@ var HelpMeSettingsNamespace = {
 	buildDivSettings: function() {
 		
 		$('#divMainContent div').remove();
+		
+		$('#waitingParameters').dialog("close");
+		$('#waitingParameters').remove();
 		
 		$('#imgGoBack').off('click');
 		$('#imgGoBack').on('click', function() {
@@ -436,7 +439,7 @@ var HelpMeSettingsNamespace = {
 			var title = HelpMeSettingsNamespace.buildLevelTitle(index, currentLevel.numberOfTargets, currentLevel.numberOfDistracters);
 			
 			var divLevel = $('<div>').attr('id', 'level' + index).appendTo(divTabs); 
-			$('<h2>').text(title).appendTo(divLevel);
+			$('<h2>').html(title).appendTo(divLevel);
 			
 			var select = HelpMeSettingsNamespace.buildSelectTargetFamily(currentLevel.targetFamily);
 			select.appendTo($('<div>').addClass('divSelectTargetFamily').text('Famiglia target: ').appendTo(divLevel));
@@ -482,7 +485,7 @@ var HelpMeSettingsNamespace = {
 					width: '33%',
 				});
 		
-		$('<div>').attr('id', 'buttonMoveUp').text('&uarr;').appendTo(divButtons).button();
+		$('<div>').attr('id', 'buttonMoveUp').html("&uarr;").appendTo(divButtons).button();
 		$('#buttonMoveUp').on('click', function() {
 			var rowSelected = $('tr.ui-selected');
 			var rowIndex = rowSelected.parent().children().index(rowSelected);
@@ -491,7 +494,7 @@ var HelpMeSettingsNamespace = {
 				 rowSelected.insertBefore(rowSelected.parent().children().get(rowIndex - 1));
 			 }
 		})
-		$('<idv>').attr('id', 'buttonMoveDown').text('&darr;').appendTo(divButtons).button();
+		$('<idv>').attr('id', 'buttonMoveDown').html("&darr;").appendTo(divButtons).button();
 		$('#buttonMoveDown').on('click', function() {
 			var rowSelected = $('tr.ui-selected');
 			var rowIndex = rowSelected.parent().children().index(rowSelected);

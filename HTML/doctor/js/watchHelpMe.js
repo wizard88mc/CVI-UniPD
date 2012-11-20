@@ -41,12 +41,12 @@ var HelpMeNamespace = {
 		
 			HelpMeNamespace.prepareTable();	
 			
-			$('<div id="screenPreview"></div>').insertBefore('#tableResultsHelpMe');
+			$('<div>').attr('id', 'screenPreview').insertBefore('#tableResultsHelpMe');
 			
 			HelpMeNamespace.prepareLegend();
 			HelpMeNamespace.prepareCanvas();
 			
-			$('<div id="divButtonStopGame">Interrompi gioco</div>').insertBefore('#tableResultsHelpMe')
+			$('<div>').attr('id', 'divButtonStopGame').text('Interrompi gioco').insertBefore('#tableResultsHelpMe')
 			.button().on('click', function() {
 				
 				var packetToSend = {
@@ -58,7 +58,8 @@ var HelpMeNamespace = {
 				$(this).remove();
 			})
 			
-			$('<div id="dialogWaitingToStart" title="Pronto"><p>Non appena tutto sarà pronto, cliccare su Ok per iniziare la presentazione</p></div>').appendTo('#divMainContent')
+			$('<p>').text('Non appena tutto sarà pronto, cliccare su Ok per iniziare la presentazione').appendTo(
+			$('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Pronto').appendTo('#divMainContent')
 			.dialog({
 				modal: true,
 				resizable: false,
@@ -80,12 +81,13 @@ var HelpMeNamespace = {
 						
 					}
 				}
-			});
+			}));
 			
 		}
 		else if (data.TYPE == 'PRESENTATION_COMPLETE') {
 			
-			$('<div id="dialogWaitingToStart" title="Cominciamo!"><p>Presentazione completata. Premere Ok per iniziare il gioco</p></div>').appendTo('#divMainContent')
+			$('<p>').text('Presentazione completata. Premere Ok per iniziare il gioco').appendTo(
+			$('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Cominciamo!').appendTo('#divMainContent')
 			.dialog({
 				modal: true,
 				resizable: false,
@@ -110,7 +112,7 @@ var HelpMeNamespace = {
 						websocket.onmessage = HelpMeNamespace.messagesDuringGame;
 					}
 				}
-			});
+			}));
 		}
 		else {
 			console.log("Bad Message in entryFunction:");
@@ -230,11 +232,11 @@ var HelpMeNamespace = {
 				
 				var row = $('<tr id="' + targetFamily + indexCurrentLevel +'"></tr>');
 				row.appendTo(tableBody);
-				$('<td>Riepilogo</td>').appendTo(row);
-				$('<td>' + targetFamily + '</td>').appendTo(row);
-				$('<td class="meanValueFRT"></td>').appendTo(row);
-				$('<td class="meanValueCT"></td>').appendTo(row);
-				$('<td class="counts"></td>').appendTo(row);
+				$('<td>').text('Riepilogo').appendTo(row);
+				$('<td>').text('targetFamily').appendTo(row);
+				$('<td>').addClass('meanValueFRT').appendTo(row);
+				$('<td>').addClass('meanValueCT').appendTo(row);
+				$('<td>').addClass('counts').appendTo(row);
 			}
 			
 			firstResponseTimeValues[indexCurrentLevel].push(data.FIRST_RESPONSE_TIME);
@@ -300,7 +302,7 @@ var HelpMeNamespace = {
 	
 	prepareTable: function() {
 		
-		var table = $('<table id="tableResultsHelpMe"></table>').appendTo('#divMainContent');
+		var table = $('<table>').attr('id', 'tableResultsHelpMe').appendTo('#divMainContent');
 		$('<thead><tr><th>Oggetto</th><th>Famiglia Target</th><th>First Response Time (ms)</th><th>Tempo di completamento (ms)</th><th>Esatte / Errate</th></thead>')
 			.addClass('ui-widget-header').appendTo(table);
 			
@@ -309,7 +311,7 @@ var HelpMeNamespace = {
 	
 	prepareCanvas: function() {
 		
-		canvas = $('<canvas id="screenSimulator"></canvas>').prependTo('#screenPreview');
+		canvas = $('<canvas>').attr('id', 'screenSimulator').prependTo('#screenPreview');
 		
 		canvasObject = canvas.get(0);
 		
@@ -328,11 +330,12 @@ var HelpMeNamespace = {
 		context = canvasObject.getContext('2d');
 		context.lineWidth = 3;
 		
-		drawingSettings.mirinoEye = $('<img class="mirino" src="images/eye-new.png" />').appendTo('#screenPreview')
-		.css({
-			width: Math.floor(getScreenWidth() * 0.05),
-			height: Math.floor(getScreenWidth() * 0.05)
-		});
+		drawingSettings.mirinoEye = $('<img>').addClass('mirino')
+			.attr('src', 'images/eye-new.png').appendTo('#screenPreview')
+			.css({
+				width: Math.floor(getScreenWidth() * 0.05),
+				height: Math.floor(getScreenWidth() * 0.05)
+			});
 	},
 	
 	resetCanvas: function() {
@@ -348,17 +351,19 @@ var HelpMeNamespace = {
 	
 	prepareLegend: function() {
 		
-		var divLegend = $('<div id="divLegend"></div>').appendTo('#screenPreview');
+		var divLegend = $('<div>').attr('id', 'divLegend').appendTo('#screenPreview');
 		
-		$('<h2>Legenda</h2>').appendTo(divLegend).css({
+		$('<h2>').text('Legenda').appendTo(divLegend).css({
 			'font-size': '1.5em',
 			margin: '0em',
 			'text-align': 'center',
 			'margin-bottom': '0.3em'
 		});
 		
-		var list = $('<ul></ul>').appendTo(divLegend);
-		$('<li class="imageCenter">Centro Immagine</li><li class="touchCenter">Posizione tocco</li><li class="eyeCenter">Posizione Occhi</li>').appendTo(list);
+		var list = $('<ul>').appendTo(divLegend);
+		$('<li>').addClass('imageCenter').text('Centro immagine').appendTo(list);
+		$('<li>').addClass('touchCenter').text('Posizione tocco').appendTo(list);
+		$('<li>').addClass('eyeCenter').text('Posizione occhi').appendTo(list)
 		
 	}
 	

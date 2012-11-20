@@ -183,8 +183,10 @@ istantiateLevel: function(level) {
     utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioLevel').appendTo('#divSounds'), 
     		level.sound);
     
-    utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioBagComplete').appendTo('#divSounds'),
+    if (level.soundBagComplete != "") {
+    	utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioBagComplete').appendTo('#divSounds'),
     		level.soundBagComplete);
+    }
     
     utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioObjectNotInserted').appendTo('#divSounds'),
     		level.soundObjectNotInserted);
