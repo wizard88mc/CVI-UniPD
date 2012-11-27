@@ -30,6 +30,7 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
             boolean alreadyManaged = super.onMessage(conn, message);
             JSONObject packet = (JSONObject)JSONValue.parse(message);
 
+            //System.out.println(packet);
             if (packet.get("TYPE").equals("IDENTIFICATION") && clientConnected != null) {
                 BaseManager.eyeTrackerManager = this;
             }
@@ -53,6 +54,11 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
                 }
                 else if (packet.get("TYPE").equals("TRAINING_SESSION")) {
                     doctorManager.sendPacket(packet);
+                }
+                else {
+                    System.out.println("PACCHETTO NON CORRETTO eyeTrackerManager");
+                    System.out.println(packet);
+                    System.out.println("****************************");
                 }
             }
             return true;

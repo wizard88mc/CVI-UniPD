@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 09, 2012 at 02:38 PM
+-- Generation Time: Nov 22, 2012 at 01:51 PM
 -- Server version: 5.5.24-log
 -- PHP Version: 5.3.13
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `CatchMeEvaluation` (
   `EyeEvaluation` float DEFAULT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `IDVisit` (`IDVisit`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=315 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=327 ;
 
 --
 -- Dumping data for table `CatchMeEvaluation`
@@ -98,7 +98,19 @@ INSERT INTO `CatchMeEvaluation` (`ID`, `IDVisit`, `TouchEvaluation`, `EyeEvaluat
 (311, 351, 23.53, 0),
 (312, 352, 38.24, 0),
 (313, 354, 29.17, 0),
-(314, 355, 13.57, 0);
+(314, 355, 13.57, 0),
+(315, 360, 0, 0),
+(316, 356, 38.46, 0),
+(317, 361, 38.24, 0),
+(318, 363, 0, 0),
+(319, 362, 38.24, 0),
+(320, 365, 38.46, 0),
+(321, 368, 30.91, 0),
+(322, 369, 27.21, 0),
+(323, 370, 38.93, 0),
+(324, 371, 26.45, 0),
+(325, 372, 0, 0),
+(326, 373, 32.47, 0);
 
 -- --------------------------------------------------------
 
@@ -122,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `CatchMeExercises` (
   `ImageWidth` int(11) DEFAULT NULL,
   `CurrentValidSettings` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=24 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=25 ;
 
 --
 -- Dumping data for table `CatchMeExercises`
@@ -142,7 +154,8 @@ INSERT INTO `CatchMeExercises` (`ID`, `DefaultGravity`, `IDPatient`, `Movements`
 (20, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 19, 0),
 (21, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 0),
 (22, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 21, 0),
-(23, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 1);
+(23, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 1),
+(24, NULL, 4, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 4, 16, 1);
 
 -- --------------------------------------------------------
 
@@ -241,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `HelpMeEvaluation` (
   `WrongAnswers` int(11) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `IDVisit` (`IDVisit`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=31 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=35 ;
 
 --
 -- Dumping data for table `HelpMeEvaluation`
@@ -275,7 +288,11 @@ INSERT INTO `HelpMeEvaluation` (`ID`, `IDVisit`, `FirstResponseTime`, `Completio
 (27, 277, 4502, 7036, 1, 0),
 (28, 278, 4807, 7363, 1, 0),
 (29, 301, 4294, 15929, 1, 0),
-(30, 349, 771, 3285, 2, 0);
+(30, 349, 771, 3285, 2, 0),
+(31, 358, 730, 13438, 1, 1),
+(32, 357, 1509, 2340, 5, 2),
+(33, 367, 1509, 2340, 5, 2),
+(34, 366, 730, 13438, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -291,7 +308,7 @@ CREATE TABLE IF NOT EXISTS `HelpMeExercises` (
   `FileLevels` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `CurrentValidSettings` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene i livelli assegnati a ciascun paziente' AUTO_INCREMENT=23 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene i livelli assegnati a ciascun paziente' AUTO_INCREMENT=25 ;
 
 --
 -- Dumping data for table `HelpMeExercises`
@@ -303,7 +320,9 @@ INSERT INTO `HelpMeExercises` (`ID`, `DefaultGravity`, `IDPatient`, `FileLevels`
 (3, 'H', NULL, 'high.xml', NULL),
 (18, NULL, 1, '1/20120911-075034.xml', 0),
 (20, NULL, 1, '1/20120911-075801.xml', 1),
-(22, NULL, 1, '1/20120919-000101.xml', 0);
+(22, NULL, 1, '1/20120919-000101.xml', 0),
+(23, NULL, 1, '1/20121116-130037.xml', 0),
+(24, NULL, 1, '1/20121120-101816.xml', 0);
 
 -- --------------------------------------------------------
 
@@ -343,7 +362,7 @@ CREATE TABLE IF NOT EXISTS `MachinesOffset` (
   `Offset` varchar(500) COLLATE utf8_unicode_ci NOT NULL,
   `DateOffsetCalculation` date NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene tutti i valori di offset calcolati per le macchine utilizzate' AUTO_INCREMENT=137 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene tutti i valori di offset calcolati per le macchine utilizzate' AUTO_INCREMENT=190 ;
 
 --
 -- Dumping data for table `MachinesOffset`
@@ -458,7 +477,60 @@ INSERT INTO `MachinesOffset` (`ID`, `Offset`, `DateOffsetCalculation`) VALUES
 (133, '1.0,-0.7', '2012-10-07'),
 (134, '1.0,-0.7', '2012-10-07'),
 (135, '1.0,-0.7', '2012-10-07'),
-(136, '1.0,-0.7', '2012-10-08');
+(136, '1.0,-0.7', '2012-10-08'),
+(137, '1.0,-0.7', '2012-11-01'),
+(138, '1.0,-0.7', '2012-11-06'),
+(139, '1.0,1.2', '2012-08-06'),
+(140, '1.0,-0.7', '2012-11-06'),
+(141, '1.0,-0.7', '2012-11-06'),
+(142, '1.0,-0.7', '2012-11-06'),
+(143, '1.0,-0.7', '2012-11-06'),
+(144, '1.0,-0.7', '2012-11-06'),
+(145, '1.0,-1.8', '2012-08-06'),
+(146, '1.0,-0.8', '2012-11-06'),
+(147, '1.0,-0.7', '2012-11-06'),
+(148, '1.0,-0.7', '2012-11-06'),
+(149, '1.0,-0.7', '2012-11-06'),
+(150, '1.0,-0.8', '2012-11-06'),
+(151, '1.0,-0.7', '2012-11-06'),
+(152, '1.0,-0.7', '2012-11-06'),
+(153, '1.0,-0.8', '2012-11-06'),
+(154, '1.0,-0.7', '2012-11-06'),
+(155, '1.0,-0.8', '2012-11-06'),
+(156, '1.0,-0.7', '2012-11-06'),
+(157, '1.0,-0.8', '2012-11-06'),
+(158, '1.0,-0.8', '2012-11-06'),
+(159, '1.0,-0.6', '2012-11-13'),
+(160, '1.0,-0.8', '2012-11-13'),
+(161, '1.0,-0.7', '2012-11-13'),
+(162, '1.0,-0.7', '2012-11-13'),
+(163, '1.0,-0.6', '2012-11-13'),
+(164, '1.0,-0.6', '2012-11-13'),
+(165, '1.0,-0.6', '2012-11-13'),
+(166, '1.0,-14.5', '2012-11-14'),
+(167, '1.1,-14.7', '2012-11-14'),
+(168, '1.1,-14.8', '2012-11-14'),
+(169, '1.1,-15.8', '2012-11-14'),
+(170, '1.1,-15.7', '2012-11-14'),
+(171, '1.1,-15.8', '2012-11-14'),
+(172, '1.1,-14.8', '2012-11-14'),
+(173, '1.1,-14.8', '2012-11-14'),
+(174, '1.1,-14.7', '2012-11-14'),
+(175, '1.0,-0.8', '2012-11-14'),
+(176, '1.0,1.3', '2012-11-14'),
+(177, '1.1,-15.8', '2012-11-14'),
+(178, '1.0,1.2', '2012-11-14'),
+(179, '1.1,-14.5', '2012-11-14'),
+(180, '1.0,-0.8', '2012-11-14'),
+(181, '1.0,-0.8', '2012-11-14'),
+(182, '1.0,-0.8', '2012-11-14'),
+(183, '1.0,-0.8', '2012-11-14'),
+(184, '1.0,-0.8', '2012-11-14'),
+(185, '1.0,-0.8', '2012-11-14'),
+(186, '1.0,-0.8', '2012-11-14'),
+(187, '1.0,-0.8', '2012-11-14'),
+(188, '1.0,-0.8', '2012-11-14'),
+(189, '1.0,-0.8', '2012-11-14');
 
 -- --------------------------------------------------------
 
@@ -506,7 +578,7 @@ CREATE TABLE IF NOT EXISTS `Visits` (
   `Folder` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `IsAtHome` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=356 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=375 ;
 
 --
 -- Dumping data for table `Visits`
@@ -853,7 +925,26 @@ INSERT INTO `Visits` (`ID`, `Date`, `IDPatient`, `IDGame`, `Folder`, `IsAtHome`)
 (352, '2012-10-05', 1, 1, 'archivio_visite/1/2012-10-05-17-48-352/', 1),
 (353, '2012-10-07', 1, 1, 'archivio_visite/1/2012-10-7-11-12-353/', 0),
 (354, '0000-00-00', 1, 1, 'archivio_visite/1/1-2012-10-8-1-354/', 1),
-(355, '2012-10-08', 1, 1, 'archivio_visite/1/2012-10-8-18-17-355/', 0);
+(355, '2012-10-08', 1, 1, 'archivio_visite/1/2012-10-8-18-17-355/', 0),
+(356, '2012-10-08', 1, 1, 'archivio_visite/1/2012-10-08-16-53-356/', 1),
+(357, '2012-10-08', 1, 2, 'archivio_visite/1/2012-10-08-11-2-357/', 1),
+(358, '2012-10-08', 1, 2, 'archivio_visite/1/2012-10-08-14-13-358/', 1),
+(359, '2012-10-08', 1, 1, 'archivio_visite/1/2012-10-08-16-59-359/', 1),
+(360, '2012-10-09', 1, 1, 'archivio_visite/1/2012-10-09-20-7-360/', 1),
+(361, '2012-09-05', 1, 1, 'archivio_visite/1/2012-09-05-17-48-361/', 1),
+(362, '2012-09-05', 1, 1, 'archivio_visite/1/2012-09-05-17-48-362/', 1),
+(363, '2012-10-09', 1, 1, 'archivio_visite/1/2012-10-09-20-7-363/', 1),
+(364, '2012-10-08', 1, 1, 'archivio_visite/1/2012-10-08-16-59-364/', 1),
+(365, '2012-10-08', 1, 1, 'archivio_visite/1/2012-10-08-16-53-365/', 1),
+(366, '2012-10-08', 1, 2, 'archivio_visite/1/2012-10-08-14-13-366/', 1),
+(367, '2012-10-08', 1, 2, 'archivio_visite/1/2012-10-08-11-2-367/', 1),
+(368, '2012-11-06', 1, 1, 'archivio_visite/1/2012-11-6-16-53-368/', 0),
+(369, '2012-11-16', 1, 1, 'archivio_visite/1/2012-11-16-10-25-369/', 0),
+(370, '2012-11-16', 4, 1, 'archivio_visite/4/2012-11-16-10-29-370/', 0),
+(371, '2012-11-16', 4, 1, 'archivio_visite/4/2012-11-16-11-14-371/', 0),
+(372, '2012-11-16', 2, 1, 'archivio_visite/2/2012-11-16-11-16-372/', 0),
+(373, '2012-11-16', 1, 1, 'archivio_visite/1/2012-11-16-11-21-373/', 0),
+(374, '2012-11-20', 1, 2, 'archivio_visite/1/2012-11-20-11-20-374/', 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

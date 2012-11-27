@@ -4,7 +4,7 @@ function Sacco() {
     this.secondElement = $('<div>').attr('id', 'divSaccoMezzo');
     
     	
-	this.width = getScreenWidth() / 5 * 2;
+	this.width = getScreenWidth() / 5 * 3;
     if (this.width < 768 / 2) {
         this.width = 768 / 2;
     }

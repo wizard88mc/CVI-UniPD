@@ -155,14 +155,13 @@ function manageLevels(repeatLevel) {
         if (gameManager.currentLevelRepetition > gameManager.maxRepetitionForLevel) {
             gameManager.levelIndex++;
             gameManager.currentLevelRepetition = 1;
-            gameManager.levelCompletedCorrectly = true;
         }
     }
     else {
         gameManager.levelIndex++;
         gameManager.currentLevelRepetition = 1;
-        gameManager.levelCompletedCorrectly = true;
     }
+    gameManager.levelCompletedCorrectly = true;
 
     if (gameManager.levelIndex < livelliGioco.length && gameManager.gameInProgress) {
     	
@@ -255,23 +254,32 @@ function levelComplete() {
     };
     
     websocket.send(JSON.stringify(packetEndLevel));
+    var levelCompletion = function() { 
+	    sacco.element.css({
+	    	top: getScreenHeight()
+	    }).one('transitionend webkitTransitionEnd oTransitionEnd', function() {
+	    	
+	    	
+	    	setTimeout(function() {
+	    		manageLevels(!gameManager.levelCompletedCorrectly);
+	    	}, 1000);
+	    	
+	    });
+	    
+	    var topSecondElement = getScreenHeight() + 
+	    	(sacco.height - sacco.halfBagHeight);
+	    
+	    sacco.secondElement.css({
+	    	top: topSecondElement 
+	    });
+    }
     
-    sacco.element.css({
-    	top: getScreenHeight()
-    }).one('transitionend webkitTransitionEnd oTransitionEnd', function() {
-    	
-    	setTimeout(function() {
-    		manageLevels(!gameManager.levelCompletedCorrectly);
-    	}, 1000);
-    	
-    });
-    
-    var topSecondElement = getScreenHeight() + 
-    	(sacco.height - sacco.halfBagHeight);
-    
-    sacco.secondElement.css({
-    	top: topSecondElement 
-    });
+    if ($('#divSounds #audioBagComplete').length != 0) {
+    	$('#divSounds #audioBagComplete').on('ended', levelCompletion).get(0).play();
+    }
+    else {
+    	levelCompletion();
+    }
     
 }
 
@@ -449,10 +457,10 @@ function localFileSystemInitializationComplete() {
 				/*presentationManager = new PresentationManager();
 				presentationManager.createElements();*/
 				try {
-					initGame();
-					allExamplesCompleted();
-					/*presentationManager = new PresentationManager();
-					presentationManager.createElements();*/
+					/*initGame();
+					allExamplesCompleted();*/
+					presentationManager = new PresentationManager();
+					presentationManager.createElements();
 				}
 				catch(error) {
 					console.log("Errore in localFileSystemInitializationComplete");
@@ -582,7 +590,7 @@ function presentationEnded() {
 	ExampleNamespace.prepareExamples();
 }
 
-$('document').ready(function() {
+$(document).ready(function() {
 
     gameManager.divMainContent = $('#divMainContent').width(getScreenWidth())
     	.height(getScreenHeight()).css('overflow', 'hidden');

@@ -10,6 +10,29 @@
  var divPage = null;
  
 // PAGE INITIALIZATION
+ 
+var offlineLogin = function(username, password) {
+
+	console.log("offlineLogin");
+	if (getFromLocalStorage("username") == username && 
+			MD5(getFromLocalStorage("password")) == password) {
+			
+		var permission = getFromLocalStorage("permission");
+		if (permission == "PATIENT") {
+			
+			var data = new Object();
+			data.ID = getFromLocalStorage("patientID");
+			data.NAME = getFromLocalStorage("patientName");
+			data.SURNAME = getFromLocalStorage("patientSurname");
+			data.SEX = getFromLocalStorage("patientSex");
+			data.PERMISSION = permission;
+			loginCorrect(data);
+		}
+		else {
+			console.log("Loggato come dottore");
+		}
+	}
+}
 
 function checkLogin(e) {
 	
@@ -53,6 +76,7 @@ function checkLogin(e) {
 			
 			var pageAddress = SERVER_ADDRESS + '/server/CheckLogin.php'; 
 			
+			try {
 			$.ajax({
 				url: SERVER_ADDRESS + '/server/CheckLogin.php',
 				type: 'POST',
@@ -60,7 +84,6 @@ function checkLogin(e) {
 				success: function(message) {
 					
 					var data = JSON.parse(message);
-					console.log(data);
 					
 					if (data.CORRECT == "true") {
 						loginCorrect(data);
@@ -68,30 +91,25 @@ function checkLogin(e) {
 					else {
 						loginIncorrect();
 					}
-				}/*,
+				},
 				error: function(message) {
-					console.log(message);
-					//loginIncorrect();
-				}*/
+					//console.log(message);
+					offlineLogin(username, password);
+				}
 			});
+			}
+			catch(e) {
+				offlineLogin(username, password);
+			}
 		}
 		else {
-			if (getFromLocalStorage("username") == username && 
-				getFromLocalStorage("password") == password) {
-				
-				var permission = getFromLocalStorage("permission");
-				if (permission == "PATIENT") {
-					patientClient();
-				}
-				else {
-					console.log("Loggato come dottore");
-				}
-			}			
+			offlineLogin(username, password);	
 		}
 	}
 }
 
-function patientClient(e) {	
+function patientClient(e) {
+	
 	location.replace('patient/index.html');
 }
 
@@ -116,15 +134,21 @@ function loginCorrect(data) {
 		setSessionStorage("doctorSurname", doctorSurname);
 		setSessionStorage("permission", "DOCTOR");
 		setSessionStorage("doctorID", doctorID);
+		saveInLocalStorage("permission", "DOCTOR");
 		
 		secondStepPage();
 	}
 	else if (data.PERMISSION == 'PATIENT') {
 		setSessionStorage("permission", "PATIENT");
+		saveInLocalStorage("permission", "PATIENT");
 		setSessionStorage("patientID", data.ID);
+		saveInLocalStorage("patientID", data.ID);
 		setSessionStorage("patientName", data.NAME);
+		saveInLocalStorage("patientName", data.NAME);
 		setSessionStorage("patientSurname", data.SURNAME);
+		saveInLocalStorage("patientSurname", data.SURNAME);
 		setSessionStorage("patientSex", data.SEX);
+		saveInLocalStorage("patientSex", data.SEX);
 		location.replace('patient/index.html');
 	}
 }
@@ -264,7 +288,32 @@ function checkAlreadyLogged() {
 }
 
 $(document).ready(function(e) {
+	
+	var appCache = window.applicationCache;
+	
+	$('<img>').attr('src', 'images/preloader.gif')
+	.attr('id', 'preloaderWaitingCache').prependTo('body');
+	
+	appCache.addEventListener('updateready', cacheUpdateReady, false);
+	appCache.addEventListener('cached', operationsCacheFinished, false);
+	appCache.addEventListener('updateReady', cacheUpdateReady, false);
+	appCache.addEventListener('noupdate', operationsCacheFinished, false);
+	appCache.addEventListener('error', operationsCacheFinished, false);
+	appCache.addEventListener('obsolete', operationsCacheFinished, false);
+	
+	try {
+		appCache.update();
+	}
+	catch(e) {
+		operationsCacheFinished(e);
+	}
     
+});
+
+function initPage() {
+	
+	$('#preloaderWaitingCache').remove();
+	
 	divPage = $('#divMain');
 	
 	var alreadyLogged = checkAlreadyLogged();
@@ -344,4 +393,4 @@ $(document).ready(function(e) {
 		}
 		
 	}
-});
+};

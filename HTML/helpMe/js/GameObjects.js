@@ -8,6 +8,7 @@ function GameManager() {
     this.startTimeObjectOnScreen = null;
     this.imageRetrieved = 0;
     this.totalImageToRetrieve = 2;
+    this.totalImagesFamilies = -this.totalImageToRetrieve - 1;
     this.isAnExample = false;
     this.imageRightAnswer = null;
     this.imageBadAnswer = null;
@@ -56,7 +57,7 @@ this.getSystemImages = function() {
             display: 'none',
             'z-index': 100
         });
-
+        
         utilsNamespace.anotherImageRetrieved();
     }
     imageGoodAnswer.src="images/spongebob_ok.gif";

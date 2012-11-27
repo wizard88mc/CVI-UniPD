@@ -1,15 +1,23 @@
-
-function cacheEventHandler() {
+var operationsCacheFinished = function(e) {
 	
-	var status = window.applicationCache.status;
-
-	switch(status) {
-	case window.applicationCache.UPDATEREAY: 
-		window.applicationCache.swapCache();
+	if (e.code && e.code == 11) {
+		return;
 	}
+	var appCache = window.applicationCache;
+	appCache.removeEventListener('cached', operationsCacheFinished, false);
+	appCache.removeEventListener('updateReady', cacheUpdateReady, false);
+	appCache.removeEventListener('noupdate', operationsCacheFinished, false);
+	appCache.removeEventListener('error', operationsCacheFinished, false);
+	appCache.removeEventListener('obsolete', operationsCacheFinished, false);
+	
+	console.log("calling initPage");
+	initPage();
 }
 
-function registerCacheEvents() {
+var cacheUpdateReady = function(e) {
 	
-	window.applicationCache.addEventListener('updateready', cacheEventHandler);
+	if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+		window.applicationCache.swapCache();
+		operationsCacheFinisched(null);
+	}
 }

@@ -110,6 +110,7 @@ public class ServerManager {
         System.out.println(host);
         
         try {
+            
             ServerManager manager = new ServerManager();
             BaseManager.setServerManager(manager);
             
@@ -118,8 +119,8 @@ public class ServerManager {
             System.out.println("Server Started");
             
             Thread.sleep(3000);
-            EyeTrackerSimulator simulator = new EyeTrackerSimulator(host, 8000);
-            simulator.connect();
+            //EyeTrackerSimulator simulator = new EyeTrackerSimulator(host, 8000);
+            //simulator.connect();
         }
         catch (Exception exc) {
             exc.printStackTrace();

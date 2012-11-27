@@ -136,6 +136,30 @@ function putInWaitingToStart() {
 $('document').ready(function(e) {
 
 	//setSessionStorage("permission", "DOCTOR");
+var appCache = window.applicationCache;
+	
+	$('<img>').attr('src', '../images/preloader.gif')
+	.attr('id', 'preloaderWaitingCache').prependTo('body');
+	
+	appCache.addEventListener('updateready', cacheUpdateReady, false);
+	appCache.addEventListener('cached', operationsCacheFinished, false);
+	appCache.addEventListener('updateReady', cacheUpdateReady, false);
+	appCache.addEventListener('noupdate', operationsCacheFinished, false);
+	appCache.addEventListener('error', operationsCacheFinished, false);
+	appCache.addEventListener('obsolete', operationsCacheFinished, false);
+	
+	try {
+		appCache.update();
+	}
+	catch(e) {
+		operationsCacheFinished(e);
+	}
+	
+});
+
+function initPage() {
+	
+	$('#preloaderWaitingCache').remove();
 	
 	if (getFromSessionStorage("permission") == "DOCTOR") {
 		
@@ -189,4 +213,4 @@ $('document').ready(function(e) {
 		});
 		
 	}
-});
+};

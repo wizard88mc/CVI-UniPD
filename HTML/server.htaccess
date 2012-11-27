@@ -1,0 +1,10 @@
+# Do not remove this line, otherwise mod_rewrite rules will stop working
+RewriteBase /
+AddType text/cache-manifest .manifest manifest
+
+<IfModule mod_expires.c>
+    Header set cache-control: public
+    ExpiresActive on
+    # Prevent receiving a cached manifest
+    ExpiresByType text/cache-manifest "access plus 0 seconds"
+</IfModule>

@@ -28,6 +28,7 @@ var utilsNamespace = {
 
 getImagesFromSettings: function() {
 
+	console.log(arguments.callee.caller.toString());
     $.ajax({
         type: "GET",
         url: "settings/images.xml",
@@ -35,7 +36,8 @@ getImagesFromSettings: function() {
         cache: 'false',
         success: function(xml) {
 
-            gameManager.totalImageToRetrieve += $(xml).find('image').length;
+        	console.log("answer");
+        	gameManager.totalImagesFamilies = $(xml).find('image').length;
 
             $(xml).find('family').each(function() {
                 var family = $(this).attr('type');
@@ -67,7 +69,8 @@ getImagesFromSettings: function() {
 anotherImageRetrieved: function() {
 
     gameManager.imageRetrieved++;
-    if (gameManager.totalImageToRetrieve == gameManager.imageRetrieved) {
+    if (gameManager.totalImageToRetrieve + gameManager.totalImagesFamilies 
+    		== gameManager.imageRetrieved) {
 
     	// devo aprire connessione e mettermi in attesa
     	//ExampleNamespace.prepareExamples();
@@ -75,7 +78,12 @@ anotherImageRetrieved: function() {
         //presentationManager.createElements();
         //ExampleNamespace.prepareExamples();
     	
-    	openWebSocket(port);
+    	if (getFromSessionStorage("permission") == "DOCTOR") {
+    		openWebSocket(port);
+    	}
+    	else {
+    		manageOnCloseWebsocket(null);
+    	}
     }
 },
 
@@ -181,7 +189,7 @@ istantiateLevel: function(level) {
 
     // adding audios specific for the level
     utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioLevel').appendTo('#divSounds'), 
-    		level.sound);
+    		familySound[targetFamily].audioFile);
     
     if (level.soundBagComplete != "") {
     	utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioBagComplete').appendTo('#divSounds'),

@@ -50,4 +50,14 @@ body {
 	text-align: left;
 }
 
+#preloaderWaitingCache {
+	height: 60%;
+	width: auto;
+	margin: auto;
+	position: absolute;
+	left: 40%;
+	top: 20%;
+	z-index: 10;
+}
+
 

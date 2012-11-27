@@ -1,0 +1,31 @@
+CACHE MANIFEST
+# version 0.1
+
+# HTML
+index.html
+
+# CSS
+style/style.css
+
+../js/jquery-1.7.2.min.js
+../js/jquery-ui-1.8.21.custom.min.js"></script>
+../js/CacheManager.
+../js/Utilities.js"></script>
+<script src="js/util.js"></script>
+<script src="js/SettingsObjects.js"></script>
+<script src="js/GameObjects.js"></script>
+<script src="js/TickerObjects.js"></script>
+<script src="js/BarraTempo.js"></script>
+<script src="js/Tubo.js"></script>
+<script src="js/Sacco.js"></script>
+<script src="js/Cestino.js"></script>
+<script src="js/ObjectImage.js"></script>
+<script src="js/jquery.ui.touch-punch.min.js"></script>
+<script src="js/TouchEventsManager.js"></script>
+<script src="../js/WebSocketManager.js"></script>
+<script src="../js/Utilities.js"></script>
+<script src="../js/OfflineManager.js"></script>
+<script src="js/ExamplesManager.js"></script>
+<script src="js/PresentationManager.js"></script>
+<script src="js/HelpMe.js"></script>
+
