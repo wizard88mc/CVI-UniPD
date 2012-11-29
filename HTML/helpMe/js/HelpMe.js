@@ -475,8 +475,8 @@ function localFileSystemInitializationComplete() {
 						/*presentationManager = new PresentationManager();
 						presentationManager.createElements();*/
 						try {
-							/*initGame();
-							allExamplesCompleted();*/
+							//initGame();
+							//allExamplesCompleted();
 							presentationManager = new PresentationManager();
 							presentationManager.createElements();
 						}

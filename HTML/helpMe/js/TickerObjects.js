@@ -112,7 +112,7 @@ var frameAnimatorNamespace = {
             	// Defines the transition for the example from its 
             	// position to the bin
             	
-        		var objectTransition = function() {            		
+        		var objectTransition = function() {      		
 	            	imageObjectOnScreen.element.one(eventEndAnimation, function() {
 	        			
 	            		imageObjectOnScreen.element.one(eventEndAnimation, function() {
@@ -138,6 +138,46 @@ var frameAnimatorNamespace = {
 	            	imageObjectOnScreen.element.css({
 	            		left: cestino.width + 'px',
 	            	});
+	            	
+	            	if (exampleManager.arrow != null) {
+            			addTransitionSpecifications(exampleManager.arrow, 'all 2s linear');
+            			
+            			exampleManager.arrow.css({
+            				height: '0px',
+            				left: exampleManager.arrow.position().left - exampleManager.arrow.height()
+            			});
+            		}
+        		};
+        		
+        		if (exampleManager.currentExample.withHelp) {
+        			
+        			exampleManager.arrow = $(exampleManager.arrowImage).attr('id', 'imgArrow').appendTo('#divMainContent');
+        			var bottomPositionImage = imageObjectOnScreen.drawingPosition.top + imageObjectOnScreen.height;
+        			var hypotenuse = Math.sqrt(Math.pow(sacco.center.left, 2) + Math.pow(getScreenHeight() - bottomPositionImage, 2));
+        			
+        			var sinAngle = sacco.center.left / hypotenuse;
+        			var angle = Math.asin(sinAngle) * 180 / Math.PI;
+        			
+        			var heightArrow = (cestino.width) / sinAngle;
+        			
+                    
+                    exampleManager.arrow.width(imageObjectOnScreen.element.width() / 3);
+                    exampleManager.arrowStartingHeight = sacco.center.top - bottomPositionImage;
+                    exampleManager.arrow.height(heightArrow);
+                    exampleManager.arrow.css({
+                        position: 'absolute',
+                        top: bottomPositionImage,
+                        left: imageObjectOnScreen.center.left - exampleManager.arrow.width() / 2,
+                        'z-index': 200
+                    });
+                    exampleManager.arrow.css({
+                    	'transform-origin': 'center top',
+                    	'-webkit-transform-origin': 'center top',
+                    	'-moz-transform-origin': 'center top',
+                    	'-o-transform-origin': 'center top'
+                    });
+                    
+                    addTransformSpecifications(exampleManager.arrow, 'rotate(90deg)');
         		}
         		
         		if ($('#divSounds #soundBefore').length > 0) {
@@ -190,9 +230,10 @@ var frameAnimatorNamespace = {
     		
     		exampleManager.arrow.on(eventEndAnimation, function(event) {
     			
-    			if (event.originalEvent.propertyName === "height") {
+    			if (event.originalEvent.propertyName == "height") {
     				
     				exampleManager.arrow.remove();
+    				addTransitionSpecifications(exampleManager.arrow, 'none');
 	                exampleManager.arrow = null;
     			}
     		}).css({

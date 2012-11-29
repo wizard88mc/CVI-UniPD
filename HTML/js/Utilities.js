@@ -221,14 +221,6 @@ function addSoundSource(element, sourceFileName) {
 	$('<source>').attr('src', 'sounds/' + sourceFileName + '.mp3').attr('type', 'audio/mpeg').attr('preload', 'auto').appendTo(element);
 }
 
-function cacheIsChecking() {
-	console.log("checking");
-}
-
-function cacheIsDownloading() {
-	console.log("downloading");
-}
-
 function checkForLocalStorageIfFolder(folder) {
 	
 	var pattern = /^\d_\d{4}_\d+_\d+_\d+_\d+_\d+/i;

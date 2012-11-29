@@ -1,7 +1,7 @@
 
 function Cestino() {
 	
-	this.element = $('<div id="divCestino"></div>');
+	this.element = $('<div>').attr('id', 'divCestino');
 	
 	this.height = getScreenHeight();
 	this.width = Math.round(getScreenWidth() / 7);
