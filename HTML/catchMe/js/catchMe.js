@@ -159,7 +159,7 @@ defineGame: function(settings) {
 	
 	var divSounds = $('<div>').attr('id', 'divSounds').appendTo('body');
 	
-	var arraySounds = ['good_image', 'bene', 'molto_bene', 'continua_cosi'];
+	var arraySounds = ['bene', 'molto_bene', 'continua_cosi'];
 	
 	for (index in arraySounds) {
 		
@@ -173,20 +173,22 @@ createTransitionCSS: function(time, endPosition) {
 	
 	var stringFinalDestination = endPosition.left + 'px ' + endPosition.top + 'px';
 	
-	$('#image').css('transition', 'left ' + time + 's, top ' + time + 's')
-				.css('transition-duration', time + 's')
-				.css('transition-timing-function', 'linear')
-				.css('-moz-transition', 'left ' + time + 's, top ' 
-					+ time + 's, -moz-transform ' + time + 's')
-				.css('-moz-transition-timing-function', 'linear')
-				.css('-webkit-transition', 'left ' + time + 's, top ' 
-						+ time + 's, -webkit-transform ' + time + 's')
-				.css('-webkit-transition-timing-function', 'linear')
-				.css('-o-transition','left '  + time + 's, top ' + 
-					time + 's, -o-transform ' + time + 's')
-				.css('-o-transition-timing-function', 'linear')
-				.css('left', endPosition.left + 'px')
-				.css('top', endPosition.top + 'px');
+	$('#image').css({
+		transition: 'left ' + time + 's, top ' + time + 's',
+		'transition-duration': time + 's',
+		'transition-timing-function': 'linear',
+		'-moz-transition': 'left ' + time + 's, top ' 
+			+ time + 's, -moz-transform ' + time + 's',
+		'-moz-transition-timing-function': 'linear',
+		'-webkit-transition': 'left ' + time + 's, top ' 
+			+ time + 's, -webkit-transform ' + time + 's',
+		'-webkit-transition-timing-function': 'linear',
+		'-o-transition':'left '  + time + 's, top ' + 
+			time + 's, -o-transform ' + time + 's',
+		'-o-transition-timing-function': 'linear',
+		'left': endPosition.left + 'px',
+		'top': endPosition.top + 'px'
+	});
 },
 
 timingFunction: function() {
@@ -405,7 +407,7 @@ startGame: function() {
 			
 			gameManager.lastTimePlayedGoodSound = time;
 		}
-	})
+	});
 	
 	$('<div>').attr('id', 'divCloseGame').appendTo('body')
 		.css({
@@ -1033,8 +1035,37 @@ animationEndGame: function() {
 
 $('document').ready(function(e) {
 	
-	openWebSocket(port);
+	var appCache = window.applicationCache;
+	
+	$('<img>').attr('src', '../images/preloader.gif')
+	.attr('id', 'preloaderWaitingCache').prependTo('body');
+	
+	appCache.addEventListener('updateready', cacheUpdateReady, false);
+	appCache.addEventListener('cached', operationsCacheFinished, false);
+	appCache.addEventListener('updateReady', cacheUpdateReady, false);
+	appCache.addEventListener('noupdate', operationsCacheFinished, false);
+	appCache.addEventListener('error', operationsCacheFinished, false);
+	appCache.addEventListener('obsolete', operationsCacheFinished, false);
+	
+	try {
+		appCache.update();
+	}
+	catch(e) {
+		operationsCacheFinished(e);
+	}
 });
+	
+function initPage() {
+	
+	$('#preloaderWaitingCache').remove();
+	
+	if (getFromSessionStorage("permission") == "DOCTOR") {
+		openWebSocket(port);
+	}
+	else if (getFromSessionStorage("permission") == "PATIENT") {
+		manageOnCloseWebsocket(null);
+	}
+};
 
 
 function manageOnCloseWebsocket(e) {

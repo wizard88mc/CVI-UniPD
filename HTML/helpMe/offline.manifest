@@ -1,31 +1,156 @@
 CACHE MANIFEST
-# version 0.1
+# version 0.2
 
 # HTML
 index.html
 
 # CSS
 style/style.css
+../style/baseStyle.css
+
+# System Images
+../images/preloader.gif
+
+# Javascript
 
 ../js/jquery-1.7.2.min.js
-../js/jquery-ui-1.8.21.custom.min.js"></script>
-../js/CacheManager.
-../js/Utilities.js"></script>
-<script src="js/util.js"></script>
-<script src="js/SettingsObjects.js"></script>
-<script src="js/GameObjects.js"></script>
-<script src="js/TickerObjects.js"></script>
-<script src="js/BarraTempo.js"></script>
-<script src="js/Tubo.js"></script>
-<script src="js/Sacco.js"></script>
-<script src="js/Cestino.js"></script>
-<script src="js/ObjectImage.js"></script>
-<script src="js/jquery.ui.touch-punch.min.js"></script>
-<script src="js/TouchEventsManager.js"></script>
-<script src="../js/WebSocketManager.js"></script>
-<script src="../js/Utilities.js"></script>
-<script src="../js/OfflineManager.js"></script>
-<script src="js/ExamplesManager.js"></script>
-<script src="js/PresentationManager.js"></script>
-<script src="js/HelpMe.js"></script>
+../js/jquery-ui-1.8.21.custom.min.js
+../js/CacheManager.js
+../js/Utilities.js
+js/util.js
+js/SettingsObjects.js
+js/GameObjects.js
+js/TickerObjects.js
+js/BarraTempo.js
+js/Tubo.js
+js/Sacco.js
+js/Cestino.js
+js/ObjectImage.js
+js/jquery.ui.touch-punch.min.js
+js/TouchEventsManager.js
+../js/WebSocketManager.js
+../js/Utilities.js
+../js/OfflineManager.js
+js/ExamplesManager.js
+js/PresentationManager.js
+js/HelpMe.js
 
+# SOUNDS
+sounds/bene.mp3
+sounds/bene.ogg
+sounds/brava.mp3
+sounds/brava.ogg
+sounds/bravissima.mp3
+sounds/bravissima.ogg
+sounds/bravissimo.mp3
+sounds/bravissimo.ogg
+sounds/bravo.mp3
+sounds/bravo.ogg
+sounds/continua_cosi.mp3
+sounds/continua_cosi.ogg
+sounds/elfo_andare_riposare.mp3
+sounds/elfo_andare_riposare.ogg
+sounds/frenata.mp3
+sounds/frenata.ogg
+sounds/indicazione_secondo_dolcetto.mp3
+sounds/indicazione_secondo_dolcetto.ogg
+sounds/indicazione_trascina_dolcetto.mp3
+sounds/indicazione_trascina_dolcetto.ogg
+sounds/introduzione_sacco_animali_peluche.mp3
+sounds/introduzione_sacco_animali_peluche.ogg
+sounds/introduzione_sacco_costruzioni.mp3
+sounds/introduzione_sacco_costruzioni.ogg
+sounds/introduzione_sacco_dolcetti.mp3
+sounds/introduzione_sacco_dolcetti.ogg
+sounds/introduzione_sacco_macchinine.mp3
+sounds/introduzione_sacco_macchinine.ogg
+sounds/introduzione_sacco_pennarelli_matite.mp3
+sounds/introduzione_sacco_pennarelli_matite.ogg
+sounds/introduzione_sacco_soldatini.mp3
+sounds/introduzione_sacco_soldatini.ogg
+sounds/introduzione_sacco_strumenti_musica.mp3
+sounds/introduzione_sacco_strumenti_musica.ogg
+sounds/introduzione_sacco_vestiti_bambole.mp3
+sounds/introduzione_sacco_vestiti_bambole.ogg
+sounds/introduzione_seconda_parte.mp3
+sounds/introduzione_seconda_parte.ogg
+sounds/introduzione.mp3
+sounds/introduzione.ogg
+sounds/intruso.mp3
+sounds/intruso.ogg
+sounds/molto_bene.mp3
+sounds/molto_bene.ogg
+sounds/no_dolcetto.mp3
+sounds/no_dolcetto.ogg
+sounds/oggetto_non_inserito_animali_peluche.mp3
+sounds/oggetto_non_inserito_animali_peluche.ogg
+sounds/oggetto_non_inserito_costruzioni.mp3
+sounds/oggetto_non_inserito_costruzioni.ogg
+sounds/oggetto_non_inserito_dolcetti.mp3
+sounds/oggetto_non_inserito_dolcetti.ogg
+sounds/oggetto_non_inserito_macchinine.mp3
+sounds/oggetto_non_inserito_macchinine.ogg
+sounds/oggetto_non_inserito_pennarelli_matite.mp3
+sounds/oggetto_non_inserito_pennarelli_matite.ogg
+sounds/oggetto_non_inserito_soldatini.mp3
+sounds/oggetto_non_inserito_soldatini.ogg
+sounds/oggetto_non_inserito_strumenti_musica.mp3
+sounds/oggetto_non_inserito_strumenti_musica.ogg
+sounds/oggetto_non_inserito_vestiti_bambole.mp3
+sounds/oggetto_non_inserito_vestiti_bambole.ogg
+sounds/pronti_per_cominciare.mp3
+sounds/pronti_per_cominciare.ogg
+sounds/riprova.mp3
+sounds/riprova.ogg
+sounds/sacco_pronto_costruzioni.mp3
+sounds/sacco_pronto_costruzioni.ogg
+sounds/sacco_pronto_macchinine.mp3
+sounds/sacco_pronto_macchinine.ogg
+sounds/sacco_pronto_pennarelli_matite.mp3
+sounds/sacco_pronto_pennarelli_matite.ogg
+sounds/sacco_pronto_soldatini.mp3
+sounds/sacco_pronto_soldatini.ogg
+sounds/sacco_pronto_strumenti_musica.mp3
+sounds/sacco_pronto_strumenti_musica.ogg
+sounds/sacco_pronto_vestiti_bambole.mp3
+sounds/sacco_pronto_vestiti_bambole.ogg
+sounds/saluto_elfo_fine.ogg
+sounds/saluto_elfo_fine.mp3
+sounds/slitta_puo_partire.mp3
+sounds/slitta_puo_partire.ogg
+
+# IMAGES
+images/asino.png
+images/bin.png
+images/biscuit.png
+images/coniglio.png
+images/down_arrow.jpg
+images/down_arrow.png
+images/ferrari.png
+images/folletto.fw.png
+images/gallina.png
+images/gatto.jpg
+images/gatto.png
+images/maiale.png
+images/oca.jpg
+images/oca.png
+images/occhiali.png
+images/ombrello.png
+images/orologio-bambino.jpg
+images/orologio-bambino.png
+images/pipa.png
+images/rosa.png
+images/sacco_completo.png
+images/sacco_mezzo.png
+images/sfondo_gioco.jpg
+images/sfondo_gioco1.jpg
+images/slitta_indietro.fw.png
+images/slitta.fw.png
+images/spongebob_ok.gif
+images/spongebob_sad.png
+images/tartaruga.png
+images/ZZ10042.jpg
+
+# XML
+settings/images.xml
+settings/examples.xml

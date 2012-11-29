@@ -29,7 +29,26 @@ var offlineLogin = function(username, password) {
 			loginCorrect(data);
 		}
 		else {
-			console.log("Loggato come dottore");
+			
+			$('<p>').text('La modalità offline è disponibile solamente per i bambini e non per i dottori.')
+				.appendTo($('<div>').attr('id', 'dialogOfflineDoctor')
+						.attr('Impossibile accedere').appendTo($('#divMainContent')));	
+			
+			var width = getScreenWidth() * 0.5;
+			
+			$('#dialogOfflineDoctor').dialog({
+				width: width,
+				modal: true,
+				draggable: false,
+				resizable: false,
+				closeOnEscape: true,
+				buttons: {
+					"Ok": function() {
+						$(this).dialog("close");
+						$(this).remove();
+					}
+				}
+			})
 		}
 	}
 }
@@ -54,7 +73,7 @@ function checkLogin(e) {
 			var divDialog = $('<div>').attr('id', 'dialogLogin').attr('title', 'Attendere..');
 			$('<p>').text('Login in corso').appendTo(divDialog);
 			
-			divDialog.appendTo(divPage);
+			divDialog.appendTo('#divMainContent');
 			
 			saveInLocalStorage("username", username);
 			saveInLocalStorage("password", password);
@@ -163,9 +182,13 @@ function secondStepPage() {
 		builtHeader();
 	}
 	
-	divPage.css('width', '80%').css('text-align', 'center');
+	$('#divMainContent').css({
+		width: '80%',
+		'text-align': 'center'
+	});
 	
-	var title = $('<h2>').attr('id', 'welcomeDoctor').text('Bentornato Dott. '+ doctorName + ' ' + doctorSurname).appendTo(divPage);
+	var title = $('<h2>').attr('id', 'welcomeDoctor')
+		.text('Bentornato Dott. '+ doctorName + ' ' + doctorSurname).appendTo('#divMainContent');
 	
 	
 	var logout = $('<img>').attr('id', 'buttonLogout').attr('src', 'images/logout.png').attr('alt', 'Logout').appendTo(title);
@@ -197,14 +220,14 @@ function secondStepPage() {
 	buttonDoctorClient.appendTo(divSceltaOperazione);
 	buttonPatientClient.appendTo(divSceltaOperazione);
 	
-	divSceltaOperazione.appendTo(divPage);
+	divSceltaOperazione.appendTo('#divMainContent');
 	
-	$('#divSceltaOperazione > button')
-					.css('padding-top', '1.5em')
-					.css('padding-bottom', '1.5em')
-					.css('font-size', '1.5em')
-					.css('margin', '0.5em');
-					
+	$('#divSceltaOperazione > button').css({
+		'padding-top': '1.5em',
+		'padding-bottom': '1.5em',
+		'font-size': '1.5em',
+		margin: '0.5em'
+	});
 }
 
 function localFileSystemInitializationComplete() {
@@ -256,7 +279,7 @@ function loginIncorrect() {
 	
 	$('<p>').text('Username e password inseriti non corretti. ').appendTo(
 			$('<div>').attr('id', 'dialogErrorLogin').attr('title', 'Errore!')
-			.appendTo(divPage));
+			.appendTo('#divMainContent'));
 		
 	var width = getScreenWidth() * 0.5;
 		
@@ -314,14 +337,19 @@ function initPage() {
 	
 	$('#preloaderWaitingCache').remove();
 	
-	divPage = $('#divMain');
+	$('<div>').attr('id', 'divMainContent').appendTo('body');
 	
 	var alreadyLogged = checkAlreadyLogged();
 	
 	if (alreadyLogged) {
-		doctorName = getFromSessionStorage("doctorName");
-		doctorSurname = getFromSessionStorage("doctorSurname");
-		secondStepPage();
+		if (getFromSessionStorage("permission") == "DOCTOR") {
+			doctorName = getFromSessionStorage("doctorName");
+			doctorSurname = getFromSessionStorage("doctorSurname");
+			secondStepPage();
+		}
+		else if (getFromSessionStorage("permission") == "PATIENT") {
+			location.replace('patient/index.html');
+		}
 	}
 	else {
 		
@@ -329,7 +357,7 @@ function initPage() {
 		
 		var tableLogin = $('<table>').attr('id', 'tableLogin');
 		$('<tbody>').appendTo(tableLogin);
-		tableLogin.appendTo(divPage);
+		tableLogin.appendTo('#divMainContent');
 		
 		$('<tr id="usernameRow"><td class="label">Username: </td><td><input type="text" id="username" name="username" /></td></tr>').appendTo(tableLogin);
 		$('<tr id="passwordRow"><td class="label">Password: </td><td><input type="password" id="password" name="password" /></td></tr>').appendTo(tableLogin);
@@ -346,7 +374,7 @@ function initPage() {
 		}
 		
 		$('<button>').attr('id', 'buttonLogin').text('Login').appendTo(
-				$('<div>').attr('id', 'divButtonLogin').addClass('alignCenter').appendTo(divPage));
+				$('<div>').attr('id', 'divButtonLogin').addClass('alignCenter').appendTo('#divMainContent'));
 		
 		$('#buttonLogin').button();
 		$('#buttonLogin').click(checkLogin);
@@ -356,7 +384,7 @@ function initPage() {
 			
 			$('<p>').text('Per poter utilizzare l\'applicazione in modalità offline è necessario collegarsi alla rete almeno una volta.').appendTo(
 					$('<div>').attr('id', 'dialogNeverConnected').attr('title', 'Errore!')
-					.appendTo(divPage));
+					.appendTo('#divMainContent'));
 				
 			var width = getScreenWidth() * 0.5;
 				

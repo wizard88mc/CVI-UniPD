@@ -126,7 +126,7 @@ var frameAnimatorNamespace = {
 	                		width: '0px',
 	                		height: '0px',
 	                		left: '0px',
-	                		top: imageObjectOnScreen.center.top
+	                		top: getScreenHeight()
 	                	});
 	                	
 	                	addTransformSpecifications(imageObjectOnScreen.element, 'rotate(720deg)');
@@ -284,7 +284,7 @@ var frameAnimatorNamespace = {
         		width: '0px',
         		height: '0px',
         		left: '0px',
-        		top: imageObjectOnScreen.center.top
+        		top: getScreenHeight()
         	});
         	
         	addTransformSpecifications(imageObjectOnScreen.element, 'rotate(720deg)');

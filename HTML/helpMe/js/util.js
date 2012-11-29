@@ -28,7 +28,6 @@ var utilsNamespace = {
 
 getImagesFromSettings: function() {
 
-	console.log(arguments.callee.caller.toString());
     $.ajax({
         type: "GET",
         url: "settings/images.xml",
@@ -36,7 +35,6 @@ getImagesFromSettings: function() {
         cache: 'false',
         success: function(xml) {
 
-        	console.log("answer");
         	gameManager.totalImagesFamilies = $(xml).find('image').length;
 
             $(xml).find('family').each(function() {

@@ -148,7 +148,6 @@ function resetLevel() {
 
 function manageLevels(repeatLevel) {
 
-	console.log(repeatLevel);
     if (repeatLevel) {
         gameManager.currentLevelRepetition++;
 
@@ -428,6 +427,21 @@ function manageOnCloseWebsocket(e) {
     }
 }
 
+function offlineJobs() {
+	
+	var fieldWhereGet = "HELPME_SETTINGS_" + getFromSessionStorage("patientID");
+	var levelString = getFromLocalStorage(fieldWhereGet);
+	
+	if (levelString != "") {
+		livelliGioco = JSON.parse(levelString);
+		presentationManager = new PresentationManager();
+		presentationManager.createElements();
+	}
+	else {
+		console.log("no configuration saved");
+	}
+}
+
 function localFileSystemInitializationComplete() {
 
 	if (getFromSessionStorage("permission") == "PATIENT") {
@@ -440,35 +454,51 @@ function localFileSystemInitializationComplete() {
 		}
 		
 		// richiesta delle impostazioni di gioco
-		console.log("Sending request");
 		
-		$.ajax({
-			url: SERVER_ADDRESS + '/server/GetLevelsHelpMe.php',
-			type: "POST",
-			data: {
-				patientID: patientID
-			},
-			success: function(data) {
-				
-				console.log(data);
-				livelliGioco = JSON.parse(data);
-				
-				// x saltare presentazione
-				/*presentationManager = new PresentationManager();
-				presentationManager.createElements();*/
-				try {
-					/*initGame();
-					allExamplesCompleted();*/
-					presentationManager = new PresentationManager();
-					presentationManager.createElements();
-				}
-				catch(error) {
-					console.log("Errore in localFileSystemInitializationComplete");
-					console.log(error);
-				}
-			}
+		if (navigator.onLine) {
 			
-		});
+			try {
+				$.ajax({
+					url: SERVER_ADDRESS + '/server/GetLevelsHelpMe.php',
+					type: "POST",
+					data: {
+						patientID: patientID
+					},
+					success: function(data) {
+						
+						livelliGioco = JSON.parse(data);
+						
+						var fieldWhereSave = "HELPME_SETTINGS_" + patientID;
+						saveInLocalStorage(fieldWhereSave, data);
+						
+						// x saltare presentazione
+						/*presentationManager = new PresentationManager();
+						presentationManager.createElements();*/
+						try {
+							/*initGame();
+							allExamplesCompleted();*/
+							presentationManager = new PresentationManager();
+							presentationManager.createElements();
+						}
+						catch(error) {
+							console.log("Errore in localFileSystemInitializationComplete");
+							console.log(error);
+						}
+					},
+					error: function() {
+						
+						console.log("error");
+						offlineJobs();
+					}
+				});
+			}
+			catch(e) {
+				offlineJobs();
+			}
+		}
+		else {
+			offlineJobs();
+		}
 	}
 }
 
@@ -592,6 +622,30 @@ function presentationEnded() {
 
 $(document).ready(function() {
 
+	$('<img>').attr('src', '../images/preloader.gif')
+	.attr('id', 'preloaderWaitingCache').prependTo('body');
+	
+	var appCache = window.applicationCache;
+	
+	appCache.addEventListener('updateready', cacheUpdateReady, false);
+	appCache.addEventListener('cached', operationsCacheFinished, false);
+	appCache.addEventListener('updateReady', cacheUpdateReady, false);
+	appCache.addEventListener('noupdate', operationsCacheFinished, false);
+	appCache.addEventListener('error', operationsCacheFinished, false);
+	appCache.addEventListener('obsolete', operationsCacheFinished, false);
+	
+	try {
+		appCache.update();
+	}
+	catch(e) {
+		operationsCacheFinished(e);
+	}
+});
+
+function initPage() {
+
+	$('#preloaderWaitingCache').remove();
+
     gameManager.divMainContent = $('#divMainContent').width(getScreenWidth())
     	.height(getScreenHeight()).css('overflow', 'hidden');
 
@@ -600,4 +654,4 @@ $(document).ready(function() {
     //utilsNamespace.retrieveLevels();
     utilsNamespace.getImagesFromSettings();
     //utilsNamespace.retrieveLevels();
-});
+};

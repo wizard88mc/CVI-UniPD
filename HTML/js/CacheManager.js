@@ -1,4 +1,4 @@
-var operationsCacheFinished = function(e) {
+function operationsCacheFinished(e) {
 	
 	if (e.code && e.code == 11) {
 		return;
@@ -14,7 +14,7 @@ var operationsCacheFinished = function(e) {
 	initPage();
 }
 
-var cacheUpdateReady = function(e) {
+function cacheUpdateReady(e) {
 	
 	if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
 		window.applicationCache.swapCache();

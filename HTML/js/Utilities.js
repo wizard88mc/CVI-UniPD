@@ -67,9 +67,11 @@ function getAddressForWebsocket() {
 }
 
 function builtHeader() {
-	$('<div id="divHeader"><h1>Cortical Visual Impairment</h1><h2>Assessment in Web</h2></div>').appendTo($('#divMain'));
-	$('#divHeader').addClass('ui-widget-header')
-					.addClass('alignCenter');
+	var divHeader = $('<div>').attr('id', 'divHeader')
+		.addClass('ui-widget-header alignCenter').appendTo('#divMainContent');
+	
+	$('<h1>').text('Cortical Visual Impairment').appendTo(divHeader);
+	$('<h2>').text('Assessment in Web').appendTo(divHeader);
 }
 
 function setCookie(c_name,value,exdays) {
