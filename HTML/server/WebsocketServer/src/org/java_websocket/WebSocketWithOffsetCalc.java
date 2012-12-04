@@ -220,11 +220,13 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
      */
     public void comunicateStartTime(long time) {
         
-        JSONObject packetToSend = new JSONObject();
-        packetToSend.put("TYPE", "START_WORKING");
-        packetToSend.put("START_TIME", calculateTimeWithOffset(time));
-        clientConnected.send(packetToSend.toJSONString());
-        messageManager.startTime = time;
+        if (clientConnected != null) {
+            JSONObject packetToSend = new JSONObject();
+            packetToSend.put("TYPE", "START_WORKING");
+            packetToSend.put("START_TIME", calculateTimeWithOffset(time));
+            clientConnected.send(packetToSend.toJSONString());
+            messageManager.startTime = time;
+        }
     }
     
     public long calculateTimeWithOffset(long baseTime) {

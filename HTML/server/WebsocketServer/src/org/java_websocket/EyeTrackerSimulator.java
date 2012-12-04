@@ -44,8 +44,8 @@ public class EyeTrackerSimulator extends Thread {
             JSONObject message = new JSONObject();
             message.put("TYPE", "EYE_TRACKER_DATA");
             message.put("TIME", new Date().getTime() - startTime);
-            message.put("POSX", 100L);
-            message.put("POSY", 100L);
+            message.put("POSX", (long)(Math.random() * 500));
+            message.put("POSY", (long)(Math.random() * 500));
             clientConnecter.send(message.toJSONString());
         }
         System.out.println("*** EYE TRACKER STOPPED ***");
@@ -196,7 +196,7 @@ public class EyeTrackerSimulator extends Thread {
                 else if (packet.get("TYPE").equals("START_TRAINING")) {
                     EyeTrackerSimulator.this.simulateTraining();
                 }
-                else if (packet.get("TYPE").equals("TRAINING_SESSION")) {
+                else if (packet.get("TYPE").equals("TRAINING")) {
                     
                     packet.put("DATA", "false");
                     clientConnecter.send(packet.toJSONString());

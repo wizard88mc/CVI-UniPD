@@ -76,10 +76,10 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
             else if (packetType.equals("READY_TO_PLAY")) {                     
 
                 if (packet.containsKey("IMAGE_WIDTH")) {
-                    imageWidth = (Long)packet.get("IMAGE_WIDTH");
-                    System.out.println("Width: " + imageWidth);
+                    
+                    imageWidth = (Long)packet.get("IMAGE_WIDTH");                    
                     imageHeight = (Long)packet.get("IMAGE_HEIGHT");
-                    System.out.println("Height: " + imageWidth);
+
                     screenWidth = (Long)packet.get("SCREEN_WIDTH");
                     screenHeight = (Long)packet.get("SCREEN_HEIGHT");
 
@@ -95,10 +95,20 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                     doctorManager.sendPacket(packet);
                 }
                 
-                JSONObject packetStartTraining = new JSONObject();
-                packetStartTraining.put("TYPE", "TRAINING_SESSION");
-                
-                eyeTrackerManager.sendPacket(packetStartTraining);
+                if (eyeTrackerManager != null) {
+                    JSONObject packetStartTraining = new JSONObject();
+                    packetStartTraining.put("TYPE", "TRAINING");
+                    packetStartTraining.put("CHILD_ID", patientID);
+
+                    eyeTrackerManager.sendPacket(packetStartTraining);
+                }
+                else {
+                    
+                    JSONObject packetEyeTrackerNotReady = new JSONObject();
+                    packetEyeTrackerNotReady.put("TYPE", "EYE_TRACKER_NOT_READY");
+                    
+                    doctorManager.sendPacket(packetEyeTrackerNotReady);
+                }
                 
                  // se non ho appena calcolato il valore di offset (offsetCalculated == false)
                 // recupero il valore di offset dal mio DB

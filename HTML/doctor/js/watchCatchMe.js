@@ -40,7 +40,7 @@ var CatchMeNamespace = {
 			// Mostro un dialog che dice che è tutto a posto,
 			// e di cliccare quando tutto è pronto x iniziare
 		}
-		else if (dataReceived.TYPE == "TRAINING_SESSION" && dataReceived.DATA == "false") {
+		else if (dataReceived.TYPE == "EYE_TRACKER_READY" && dataReceived.DATA == "false") {
 			
 			websocket.onmessage = CatchMeNamespace.manageMessagesGame;
 			
@@ -80,7 +80,7 @@ var CatchMeNamespace = {
 				}
 			});
 		}
-		else if (dataReceived.TYPE == "TRAINING_SESSION" && dataReceived.DATA == "true") {
+		else if (dataReceived.TYPE == "EYE_TRACKER_READY" && dataReceived.DATA == "true") {
 			
 			// dialog to start training session
 			$('<p>').text('Necessario iniziare fase di training per il sistema di eye-tracking prima di iniziare il gioco. Cliccare su Ok per iniziare')
@@ -101,6 +101,53 @@ var CatchMeNamespace = {
 						
 						var packetToSend = {
 							'TYPE': 'START_TRAINING',
+						};
+						
+						websocket.send(JSON.stringify(packetToSend));
+					}
+				}
+			});
+		}
+		else if (dataReceived.TYPE == "EYE_TRACKER_NOT_READY") {
+			$('<p>').text('Il sistema di eye-tracking non è collegato. Si desidera procedere con la visita senza analisi del movimento degli occhi?')
+			.appendTo($('<div>').attr('id', 'dialogTrackerNotReady').attr('title', 'Tracciamento degli occhi non collegato').appendTo('#divMainContent'))
+			.dialog({
+				modal: true,
+				resizable: false,
+				closeOnEscape: false,
+				draggable: false,
+				width: getScreenWidth() * 0.5,
+				buttons: {
+					"Continua senza": function() {
+						$(this).dialog("close");
+						$(this).remove();
+						
+						withEyeTracker = false;
+						
+						var fakePacket = {
+								TYPE: 'EYE_TRACKER_READY',
+								DATA: 'false'
+						};
+						CatchMeNamespace.entryFunction(JSON.stringify(fakePacket));
+						
+					},
+					"Attendi collegamento": function() {
+						console.log("Attendi collegamento");
+						$(this).dialog("close");
+						$(this).remove();
+						$('<p>').text("Collegare il sistema di eye-tracking per continuare...").appendTo(
+							$('<div>').attr('id', '#dialogWaitingTracker').attr('title', 'In Attesa...').appendTo('#divMainContent')
+							.dialog({
+								modal: true,
+								resizable: false,
+								closeOnEscape: false,
+								draggable: false,
+								width: getScreenWidth() * 0.4
+							})
+						);
+						
+						var packetToSend = {
+							TYPE: 'WAITING_TRACKER'
 						};
 						
 						websocket.send(JSON.stringify(packetToSend));

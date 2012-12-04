@@ -44,13 +44,30 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
                         messageManager.bufferSynchronizer.notifyAll();
                     }
                 }
-                else if (packet.get("TYPE").equals("READY_TO_PLAY")) {
-
-                    System.out.println("Eye_Tracker_Manager READY TO START");
-                }
                 else if (packet.get("TYPE").equals("TRAINING_POSITIONS")) {
 
                     patientManager.sendPacket(packet);
+                }
+                else if (packet.get("TYPE").equals("READY_TO_PLAY")) {
+
+                    System.out.println("Eye_Tracker_Manager READY TO START");
+                    if (waitingForTracker) {
+                        waitingForTracker = false;
+                        
+                        JSONObject packetForTraining = new JSONObject();
+                        packetForTraining.put("TYPE", "TRAINING");
+                        packetForTraining.put("CHILD_ID", patientID);
+                        
+                        clientConnected.send(packetForTraining.toJSONString());
+                    }
+                }
+                else if (packet.get("TYPE").equals("TRAINING")) {
+                    
+                    JSONObject packetForDoctor = new JSONObject();
+                    packetForDoctor.put("TYPE", "EYE_TRACKER_READY");
+                    packetForDoctor.put("DATA", packet.get("DATA"));
+                    
+                    doctorManager.sendPacket(packetForDoctor);
                 }
                 else if (packet.get("TYPE").equals("TRAINING_SESSION")) {
                     doctorManager.sendPacket(packet);

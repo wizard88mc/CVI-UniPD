@@ -4,6 +4,8 @@ var listOfLevelTipologies = [];
 var listOfImages = [];
 var familySound = new Object();
 var divTabs = null;
+var screenWidth = 0;
+var screenHeight = 0;
 
 function ImageGame(ID,name, fileName) {
 	this.imageID = ID;
@@ -78,7 +80,7 @@ var HelpMeSettingsNamespace = {
 	
 	buildSelectImages: function(imageID) {
 		
-		var select = $('<select></select>');
+		var select = $('<select>');
 		
 		if (imageID == -1) {
 			$('<option>').attr('value', "").attr('selected', 'selected').appendTo(select);
@@ -122,7 +124,7 @@ var HelpMeSettingsNamespace = {
 	
 	buildSelectTargetFamily: function(targetFamily) {
 		
-		var select = $('<select>').addClass('class', 'selectTargetFamily');
+		var select = $('<select>').addClass('selectTargetFamily');
 		
 		if (targetFamily == null) {
 			$('<option>').attr('value', '').attr('selected', 'selected').appendTo(select);
@@ -197,6 +199,35 @@ var HelpMeSettingsNamespace = {
 				return listOfImages[i].fileName;
 			}
 		}
+	},
+	
+	requestScreenClient: function() {
+		
+		var packetToSend = {
+			TYPE: 'SCREEN_MEASURES'
+		}
+		
+		websocket.onmessage = function(message) {
+			
+			var data = JSON.parse(message.data);
+			if (data.TYPE == "SCREEN_MEASURES") {
+				
+				if (data.RESULT == true) {
+					screenWidth = data.SCREEN_WIDTH;
+					screenHeight = data.SCREEN_HEIGHT;
+					
+					HelpMeSettingsNamespace.getImagesFamilies();
+				}
+				else {
+					if (data.ERROR == "01") {
+						console.log("Errore: nessun client connesso");
+					}
+				}
+				
+			}
+		};
+		
+		websocket.send(JSON.stringify(packetToSend));
 	},
 
 	getImagesFamilies: function() {
@@ -328,6 +359,13 @@ var HelpMeSettingsNamespace = {
 			websocket.send(JSON.stringify(packet));
 			
 			$('#divMainContent div, #divMainContent table').remove();
+			imagesFamily = new Object();
+			listOfLevels = [];
+			listOfLevelTipologies = [];
+			listOfImages = [];
+			familySound = new Object();
+			divTabs = null;
+			
 			NewVisitNamespace.initializePage();
 		})
 		
@@ -623,12 +661,14 @@ var HelpMeSettingsNamespace = {
 		
 		var packetToSend = {
 			TYPE: "GAME_SETTINGS",
-			LEVELS: levels
+			LEVELS: levels,
+			GAME_ID: gameID,
+			PATIENT_ID: patientID
 		};
 			
 		websocket.send(JSON.stringify(packetToSend));
 
-		websocket.onmessage = HelpMeNamespace.entryFunction;
+		HelpMeNamespace.initializePage();
 		
 	}
 }

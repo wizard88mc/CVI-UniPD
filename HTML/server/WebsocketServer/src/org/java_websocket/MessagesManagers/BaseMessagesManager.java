@@ -30,9 +30,10 @@ public abstract class BaseMessagesManager extends Thread {
     protected String fileEyeTracking = null;
     protected String fileSpecs = null;
     protected int visitID = 0;
+    protected boolean withEyeTracker = false;
 
-    public final ArrayList<JSONObject> messagesGameBuffer = new ArrayList<JSONObject>();
-    public final ArrayList<JSONObject> messagesEyeTrackerBuffer = new ArrayList<JSONObject>();
+    public ArrayList<JSONObject> messagesGameBuffer = new ArrayList<JSONObject>();
+    public ArrayList<JSONObject> messagesEyeTrackerBuffer = new ArrayList<JSONObject>();
     public long startTime = 0;
 
     public final Object bufferSynchronizer = new Object();
@@ -41,9 +42,13 @@ public abstract class BaseMessagesManager extends Thread {
 
     protected static DoctorClientManager doctorManager = null;
 
-    public BaseMessagesManager(String patientID, int visitID) {
+    public BaseMessagesManager(String patientID, int visitID, boolean withEyeTracker) {
 
-        this.visitID = visitID;
+        this.visitID = visitID; this.withEyeTracker = withEyeTracker;
+        
+        if (!this.withEyeTracker) {
+            messagesEyeTrackerBuffer = null;
+        }
         // devo creare cartella dove salverò i file
         Calendar giornoVisita = Calendar.getInstance();
         String anno = new Integer(giornoVisita.get(Calendar.YEAR)).toString();
@@ -160,4 +165,9 @@ public abstract class BaseMessagesManager extends Thread {
     public void manageDifferentGameData(JSONObject packet) {}
     
     public void gameIsEnded() {}
+    
+    public void withoutTracker() {
+        this.withEyeTracker = false;
+        messagesEyeTrackerBuffer = null;
+    }
 }

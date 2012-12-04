@@ -18,6 +18,9 @@ import org.json.simple.JSONObject;
 public abstract class BaseManager extends WebSocketServer {
     
     protected String clientType = null;
+    protected static String gameIdentification = null;
+    protected static String patientID = null;
+    protected static boolean waitingForTracker = false;
     protected static ServerManager serverManager;
     protected WebSocket clientConnected = null;
     protected int machineID = 0;

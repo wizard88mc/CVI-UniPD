@@ -18,6 +18,6 @@ function cacheUpdateReady(e) {
 	
 	if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
 		window.applicationCache.swapCache();
-		operationsCacheFinisched(null);
+		operationsCacheFinished(null);
 	}
 }

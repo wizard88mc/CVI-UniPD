@@ -4,15 +4,16 @@
  * @version 0.1
  */
 
-var gameID = null;
-var patientID = null;
+var gameID = -1;
+var patientID = -1;
 var name = null;
 var surname = null;
 var gameReady = false;
 var arrayOfDescriptionGames = Array();
 var arrayOfFoldersGames = Array();
 var identificationType = 'GAME_CLIENT';
-var doctorID = getFromSessionStorage("doctorID"); 
+var doctorID = getFromSessionStorage("doctorID");
+var useEyeTracker = true;
 
 var NewVisitNamespace = {
 
@@ -193,7 +194,7 @@ goToGame: function() {
 						try {
 							var data = JSON.parse(message.data);
 							if (data.TYPE == "GAME" && data.RESULT == true) {
-								HelpMeSettingsNamespace.getImagesFamilies();
+								setTimeout(HelpMeSettingsNamespace.requestScreenClient, 3000);
 							}
 							else if (data.TYPE == "GAME" && data.RESULT == false) {
 								NewVisitNamespace.noClientConnected();

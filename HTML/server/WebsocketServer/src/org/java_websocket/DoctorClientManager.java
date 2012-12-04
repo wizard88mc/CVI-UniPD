@@ -18,7 +18,6 @@ import org.java_websocket.MessagesManagers.HelpMeMessagesManager;
  */
 public class DoctorClientManager extends BaseManager {
     
-    protected String patientID = null;
     protected ArrayList<String> messagesToSend = new ArrayList<String>();
     
     public DoctorClientManager(int port) throws UnknownHostException {
@@ -87,6 +86,13 @@ public class DoctorClientManager extends BaseManager {
             
             patientManager.sendPacket(packet);
             
+            patientID = (String)packet.get("PATIENT_ID");
+            gameIdentification = dbManager.getGameIdentification((String)packet.get("GAME_ID"));
+            
+        }
+        else if (packet.get("TYPE").equals("WAITING_TRACKER")) {
+            
+            waitingForTracker = true;
         }
         else if (packet.get("TYPE").equals("START_PRESENTATION") || 
                 packet.get("TYPE").equals("GO_BACK")) {
@@ -98,18 +104,21 @@ public class DoctorClientManager extends BaseManager {
             eyeTrackerManager.sendPacket(packet);
             patientManager.sendPacket(packet);
         }
+        else if (packet.get("TYPE").equals("WITHOUT_TRACKER")) {
+            
+        }
         else if (packet.get("TYPE").equals("SESSION_SPECS")) {
             
             // convertire in long e poi in stringhe
-            patientID = (String)packet.get("PATIENT_ID");
-            String gameIdentification = (String)packet.get("GAME_ID");
+            //patientID = (String)packet.get("PATIENT_ID");
+            //String gameIdentification = (String)packet.get("GAME_ID");
             int gameID = dbManager.getGameID(gameIdentification);
             int visitID = dbManager.insertNewVisit(new Integer(patientID), 
                     new Integer(gameID));
             
             System.out.println("Game identification: " + gameIdentification);
             
-            if (gameIdentification.equals("CATCH_ME")) {
+            /*if (gameIdentification.equals("CATCH_ME")) {
                 messageManager = new CatchMeMessagesManager(patientID, visitID);
                 String folder = messageManager.getFolderWhereArchive();
                 dbManager.setFolder(visitID, folder);
@@ -118,12 +127,13 @@ public class DoctorClientManager extends BaseManager {
                 messageManager = new HelpMeMessagesManager(patientID, visitID);
                 String folder = messageManager.getFolderWhereArchive();
                 dbManager.setFolder(visitID, folder);
-            }
+            }*/
         }
         else if (packet.get("TYPE").equals("START_GAME")) {
             
-            patientID = (String)packet.get("PATIENT_ID");
-            String gameIdentification = (String)packet.get("GAME_ID");
+            //patientID = (String)packet.get("PATIENT_ID");
+            //String gameIdentification = (String)packet.get("GAME_ID");
+            Boolean withEyeTracker = (Boolean)packet.get("WITH_TRACKER");
             int gameID = dbManager.getGameID(gameIdentification);
             int visitID = dbManager.insertNewVisit(new Integer(patientID), 
                     new Integer(gameID));
@@ -131,13 +141,13 @@ public class DoctorClientManager extends BaseManager {
             System.out.println("Game identification: " + gameIdentification);
             
             if (gameIdentification.equals("CATCH_ME")) {
-                messageManager = new CatchMeMessagesManager(patientID, visitID);
+                messageManager = new CatchMeMessagesManager(patientID, visitID, withEyeTracker.booleanValue());
                 String folder = messageManager.getFolderWhereArchive();
                 dbManager.setFolder(visitID, folder);
                 patientManager.writeGameSpecs();
             }
             else if (gameIdentification.equals("HELP_ME")) {
-                messageManager = new HelpMeMessagesManager(patientID, visitID);
+                messageManager = new HelpMeMessagesManager(patientID, visitID, withEyeTracker.booleanValue());
                 String folder = messageManager.getFolderWhereArchive();
                 dbManager.setFolder(visitID, folder);
             }

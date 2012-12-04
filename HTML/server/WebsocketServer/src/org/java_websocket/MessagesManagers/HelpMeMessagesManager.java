@@ -26,8 +26,8 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
     
     //protected long lastTimeValidPacket = 0L;
     
-    public HelpMeMessagesManager(String patientID, int visitID) {
-        super(patientID, visitID);
+    public HelpMeMessagesManager(String patientID, int visitID, boolean withTracker) {
+        super(patientID, visitID, withTracker);
         
         String fileResults = folderWhereArchive.concat("Results.txt");
         try {
@@ -46,125 +46,162 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
         stupidPositions.add(-1L);
         
         while (!endGame) {
-            synchronized(bufferSynchronizer) {
-                while (messagesGameBuffer.isEmpty() && messagesEyeTrackerBuffer.isEmpty()) {
-                    try {
-                        bufferSynchronizer.wait();
+            
+            if (this.withEyeTracker) {
+                synchronized(bufferSynchronizer) {
+                    while (messagesGameBuffer.isEmpty() && messagesEyeTrackerBuffer.isEmpty()) {
+                        try {
+                            bufferSynchronizer.wait();
+                        }
+                        catch(InterruptedException exc) {}
                     }
-                    catch(InterruptedException exc) {}
                 }
-            }
-            
-            boolean removeMessageEyeTracker = false;
-            boolean removeMessageGame = false;
-            HelpMeDataPacket imageInformations = null;
-            EyeTrackerDataPacket eyeTrackerInformations = null;
-            
-            if (!removeMessageEyeTracker && !removeMessageGame && 
-                    !messagesGameBuffer.isEmpty() && !messagesEyeTrackerBuffer.isEmpty()) {
-                
-                imageInformations = 
-                        new HelpMeDataPacket(messagesGameBuffer.get(0));
-                eyeTrackerInformations = 
-                        new EyeTrackerDataPacket(messagesEyeTrackerBuffer.get(0));
-                
-                Long timeMessageGame = imageInformations.getTime();
-                Long timeEyeTrackerMessage = eyeTrackerInformations.getTime();
 
-                Long deltaTime = Math.abs(timeMessageGame - timeEyeTrackerMessage);
-                
-                if (deltaTime <= MAX_DIFFERENCE) {
-                    removeMessageEyeTracker = true;
-                    removeMessageGame = true;
-                    
-                    long time = (eyeTrackerInformations.getTime() + imageInformations.getTime())
-                            / 2;
-                    
-                    eyeTrackerInformations.setTime(time);
-                    imageInformations.setTime(time);
-                    
-                    writeEyeTrackerMessage(eyeTrackerInformations);
-                    writeImageMessage(imageInformations);
-                     System.out.println("Entrambi");
-                    
+                boolean removeMessageEyeTracker = false;
+                boolean removeMessageGame = false;
+                HelpMeDataPacket imageInformations = null;
+                EyeTrackerDataPacket eyeTrackerInformations = null;
+
+                if (!removeMessageEyeTracker && !removeMessageGame && 
+                        !messagesGameBuffer.isEmpty() && !messagesEyeTrackerBuffer.isEmpty()) {
+
+                    imageInformations = 
+                            new HelpMeDataPacket(messagesGameBuffer.get(0));
+                    eyeTrackerInformations = 
+                            new EyeTrackerDataPacket(messagesEyeTrackerBuffer.get(0));
+
+                    Long timeMessageGame = imageInformations.getTime();
+                    Long timeEyeTrackerMessage = eyeTrackerInformations.getTime();
+
+                    Long deltaTime = Math.abs(timeMessageGame - timeEyeTrackerMessage);
+
+                    if (deltaTime <= MAX_DIFFERENCE) {
+                        removeMessageEyeTracker = true;
+                        removeMessageGame = true;
+
+                        long time = (eyeTrackerInformations.getTime() + imageInformations.getTime())
+                                / 2;
+
+                        eyeTrackerInformations.setTime(time);
+                        imageInformations.setTime(time);
+
+                        writeEyeTrackerMessage(eyeTrackerInformations);
+                        writeImageMessage(imageInformations);
+                        System.out.println("Entrambi");
+
+                    }
+                    else if (timeMessageGame < timeEyeTrackerMessage) {
+                        // devo spedire solo pacchetto relativo all'immagine
+                        removeMessageGame = true;
+                        writeImageMessage(imageInformations);
+
+                        JSONObject stupidEye = new JSONObject();
+                        stupidEye.put("TIME", imageInformations.getTime());
+                        stupidEye.put("POSX", -1L);
+                        stupidEye.put("POSY", -1L);
+
+                        writeEyeTrackerMessage(new EyeTrackerDataPacket(stupidEye));
+
+                        System.out.println("Solo immagine");
+                    }
+                    else if (timeEyeTrackerMessage < timeMessageGame) {
+                        // devo spedire solo pacchetto relativo all'eye-tracker
+                        removeMessageEyeTracker = true;
+                        writeEyeTrackerMessage(eyeTrackerInformations);
+
+                        JSONObject stupidImage = new JSONObject();
+                        stupidImage.put("TIME", eyeTrackerInformations.getTime());
+                        stupidImage.put("TOUCH", stupidPositions);
+                        stupidImage.put("IMAGE", stupidPositions);
+
+                        writeImageMessage(new HelpMeDataPacket(stupidImage));
+                    }
                 }
-                else if (timeMessageGame < timeEyeTrackerMessage) {
-                    // devo spedire solo pacchetto relativo all'immagine
-                    removeMessageGame = true;
-                    writeImageMessage(imageInformations);
+                else if (messagesGameBuffer.isEmpty()) {
+                    // ho solo messaggi eye tracker, non delle immagini
+                    eyeTrackerInformations = 
+                            new EyeTrackerDataPacket(messagesEyeTrackerBuffer.get(0));
+
+                    if (System.currentTimeMillis() - startTime - eyeTrackerInformations.getTime() > MAX_TIME_WAITING) {
+
+                        removeMessageEyeTracker = true;
+                        writeEyeTrackerMessage(eyeTrackerInformations);
+
+                        JSONObject stupidImage = new JSONObject();
+                        stupidImage.put("TIME", eyeTrackerInformations.getTime());
+                        stupidImage.put("TOUCH", stupidPositions);
+                        stupidImage.put("IMAGE", stupidPositions);
+
+                        writeImageMessage(new HelpMeDataPacket(stupidImage));
+
+                        System.out.println("Immagini vuoto");
+                    }
+                }
+                else if (messagesEyeTrackerBuffer.isEmpty()) {
+                    imageInformations = new HelpMeDataPacket(messagesGameBuffer.get(0));
+
+                    if (System.currentTimeMillis() - startTime - imageInformations.getTime() > MAX_TIME_WAITING) {
+                        removeMessageGame = true;
+                        writeImageMessage(imageInformations);
+
+                        JSONObject stupidEye = new JSONObject();
+                        stupidEye.put("TIME", imageInformations.getTime());
+                        stupidEye.put("POSX", -1L);
+                        stupidEye.put("POSY", -1L);
+
+                        writeEyeTrackerMessage(new EyeTrackerDataPacket(stupidEye));
+
+                        System.out.println("Eye tracker vuoto");
+                    }
+                }
+
+                if (removeMessageEyeTracker || removeMessageGame) {
+                    if (removeMessageEyeTracker) {
+                        
+                        synchronized(bufferSynchronizer) {
+                            messagesEyeTrackerBuffer.remove(0);
+                        }
+                    }
+                    if (removeMessageGame) {
+
+                        synchronized(bufferSynchronizer) {
+                            messagesGameBuffer.remove(0);
+                        }
+                    }
+                        //lastTimeValidPacket -= MAX_DIFFERENCE;
+                    HelpMeDoctorMessage message = new HelpMeDoctorMessage(imageInformations, eyeTrackerInformations);
+                    doctorManager.sendMessageToDoctorClient(message);
+                }
+            }
+            else {
+                synchronized(bufferSynchronizer) {
+                    while (messagesGameBuffer.isEmpty()) {
+                        try {
+                            bufferSynchronizer.wait();
+                        }
+                        catch(InterruptedException exc) {}
+                    }
+                }
+                
+                if (!messagesGameBuffer.isEmpty()) {
                     
+                    HelpMeDataPacket packet = new HelpMeDataPacket(messagesGameBuffer.get(0));
+                    
+                    writeImageMessage(packet);
+
                     JSONObject stupidEye = new JSONObject();
-                    stupidEye.put("TIME", imageInformations.getTime());
+                    stupidEye.put("TIME", packet.getTime());
                     stupidEye.put("POSX", -1L);
                     stupidEye.put("POSY", -1L);
-                    
+
                     writeEyeTrackerMessage(new EyeTrackerDataPacket(stupidEye));
                     
-                    System.out.println("Solo immagine");
+                    synchronized(bufferSynchronizer) {
+                        messagesGameBuffer.remove(0);
+                    }
+                    HelpMeDoctorMessage message = new HelpMeDoctorMessage(packet, null);
+                    doctorManager.sendMessageToDoctorClient(message);
                 }
-                else if (timeEyeTrackerMessage < timeMessageGame) {
-                    // devo spedire solo pacchetto relativo all'eye-tracker
-                    removeMessageEyeTracker = true;
-                    writeEyeTrackerMessage(eyeTrackerInformations);
-                    
-                    JSONObject stupidImage = new JSONObject();
-                    stupidImage.put("TIME", eyeTrackerInformations.getTime());
-                    stupidImage.put("TOUCH", stupidPositions);
-                    stupidImage.put("IMAGE", stupidPositions);
-                    
-                    writeImageMessage(new HelpMeDataPacket(stupidImage));
-                }
-            }
-            else if (messagesGameBuffer.isEmpty()) {
-                // ho solo messaggi eye tracker, non delle immagini
-                eyeTrackerInformations = 
-                        new EyeTrackerDataPacket(messagesEyeTrackerBuffer.get(0));
-                
-                if (System.currentTimeMillis() - startTime - eyeTrackerInformations.getTime() > MAX_TIME_WAITING) {
-                    
-                    removeMessageEyeTracker = true;
-                    writeEyeTrackerMessage(eyeTrackerInformations);
-                    
-                    JSONObject stupidImage = new JSONObject();
-                    stupidImage.put("TIME", eyeTrackerInformations.getTime());
-                    stupidImage.put("TOUCH", stupidPositions);
-                    stupidImage.put("IMAGE", stupidPositions);
-                    
-                    writeImageMessage(new HelpMeDataPacket(stupidImage));
-                    
-                    System.out.println("Immagini vuoto");
-                }
-            }
-            else if (messagesEyeTrackerBuffer.isEmpty()) {
-                imageInformations = new HelpMeDataPacket(messagesGameBuffer.get(0));
-                
-                if (System.currentTimeMillis() - startTime - imageInformations.getTime() > MAX_TIME_WAITING) {
-                    removeMessageGame = true;
-                    writeImageMessage(imageInformations);
-                    
-                    JSONObject stupidEye = new JSONObject();
-                    stupidEye.put("TIME", imageInformations.getTime());
-                    stupidEye.put("POSX", -1L);
-                    stupidEye.put("POSY", -1L);
-                    
-                    writeEyeTrackerMessage(new EyeTrackerDataPacket(stupidEye));
-                    
-                     System.out.println("Eye tracker vuoto");
-                }
-            }
-            
-            if (removeMessageEyeTracker || removeMessageGame) {
-                if (removeMessageEyeTracker) {
-                    
-                    messagesEyeTrackerBuffer.remove(0);
-                }
-                if (removeMessageGame) {
-                    
-                    messagesGameBuffer.remove(0);
-                }
-                    //lastTimeValidPacket -= MAX_DIFFERENCE;
-                HelpMeDoctorMessage message = new HelpMeDoctorMessage(imageInformations, eyeTrackerInformations);
-                doctorManager.sendMessageToDoctorClient(message);
             }
         }
     }

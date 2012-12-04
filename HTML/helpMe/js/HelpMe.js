@@ -30,11 +30,16 @@ function presentationComplete() {
 			
 			livelliGioco = data.LEVELS;
 			
-			var packetToSend = {
+			/*var packetToSend = {
 				'TYPE': 'SCREEN_MEASURES',
 				'SCREEN_WIDTH': getScreenWidth(),
 				'SCREEN_HEIGHT': getScreenHeight()
-			}
+			}*/
+			var packetToSend = {
+				'TYPE': 'READY_TO_PLAY',
+				'MACHINE_ID': checkAlreadySync()
+				//'SCREEN_WIDTH': getScreenWidth(),
+			};
 			
 			websocket.send(JSON.stringify(packetToSend));
 		}
@@ -43,18 +48,22 @@ function presentationComplete() {
 			presentationManager = new PresentationManager();
 			presentationManager.createElements();
 			
-			var packetToSend = {
-				'TYPE': 'READY_TO_PLAY',
-				'MACHINE_ID': checkAlreadySync()
-			};
-			
-			websocket.send(JSON.stringify(packetToSend));
-			
 		}
 		else if (data.TYPE == 'START_WORKING') {
 			
 			gameManager.timeToStart = data.START_TIME;
 			allInfosRetrieved();
+		}
+		else if (data.TYPE == "SCREEN_MEASURES") {
+			
+			var packetToSend = {
+				'TYPE': 'SCREEN_MEASURES',
+				'RESULT': true,
+				'SCREEN_WIDTH': getScreenWidth(),
+				'SCREEN_HEIGHT': getScreenHeight()
+			}
+				
+			websocket.send(JSON.stringify(packetToSend));
 		}
 		else if (data.TYPE == 'GO_BACK') {
 			
