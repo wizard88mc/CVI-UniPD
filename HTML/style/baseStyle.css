@@ -51,11 +51,10 @@ body {
 }
 
 #preloaderWaitingCache {
-	height: 60%;
-	width: auto;
+	width: 30%;
 	margin: auto;
 	position: absolute;
-	left: 40%;
+	left: 35%;
 	top: 20%;
 	z-index: 10;
 }

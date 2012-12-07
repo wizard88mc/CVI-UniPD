@@ -1,0 +1,20 @@
+#dialogSettingsTraining table {
+	margin: auto;
+}
+
+#dialogSettingsTraining h2 {
+	text-align: center;
+	padding-bottom: 0.6em;
+}
+
+#dialogSettingsTraining td {
+	padding-right: 1.3em;
+}
+
+#dialogSettingsTraining select {
+	width: 110%;
+}
+
+#dialogSettingsTraining p {
+	padding-bottom: 0.6em;
+}

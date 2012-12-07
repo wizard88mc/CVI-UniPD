@@ -14,6 +14,8 @@ import org.json.simple.JSONValue;
  */
 public class EyeTrackerManager extends WebSocketWithOffsetCalc {
     
+    public static JSONObject packetWithScreenDimension = null;
+    
     public EyeTrackerManager(int port) throws UnknownHostException {
         super("EyeTrackerClient", port);
     }
@@ -51,6 +53,7 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
                 else if (packet.get("TYPE").equals("READY_TO_PLAY")) {
 
                     System.out.println("Eye_Tracker_Manager READY TO START");
+                    
                     if (waitingForTracker) {
                         waitingForTracker = false;
                         
@@ -89,5 +92,11 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
             return true;
         }
     }
-    
+ 
+    @Override
+    public void onClose(WebSocket client, int code, String reason, boolean remote) {
+        System.out.println("EYE_TRACKER MANAGER Closed");
+        clientConnected = null;
+        eyeTrackerManager = null;
+    }
 }

@@ -73,6 +73,10 @@ function presentationComplete() {
 		else if (data.TYPE == "STOP_GAME") {
 			gameManager.gameInProgress = false;
 		}
+		else if (data.TYPE == "START_TRAINING") {
+			
+			TrainingExamplesNamespace.startTraining();
+		}
 		else {
 			console.log(data);
 			console.log(message);

@@ -43,7 +43,7 @@ $('document').ready(function(e) {
 		'margin-bottom': '0.5em'
 	});
 	
-	var paragraph = $('<p></p>').appendTo('#divMainContent');
+	var paragraph = $('<p>').appendTo('#divMainContent');
 	paragraph.css({
 		width: '20%',
 		'text-align': 'left',

@@ -52,6 +52,7 @@ var HelpMeNamespace = {
 	entryFunction: function(message) {
 		
 		var data = JSON.parse(message.data || message);
+		console.log(data);
 		
 		if (data.TYPE == "EYE_TRACKER_READY" && data.DATA == "false") {
 			
@@ -77,10 +78,22 @@ var HelpMeNamespace = {
 						
 						websocket.send(JSON.stringify(packetToSend));
 						
+						$('<p>').text('Presentazione in corso. Attendere ....').appendTo(
+							$('<div>').attr('id', 'dialogWaitingEndPresentation').attr('title', 'Attendere')
+							.appendTo('#divMainContent').dialog({
+								modal: true,
+								resizable: false,
+								closeOnEscape: false,
+								draggable: false
+							}));
 					}
+					
 				}
 			}));
+		}
+		else if (data.TYPE == "EYE_TRACKER_READY" && data.DATA == true) {
 			
+			TrainingExamplesNamespace.dialogSelectParameters();
 		}
 		else if (data.TYPE == "EYE_TRACKER_NOT_READY") {
 			
@@ -132,6 +145,8 @@ var HelpMeNamespace = {
 		}
 		else if (data.TYPE == 'PRESENTATION_COMPLETE') {
 			
+			$('#dialogWaitingEndPresentation').dialog("close").remove();
+			
 			$('<p>').text('Presentazione completata. Premere Ok per iniziare il gioco').appendTo(
 			$('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Cominciamo!').appendTo('#divMainContent')
 			.dialog({
@@ -144,7 +159,7 @@ var HelpMeNamespace = {
 						$(this).dialog("remove");
 						$(this).remove();
 						
-						$('#divMainContent > h1').text('Aiutami!');
+						$('#divMainContent > h1').text('HelpMe!');
 						
 						var packetToSend = {
 							'TYPE': 'START_GAME',
@@ -276,9 +291,9 @@ var HelpMeNamespace = {
 				goodAnswers[indexCurrentLevel] = 0;
 				badAnswers[indexCurrentLevel] = 0;
 				
-				var row = $('<tr id="' + targetFamily + indexCurrentLevel +'"></tr>')
+				var row = $('<tr>').attr('id', targetFamily + indexCurrentLevel)
 					.css('font-weight', 'bold').appendTo(tableBody);
-				$('<td>').text('Riepilogo').appendTo(row);
+				$('<td>').text('Resume').appendTo(row);
 				$('<td>').text(targetFamily).appendTo(row);
 				$('<td>').addClass('meanValueFRT').appendTo(row);
 				$('<td>').addClass('meanValueCT').appendTo(row);

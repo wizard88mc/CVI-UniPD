@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# revision 0.1
+# revision 0.2
 
 # HTML
 
@@ -41,3 +41,4 @@ style/custom-theme/images/ui-icons_f9bd01_256x240.png
 
 # Images
 images/preloader.gif
+images/logout.png

@@ -1,6 +1,6 @@
 function operationsCacheFinished(e) {
 	
-	if (e.code && e.code == 11) {
+	if (e != null && e.code && e.code == 11) {
 		return;
 	}
 	var appCache = window.applicationCache;

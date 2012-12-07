@@ -38,7 +38,7 @@ startNewGame: function() {
 		$('<p>').text('Non sono state fornite tutte le informazioni necessarie:').appendTo('#errorStartGame');
 		errorsList.appendTo('#errorStartGame');
 		
-		var width = getScreenWidth() * 0.4;
+		var width = getScreenWidth() * 0.5;
 		
 		$('#errorStartGame').dialog({
 			modal: true,
@@ -217,8 +217,7 @@ goToGame: function() {
 
 noServerWorking: function() {
 	
-	$('#waitingParameters').dialog("close");
-	$('waitingParamenter').remove();
+	$('#waitingParameters').dialog("close").remove();
 	
 	$('<p>').text('Attenzione: Server non attivato o non funzionante. Verificare e riprovare')
 		.appendTo($('<div>').attr('id', 'divDialogServerNotWorking').attr('title', 'Attenzione').appendTo('#divMainContent'));
@@ -228,7 +227,7 @@ noServerWorking: function() {
 		modal: true,
 		resizable: false,
 		draggable: false,
-		width: (getScreenWidth() * 0.4),
+		width: (getScreenWidth() * 0.5),
 		buttons: {
 			"Chiudi": function() {
 				$(this).dialog("close");
@@ -241,15 +240,17 @@ noServerWorking: function() {
 
 noClientConnected: function() {
 	
+	$('#waitingParameters').dialog("close").remove();
+	
 	$('<p>').text('Attenzione: nessun dispositivo per il paziente connesso. Collegarlo e riprovare')
 		.appendTo($('<div>').attr('id', 'divDialogNoClientConnected').attr('title', 'Errore')
 		.appendTo('#divMainContent'))
 	
-	$('divDialogNoClientConnected').dialog({
+	$('#divDialogNoClientConnected').dialog({
 		modal: true,
 		resizable: false,
 		draggable: false,
-		width: (getScreenWidth() * 0.4),
+		width: (getScreenWidth() * 0.5),
 		buttons : {
 			"Chiudi": function() {
 				$(this).dialog("close");
@@ -348,13 +349,11 @@ initializePage: function() {
 				
 				listErrors.appendTo('#dialogError');
 				
-				var width = getScreenWidth() * 0.4;
-				
 				$('#dialogErrorInput').dialog({
 					modal: true,
 					resizable: false,
 					draggable: false,
-					width: width, 
+					width: getScreenWidth() * 0.5, 
 					buttons: {
 						Ok: function() {
 							$(this).dialog('close');
@@ -395,12 +394,11 @@ initializePage: function() {
 							$('<p>').text('Operazione completata').appendTo(dialog);
 							$('<p>').text('Il nuovo bambino è già selezionato nell\'elenco a sinistra.').appendTo(dialog);
 							
-							var width = getScreenWidth() * 0.4;
 							dialog.dialog({
 								modal: true, 
 								draggable: false,
 								resizable: false,
-								width: width,
+								width: getScreenWidth() * 0.4,
 								buttons: {
 									Ok: function() {
 										$(this).dialog("destroy");
@@ -418,12 +416,11 @@ initializePage: function() {
 
 							$('<p>').text(data.ERROR).appendTo('#dialogError');
 							
-							var width = getScreenWidth() * 0.4;
 							$('#dialogError').dialog({
 								modal: true,
 								draggable: false,
 								resizable: false,
-								width: width, 
+								width: getScreenWidth() * 0.4, 
 								buttons: {
 									Ok: function() {
 										$(this).dialog("close");

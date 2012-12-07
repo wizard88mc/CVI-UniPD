@@ -21,6 +21,8 @@ public class EyeTrackerSimulator extends Thread {
     private long startTime = 0;
     private String host = null;
     private boolean work = true;
+    private long screenWidth = 0L;
+    private long screenHeight = 0L;
     
     public EyeTrackerSimulator(String host, int port) throws Exception {
         
@@ -33,6 +35,8 @@ public class EyeTrackerSimulator extends Thread {
     @Override
     public void run() {
         System.out.println("EYE_TRACKER PARTITO");
+        int count = 0;
+        long valuex = 0, valuey = 0;
         while (work) {
             try {
                 
@@ -44,9 +48,15 @@ public class EyeTrackerSimulator extends Thread {
             JSONObject message = new JSONObject();
             message.put("TYPE", "EYE_TRACKER_DATA");
             message.put("TIME", new Date().getTime() - startTime);
-            message.put("POSX", (long)(Math.random() * 500));
-            message.put("POSY", (long)(Math.random() * 500));
+            if (count % 40 == 0) {
+                valuex = (long)(Math.random() * 1360);
+                valuey = (long)(Math.random() * 643);
+                count = 0;
+            }
+            message.put("POSX", valuex);
+            message.put("POSY", valuey);
             clientConnecter.send(message.toJSONString());
+            count++;
         }
         System.out.println("*** EYE TRACKER STOPPED ***");
     }
@@ -57,9 +67,10 @@ public class EyeTrackerSimulator extends Thread {
             @Override
             public void run() {
                 
+                long timeToWait = 5000;
                 try {
                 
-                    Thread.sleep((long)(3000));
+                    Thread.sleep((long)(1000));
                 }
                 catch(Exception exc) {
                     System.out.println("Error in EyeTracker");
@@ -67,28 +78,28 @@ public class EyeTrackerSimulator extends Thread {
                 
                 JSONObject firstMessage = new JSONObject();
                 firstMessage.put("TYPE", "TRAINING_POSITIONS");
-                firstMessage.put("POS_LEFT", 150);
-                firstMessage.put("POS_TOP", 150);
+                firstMessage.put("POS_LEFT", Math.random() * screenWidth);
+                firstMessage.put("POS_TOP", Math.random() * screenHeight);
                 
                 clientConnecter.send(firstMessage.toJSONString());
                 
                 try {
                 
-                    Thread.sleep((long)(3000));
+                    Thread.sleep((long)(timeToWait));
                 }
                 catch(Exception exc) {
                     System.out.println("Error in EyeTracker");
                 }
                 JSONObject secondMessage = new JSONObject();
                 secondMessage.put("TYPE", "TRAINING_POSITIONS");
-                secondMessage.put("POS_LEFT", 150);
-                secondMessage.put("POS_TOP", 600);
+                secondMessage.put("POS_LEFT", Math.random() * screenWidth);
+                secondMessage.put("POS_TOP", Math.random() * screenHeight);
                 
                 clientConnecter.send(secondMessage.toJSONString());
                 
                 try {
                 
-                    Thread.sleep((long)(3000));
+                    Thread.sleep((long)(timeToWait));
                 }
                 catch(Exception exc) {
                     System.out.println("Error in EyeTracker");
@@ -96,14 +107,14 @@ public class EyeTrackerSimulator extends Thread {
                 
                 JSONObject thirdMessage = new JSONObject();
                 thirdMessage.put("TYPE", "TRAINING_POSITIONS");
-                thirdMessage.put("POS_LEFT", 800);
-                thirdMessage.put("POS_TOP", 150);
+                thirdMessage.put("POS_LEFT", Math.random() * screenWidth);
+                thirdMessage.put("POS_TOP", Math.random() * screenHeight);
                 
                 clientConnecter.send(thirdMessage.toJSONString());
                 
                 try {
                 
-                    Thread.sleep((long)(3000));
+                    Thread.sleep((long)(timeToWait));
                 }
                 catch(Exception exc) {
                     System.out.println("Error in EyeTracker");
@@ -111,14 +122,14 @@ public class EyeTrackerSimulator extends Thread {
                 
                 JSONObject fourthMessage = new JSONObject();
                 fourthMessage.put("TYPE", "TRAINING_POSITIONS");
-                fourthMessage.put("POS_LEFT", 800);
-                fourthMessage.put("POS_TOP", 600);
+                fourthMessage.put("POS_LEFT", Math.random() * screenWidth);
+                fourthMessage.put("POS_TOP", Math.random() * screenHeight);
                 
                 clientConnecter.send(fourthMessage.toJSONString());
                 
                 try {
                 
-                    Thread.sleep((long)(3000));
+                    Thread.sleep((long)(timeToWait));
                 }
                 catch(Exception exc) {
                     System.out.println("Error in EyeTracker");
@@ -198,7 +209,7 @@ public class EyeTrackerSimulator extends Thread {
                 }
                 else if (packet.get("TYPE").equals("TRAINING")) {
                     
-                    packet.put("DATA", "false");
+                    packet.put("DATA", true);
                     clientConnecter.send(packet.toJSONString());
                 }
                 else if (packet.get("TYPE").equals("OFFSET_CALCULATION")) {
@@ -226,6 +237,15 @@ public class EyeTrackerSimulator extends Thread {
                     packetToSend.put("TYPE", "READY_TO_PLAY");
                     
                     clientConnecter.send(packetToSend.toJSONString());
+                }
+                else if (packet.get("TYPE").equals("SCREEN_MEASURES")) {
+                    System.out.println("EYE TRACKER: Screen dimensions received");
+                    
+                    screenWidth = ((Long)packet.get(("SCREEN_WIDTH"))).longValue();
+                    screenHeight = ((Long)packet.get("SCREEN_HEIGHT")).longValue();
+                }
+                else if (packet.get("TYPE").equals("TRAINING_SETTINGS")) {
+                    EyeTrackerSimulator.this.simulateTraining();
                 }
             }
 

@@ -48,7 +48,7 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
         JSONObject packet = (JSONObject)JSONValue.parse(message);
         
         if (packet.get("TYPE").equals("IDENTIFICATION") && clientConnected != null) {
-            BaseManager.patientManager = this;
+            patientManager = this;
         }
         if (!alreadyManaged) {
             
@@ -72,6 +72,20 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                     packetType.equals("LEVEL_ENDED"))  {
                 
                 doctorManager.sendPacket(packet);
+                
+                /**
+                 * If the eye-tracker software is already connected, 
+                 * send it the screen dimension
+                 */
+                if (packetType.equals("SCREEN_MEASURES")) {
+                    
+                    if (eyeTrackerManager == null) {
+                        EyeTrackerManager.packetWithScreenDimension = packet;
+                    }
+                    else {
+                        eyeTrackerManager.sendPacket(packet);
+                    }
+                }
             }
             else if (packetType.equals("READY_TO_PLAY")) {                     
 
@@ -126,6 +140,13 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
         }
 
         return true; 
+    }
+    
+    @Override
+    public void onClose(WebSocket client, int code, String reason, boolean remote) {
+        System.out.println("CHILD_MANAGER Closed");
+        clientConnected = null;
+        patientManager = null;
     }
     
     public void writeGameSpecs() {

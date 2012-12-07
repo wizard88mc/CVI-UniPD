@@ -27,6 +27,11 @@ var ImageForTraining = function() {
 			left: this.drawPosition.left,
 			top: this.drawPosition.top
 		});
+		
+		this.element.removeClass().addClass('animated bounceIn');
+		setTimeout(function() {
+			imageForTraining.element.removeClass().css('opacity', '1');
+		}, 1300);
 	}
 	
 }
@@ -60,7 +65,7 @@ var TrainingExamplesNamespace = {
 			opacity: '0',
 			width: width,
 			height: height,
-			position: 'relative'
+			position: 'absolute'
 		});
 		
 		var center = new Point(getScreenHeight() / 2, getScreenWidth() / 2);
@@ -81,6 +86,73 @@ var TrainingExamplesNamespace = {
 			imageForTraining.moveObject(centerToDraw);
 			imageForTraining.drawObject();
 		}
+	},
+	
+	dialogSelectParameters: function() {
+		
+		var selectNumberPoints = $('<select>').attr('id', 'selectNumberOfPoints');
+		$('<option>').attr('value', '5').attr('selected', 'selected').text('5 punti').appendTo(selectNumberPoints);
+		$('<option>').attr('value', '7').text('7 punti').appendTo(selectNumberPoints);
+		$('<option>').attr('value', '9').text('9 punti').appendTo(selectNumberPoints);
+		
+		var selectTimePerPoint = $('<select>').attr('id', 'selectTimePerPoint');
+		$('<option>').attr('value', '10').attr('selected', 'selected').text('10 secondi').appendTo(selectTimePerPoint);
+		$('<option>').attr('value', '15').text('15 secondi').appendTo(selectTimePerPoint);
+		$('<option>').attr('value', '20').text('20 secondi').appendTo(selectTimePerPoint);
+		
+		var tableForm = $('<table>');
+		$('<tbody>').appendTo(tableForm);
+		
+		
+		var row = $('<tr><td>Numero di punti per il training: </td></tr>').appendTo(tableForm);
+		$(selectNumberPoints).appendTo($('<td>').appendTo(row));
+				
+		row = $('<tr><td>Tempo per ogni punto: </td></tr>').appendTo(tableForm);
+		$(selectTimePerPoint).appendTo($('<td>').appendTo(row));
+		
+		var divContainer = $('<div>');
+		$('<h2>').text('Impostazioni per il training').appendTo(divContainer);
+		$('<p>').text("E' necessario effettuare il training del sistema di eye tracking per continuare. Settare le impostazioni e cliccare su \"Inizia\".")
+			.appendTo(divContainer);
+		
+		tableForm.appendTo(divContainer);
+		
+		divContainer.appendTo($('<div>').attr('id', 'dialogSettingsTraining').attr('title', 'Impostazioni')
+			.appendTo('#divMainContent').dialog({
+				modal: true,
+				resizable: false,
+				draggable: false,
+				closeOnEscape: false,
+				width: getScreenWidth() * 0.6,
+				buttons: {
+					"Inizia": function() {
+						
+						var numberOfPoints = $('select#selectNumberOfPoints').val();
+						var totalSeconds = $('select#selectTimePerPoint').val();
+						
+						var packetWithSettings = {
+							TYPE: 'TRAINING_SETTINGS',
+							POINTS: numberOfPoints,
+							SECONDS: totalSeconds
+						};
+						
+						websocket.send(JSON.stringify(packetWithSettings));
+						
+						$(this).dialog("close");
+						$(this).destroy();
+						
+						$('<p>').text('Training in corso. Attendere ....').appendTo(
+							$('<div>').attr('id', 'dialogWaitingCompleteTraining').attr('title', 'Attendere')
+							.appendTo('#divMainContent').dialog({
+								modal: true,
+								resizable: false,
+								draggable: false,
+								closeOnEscape: false
+							})
+						);
+					}
+				}
+			}));
 	}
 
 }

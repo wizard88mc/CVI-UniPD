@@ -73,3 +73,8 @@ td.ui-selected {
 .divSelectMaxTime select {
 	width: 20%;
 }
+
+.badSettings {
+	background-color: #FF0000;
+	font-weight: bold;
+}

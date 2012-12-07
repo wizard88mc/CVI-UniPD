@@ -20,6 +20,7 @@ js/graphsettings.js
 ../js/jquery.slider.min.js
 ../js/colorpicker/farbtastic.js
 ../js/Utilities.js
+../js/TrainingManager.js
 js/nuovavisita.js
 js/CatchMeSettings.js
 js/HelpMeSettings.js
@@ -32,13 +33,13 @@ js/index.js
 
 # CSS
 
-<link rel="stylesheet" href="style/index.css" />
-<link rel="stylesheet" href="style/settingsHelpMe.css" />
-<link rel="stylesheet" href="../style/custom-theme/jquery-ui-1.8.21.custom.css" />
-<link rel="stylesheet" href="../style/jquery.slider.min.css" />
-<link rel="stylesheet" href="style/watchHelpMe.css" />
-<link href="../js/colorpicker/farbtastic.css" rel="stylesheet" />
-<link rel="stylesheet" href="../style/baseStyle.css" />
+style/index.css
+style/settingsHelpMe.css
+../style/custom-theme/jquery-ui-1.8.21.custom.css
+../style/jquery.slider.min.css
+style/watchHelpMe.css
+../js/colorpicker/farbtastic.css
+../style/baseStyle.css
 
 style/baseStyle.css
 style/index.css

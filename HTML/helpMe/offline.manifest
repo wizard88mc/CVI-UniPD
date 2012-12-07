@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# version 0.1.1
+# version 0.2.8
 
 # HTML
 index.html
@@ -7,9 +7,11 @@ index.html
 # CSS
 style/style.css
 ../style/baseStyle.css
+../style/animate-custom.css
 
 # System Images
 ../images/preloader.gif
+../images/training_image3.png
 
 # Javascript
 
@@ -31,6 +33,7 @@ js/TouchEventsManager.js
 ../js/WebSocketManager.js
 ../js/Utilities.js
 ../js/OfflineManager.js
+../js/TrainingManager.js
 js/ExamplesManager.js
 js/PresentationManager.js
 js/HelpMe.js

@@ -6,6 +6,7 @@ var familySound = new Object();
 var divTabs = null;
 var screenWidth = 0;
 var screenHeight = 0;
+var totalErrors = 0;
 
 function ImageGame(ID,name, fileName) {
 	this.imageID = ID;
@@ -114,7 +115,12 @@ var HelpMeSettingsNamespace = {
 			
 			console.log(isImageCorrect);
 			if (!isImageCorrect) {
-				// indicare che l'immagine selezionata non è corretta
+				$(this).parent().parent('tr').children('td').addClass('badSettings');
+				totalErrors++;
+			}
+			else {
+				$(this).parent().parent('tr').children('td').removeClass('badSettings');
+				totalErrors--;
 			}
 			
 		})
@@ -169,12 +175,27 @@ var HelpMeSettingsNamespace = {
 	
 	makeRowSelectable: function(row) {
 		
-		$(row).selectable({
-			stop: function() {
-				$('td.ui-selected, tr.ui-selected').removeClass('ui-selected');
+		$(row).bind('mousedown', function(e) {
+			e.metaKey = true;
+		}).selectable({
+			//selected: function() {
+				/*console.log("selected");
 				$(this).children().addClass('ui-selected');
-				$(this).addClass('ui-selected');
-			}
+				$(this).addClass('ui-selected');*/
+				
+			//}
+			/*stop: function() {
+				$('td.ui-selected, tr.ui-selected').removeClass('ui-selected');
+				
+				if ($(this).children('td.ui-selected').length > 0) {
+					$(this).removeClass('ui-selected');
+				}
+				else {
+					$(this).children().addClass('ui-selected');
+					$(this).addClass('ui-selected');
+				}
+				
+			}*/
 		});
 	},
 	
@@ -221,6 +242,7 @@ var HelpMeSettingsNamespace = {
 				else {
 					if (data.ERROR == "01") {
 						console.log("Errore: nessun client connesso");
+						NewVisitNamespace.noClientConnected();
 					}
 				}
 				

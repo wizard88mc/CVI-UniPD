@@ -99,6 +99,7 @@ requestScreenClient: function() {
 			else {
 				if (data.ERROR == "01") {
 					console.log("Errore: nessun client connesso");
+					NewVisitNamespace.noClientConnected();
 				}
 			}
 			

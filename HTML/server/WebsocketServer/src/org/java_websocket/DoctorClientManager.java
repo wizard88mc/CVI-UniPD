@@ -104,30 +104,20 @@ public class DoctorClientManager extends BaseManager {
             eyeTrackerManager.sendPacket(packet);
             patientManager.sendPacket(packet);
         }
+        else if (packet.get("TYPE").equals("TRAINING_SETTINGS")) {
+            
+            /**
+             * Create a packet to send to the child client
+             * to inform that there will be a training session
+             */
+            JSONObject packetForChild = new JSONObject();
+            packetForChild.put("TYPE", "START_TRAINING");
+            patientManager.sendPacket(packetForChild);
+            
+            eyeTrackerManager.sendPacket(packet);
+        }
         else if (packet.get("TYPE").equals("WITHOUT_TRACKER")) {
             
-        }
-        else if (packet.get("TYPE").equals("SESSION_SPECS")) {
-            
-            // convertire in long e poi in stringhe
-            //patientID = (String)packet.get("PATIENT_ID");
-            //String gameIdentification = (String)packet.get("GAME_ID");
-            int gameID = dbManager.getGameID(gameIdentification);
-            int visitID = dbManager.insertNewVisit(new Integer(patientID), 
-                    new Integer(gameID));
-            
-            System.out.println("Game identification: " + gameIdentification);
-            
-            /*if (gameIdentification.equals("CATCH_ME")) {
-                messageManager = new CatchMeMessagesManager(patientID, visitID);
-                String folder = messageManager.getFolderWhereArchive();
-                dbManager.setFolder(visitID, folder);
-            }
-            else if (gameIdentification.equals("HELP_ME")) {
-                messageManager = new HelpMeMessagesManager(patientID, visitID);
-                String folder = messageManager.getFolderWhereArchive();
-                dbManager.setFolder(visitID, folder);
-            }*/
         }
         else if (packet.get("TYPE").equals("START_GAME")) {
             
@@ -185,6 +175,7 @@ public class DoctorClientManager extends BaseManager {
     public void onClose(WebSocket client, int code, String reason, boolean remote) {
         System.out.println("Connection closed for " + clientType + " Manager");
         clientConnected = null;
+        
     }
     
     public void sendMessageToDoctorClient(DoctorClientPacket packet) {
