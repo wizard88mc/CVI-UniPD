@@ -124,7 +124,6 @@ this.loadImage = function() {
     iterateOnExamples: function() {
 
     exampleManager.indexCurrentExample++;
-    exampleManager.indexCurrentExample = 100;
 
     if (exampleManager.indexCurrentExample < exampleManager.examples.length) {
     	

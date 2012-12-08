@@ -112,8 +112,6 @@ if (strpos($row['Movements'], 'B') !== false) {
 
 list($imageID, $imageName, $imageFile, $imageSize) = retrieveImageInfo($row['ImageID'], false);
 
-//print_r($row['StartFromCenter'] == "1" ? true : false);
-
 $arrayToSend = array(
 	"TYPE" => "GAME_SPECS",
 	"RIGHT_MOV" => $movements["RightMovement"],
@@ -151,3 +149,4 @@ if (!isset($_POST['onlySettings'])) {
 echo json_encode($arrayToSend);
 
 ?>
+

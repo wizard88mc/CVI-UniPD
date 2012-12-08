@@ -142,7 +142,7 @@ defineGame: function(settings) {
 	
 	gameSettings.rightMovement = settings.rightMovement || settings.RIGHT_MOV;
 	gameSettings.downMovement = settings.downMovement || settings.DOWN_MOV;
-	gameSettings.upMovement = settings.upMovement || settings.DOWN_MOV;
+	gameSettings.upMovement = settings.upMovement || settings.UP_MOV;
 	gameSettings.leftMovement = settings.leftMovement || settings.LEFT_MOV;
 	gameSettings.startFromCenter = Boolean(settings.startFromCenter || settings.START_CENTER);
 	gameSettings.mixMovements = Boolean(settings.mixMovements || settings.MIX_MOVEMENTS);
@@ -402,7 +402,6 @@ startGame: function() {
 			var number = $('#divSounds audio').length;
 			
 			var index = Math.floor(Math.random() * number);
-			console.log(index);
 			$('#divSounds audio').get(index).play();
 			
 			gameManager.lastTimePlayedGoodSound = time;
@@ -1042,10 +1041,10 @@ $('document').ready(function(e) {
 	
 	appCache.addEventListener('updateready', cacheUpdateReady, false);
 	appCache.addEventListener('cached', operationsCacheFinished, false);
-	appCache.addEventListener('updateReady', cacheUpdateReady, false);
 	appCache.addEventListener('noupdate', operationsCacheFinished, false);
 	appCache.addEventListener('error', operationsCacheFinished, false);
 	appCache.addEventListener('obsolete', operationsCacheFinished, false);
+	appCache.addEventListener('progress', progressFunctionCache, false);
 	
 	try {
 		appCache.update();
@@ -1096,6 +1095,34 @@ function manageOnCloseWebsocket(e) {
     }
 }
 
+function offlineJobs() {
+	
+	var fieldWhereGet = "CATCHME_SETTINGS_" + getFromSessionStorage("patientID");
+	var settingsString = getFromLocalStorage(fieldWhereGet);
+	
+	if (settingsString != "") {
+		var settings = JSON.parse(settingsString);
+		
+		CatchMeNamespace.defineGame(settings);
+		
+		if (window.requestFileSystem) {
+			websocket.send = manageWriteOffline;
+			
+			OfflineNamespace.initFolderForGame();
+		}
+		else {
+			// funzione settaggio parametri
+			// per salvataggio in localStorage
+			websocket.send = manageWriteWithLocalStorage;
+			
+			offlineSavingWithLocalStorage();
+		}
+	}
+	else {
+		console.log("no configuration saved");
+	}
+}
+
 function localFileSystemInitializationComplete() {
 	
 	if (getFromSessionStorage("permission") == "PATIENT") {
@@ -1107,36 +1134,53 @@ function localFileSystemInitializationComplete() {
 			patientID = "1";
 		}
 		
-		console.log("sending");
-		
-		$.ajax({
-			url: SERVER_ADDRESS + '/server/GetGameSettingsCatchMe.php',
-			data: {
-				patientID : patientID,
-				onlySettings: true
-			},
-			cache: false,
-			type: 'POST',
-			dataType: 'json',
-			success: function(message) {
-				
-				CatchMeNamespace.defineGame(message);
-				
-				if (window.requestFileSystem) {
-					websocket.send = manageWriteOffline;
-					
-					OfflineNamespace.initFolderForGame();
-				}
-				else {
-					// funzione settaggio parametri
-					// per salvataggio in localStorage
-					websocket.send = manageWriteWithLocalStorage;
-					
-					offlineSavingWithLocalStorage();
-				}
-			}
+		if (navigator.onLine) {
 			
-		});
+			try {
+				$.ajax({
+					url: SERVER_ADDRESS + '/server/GetGameSettingsCatchMe.php',
+					data: {
+						patientID : patientID,
+						onlySettings: true
+					},
+					cache: false,
+					type: 'POST',
+					success: function(message) {
+						
+						var settings = JSON.parse(message);
+						
+						var fieldWhereSave = "CATCHME_SETTINGS_" + patientID;
+						saveInLocalStorage(fieldWhereSave, message);
+						
+						CatchMeNamespace.defineGame(settings);
+						
+						if (window.requestFileSystem) {
+							websocket.send = manageWriteOffline;
+							
+							OfflineNamespace.initFolderForGame();
+						}
+						else {
+							// funzione settaggio parametri
+							// per salvataggio in localStorage
+							websocket.send = manageWriteWithLocalStorage;
+							
+							offlineSavingWithLocalStorage();
+						}
+					},
+					error: function() {
+						console.log("Error in retrieving settings");
+						offlineJobs();
+					}
+					
+				});
+			}
+			catch(e) {
+				offlineJobs();
+			}
+		}
+		else {
+			offlineJobs();
+		}
 	}
     
 }

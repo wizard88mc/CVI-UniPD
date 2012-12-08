@@ -143,10 +143,10 @@ var appCache = window.applicationCache;
 	
 	appCache.addEventListener('updateready', cacheUpdateReady, false);
 	appCache.addEventListener('cached', operationsCacheFinished, false);
-	appCache.addEventListener('updateReady', cacheUpdateReady, false);
 	appCache.addEventListener('noupdate', operationsCacheFinished, false);
 	appCache.addEventListener('error', operationsCacheFinished, false);
 	appCache.addEventListener('obsolete', operationsCacheFinished, false);
+	appCache.addEventListener('progress', progressFunctionCache, false);
 	
 	try {
 		appCache.update();

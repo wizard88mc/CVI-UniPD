@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 22, 2012 at 01:51 PM
+-- Generation Time: Dec 07, 2012 at 10:20 AM
 -- Server version: 5.5.24-log
 -- PHP Version: 5.3.13
 
@@ -154,7 +154,7 @@ INSERT INTO `CatchMeExercises` (`ID`, `DefaultGravity`, `IDPatient`, `Movements`
 (20, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 19, 0),
 (21, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 0),
 (22, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 21, 0),
-(23, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 1),
+(23, NULL, 1, 'L;B', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 1),
 (24, NULL, 4, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 4, 16, 1);
 
 -- --------------------------------------------------------
@@ -254,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `HelpMeEvaluation` (
   `WrongAnswers` int(11) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `IDVisit` (`IDVisit`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=35 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=36 ;
 
 --
 -- Dumping data for table `HelpMeEvaluation`
@@ -292,7 +292,8 @@ INSERT INTO `HelpMeEvaluation` (`ID`, `IDVisit`, `FirstResponseTime`, `Completio
 (31, 358, 730, 13438, 1, 1),
 (32, 357, 1509, 2340, 5, 2),
 (33, 367, 1509, 2340, 5, 2),
-(34, 366, 730, 13438, 1, 1);
+(34, 366, 730, 13438, 1, 1),
+(35, 384, 1668, 18670, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -308,7 +309,7 @@ CREATE TABLE IF NOT EXISTS `HelpMeExercises` (
   `FileLevels` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `CurrentValidSettings` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene i livelli assegnati a ciascun paziente' AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene i livelli assegnati a ciascun paziente' AUTO_INCREMENT=32 ;
 
 --
 -- Dumping data for table `HelpMeExercises`
@@ -320,9 +321,7 @@ INSERT INTO `HelpMeExercises` (`ID`, `DefaultGravity`, `IDPatient`, `FileLevels`
 (3, 'H', NULL, 'high.xml', NULL),
 (18, NULL, 1, '1/20120911-075034.xml', 0),
 (20, NULL, 1, '1/20120911-075801.xml', 1),
-(22, NULL, 1, '1/20120919-000101.xml', 0),
-(23, NULL, 1, '1/20121116-130037.xml', 0),
-(24, NULL, 1, '1/20121120-101816.xml', 0);
+(31, NULL, 1, '1/20121201-005753.xml', 0);
 
 -- --------------------------------------------------------
 
@@ -578,7 +577,7 @@ CREATE TABLE IF NOT EXISTS `Visits` (
   `Folder` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `IsAtHome` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=375 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=385 ;
 
 --
 -- Dumping data for table `Visits`
@@ -944,7 +943,17 @@ INSERT INTO `Visits` (`ID`, `Date`, `IDPatient`, `IDGame`, `Folder`, `IsAtHome`)
 (371, '2012-11-16', 4, 1, 'archivio_visite/4/2012-11-16-11-14-371/', 0),
 (372, '2012-11-16', 2, 1, 'archivio_visite/2/2012-11-16-11-16-372/', 0),
 (373, '2012-11-16', 1, 1, 'archivio_visite/1/2012-11-16-11-21-373/', 0),
-(374, '2012-11-20', 1, 2, 'archivio_visite/1/2012-11-20-11-20-374/', 0);
+(374, '2012-11-20', 1, 2, 'archivio_visite/1/2012-11-20-11-20-374/', 0),
+(375, '2012-12-04', 1, -1, NULL, 0),
+(376, '2012-12-04', 1, 2, 'archivio_visite/1/2012-12-4-0-22-376/', 0),
+(377, '2012-12-04', 1, 2, 'archivio_visite/1/2012-12-4-0-38-377/', 0),
+(378, '2012-12-04', 1, 2, 'archivio_visite/1/2012-12-4-0-49-378/', 0),
+(379, '2012-12-04', 1, 2, 'archivio_visite/1/2012-12-4-0-52-379/', 0),
+(380, '2012-12-04', 1, 2, 'archivio_visite/1/2012-12-4-0-56-380/', 0),
+(381, '2012-12-04', 1, 2, 'archivio_visite/1/2012-12-4-1-5-381/', 0),
+(382, '2012-12-04', 1, 2, 'archivio_visite/1/2012-12-4-9-58-382/', 0),
+(383, '2012-12-04', 1, 2, 'archivio_visite/1/2012-12-4-10-6-383/', 0),
+(384, '2012-12-04', 1, 2, 'archivio_visite/1/2012-12-4-10-11-384/', 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
