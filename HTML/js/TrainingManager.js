@@ -73,7 +73,7 @@ var TrainingExamplesNamespace = {
 		imageForTraining.moveObject(center);
 		imageForTraining.drawObject();
 	},
-
+	
 	messageManager: function(message) {
 		
 		var data = JSON.parse(message.data);
@@ -86,7 +86,10 @@ var TrainingExamplesNamespace = {
 			imageForTraining.moveObject(centerToDraw);
 			imageForTraining.drawObject();
 		}
-	},
+	}
+}
+
+var TrainingManager = {
 	
 	dialogSelectParameters: function() {
 		
@@ -133,10 +136,12 @@ var TrainingExamplesNamespace = {
 						var packetWithSettings = {
 							TYPE: 'TRAINING_SETTINGS',
 							POINTS: numberOfPoints,
-							SECONDS: totalSeconds
+							SPEED: totalSeconds // da capire cosa devo scegliere
 						};
 						
 						websocket.send(JSON.stringify(packetWithSettings));
+						
+						websocket.send = TrainingManager.packetsTraining;
 						
 						$(this).dialog("close");
 						$(this).destroy();
@@ -153,6 +158,10 @@ var TrainingExamplesNamespace = {
 					}
 				}
 			}));
+	}, 
+	
+	trainingResult: function(value) {
+		
 	}
 
 }

@@ -93,7 +93,11 @@ var HelpMeNamespace = {
 		}
 		else if (data.TYPE == "EYE_TRACKER_READY" && data.DATA == true) {
 			
-			TrainingExamplesNamespace.dialogSelectParameters();
+			TrainingManager.dialogSelectParameters();
+		}
+		else if (data.TYPE == "TRAINING_RESULT") {
+			
+			TrainingManager.trainingResult(data.DATA);
 		}
 		else if (data.TYPE == "EYE_TRACKER_NOT_READY") {
 			

@@ -87,7 +87,7 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                     }
                 }
             }
-            else if (packetType.equals("READY_TO_PLAY")) {                     
+            else if (packetType.equals("READY_TO_PLAY")) {                
 
                 if (packet.containsKey("IMAGE_WIDTH")) {
                     
@@ -124,18 +124,6 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                     doctorManager.sendPacket(packetEyeTrackerNotReady);
                 }
                 
-                 // se non ho appena calcolato il valore di offset (offsetCalculated == false)
-                // recupero il valore di offset dal mio DB
-                /*if (!offsetCalculated)  {
-                    int machineID = new Integer((String)packet.get("MACHINE_ID"));
-                    // recupero valore dell'offset da DB 
-                    String dbValue = dbManager.getMachineOffset(machineID);
-                    if (!dbValue.equals("")) {
-                        String[] components = dbValue.split(",");
-                        valuea12 = Double.parseDouble(components[0]);
-                        valueb12 = Double.parseDouble(components[1]);
-                    }
-                }*/
             }
         }
 

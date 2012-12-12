@@ -113,7 +113,7 @@ public class DoctorClientManager extends BaseManager {
             JSONObject packetForChild = new JSONObject();
             packetForChild.put("TYPE", "START_TRAINING");
             patientManager.sendPacket(packetForChild);
-            
+             // pacchetto deve essere start training anche per l'eye tracker
             eyeTrackerManager.sendPacket(packet);
         }
         else if (packet.get("TYPE").equals("WITHOUT_TRACKER")) {

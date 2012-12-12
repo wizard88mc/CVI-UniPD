@@ -137,7 +137,7 @@ public class EyeTrackerSimulator extends Thread {
                 
                 JSONObject finalMessage = new JSONObject();
                 finalMessage.put("TYPE", "TRAINING_RESULT");
-                finalMessage.put("EVALUATION", 70);
+                finalMessage.put("DATA", 70);
                 
                 clientConnecter.send(finalMessage.toJSONString());
             }

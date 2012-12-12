@@ -57,6 +57,8 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
                     if (waitingForTracker) {
                         waitingForTracker = false;
                         
+                        clientConnected.send(packetWithScreenDimension.toJSONString());
+                        
                         JSONObject packetForTraining = new JSONObject();
                         packetForTraining.put("TYPE", "TRAINING");
                         packetForTraining.put("CHILD_ID", patientID);
