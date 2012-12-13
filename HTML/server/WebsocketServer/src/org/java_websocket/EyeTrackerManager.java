@@ -74,7 +74,9 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
                     
                     doctorManager.sendPacket(packetForDoctor);
                 }
-                else if (packet.get("TYPE").equals("TRAINING_SESSION")) {
+                else if (packet.get("TYPE").equals("TRAINING_SESSION") || 
+                        packet.get("TYPE").equals("TRAINING_RESULT")) {
+                    
                     doctorManager.sendPacket(packet);
                 }
                 else {

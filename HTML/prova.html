@@ -16,15 +16,17 @@ Remove this if you use the .htaccess -->
 
 <script>
 
-$.ajax({
-	url:'server/GetGameSettingsCatchMe.php',
-	data: {
-		patientID: "1"
-	},
-	type: "POST",
-	success: function(message) {
-		console.log(message);
-	}
+$(document).ready(function() {
+	
+	$('body').height($(window).height());
+	
+	$('body').css({
+		'background-color': '#000064',
+		'background-image': 'url("images/background-training.png")',
+		'background-size': '100%'
+		
+	});
+	
 })
 
 </script>

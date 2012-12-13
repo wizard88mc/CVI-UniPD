@@ -5,7 +5,7 @@ var ImageForTraining = function() {
 		
 		TrainingExamplesNamespace.imageLoaded();
 	}
-	this.image.src = '../images/training_image3.png';
+	this.image.src = '../images/space_shuttle.png';
 	this.element = null;
 	this.width = 0;
 	this.height = 0;
@@ -25,13 +25,10 @@ var ImageForTraining = function() {
 	this.drawObject = function() {
 		this.element.css({
 			left: this.drawPosition.left,
-			top: this.drawPosition.top
+			top: this.drawPosition.top,
+			opacity: '1'
 		});
 		
-		this.element.removeClass().addClass('animated bounceIn');
-		setTimeout(function() {
-			imageForTraining.element.removeClass().css('opacity', '1');
-		}, 1300);
 	}
 	
 }
@@ -46,6 +43,14 @@ var TrainingExamplesNamespace = {
 		
 		websocket.onmessage = TrainingExamplesNamespace.messageManager;
 		
+		$('body').css({
+			'background-color': '#000064',
+			'background-image': 'url(../images/background_training.png)',
+			'background-size': '100% auto',
+			'background-repeat': 'no-repeat',
+			'background-position': 'left bottom'
+		});
+		
 		imageForTraining = new ImageForTraining();
 	},
 	
@@ -58,7 +63,7 @@ var TrainingExamplesNamespace = {
 		var aspectRatio = imageForTraining.image.naturalWidth / 
 			imageForTraining.image.naturalHeight;
 		
-		var height = getScreenHeight() * 0.3;
+		var height = getScreenHeight() * 0.4;
 		var width = aspectRatio * height;
 		
 		imageForTraining.element.css({
@@ -72,6 +77,19 @@ var TrainingExamplesNamespace = {
 		
 		imageForTraining.moveObject(center);
 		imageForTraining.drawObject();
+		
+		var transition = 'left 3s, top 3s';
+		addTransitionSpecifications(imageForTraining.element, transition);
+		
+		imageForTraining.element.on('transitionend webkitTransitionEnd oTransitionEnd', function() {
+			
+			imageForTraining.element.removeClass().addClass('animated bounceIn');
+			
+			setTimeout(function() {
+				imageForTraining.element.removeClass().css('opacity', '1');
+			}, 1300);
+			
+		})
 	},
 	
 	messageManager: function(message) {
@@ -144,7 +162,7 @@ var TrainingManager = {
 						websocket.send = TrainingManager.packetsTraining;
 						
 						$(this).dialog("close");
-						$(this).destroy();
+						$(this).remove();
 						
 						$('<p>').text('Training in corso. Attendere ....').appendTo(
 							$('<div>').attr('id', 'dialogWaitingCompleteTraining').attr('title', 'Attendere')

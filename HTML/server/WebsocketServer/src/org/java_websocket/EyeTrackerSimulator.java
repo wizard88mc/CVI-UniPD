@@ -67,7 +67,7 @@ public class EyeTrackerSimulator extends Thread {
             @Override
             public void run() {
                 
-                long timeToWait = 5000;
+                long timeToWait = 10000;
                 try {
                 
                     Thread.sleep((long)(1000));

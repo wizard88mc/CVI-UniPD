@@ -174,7 +174,7 @@ function PresentationManager() {
     this.totalHeightIncrease = 0;
     this.totalScaleFactorIncrease = 0;
     this.timeToPerformMovement = 5;
-    //this.timeToPerformMovement = 1;
+    this.timeToPerformMovement = 1;
     
     utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioFrenata').appendTo('#divSounds'), 
     		"frenata");

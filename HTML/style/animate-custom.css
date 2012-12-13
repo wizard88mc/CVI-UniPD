@@ -72,17 +72,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 }
 @-webkit-keyframes bounceIn {
 	0% {
-		opacity: 0;
 		-webkit-transform: scale(.3);
 	}
 	
 	50% {
 		opacity: 1;
-		-webkit-transform: scale(1.05);
+		-webkit-transform: scale(1.5);
 	}
 	
 	70% {
-		-webkit-transform: scale(.9);
+		-webkit-transform: scale(.8);
 	}
 	
 	100% {
@@ -92,17 +91,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @-moz-keyframes bounceIn {
 	0% {
-		opacity: 0;
 		-moz-transform: scale(.3);
 	}
 	
 	50% {
 		opacity: 1;
-		-moz-transform: scale(1.05);
+		-moz-transform: scale(1.5);
 	}
 	
 	70% {
-		-moz-transform: scale(.9);
+		-moz-transform: scale(.8);
 	}
 	
 	100% {
@@ -112,17 +110,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @-o-keyframes bounceIn {
 	0% {
-		opacity: 0;
 		-o-transform: scale(.3);
 	}
 	
 	50% {
 		opacity: 1;
-		-o-transform: scale(1.05);
+		-o-transform: scale(1.5);
 	}
 	
 	70% {
-		-o-transform: scale(.9);
+		-o-transform: scale(.8);
 	}
 	
 	100% {
@@ -132,17 +129,17 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @keyframes bounceIn {
 	0% {
-		opacity: 0;
+
 		transform: scale(.3);
 	}
 	
 	50% {
 		opacity: 1;
-		transform: scale(1.05);
+		transform: scale(1.5);
 	}
 	
 	70% {
-		transform: scale(.9);
+		transform: scale(.8);
 	}
 	
 	100% {

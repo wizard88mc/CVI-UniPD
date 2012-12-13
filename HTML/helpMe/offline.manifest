@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# version 0.2.8
+# version 0.2.9
 
 # HTML
 index.html
@@ -12,6 +12,8 @@ style/style.css
 # System Images
 ../images/preloader.gif
 ../images/training_image3.png
+../images/background_training.png
+../images/space_shuttle.png
 
 # Javascript
 

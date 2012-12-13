@@ -55,7 +55,7 @@ var CatchMeNamespace = {
 			currentSpeedValue = -1;
 			
 		
-			$('<div id="dialogWaitingToStart" title="Pronto a cominciare"><p>Non appena tutto sarà pronto, cliccare su Ok per iniziare</p></div>').appendTo('#divMainContent');
+			$('<p>').text('Non appena tutto sarà pronto, cliccare su Ok per iniziare').appendTo($('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Pronto a cominciare').appendTo('#divMainContent'));
 			$('#dialogWaitingToStart').dialog({
 				modal: true,
 				resizable: false,
@@ -80,33 +80,14 @@ var CatchMeNamespace = {
 				}
 			});
 		}
-		else if (dataReceived.TYPE == "EYE_TRACKER_READY" && dataReceived.DATA == "true") {
+		else if (dataReceived.TYPE == "EYE_TRACKER_READY" && dataReceived.DATA == true) {
 			
 			// dialog to start training session
-			$('<p>').text('Necessario iniziare fase di training per il sistema di eye-tracking prima di iniziare il gioco. Cliccare su Ok per iniziare')
-				.appendTo($('<div>').attr('id', 'dialogStartTraining').attr('title', 'Training eye-tracking')
-						.appendTo('#divMainContent')
-				);
+			TrainingManager.dialogSelectParameters();
+		}
+		else if (data.TYPE == "TRAINING_RESULT") {
 			
-			$('#dialogStartTraining').dialog({
-				modal: true,
-				resizable: false,
-				closeOnEscape: false,
-				draggable: false,
-				width: getScreenWidth() * 0.5,
-				buttons: {
-					Ok: function() {
-						$(this).dialog("remove");
-						$(this).remove();
-						
-						var packetToSend = {
-							'TYPE': 'START_TRAINING',
-						};
-						
-						websocket.send(JSON.stringify(packetToSend));
-					}
-				}
-			});
+			TrainingManager.trainingResult(data.DATA);
 		}
 		else if (dataReceived.TYPE == "EYE_TRACKER_NOT_READY") {
 			$('<p>').text('Il sistema di eye-tracking non è collegato. Si desidera procedere con la visita senza analisi del movimento degli occhi?')
@@ -155,6 +136,7 @@ var CatchMeNamespace = {
 				}
 			});
 		}
+		else if ()
 	},
 	
 	updateChart: function() {

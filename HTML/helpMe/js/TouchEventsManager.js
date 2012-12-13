@@ -16,10 +16,43 @@ var touchManagerNamespace = {
         var left = imageObjectOnScreen.element.position().left;
         var top = imageObjectOnScreen.element.position().top;
         
-        imageObjectOnScreen.center.top = top + imageObjectOnScreen.height / 2;
+        if (top + imageObjectOnScreen.height > getScreenHeight()) {
+        	
+        	top = getScreenHeight() - imageObjectOnScreen.height;
+        	
+        	imageObjectOnScreen.element.css({
+        		top: top
+        	});
+        	
+        	imageObjectOnScreen.center.top = top + imageObjectOnScreen.height / 2;;
+        	imageObjectOnScreen.drawingPosition.top = top;
+        	
+        }
+        else {
+        	imageObjectOnScreen.center.top = top + imageObjectOnScreen.height / 2;
+        	imageObjectOnScreen.drawingPosition.top = top;
+        }
+        
+        if (left + imageObjectOnScreen.width > getScreenWidth() ) {
+        	
+        	left = getScreenWidth() - imageObjectOnScreen.width;
+        	
+        	imageObjectOnScreen.element.css({
+        		left: left
+        	});
+        	
+        	imageObjectOnScreen.center.left = left + imageObjectOnScreen.width / 2;
+        	imageObjectOnScreen.drawingPosition.left = left;
+        }
+        else {
+        	imageObjectOnScreen.center.left = left + imageObjectOnScreen.width / 2;
+        	imageObjectOnScreen.drawingPosition.left = left;
+        }
+        
+        
         imageObjectOnScreen.center.left = left + imageObjectOnScreen.width / 2;
 
-        imageObjectOnScreen.drawingPosition.top = top;
+        
         imageObjectOnScreen.drawingPosition.left = left;
     },
 

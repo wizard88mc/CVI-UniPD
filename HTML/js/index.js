@@ -80,8 +80,6 @@ function checkLogin(e) {
 			saveInLocalStorage("username", username);
 			saveInLocalStorage("password", password);
 			
-			password = MD5(password);
-			
 			var width = getScreenWidth() * 0.4;
 			
 			divDialog.dialog({
@@ -101,7 +99,7 @@ function checkLogin(e) {
 			$.ajax({
 				url: SERVER_ADDRESS + '/server/CheckLogin.php',
 				type: 'POST',
-				data: {username: username, password: password},
+				data: {username: username, password: MD5(password)},
 				success: function(message) {
 					
 					var data = JSON.parse(message);
