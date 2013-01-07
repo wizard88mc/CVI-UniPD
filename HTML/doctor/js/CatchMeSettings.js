@@ -525,10 +525,10 @@ setGameSettings: function(data) {
 			}
 			
 			if (areThereErrors) {
-				$('<div id="dialogErrorsSettings" title="Attenzione!"></div>').appendTo($('#divMainContent'));
-				$('<p>Attenzione: </p>').appendTo($('#dialogErrorsSettings'));
-				$('<ul></ul>').appendTo($('#dialogErrorsSettings'));
-				$(stringErrors).appendTo($('#dialogErrorsSettings ul'));
+				$('<div>').attr('id', 'dialogErrorsSettings').attr('title', 'Attenzione!').appendTo('#divMainContent');
+				$('<p>').text('Attenzione: ').appendTo('#dialogErrorsSettings');
+				$('<ul>').appendTo('#dialogErrorsSettings');
+				$(stringErrors).appendTo('#dialogErrorsSettings ul');
 				$('#dialogErrorsSettings ul').css('list-style-position', 'inside');
 				
 				$('#dialogErrorsSettings').dialog({
@@ -593,9 +593,10 @@ personalizationComplete: function() {
 	})
 	
 	var packetToSend = {
-		"TYPE": "GAME_SETTINGS",
-		"GAME_ID": gameIdentification,
-		"SETTINGS": gameSettings
+		TYPE: "GAME_SETTINGS",
+		GAME_ID: gameID,
+		SETTINGS: gameSettings,
+		PATIENT_ID: patientID
 	};
 	websocket.send(JSON.stringify(packetToSend));
 	

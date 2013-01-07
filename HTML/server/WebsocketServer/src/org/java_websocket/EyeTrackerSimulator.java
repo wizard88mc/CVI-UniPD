@@ -70,7 +70,7 @@ public class EyeTrackerSimulator extends Thread {
                 long timeToWait = 10000;
                 try {
                 
-                    Thread.sleep((long)(1000));
+                    Thread.sleep((long)(timeToWait));
                 }
                 catch(Exception exc) {
                     System.out.println("Error in EyeTracker");

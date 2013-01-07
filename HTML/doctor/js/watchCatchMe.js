@@ -136,7 +136,7 @@ var CatchMeNamespace = {
 				}
 			});
 		}
-		else if ()
+		//else if ()
 	},
 	
 	updateChart: function() {

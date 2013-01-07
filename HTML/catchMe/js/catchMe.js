@@ -28,11 +28,9 @@ function presentationComplete() {
 		}
 		else if (data.TYPE == "GAME_SETTINGS") {
 
-			if (data.GAME_ID == "CATCH_ME") {
-				console.log("CatchMeGame Settings");
+			console.log("CatchMeGame Settings");
 				
-				CatchMeNamespace.defineGame(data.SETTINGS);
-			}
+			CatchMeNamespace.defineGame(data.SETTINGS);
 		}
 		else if (data.TYPE == 'GO_BACK') {
 			websocket.close();

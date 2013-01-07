@@ -1,3 +1,7 @@
+body {
+	overflow: hidden;
+}
+
 #divMainContent {
 	max-width: 1024px;
 	margin: auto;

@@ -1,134 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
 
-<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-Remove this if you use the .htaccess -->
-
-<title>prova</title>
-<meta name="description" content="" />
-<meta name="author" content="Matteo" />
-
-<link href="../style/custom-theme/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
-<link href="style/catchMe.css" rel="stylesheet" />
+<title>Prendimi!</title>
 <script src="../js/jquery-1.7.2.min.js"></script>
 <script src="../js/jquery-ui-1.8.21.custom.min.js"></script>
-<style>
-	div.demo { padding: 10px !important; }
-</style>
 
-<!--<script src="../js/jgestures.min.js"></script>
-<script src="../js/Utilities.js"></script>
-<script src="../js/WebSocketManager.js"></script>
-<script src="../js/TouchTracker.js"></script>-->
+<link rel="stylesheet" href="../style/baseStyle.css" />
+<link rel="stylesheet" href="style/catchMe.css" />
 
 <script type="text/javascript">
-var cvd = function () {
-    var output = '';  
-    var that={};
-    var oldFuncs;;
-    
-    var caller = function (prop) {
-        return function () {
-            var args = '',
-                str = '';
-            for (var i = 0; i < arguments.length; i++) {
-                args += arguments[i];
-                if (i !== arguments.length - 1) { args += ','; }
-            }           
-            str = 'ctx.' + prop + '(' + args + ');';
-            output += str + '\n';           
-        };
-    };
-    
-    that.overrideFuncs = function () {
-        oldFuncs = {};
-        for (var prop in CanvasRenderingContext2D.prototype) {         
-            if (CanvasRenderingContext2D.prototype.hasOwnProperty(prop)) {
-                try {                   
-                    var oldFunc = CanvasRenderingContext2D.prototype[prop];
-                     if ((typeof oldFunc == 'function') &&  (prop !== 'createLinearGradient') &&  (prop !== 'createRadialGradient')) {                    
-                        oldFuncs[prop] = oldFunc;
-                        CanvasRenderingContext2D.prototype[prop] = caller(prop);
-                    }
-                }
-                catch (e) {}
-            }
-        }
-    }    
-    
-    that.restoreFuncs = function() {
-        for (var key in oldFuncs) {
-            if(oldFuncs.hasOwnProperty(key) ){
-                CanvasRenderingContext2D.prototype[key] = oldFuncs[key];
-            }
-        }
-    }
-    
-    that.logCommand = function(command) {
-        output += command  + ';\n';  
-    }
-    that.getOutput = function() {return output;}
-    
-    that.clearOutput = function() { output = '';};
-    return that;
-}();      
+
+	$('document').ready(function() {
+		
+		$('body').height($(window).height());
+		
+		$('body').css({
+		'background-color': '#000064',
+		'background-image': 'url("../images/background_training.png")',
+		'background-size': '100%',
+		'background-position': 'left bottom',
+		'background-repeat': 'no-repeat'
+		});
+		
+		$('<img>').attr('src', '../images/space_shuttle2.png').attr('id', 'imgTraining').appendTo('body');
+		
+		var imgWidth = 219, imgHeight = 512;
+		
+		var middleLeft = $(window).width() / 2; var middleTop = $(window).height() / 2;
+		
+		$('#imgTraining').css({
+			position: 'absolute',
+			left: middleLeft - imgWidth / 2,
+			top: middleTop - imgHeight / 2
+		});
+		
+		var pointTop = $(window).height(), pointLeft = 0;
+		
+		var ipotenusa = Math.sqrt(Math.pow(pointTop - (middleTop), 2) + Math.pow(pointLeft - (middleLeft), 2));
+		
+		var cosAlfa = (Math.abs(pointTop - (middleTop))) / ipotenusa;
+		
+		var alfa = Math.acos(cosAlfa) * 180 / Math.PI - 180 ;
+		console.log(alfa);
+
+		var rotation = 'rotate(' + alfa + 'deg)';
+		
+		$('#imgTraining').css({
+			transform: rotation,
+			'-webkit-transform': rotation
+		});
+	})
 </script>
-<script src="http://canvg.googlecode.com/svn/trunk/rgbcolor.js"></script> 
-<script src="http://canvg.googlecode.com/svn/trunk/canvg.js"></script> 
-
-<script>
-	$(document).ready(function(){
-
-      var canvas = $('#temp')[0],
-				ctx = canvas.getContext('2d'),  
-				canvas2 = $('#temp2')[0],
-				ctx2 = canvas2.getContext('2d');  
-				 
-			$('#clear-button').bind('click',function() {   
-					cvd.clearOutput();
-					$('#svg-input').val('');
-					$('#js-output').val('');
-					ctx2.clearRect(0,0,canvas2.width,canvas2.height); 
-			});
-			
-			$('#convert-button').bind('click',function() {                 
-					var	str = $.trim( $('#svg-input').val())
-					if(!str.length) return;
-					$('#js-output').val('');
-					cvd.overrideFuncs();
-					cvd.clearOutput();
-					var	str = $.trim( $('#svg-input').val());
-					canvg('temp',  str);
-			 
-					$('#js-output').val( 'var draw = function(ctx) {\n' + cvd.getOutput() + '};' );
-					cvd.restoreFuncs();
-					canvas2.width = canvas.width;
-					 canvas2.height = canvas.height;
-					var fn = new Function('ctx',cvd.getOutput());
-					fn(ctx2);                                  
-			});			 
-});
-</script>
-
 
 </head>
-<body class="ui-widget-content" style="border:0;">
 
-<textarea id="svg-input" style="width:100%;height:192px"></textarea>
-      
-          <p><input id="convert-button" type="button" value="Convert" />
-          the SVG into a JavaScript HTML5 Canvas function. 
-      <input id="clear-button" type="button" value="Clear All" /></p>
-      <p>The function should be passed a Canvas 2d drawing context.</p>
-      <textarea id="js-output" style="width:100%;height:192px"></textarea>
-      <p>Output from the JavaScript function is shown below:</p>
-      
-        <div style="border:1px solid #999999;overflow:scroll;width:100%;height:256px;">
-        <canvas id="temp2"></canvas>
-       </div>
-        <canvas style="display:none;"  width = '1024' height = '512' id="temp"  ></canvas>
-</div>
+<body>
+	<div id="divMainContent"></div>
 </body>
 </html>

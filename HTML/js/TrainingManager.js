@@ -5,7 +5,7 @@ var ImageForTraining = function() {
 		
 		TrainingExamplesNamespace.imageLoaded();
 	}
-	this.image.src = '../images/space_shuttle.png';
+	this.image.src = '../images/space_shuttle2.png';
 	this.element = null;
 	this.width = 0;
 	this.height = 0;
@@ -44,11 +44,12 @@ var TrainingExamplesNamespace = {
 		websocket.onmessage = TrainingExamplesNamespace.messageManager;
 		
 		$('body').css({
+			height: getScreenHeight(),
 			'background-color': '#000064',
 			'background-image': 'url(../images/background_training.png)',
 			'background-size': '100% auto',
-			'background-repeat': 'no-repeat',
-			'background-position': 'left bottom'
+			'background-position': 'left bottom',
+			'background-repeat': 'no-repeat'
 		});
 		
 		imageForTraining = new ImageForTraining();
@@ -66,17 +67,20 @@ var TrainingExamplesNamespace = {
 		var height = getScreenHeight() * 0.4;
 		var width = aspectRatio * height;
 		
+		imageForTraining.width = width;
+		imageForTraining.height = height;
+		
+		var centre = new Point(getScreenHeight() / 2, getScreenWidth() / 2);
+		
+		imageForTraining.moveObject(centre);
+		imageForTraining.drawObject();
+		
 		imageForTraining.element.css({
 			opacity: '0',
 			width: width,
 			height: height,
 			position: 'absolute'
 		});
-		
-		var center = new Point(getScreenHeight() / 2, getScreenWidth() / 2);
-		
-		imageForTraining.moveObject(center);
-		imageForTraining.drawObject();
 		
 		var transition = 'left 3s, top 3s';
 		addTransitionSpecifications(imageForTraining.element, transition);
