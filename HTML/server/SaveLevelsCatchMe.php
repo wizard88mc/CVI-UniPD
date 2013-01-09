@@ -39,17 +39,18 @@ if ($changeImageColor == "") {
 	$changeImageColor = 0;
 }
 $percentualImageWidth = $gameSettings['percentualImageWidth'];
-
+$isSpaceGame = $gameSettings['isSpaceGame'];
+$rotateImage = $gameSettings['rotateImage'];
 
 
 $queryCheckAlreadyExercise = "SELECT * FROM CatchMeExercises  
 		WHERE IDPatient = $patientID AND CurrentValidSettings = 1 
 		AND Movements = \"$stringMovements\" AND Speed = $speed 
-		AND BackgroundColor = \"$backgroundColor\" AND ImageColor = \"$foregroundColor\" 
+		AND Background = \"$backgroundColor\" AND ImageColor = \"$foregroundColor\" 
 		AND ChangeImageColor = $changeImageColor AND ImageID = $imageID 
-		AND ImageWidth = $percentualImageWidth";
+		AND ImageWidth = $percentualImageWidth AND IsSpaceGame = $isSpaceGame" ;
 
-$resultQueryCheckAlreadyExercise = mysqli_query($connection, $queryCheckAlreadyExercise) or die(mysqli_error($connection));
+$resultQueryCheckAlreadyExercise = mysqli_query($connection, $queryCheckAlreadyExercise) or die(mysqli_error($connection) . " $queryCheckAlreadyExercise");
 
 if (mysqli_num_rows($resultQueryCheckAlreadyExercise) == 0) {
 	
@@ -62,9 +63,9 @@ if (mysqli_num_rows($resultQueryCheckAlreadyExercise) == 0) {
 	
 	$queryCheckIfDefault = "SELECT * FROM CatchMeExercises
 		WHERE DefaultGravity = '$gravity' AND Movements = \"$stringMovements\" AND Speed = $speed
-		AND BackgroundColor = \"$backgroundColor\" AND ImageColor = \"$foregroundColor\"
+		AND Background = \"$backgroundColor\" AND ImageColor = \"$foregroundColor\"
 		AND ChangeImageColor = $changeImageColor AND ImageID = $imageID
-		AND ImageWidth = $percentualImageWidth";
+		AND ImageWidth = $percentualImageWidth AND IsSpaceGame = $isSpaceGame";
 	
 	$resultQueryCheckIfDefault = mysqli_query($connection, $queryCheckIfDefault) or die(mysqli_error($connection));
 	
@@ -74,8 +75,8 @@ if (mysqli_num_rows($resultQueryCheckAlreadyExercise) == 0) {
 		$queryChangeActive = "UPDATE CatchMeExercises SET CurrentValidSettings = 0 WHERE IDPatient = $patientID";
 		mysqli_query($connection, $queryChangeActive) or die(mysqli_error($connection));
 		
-		$queryInsertNewExercise = "INSERT INTO CatchMeExercises(IDPatient, Movements, Speed, BackgroundColor, ImageColor, ChangeImageColor, ImageID, ImageWidth, CurrentValidSettings) 
-				VALUES ($patientID, \"$stringMovements\", $speed, \"$backgroundColor\", \"$foregroundColor\", $changeImageColor, $imageID, $percentualImageWidth, 1)";
+		$queryInsertNewExercise = "INSERT INTO CatchMeExercises(IDPatient, Movements, Speed, Background, ImageColor, ChangeImageColor, ImageID, ImageWidth, CurrentValidSettings, IsSpaceGame) 
+				VALUES ($patientID, \"$stringMovements\", $speed, \"$backgroundColor\", \"$foregroundColor\", $changeImageColor, $imageID, $percentualImageWidth, 1, $isSpaceGame)";
 		
 		mysqli_query($connection, $queryInsertNewExercise) or die(mysqli_error($connection));
 		

@@ -15,8 +15,9 @@ function retrieveImageInfo($imageID, $others) {
 		$imageName = (string)$attributes['imageName'][0];
 		$fileName = (string)$attributes['fileName'][0];
 		$size = (string)$attributes['size'][0];
+		$forSpaceGame = (string)$attributes['isForSpaceGame'][0];
 		
-		return array($imageID, $imageName, $fileName, $size);
+		return array($imageID, $imageName, $fileName, $size, $forSpaceGame);
 	}
 	else {
 		
@@ -32,11 +33,13 @@ function retrieveImageInfo($imageID, $others) {
 			$imageName = (string)$attributes['imageName'][0];
 			$fileName = (string)$attributes['fileName'][0];
 			$size = (string)$attributes['size'][0];
+			$forSpaceGame = (string)$attributes['isForSpaceGame'][0];
 			
 			$arrayImages[$imageID] = array(
 					"IMG_NAME" => $imageName,
 					"IMG_FILE" => $fileName,
-					"IMG_SIZE" => $size
+					"IMG_SIZE" => $size,
+					"IS_FOR_SPACE_GAME" => $forSpaceGame
 				);
 		}
 		
@@ -56,8 +59,8 @@ $patientID = $_POST['patientID'];
 			WHERE e.ImageID = i.ID AND ";*/
 
 $baseQuery = "SELECT e.Movements, e.StartFromCenter, e.MixMovements,
-			e.Speed, e.ChangeImageColor, e.BackgroundColor, e.ImageColor,
-			e.ImageWidth, e.ImageID
+			e.Speed, e.ChangeImageColor, e.Background, e.ImageColor,
+			e.ImageWidth, e.ImageID, e.IsSpaceGame
 			FROM CatchMeExercises e
 			WHERE ";
 
@@ -110,7 +113,7 @@ if (strpos($row['Movements'], 'B') !== false) {
 	$movements['DownMovement'] = 1;
 }
 
-list($imageID, $imageName, $imageFile, $imageSize) = retrieveImageInfo($row['ImageID'], false);
+list($imageID, $imageName, $imageFile, $imageSize, $forSpaceGame) = retrieveImageInfo($row['ImageID'], false);
 
 $arrayToSend = array(
 	"TYPE" => "GAME_SPECS",
@@ -121,12 +124,13 @@ $arrayToSend = array(
 	"SPEED" => $row["Speed"],
 	"START_CENTER" => (int)$row["StartFromCenter"],
 	"MIX_MOVEMENTS" => (int)$row["MixMovements"],
-	"BACK_COLOR" => $row["BackgroundColor"],
+	"BACK_COLOR" => $row["Background"],
 	"IMG_COLOR" => $row["ImageColor"],
 	"CHANGE_IMG_COLOR" => (int)$row["ChangeImageColor"],
-	"IMG_SPECS" => array("IMG_ID" => $imageID, "IMG_NAME" => $imageName, "IMG_FILE" => $imageFile),
+	"IMG_SPECS" => array("IMG_ID" => $imageID, "IMG_NAME" => $imageName, "IMG_FILE" => $imageFile, "IS_FOR_SPACE_GAME" => $forSpaceGame),
 	"IMG_WIDTH" => (int)$row['ImageWidth'],
-	"CANVAS_SIZE" => $imageSize
+	"CANVAS_SIZE" => $imageSize,
+	"IS_SPACE_GAME" => $row['IsSpaceGame']
 );
 
 //print_r($arrayToSend);

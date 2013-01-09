@@ -77,6 +77,8 @@ function GameSettings() {
 	this.backgroundColor = '';
 	this.foregroundColor = '';
 	this.changeImageColor = true;
+	this.rotateImage = false;
+	this.isSpaceGame = false;
 	this.percentualImageWidth = 0; // percentual of the image width, used for CSS
 	this.effectiveImageWidth = 0; // image width in pixels, useful for calculations
 	this.effectiveImageHeight = 0; // image height in pixels, used for calculation	
@@ -149,6 +151,8 @@ defineGame: function(settings) {
 	gameSettings.speed = Number(settings.speed || settings.SPEED);
 	gameSettings.changeImageColor = Boolean(settings.changeImageColor || settings.CHANGE_IMG_COLOR);
 	gameSettings.percentualImageWidth = Number(settings.percentualImageWidth || settings.IMG_WIDTH);
+	gameSettings.rotateImage = Boolean(settings.rotateImage || settings.ROTATE_IMAGE);
+	gameSettings.isSpaceGame = Boolean(settings.IS_SPACE_GAME || settings.isSpaceGame);
 	
 	var dimensions = (settings.canvasSize || settings.CANVAS_SIZE).split("x");
 	canvasSettings.width = Number(dimensions[0]);
@@ -376,10 +380,24 @@ startGame: function() {
 	websocket.send(JSON.stringify(packetSpeed));
 	
 	$('body').css({
-		'background-color': gameSettings.backgroundColor,
 		width: getScreenWidth(),
 		height: getScreenHeight()
 	});
+	
+	if (!gameSettings.isSpaceGame) {
+		$('body').css({
+			'background-color': gameSettings.backgroundColor
+		});
+	}
+	else {
+		$('body').css({
+			'background-color': '#000064',
+			'background-image': 'url("../images/background_training.png")',
+			'background-size': '100%',
+			'background-position': 'left bottom',
+			'background-repeat': 'no-repeat'
+		})
+	}
 	
 	/**
 	 * Registro gli eventi per la gestione del tocco

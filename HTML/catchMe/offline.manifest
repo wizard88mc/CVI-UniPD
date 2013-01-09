@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# version 0.1.3
+# version 0.1.4
 
 # HTML
 index.html
@@ -12,6 +12,7 @@ images/pluto_lingua.png
 ../images/preloader.gif
 ../images/close.png
 ../images/background_training.png
+images/space_shuttle2.png
 ../images/space_shuttle2.png
 
 # Javascript

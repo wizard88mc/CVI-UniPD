@@ -164,7 +164,7 @@ goToGame: function() {
 						try {
 							var data = JSON.parse(message.data);
 							if (data.TYPE == "GAME" && data.RESULT == true) {
-								setTimeout(CatchMeSettingsNamespace.requestScreenClient, 3000);
+								setTimeout(CatchMeSettingsNamespace.requestScreenClient, /*3000*/ 100);
 							}
 							else if (data.TYPE == "GAME" && data.RESULT == false) {
 								console.log("No client connected");

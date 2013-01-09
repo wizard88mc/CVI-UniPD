@@ -1,211 +1,44 @@
-function GameSettings() {
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
 
-	this.rightMovement = false;
-	this.leftMovement = false;
-	this.upMovement = false;
-	this.downMovement = false;
-	this.startFromCenter = false;
-	this.mixMovements = false;
-	this.speed = 0;
-	this.backgroundColor = '';
-	this.foregroundColor = '';
-	this.imageID = -1;
-	this.changeImageColor = true;
-	this.percentualImageWidth = 0; // percentual of the image width, used for CSS
-	this.imageFileName = "";
-	this.rotateImage = false;
-	this.isSpaceGame = false;
-	
-this.getBackgroundRGB = function() {
-	return new Array(hexToR(this.backgroundColor),
-					hexToG(this.backgroundColor),
-					hexToB(this.backgroundColor));
-}
+<title>Osserva Visita</title>
+<meta name="description" content="" />
+<meta name="author" content="Matteo Ciman" />
 
-this.getForegroundRGB = function() {
-	return new Array(hexToR(this.foregroundColor),
-					hexToG(this.foregroundColor),
-					hexToB(this.foregroundColor));
-}
-	
-};
-var gameSettings = new GameSettings();
+<link rel="stylesheet" href="style/index.css" />
+<link rel="stylesheet" href="style/settingsHelpMe.css" />
+<link rel="stylesheet" href="../style/custom-theme/jquery-ui-1.8.21.custom.css" />
+<link rel="stylesheet" href="../style/jquery.slider.min.css" />
+<link rel="stylesheet" href="style/watchHelpMe.css" />
+<link rel="stylesheet" href="../style/training.css" />
+<link href="../js/colorpicker/farbtastic.css" rel="stylesheet" />
+<link rel="stylesheet" href="../style/baseStyle.css" />
 
-var aviableImages = new Object();
-var patientID = null;
-var canvasSettings = new Object();
-var screenWidth = 0;
-var screenHeight = 0;
+<script src="../js/jquery-1.7.2.min.js"></script>
+<script src="../js/jquery-ui-1.8.21.custom.min.js"></script>
+<script src="../js/Utilities.js"></script>
+<script src="../js/WebSocketManager.js"></script>
+<script src="js/graphsettings.js"></script>
+<script src="../js/flot/jquery.flot.min.js"></script>
+<script src="../js/flot/jquery.flot.navigate.min.js"></script>
+<script src="../js/flot/jquery.flot.axislabels.js"></script>
+<script src="../js/jquery.slider.min.js" ></script>
+<script src="../js/colorpicker/farbtastic.js"></script>
+<script src="../js/Utilities.js"></script>
 
-var CatchMeSettingsNamespace = {
-
-verifyColorContrast: function() {
-		
-	var goodColorContrast = checkColorContrast(gameSettings.getBackgroundRGB(), 
-											gameSettings.getForegroundRGB());
-	
-	if (!goodColorContrast) {
-		$('#divBadContrast').fadeIn();
-	}
-	else {
-		$('#divBadContrast').fadeOut();
-	}
-	
-	var canvas = $('#imageExample')[0];
-	if (canvas != null) {
-		var context = canvas.getContext('2d');
-		context.fillStyle = gameSettings.foregroundColor;
-		context.fillRect(0, 0, canvas.width, canvas.height);
-	}
-	
-	var divExampleDimensions = $('#exampleDimensions');
-	if (divExampleDimensions != null) {
-		divExampleDimensions.css('background-color', gameSettings.backgroundColor);
-	}
-},
-
-updateLabelSpeed: function(speed) {
-	
-	gameSettings.speed = speed;
-	$('#labelSpeed').text(speed);
-},
-
-updateCanvasPreview: function(value) {
-	
-	gameSettings.percentualImageWidth = value;
-	$('#imageExample').width(gameSettings.percentualImageWidth + '%');
-	
-	var centerOfPreviewDiv = Math.round($('#exampleDimensions').height() / 2);
-	var topOfImagePreview = centerOfPreviewDiv - Math.round($('#imageExample').height() / 2);
-	
-	$('#imageExample').css('margin-top', topOfImagePreview + 'px');
-},
-
-requestScreenClient: function() {
-	
-	var packetToSend = {
-		"TYPE": "SCREEN_MEASURES"
-	};
-	
-	websocket.onmessage = function(message) {
-		
-		var data = JSON.parse(message.data);
-		if (data.TYPE == "SCREEN_MEASURES") {
-			
-			if (data.RESULT == true) {
-				screenWidth = data.SCREEN_WIDTH;
-				screenHeight = data.SCREEN_HEIGHT;
-				
-				CatchMeSettingsNamespace.requestGameSettings();
-			}
-			else {
-				if (data.ERROR == "01") {
-					console.log("Errore: nessun client connesso");
-					NewVisitNamespace.noClientConnected();
-				}
-			}
-			
-		}
-	};
-	websocket.send(JSON.stringify(packetToSend));
-	
-},
-/**
- * Function per la personalizzazione delle 
- * impostazioni di gioco
- */
-requestGameSettings: function() {
-	
-	$('#divMainContent div').remove();
-	
-	$('#imgGoBack').off('click');
-	$('#imgGoBack').on('click', function() {
-		
-		NewVisitNamespace.initializePage();
-		$(this).off('click');
-		$(this).on('click', function() {
-			location.replace('../index.html');
-		});
-		
-	})
-	
-	$('<div>').attr('id', 'divHeaderSettings').appendTo('#divMainContent');
-	$('<h1>').text('Impostazioni di gioco').appendTo('#divHeaderSettings');
-	$('#divHeaderSettings').addClass('ui-widget-header ui-corner-all')
-		.css({
-			width: '50%',
-			margin: 'auto'
-		});
-	
-	$.ajax({
-		url: SERVER_ADDRESS + '/server/GetGameSettingsCatchMe.php',
-		type: 'POST',
-		data: {gameID: gameID, patientID: patientID},
-		success: function(message) {
-			
-			$('#waitingParameters').dialog("close");
-			$('#waitingParameters').remove();
-			
-			//try {
-				CatchMeSettingsNamespace.setGameSettings(JSON.parse(message));
-			//}
-			//catch(error) {
-				//console.log(message);
-			//}
-		}
-	});
-},
-
-setGameSettings: function(data) {
-	
-	var divChooseTypeOfGame = $('<div>').attr('id', 'divChooseTypeOfGame');
+<script type="text/javascript">
+	var divChooseTypeOfGame = $('<div>').attr('id', 'chooseTypeOfGame');
+	$('<label>').attr('for', 'spaceGame').text('Gioco spazio').appendTo(divChooseTypeOfGame);
 	$('<input>').attr('type', 'radio').attr('id', 'spaceGame')
 		.attr('name', 'chooseGame').attr('value', 'spaceGame').appendTo(divChooseTypeOfGame);
-	$('<label>').attr('for', 'spaceGame').text('Gioco spazio').appendTo(divChooseTypeOfGame);
 	
-	$('<input>').attr('type', 'radio').attr('id', 'freeGame')
-		.attr('name', 'chooseGame').attr('value', 'freeGame').appendTo(divChooseTypeOfGame);
 	$('<label>').attr('for', 'freeGame').text('Scelta libera').appendTo(divChooseTypeOfGame);
+	$('<input>').attr('type', 'radio').attr('id', 'spaceGame')
+		.attr('name', 'chooseGame').attr('value', 'spaceGame').appendTo(divChooseTypeOfGame);
 	
 	divChooseTypeOfGame.appendTo('#divMainContent');
-	
-	$('#divChooseTypeOfGame input:radio').change(function() {
-		
-		var value = $('#divChooseTypeOfGame input:radio[name=chooseGame]:checked').val();
-		
-		if (value == "spaceGame") {
-			$('div#divLeft div#divColoreSfondo').fadeOut('fast');
-			
-			$('div#divImage select option:selected').removeAttr('selected');
-			
-			var imageIDForSpaceGame = -1;
-			
-			for (imageID in aviableImages) {
-				if (aviableImages[imageID].IS_FOR_SPACE_GAME == "false") {
-					$('div#divImage select option[value=' + imageID + ']').attr('disabled', 'disabled');
-				}
-				else {
-					if (imageIDForSpaceGame == -1) {
-						imageIDForSpaceGame = imageID;
-					}
-				}
-			}
-			
-			$('div#divImage select option[value=' + imageIDForSpaceGame + ']').attr('selected', 'selected');
-			
-			$('div#divImage select').change();
-			
-			gameSettings.isSpaceGame = true;
-			
-		}
-		else if (value == "freeGame") {
-			$('div#divLeft div#divColoreSfondo').fadeIn('fast');
-			
-			$('div#divImage select option:disabled').removeAttr('disabled');
-			
-			gameSettings.isSpaceGame = false;
-		}
-	});
 	
 	var divLeft = $('<div>').attr('id', 'divLeft')
 		.addClass('leftSide alignLeft')
@@ -252,7 +85,7 @@ setGameSettings: function(data) {
 		.attr('name', 'changeForegroundColor').attr('checked', 'checked').appendTo(divColoreImmagine);
 	
 	$('<label>').attr('for', 'changeForegroundColor')
-		.text("Cambia colore dell'immagine").appendTo(divColoreImmagine);
+		.text('Cambia colore dell\'immagine').appendTo(divColoreImmagine);
 
 	//$('<input type="checkbox" id="changeForegroundColor" name="changeForegroundColor" checked="checked" /><label for="changeForegroundColor"></label>').appendTo(divColoreImmagine);
 	
@@ -420,9 +253,9 @@ setGameSettings: function(data) {
 	
 	$('<input>').attr('id', 'sliderSpeed').attr('type', 'slider')
 		.attr('name', 'speed')
-		.appendTo($('<div>').addClass('divContainerSlider').appendTo(divSpeed));
+		.appendTo($('<div class="divContainerSlider"></div>').appendTo(divSpeed));
 	
-	$('<span>').attr('id', 'labelSpeed').appendTo(divSpeed);
+	$('<span id="labelSpeed"></span>').appendTo(divSpeed);
 	$('#sliderSpeed').attr('value', gameSettings.speed)
 	$('#sliderSpeed').slider({
 		from: 1, to: 10, step: 1, format: {format: '#'},
@@ -441,8 +274,10 @@ setGameSettings: function(data) {
 	
 	$('<select>').attr('name', 'selectImage').attr('id', 'selectImage').appendTo(divImage);
 	
-	$('<option>').val(data.IMG_SPECS.IMG_ID).attr('selected', 'selected')
-		.text(data.IMG_SPECS.IMG_NAME).appendTo('#selectImage');
+	var stringOption = '<option value="' + data.IMG_SPECS.IMG_ID + '" selected="selected"">' + data.IMG_SPECS.IMG_NAME + 
+						'</option>';
+						
+	$(stringOption).appendTo('#selectImage');
 	
 	gameSettings.imageID = data.IMG_SPECS.IMG_ID;
 	
@@ -473,8 +308,7 @@ setGameSettings: function(data) {
 	aviableImages[data.IMG_SPECS.IMG_ID] = {
 			'NAME': data.IMG_SPECS.IMG_NAME, 
 			'FILENAME': data.IMG_SPECS.IMG_FILE, 
-			'SIZE': data.CANVAS_SIZE,
-			'IS_FOR_SPACE_GAME': data.IMG_SPECS.IS_FOR_SPACE_GAME};
+			'SIZE': data.CANVAS_SIZE};
 	
 	gameSettings.imageFileName = data.IMG_SPECS.IMG_FILE;
 	$('<img>').attr('id', 'imgPreview').attr('src', '../catchMe/images/' + gameSettings.imageFileName)
@@ -483,22 +317,16 @@ setGameSettings: function(data) {
 	var otherImages = data.OTHER_IMG;
 	
 	for (var imageID in otherImages) {
+		
+		stringOption = '<option value="' + imageID + '">' + otherImages[imageID].IMG_NAME + 
+						'</option>';
 						
 		aviableImages[imageID] = {
 			'NAME': otherImages[imageID].IMG_NAME, 
 			'FILENAME': otherImages[imageID].IMG_FILE,
-			'SIZE': otherImages[imageID].IMG_SIZE,
-			'IS_FOR_SPACE_GAME': otherImages[imageID].IS_FOR_SPACE_GAME};
-		
-		$('<option>').val(imageID).text(otherImages[imageID].IMG_NAME)
-			.appendTo('#selectImage')
+			'SIZE': otherImages[imageID].IMG_SIZE};
+		$(stringOption).appendTo($('#selectImage'))
 	}
-	
-	$('<input>').attr('type', 'checkbox').val('rotate').attr('id', 'rotateImage').appendTo(divImage);
-	$('<label>').attr('for', 'rotateImage').text('Ruota immagine a seconda dei punti di partenza e destinazione')
-		.appendTo(divImage).change(function() {
-			gameSettings.rotateImage = !gameSettings.rotateImage;
-		});
 	
 	if (checkColorContrast(gameSettings.backgroundColor, gameSettings.foregroundColor)) {
 		$('#divBadContrast').hide();
@@ -608,88 +436,14 @@ setGameSettings: function(data) {
 			}
 			
 		});
-		
-		if (data.IS_SPACE_GAME == "1") {
-			
-			$('div#divChooseTypeOfGame input:radio[value=spaceGame]').attr('checked', 'checked');
-			$('div#divChooseTypeOfGame input:radio').change();
-		}
-		else {
-			$('div#divChooseTypeOfGame input:radio[value=freeGame]').attr('checked', 'checked');
-			$('div#divChooseTypeOfGame input:radio').change();
-		}
-},
+	
+</script>
 
-/**
- * Devo recuperare le istruzioni per disegnare correttamente canvas
- */
-personalizationComplete: function() {
-	
-	console.log(gameSettings);
-	
-	gameSettings.canvasSize = aviableImages[gameSettings.imageID].SIZE;
-	
-	var settingsToSend = {
-		rightMovement: gameSettings.rightMovement,
-		leftMovement: gameSettings.leftMovement,
-		upMovement: gameSettings.upMovement,
-		downMovement: gameSettings.downMovement,
-		startFromCenter: gameSettings.startFromCenter,
-		mixMovements: gameSettings.mixMovements,
-		speed: gameSettings.speed,
-		backgroundColor: gameSettings.backgroundColor,
-		foregroundColor: gameSettings.foregroundColor,
-		imageID: gameSettings.imageID,
-		changeImageColor: gameSettings.changeImageColor,
-		percentualImageWidth: gameSettings.percentualImageWidth,
-		imageFileName: gameSettings.imageFileName,
-		rotateImage: gameSettings.rotateImage,
-		isSpaceGame: gameSettings.isSpaceGame
-	};
-	
-	$.ajax({
-		url: SERVER_ADDRESS + '/server/SaveLevelsCatchMe.php',
-		type: 'POST',
-		data: {
-			patientID: patientID,
-			settings: JSON.stringify(settingsToSend)
-		},
-		success: function(message) {
-			//messaggio ok se tutt ok
-			console.log(message);
-		}
-	})
-	
-	var packetToSend = {
-		TYPE: "GAME_SETTINGS",
-		GAME_ID: gameID,
-		SETTINGS: gameSettings,
-		PATIENT_ID: patientID
-	};
-	websocket.send(JSON.stringify(packetToSend));
-	
-	/*var packetSession = {
-		'TYPE': 'SESSION_SPECS',
-		'PATIENT_ID': patientID,
-		'GAME_ID': gameIdentification
-	};
-			
-	websocket.send(JSON.stringify(packetSession));*/
-	
-	$('#divMainContent > h1').text('Prendimi!');
-	
-	websocket.onmessage = CatchMeNamespace.entryFunction;
-	
-	/*$.getScript('js/watchCatchMe.js')
-		.done(function(data, textStatus) {
-			console.log("CatchMe loaded");
-						
-		})
-		.fail(function(jqxhr, settings, exception) {
-			console.log("Error loading file catchMe");
-			console.log(jqxhr);
-			console.log(settings);
-			console.log(exception);
-		});*/
-}
-}
+</head>
+
+<body>
+<div id="divMainContent" class="ui-corner-all">
+	<h1 class="ui-widget-header">Nuova Visita</h1>
+</div>
+</body>
+</html>
