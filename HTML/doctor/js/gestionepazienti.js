@@ -32,7 +32,7 @@ function drawCatchMeTable(visits) {
 
 	var table = $('<table>').attr('id', 'tableVisitsCatchMe');
 	$('<caption>').text('Gioco Prendimi!').addClass('ui-widget-header').appendTo(table);
-	var thead = $('<thead></thead>').addClass('ui-widget-header').appendTo(table);
+	var thead = $('<thead>').addClass('ui-widget-header').appendTo(table);
 	$('<tr>').appendTo(thead);
 	$('<th>').text('Data').appendTo(thead);
 	$('<th>').text('Valutazione Vista').appendTo(thead);
@@ -63,20 +63,20 @@ function drawCatchMeTable(visits) {
 		}
 				
 		var row = $('<tr>');
-		$('<td>'+data+'</td>').appendTo(row);
-		$('<td>'+eyeEval+'</td>').appendTo(row);
-		$('<td>'+touchEval+'</td>').appendTo(row);
+		$('<td>').text(data).appendTo(row);
+		$('<td>').text(eyeEval).appendTo(row);
+		$('<td>').text(touchEval).appendTo(row);
 		
 		if (visits[element].IS_AT_HOME == true) {
-			var image = $('<img src="images/home.png" alt="Visita a casa" />');
-			image.appendTo($('<td>').appendTo(row));
+			var image = $('<img>').attr('src', 'images/home.png').attr('alt', 'Visita a casa');
+			image.appendTo($('<td>').addClass('home').appendTo(row));
 		}
 		else {
-			var image = $('<img src="images/hospital.png" alt="Visita in studio" />');
-			image.appendTo($('<td>').appendTo(row));
+			var image = $('<img>').attr('src', 'images/hospital.png').attr('alt', 'Visita in studio');
+			image.appendTo($('<td>').addClass('hospital').appendTo(row));
 		}
 		
-		var image = $('<img src="../images/navigate-right.png" alt="Visualizza grafo" />')
+		var image = $('<img>').attr('src', '../images/navigate-right.png').attr('alt', 'Visualizza grafo')
 				.addClass('watchButton');
 							
 		image.click(function() {
@@ -85,18 +85,17 @@ function drawCatchMeTable(visits) {
 			makeRequestForGraphData(id);
 		});
 
-		var cell = $('<td></td>');
+		var cell = $('<td>').appendTo(row);
 		image.appendTo(cell);
-		$('<input type="hidden" name="visitID" value="' + visitID + '" />').appendTo(cell);
-		cell.appendTo(row);
+		$('<input>').attr('type', 'hidden').attr('name', 'visitID').val(visitID).appendTo(cell);
 				
 		row.appendTo(body);
 	}
 			
 	table.css('display', 'none');
 	table.appendTo('#divTableContainer').fadeIn(2000);
-			
-	$('#tableVisitsCatchMe tbody tr:odd').addClass('alternate');
+	
+	$('#divChooseOptions #divCheckboxExercises input:checkbox').change();
 }
 	
 
@@ -116,17 +115,17 @@ function drawHelpMeTable(visits) {
 		});
 	}
 
-	var table = $('<table id="tableVisitsHelpMe"></table>');
-	$('<caption>Gioco Aiutami!</caption>').addClass('ui-widget-header').appendTo(table);
+	var table = $('<table>').attr('id', 'tableVisitsHelpMe');
+	$('<caption>').text('Gioco Aiutami!').addClass('ui-widget-header').appendTo(table);
 	var thead = $('<thead>').addClass('ui-widget-header').appendTo(table);
 	$('<tr>').appendTo(thead);
-	$('<th>Data</th>').appendTo(thead);
-	$('<th>T. Risposta (ms)</th>').appendTo(thead);
-	$('<th>T. Completamento (ms)</th>').appendTo(thead);
-	$('<th>Ris. Corrette</th>').appendTo(thead);
-	$('<th>Ris. Errate</th>').appendTo(thead);
-	$('<th>Casa/Studio</th>').addClass('smallColumn').appendTo(thead);
-	$('<th>Dettagli</th>').appendTo(thead);
+	$('<th>').text('Data').appendTo(thead);
+	$('<th>').text('T. Risposta (ms)').appendTo(thead);
+	$('<th>').text('T. Completamento (ms)').appendTo(thead);
+	$('<th>').text('Ris. Corrette').appendTo(thead);
+	$('<th>').text('Ris. Errate').appendTo(thead);
+	$('<th>').text('Casa/Studio').addClass('smallColumn').appendTo(thead);
+	$('<th>').text('Dettagli').appendTo(thead);
 			
 	var body;
 	if (visits.length > 0) {
@@ -144,22 +143,22 @@ function drawHelpMeTable(visits) {
 		var wrong = visits[element].WRONG_ANSWERS;
 				
 		var row = $('<tr>');
-		$('<td>'+data+'</td>').appendTo(row);
-		$('<td>'+firstResponseTime+'</td>').appendTo(row);
-		$('<td>'+completionTime+'</td>').appendTo(row);
-		$('<td>'+correct+'</td>').appendTo(row);
-		$('<td>'+wrong+'</td>').appendTo(row);
+		$('<td>').text(data).appendTo(row);
+		$('<td>').text(firstResponseTime).appendTo(row);
+		$('<td>').text(completionTime).appendTo(row);
+		$('<td>').text(correct).appendTo(row);
+		$('<td>').text(wrong).appendTo(row);
 		
 		if (visits[element].IS_AT_HOME == true) {
-			var image = $('<img src="images/home.png" alt="Visita a casa" />');
-			image.appendTo($('<td>').appendTo(row));
+			var image = $('<img>').attr('src', 'images/home.png').attr('alt', 'Visita a casa');
+			image.appendTo($('<td>').addClass('home').appendTo(row));
 		}
 		else {
-			var image = $('<img src="images/hospital.png" alt="Visita in studio" />');
-			image.appendTo($('<td>').appendTo(row));
+			var image = $('<img>').attr('src', 'images/hospital.png').attr('alt', 'Visita in studio');
+			image.appendTo($('<td>').addClass('hospital').appendTo(row));
 		}
 		
-		var image = $('<img src="../images/navigate-right.png" alt="Visualizza esercizi" />')
+		var image = $('<img>').attr('src', '../images/navigate-right.png').attr('alt', 'Visualizza esercizi')
 				.addClass('watchButton');
 							
 		image.click(function() {
@@ -168,10 +167,10 @@ function drawHelpMeTable(visits) {
 			makeRequestForExercisesStory(id);
 		});
 
-		var cell = $('<td>');
+		var cell = $('<td>').appendTo(row);
+		
 		image.appendTo(cell);
-		$('<input type="hidden" name="visitID" value="' + visitID + '" />').appendTo(cell);
-		cell.appendTo(row);
+		$('<input>').attr('type', 'hidden').attr('name', 'visitID').val(visitID).appendTo(cell);
 				
 		row.appendTo(body);
 	}
@@ -179,7 +178,23 @@ function drawHelpMeTable(visits) {
 	table.css('display', 'none');
 	table.appendTo('#divTableContainer').fadeIn(2000);
 			
-	$('#tableVisitsHelpMe tbody tr:odd').addClass('alternate');
+	$('#divChooseOptions #divCheckboxExercises input:checkbox').change();
+}
+
+function updateRowsColorTable(table) {
+	
+	$(table).find('tbody tr').filter(function() {
+		return $(this).css('display') != 'none';
+	}).each(function(index) {
+					
+		if (index % 2 == 0) {
+			$(this).addClass('alternate');
+		}
+		else {
+			$(this).removeClass('alternate');
+		}
+	});
+	
 }
 	
 
@@ -216,8 +231,8 @@ function drawTable(newTable) {
 			}
 			
 			if ($('#divNoVisitsFound').length == 0) {
-				$('<div id="divNoVisitsFound" class="ui-state-error ui-corner-all"></div>').appendTo('#divTableContainer');
-				$('<p>Attenzione: Nessuna visita trovata per il paziente selezionato</p>').appendTo($('#divNoVisitsFound'));
+				$('<div>').attr('id', 'divNoVisitsFound').addClass('ui-state-error ui-corner-all').appendTo('#divTableContainer');
+				$('<p>').text('Attenzione: Nessuna visita trovata per il paziente selezionato').appendTo('#divNoVisitsFound');
 				$('#divNoVisitsFound').fadeIn(2000);
 			}
 			else {
@@ -608,6 +623,49 @@ $('document').ready(function() {
 	$('<option>').attr('value', '').text(' - - - ').appendTo('#selectPatient');
 	$('<img>').attr('id', 'imgPreloaderPatients').attr('src', '../images/preloader.gif')
 		.attr('alt', 'In Attesa').appendTo($('<td>').appendTo(row));
+		
+	var div = $('<div>').attr('id', 'divCheckboxExercises')
+		.addClass('alignLeft').appendTo('#divChooseOptions');
+		
+	$('<input>').attr('type', 'checkbox').attr('name', 'homeExercises')
+		.val('homeExercises').attr('id', 'homeExercises').appendTo(div);
+	$('<label>').attr('for', 'homeExercises').text('Visualizza esercizi svolti a casa').appendTo(div);
+	
+	$('<br />').appendTo(div);
+	
+	$('<input>').attr('type', 'checkbox').attr('name', 'visitExercises')
+		.val('visitExercises').attr('id', 'visitExercises').appendTo(div);
+	$('<label>').attr('for', 'visitExercises').text('Visualizza esercizi svolti nello studio medico').appendTo(div);
+	
+	$('#divChooseOptions #divCheckboxExercises input:checkbox').attr('checked', 'checked');
+	
+	$('#divChooseOptions #divCheckboxExercises input:checkbox').change(function() {
+		
+		if ($('#divChooseOptions #divCheckboxExercises input[name=homeExercises]').attr('checked') == "checked") {
+			$('#tableVisitsCatchMe tr td[class=home], #tableVisitsHelpMe tr td[class=home]').parent('tr')
+				.fadeIn('fast');
+		}
+		else {
+			$('#tableVisitsCatchMe tr td[class=home], #tableVisitsHelpMe tr td[class=home]').parent('tr')
+				.fadeOut('fast');
+		}
+		
+		if ($('#divChooseOptions #divCheckboxExercises input[name=visitExercises]').attr('checked') == "checked") {
+			$('#tableVisitsCatchMe tr td[class=hospital], #tableVisitsHelpMe tr td[class=hospital]').parent('tr')
+				.fadeIn('fast');
+		}
+		else {
+			$('#tableVisitsCatchMe tr td[class=hospital], #tableVisitsHelpMe tr td[class=hospital]').parent('tr')
+				.fadeOut('fast');
+		}
+		
+		setTimeout(function() {
+			updateRowsColorTable($('#tableVisitsCatchMe'));
+			updateRowsColorTable($('#tableVisitsHelpMe'));	
+		}, 300);
+		
+		
+	})
 	
 	$.ajax({
 		url: SERVER_ADDRESS + '/server/GetPatientsList.php',
@@ -632,7 +690,7 @@ $('document').ready(function() {
 		}
 	})
 	
-	row = $('<tr></tr>').appendTo('#tableSelectOptions');
+	row = $('<tr>').appendTo('#tableSelectOptions');
 	
 	$('<td class="alignRight"><label for="selectGame">Seleziona gioco: </label></td>').appendTo(row);
 	$('label[for="selectGame"]').addClass('label');
