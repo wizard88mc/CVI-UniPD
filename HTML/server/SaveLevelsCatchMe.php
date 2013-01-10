@@ -40,7 +40,6 @@ if ($changeImageColor == "") {
 }
 $percentualImageWidth = $gameSettings['percentualImageWidth'];
 $isSpaceGame = $gameSettings['isSpaceGame'];
-$rotateImage = $gameSettings['rotateImage'];
 
 
 $queryCheckAlreadyExercise = "SELECT * FROM CatchMeExercises  

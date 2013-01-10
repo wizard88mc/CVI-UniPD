@@ -77,7 +77,6 @@ function GameSettings() {
 	this.backgroundColor = '';
 	this.foregroundColor = '';
 	this.changeImageColor = true;
-	this.rotateImage = false;
 	this.isSpaceGame = false;
 	this.percentualImageWidth = 0; // percentual of the image width, used for CSS
 	this.effectiveImageWidth = 0; // image width in pixels, useful for calculations
@@ -104,16 +103,16 @@ var patientID = null;
 
 function CanvasSettings() {
 
-	this.final = new Point();
-	this.actual = new Point();
+	this.finalPoint = new Point();
+	this.actualPoint = new Point();
 	this.rules = "";
 	this.width = -1;
 	this.height = -1;
 	this.fileName = "";
 	
 this.isArrivedToDestination = function() {
-	return (this.actual.left == this.final.left && 
-			this.actual.top == this.final.top)
+	return (this.actual.left == this.finalPoint.left && 
+			this.actual.top == this.finalPoint.top)
 }
 }
 var canvasSettings = null;
@@ -151,7 +150,6 @@ defineGame: function(settings) {
 	gameSettings.speed = Number(settings.speed || settings.SPEED);
 	gameSettings.changeImageColor = Boolean(settings.changeImageColor || settings.CHANGE_IMG_COLOR);
 	gameSettings.percentualImageWidth = Number(settings.percentualImageWidth || settings.IMG_WIDTH);
-	gameSettings.rotateImage = Boolean(settings.rotateImage || settings.ROTATE_IMAGE);
 	gameSettings.isSpaceGame = Boolean(settings.IS_SPACE_GAME || settings.isSpaceGame);
 	
 	var dimensions = (settings.canvasSize || settings.CANVAS_SIZE).split("x");
@@ -173,23 +171,12 @@ defineGame: function(settings) {
 
 createTransitionCSS: function(time, endPosition) {
 	
-	var stringFinalDestination = endPosition.left + 'px ' + endPosition.top + 'px';
+	var stringTransition = 'left ' + time + 's, top ' + time + 's'; 
 	
+	addTransitionSpecifications($('#image'), stringTransition);
 	$('#image').css({
-		transition: 'left ' + time + 's, top ' + time + 's',
-		'transition-duration': time + 's',
-		'transition-timing-function': 'linear',
-		'-moz-transition': 'left ' + time + 's, top ' 
-			+ time + 's, -moz-transform ' + time + 's',
-		'-moz-transition-timing-function': 'linear',
-		'-webkit-transition': 'left ' + time + 's, top ' 
-			+ time + 's, -webkit-transform ' + time + 's',
-		'-webkit-transition-timing-function': 'linear',
-		'-o-transition':'left '  + time + 's, top ' + 
-			time + 's, -o-transform ' + time + 's',
-		'-o-transition-timing-function': 'linear',
-		'left': endPosition.left + 'px',
-		'top': endPosition.top + 'px'
+		left: endPosition.left + 'px',
+		top: endPosition.top + 'px'
 	});
 },
 
@@ -426,7 +413,7 @@ startGame: function() {
 	
 	$('<div>').attr('id', 'divCloseGame').appendTo('body')
 		.css({
-			'position':'absolute',
+			position :'absolute',
 			width: '10%',
 			left: '90%',
 			top: '0',
@@ -478,16 +465,18 @@ defineAnimationFunction: function(firstTime, timeToWait) {
 	var startPoint = animationToPerform.startPoint;
 	var endPoint = animationToPerform.endPoint;
 	
-	canvasSettings.final = new Point(endPoint.top, endPoint.left);
+	canvasSettings.finalPoint = new Point(endPoint.top, endPoint.left);
 	
-	$('#image').css('left', startPoint.left)
-				.css('top', startPoint.top);
+	$('#image').css({
+		left: startPoint.left,
+		top: startPoint.top
+	});
 
 	var timeForAnimation = animationToPerform.calculateAnimationTime();
 	
 	setTimeout(function() {
 		
-		CatchMeNamespace.createTransitionCSS(timeForAnimation, canvasSettings.final);
+		CatchMeNamespace.createTransitionCSS(timeForAnimation, canvasSettings.);
 		
 		if (firstTime) {
 			gameManager.timing = setInterval(CatchMeNamespace.timingFunction, gameManager.sensibility);	

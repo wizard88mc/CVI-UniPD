@@ -38,13 +38,23 @@
 			top: middleTop - imgHeight / 2
 		});
 		
-		var pointTop = $(window).height(), pointLeft = 0;
+		var pointTop = 0, pointLeft = $(window).width();
 		
 		var ipotenusa = Math.sqrt(Math.pow(pointTop - (middleTop), 2) + Math.pow(pointLeft - (middleLeft), 2));
 		
 		var cosAlfa = (Math.abs(pointTop - (middleTop))) / ipotenusa;
 		
-		var alfa = Math.acos(cosAlfa) * 180 / Math.PI - 180 ;
+		var alfa = Math.acos(cosAlfa) * 180 / Math.PI;
+		
+		if (pointTop - middleTop <= 0 && pointLeft - middleLeft <= 0) {
+			alfa = -alfa;
+		}
+		else if (pointTop - middleTop >= 0 && pointLeft - middleLeft <= 0) {
+			alfa = alfa - 180;
+		}
+		else if (pointTop - middleTop >= 0 && pointLeft - middleLeft >= 0) {
+			alfa = 180 - alfa;
+		}
 		console.log(alfa);
 
 		var rotation = 'rotate(' + alfa + 'deg)';
@@ -52,6 +62,33 @@
 		$('#imgTraining').css({
 			transform: rotation,
 			'-webkit-transform': rotation
+		});
+		
+		var centerMoveTop = pointTop - middleTop;
+		var centerMoveLeft = pointLeft - middleLeft;
+		
+		var movementTop = Math.round(centerMoveTop - imgWidth / 2 * Math.cos(alfa * Math.PI / 180));
+		var movementLeft = Math.round(centerMoveLeft - imgHeight / 2 * Math.sin(alfa * Math.PI / 180));
+		
+		console.log(movementTop);
+		console.log(movementLeft);
+		
+		var actualPosition = $('#imgTraining').position();
+		var finalPositionLeft = actualPosition.left + movementLeft;
+		var finalPositionTop = actualPosition.top + movementTop;
+		
+		if (finalPositionTop < 0) {
+			finalPositionTop = 0;
+		}
+		if (finalPositionLeft < 0) {
+			finalPositionLeft = 0;
+		}
+		
+		var transition = 'left 3s, top 3s';
+		$('#imgTraining').css({
+			'-webkit-transition': transition,
+			left: finalPositionLeft,
+			top: finalPositionTop
 		});
 	})
 </script>

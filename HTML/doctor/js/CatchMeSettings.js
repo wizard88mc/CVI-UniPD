@@ -13,7 +13,6 @@ function GameSettings() {
 	this.changeImageColor = true;
 	this.percentualImageWidth = 0; // percentual of the image width, used for CSS
 	this.imageFileName = "";
-	this.rotateImage = false;
 	this.isSpaceGame = false;
 	
 this.getBackgroundRGB = function() {
@@ -494,12 +493,6 @@ setGameSettings: function(data) {
 			.appendTo('#selectImage')
 	}
 	
-	$('<input>').attr('type', 'checkbox').val('rotate').attr('id', 'rotateImage').appendTo(divImage);
-	$('<label>').attr('for', 'rotateImage').text('Ruota immagine a seconda dei punti di partenza e destinazione')
-		.appendTo(divImage).change(function() {
-			gameSettings.rotateImage = !gameSettings.rotateImage;
-		});
-	
 	if (checkColorContrast(gameSettings.backgroundColor, gameSettings.foregroundColor)) {
 		$('#divBadContrast').hide();
 	}
@@ -643,7 +636,6 @@ personalizationComplete: function() {
 		changeImageColor: gameSettings.changeImageColor,
 		percentualImageWidth: gameSettings.percentualImageWidth,
 		imageFileName: gameSettings.imageFileName,
-		rotateImage: gameSettings.rotateImage,
 		isSpaceGame: gameSettings.isSpaceGame
 	};
 	
