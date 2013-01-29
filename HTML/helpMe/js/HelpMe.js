@@ -155,6 +155,7 @@ function initGame() {
 function resetLevel() {
 	
 	sacco.reset();
+	gameManager.currentLevelCorrectAnswers = 0;
 	$('#divSounds #audioLevel, #divSounds #audioBagComplete, #divSounds #audioObjectNotInserted').remove();
 }
 
@@ -260,6 +261,11 @@ function levelComplete() {
 
     gameManager.indexImageObject = -1;
     
+    if (gameManager.currentLevelCorrectAnswers > gameManager.maxCorrectAnswers) {
+    	
+    	gameManager.maxCorrectAnswers = gameManager.currentLevelCorrectAnswers;
+    }
+    
     var packetEndLevel = {
 		TYPE: "LEVEL_ENDED"
     };
@@ -323,6 +329,7 @@ function objectInsertedIntoSacco() {
         gameManager.packetWithResults.RIGHT_ANSWER = true;
         
         gameManager.imageRightAnswer.show();
+        gameManager.currentLevelCorrectAnswers++;
         
         playGoodAnswerSound();
     }
@@ -369,6 +376,7 @@ function timeExpired(intoBin) {
 
         gameManager.packetWithResults.RIGHT_ANSWER = true;
         gameManager.imageRightAnswer.show();
+        gameManager.currentLevelCorrectAnswers++;
         playGoodAnswerSound();
     }
 
@@ -403,8 +411,23 @@ function gameIsEnded() {
 	
 	setTimeout(function() {
 		// suono che fa complimenti al bambino per il suo comportamento??
-		location.replace('../patient/index.html')
-	}, 2000);
+		
+		$('#divSounds #finalFeedback #messoInsieme').on('ended', function() {
+			
+			$('#divSounds #finalFeedback #numberOfObjects #correct' + gameManager.maxCorrectAnswer).on('ended', function() {
+				
+				$('#divSounds #finalFeedback #oggettiAssomigliano').on('ended', function() {
+					
+					setTimeout(function() {
+						location.replace('../patient/index.html');
+					}, 1000);
+				}).get(0).play();
+			}).get(0).play();
+			
+		}).get(0).play();
+		
+		
+	}, 500);
 	
 }
 

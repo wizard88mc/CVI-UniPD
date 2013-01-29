@@ -13,9 +13,19 @@ currentSpeedValue = -1;
 	
 var CatchMeNamespace = {
 	
+	trainingComplete: function() {
+		
+		var fakePacket = {
+			TYPE: 'EYE_TRACKER_READY',
+			DATA: 'false'
+		};
+		
+		CatchMeNamespace.entryFunction(JSON.stringify(fakePacket));
+	},
+	
 	entryFunction: function(message) {
 		
-		var dataReceived = JSON.parse(message.data);
+		var dataReceived = JSON.parse(message.data || message);
 		
 		console.log(dataReceived);
 		
@@ -53,7 +63,6 @@ var CatchMeNamespace = {
 			touchPositions = new Object();
 			eyesPositions = new Object();
 			currentSpeedValue = -1;
-			
 		
 			$('<p>').text('Non appena tutto sarà pronto, cliccare su Ok per iniziare').appendTo($('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Pronto a cominciare').appendTo('#divMainContent'));
 			$('#dialogWaitingToStart').dialog({
@@ -71,7 +80,8 @@ var CatchMeNamespace = {
 						var packetToSend = {
 							'TYPE': 'START_GAME',
 							'GAME_ID': gameIdentification,
-							'PATIENT_ID': patientID
+							'PATIENT_ID': patientID,
+							'WITH_TRACKER': useEyeTracker
 						};
 						
 						websocket.send(JSON.stringify(packetToSend));
@@ -85,9 +95,10 @@ var CatchMeNamespace = {
 			// dialog to start training session
 			TrainingManager.dialogSelectParameters();
 		}
-		else if (data.TYPE == "TRAINING_RESULT") {
+		else if (dataReceived.TYPE == "TRAINING_RESULT") {
 			
-			TrainingManager.trainingResult(data.DATA);
+			TrainingManager.trainingResult(dataReceived.DATA);
+			TrainingManager.trainingComplete = CatchMeNamespace.trainingComplete;
 		}
 		else if (dataReceived.TYPE == "EYE_TRACKER_NOT_READY") {
 			$('<p>').text('Il sistema di eye-tracking non è collegato. Si desidera procedere con la visita senza analisi del movimento degli occhi?')
@@ -105,11 +116,7 @@ var CatchMeNamespace = {
 						
 						withEyeTracker = false;
 						
-						var fakePacket = {
-								TYPE: 'EYE_TRACKER_READY',
-								DATA: 'false'
-						};
-						CatchMeNamespace.entryFunction(JSON.stringify(fakePacket));
+						CatchMeNamespace.trainingComplete();
 						
 					},
 					"Attendi collegamento": function() {

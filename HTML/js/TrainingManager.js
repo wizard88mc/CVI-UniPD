@@ -41,8 +41,6 @@ var TrainingExamplesNamespace = {
 		
 		console.log('Starting training');
 		
-		websocket.onmessage = TrainingExamplesNamespace.messageManager;
-		
 		$('body').css({
 			height: getScreenHeight(),
 			'background-color': '#000064',
@@ -76,7 +74,7 @@ var TrainingExamplesNamespace = {
 		imageForTraining.drawObject();
 		
 		imageForTraining.element.css({
-			opacity: '0',
+			opacity: '1',
 			width: width,
 			height: height,
 			position: 'absolute'
@@ -96,12 +94,9 @@ var TrainingExamplesNamespace = {
 		})
 	},
 	
-	messageManager: function(message) {
+	messageManager: function(data) {
 		
-		var data = JSON.parse(message.data);
-		console.log(data);
-		
-		if (data.TYPE == "TRAINING_POSITIONS") {
+		if (data.TYPE == "TRAINING_POSITION") {
 			
 			var centerToDraw = new Point(data.POS_TOP, data.POS_LEFT);
 			
@@ -129,10 +124,12 @@ var TrainingManager = {
 		$('<tbody>').appendTo(tableForm);
 		
 		
-		var row = $('<tr><td>Numero di punti per il training: </td></tr>').appendTo(tableForm);
+		var row = $('<tr>').appendTo(tableForm);
+		$('<td>').text('Numero di punti per il training: ').appendTo(row);
 		$(selectNumberPoints).appendTo($('<td>').appendTo(row));
 				
-		row = $('<tr><td>Tempo per ogni punto: </td></tr>').appendTo(tableForm);
+		row = $('<tr>').appendTo(tableForm);
+		$('<td>').text('Tempo per ogni punto: ').appendTo(row);
 		$(selectTimePerPoint).appendTo($('<td>').appendTo(row));
 		
 		var divContainer = $('<div>');
@@ -163,8 +160,6 @@ var TrainingManager = {
 						
 						websocket.send(JSON.stringify(packetWithSettings));
 						
-						websocket.send = TrainingManager.packetsTraining;
-						
 						$(this).dialog("close");
 						$(this).remove();
 						
@@ -184,6 +179,26 @@ var TrainingManager = {
 	
 	trainingResult: function(value) {
 		
-	}
+		$('#dialogWaitingCompleteTraining').dialog('close');
+		$('#dialogWaitingCompleteTraining').remove();
+		
+		$('<div>').attr('id', 'divDialogTrainingEvaluation').attr('title', 'Valutazione training')
+			.appendTo('#divMainContent').dialog({
+				modal: true,
+				closeOnEscape: false,
+				resizable: false,
+				draggable: false,
+				buttons: {
+					"Inizia": function() {
+						$(this).dialog("close");
+						$(this).remove();
+						
+						TrainingManager.trainingComplete();
+					}
+				}
+			})
+	},
+	
+	trainingComplete: function() {}
 
 }

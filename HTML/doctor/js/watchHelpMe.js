@@ -49,12 +49,21 @@ var HelpMeNamespace = {
 		websocket.onmessage = HelpMeNamespace.entryFunction;
 	},
 	
+	trainingComplete: function() {
+		
+		var fakePacket = {
+			TYPE: 'EYE_TRACKER_READY',
+			DATA: 'false'
+		};
+		
+		HelpMeNamespace.entryFunction(JSON.stringify(fakePacket));
+	},
+	
 	entryFunction: function(message) {
 		
 		var data = JSON.parse(message.data || message);
-		console.log(data);
 		
-		if (data.TYPE == "EYE_TRACKER_READY" && data.DATA == "false") {
+		if (data.TYPE == "EYE_TRACKER_READY" && data.DATA == false) {
 			
 			useEyeTracker = true;
 			
@@ -95,9 +104,10 @@ var HelpMeNamespace = {
 			
 			TrainingManager.dialogSelectParameters();
 		}
-		else if (data.TYPE == "TRAINING_RESULT") {
+		else if (dataReceived.TYPE == "TRAINING_RESULT") {
 			
-			TrainingManager.trainingResult(data.DATA);
+			TrainingManager.trainingResult(dataReceived.DATA);
+			TrainingManager.trainingComplete = HelpMeNamespace.trainingComplete;
 		}
 		else if (data.TYPE == "EYE_TRACKER_NOT_READY") {
 			
@@ -375,8 +385,12 @@ var HelpMeNamespace = {
 	prepareTable: function() {
 		
 		var table = $('<table>').attr('id', 'tableResultsHelpMe').appendTo('#divMainContent');
-		$('<thead><tr><th>Object</th><th>Target Family</th><th>First Response Time (ms)</th><th>Completion Time (ms)</th><th>Correct / Wrong</th></thead>')
-			.addClass('ui-widget-header').appendTo(table);
+		var row = $('<tr>').appendTo($('<thead>').addClass('ui-widget-header').appendTo(table));
+		$('<th>').text('Object').appendTo(row);
+		$('<th>').text('Target Family').appendTo(row);
+		$('<th>').text('First Response Time (ms)').appendTo(row);
+		$('<th>').text('Completion Time (ms)').appendTo(row);
+		$('<th>').text('Correct / Wrong').appendTo(row);
 			
 		tableBody = $('<tbody>').appendTo(table);		
 	},

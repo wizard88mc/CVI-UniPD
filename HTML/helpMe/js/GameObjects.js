@@ -23,7 +23,9 @@ function GameManager() {
     this.levelCompletedCorrectly = true;
     this.maxRepetitionForLevel = 3;
     this.currentLevelRepetition = 1;
+    this.maxCorrectAnswers = -1;
     this.gameInProgress = true;
+    this.currentLevelCorrectAnswers = 0;
 
 this.getSystemImages = function() {
 
@@ -137,6 +139,21 @@ this.getSystemSounds = function() {
     
     utilsNamespace.addSoundSource($('<audio>').attr('id', 'sledCanLeave').appendTo(divSounds),
     	"slitta_puo_partire");
+    	
+    $('<div>').attr('id', 'finalFeedback').appendTo('#divSounds');
+    
+    utilsNamespace.addSoundSource($('<audio>').attr('id', 'messoInsieme').appendTo('#divSounds #finalFeedback'), 'messo_insieme');
+    utilsNamespace.addSoundSource($('<audio>').attr('id', 'oggettiAssomigliano').appendTo('#divSounds #finalFeedback'), 'oggetti_assomigliano');
+    
+    var divObjects = $('<div>').attr('id', 'numberOfObjects').appendTo('#divSounds div#finalFeedback');
+    
+    var numbers = new Array('uno', 'due', 'tre', 'quattro', 'cinque', 'sei', 'sette', 'otto', 'nove');
+    
+    for (x in numbers) {
+    	utilsNamespace.addSoundSource($('<audio>').attr('id', 'correct' + (x+1)).appendTo(divObjects), numbers[x]);
+    }
+    
+    
 }
 
 }

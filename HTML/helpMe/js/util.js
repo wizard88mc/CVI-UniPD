@@ -208,6 +208,7 @@ istantiateLevel: function(level) {
 },
 
     resetGame: function() {
+    	
         $('#divSystemImages').children().hide();
         $('#divMainContent div[id!="divBarraTempo"]').show();
         $('#audioLevel').remove();
@@ -217,8 +218,11 @@ istantiateLevel: function(level) {
     },
     
     addSoundSource: function(element, sourceFileName) {
-    	$('<source src="sounds/' + sourceFileName + '.ogg" type="audio/ogg" preload="auto" />').appendTo(element);
-    	$('<source src="sounds/' + sourceFileName + '.mp3" type="audio/mpeg" preload="auto" />').appendTo(element);
+    	
+    	$('<source>').attr('src', 'sounds/' + sourceFileName + '.ogg')
+    		.attr('type', 'audio/ogg').attr('preload', 'auto').appendTo(element);
+    	$('<source>').attr('src', 'sounds/' + sourceFileName + '.mp3')
+    		.attr('type', 'audio/mpeg').attr('preload', 'auto').appendTo(element);
     }
 
 };

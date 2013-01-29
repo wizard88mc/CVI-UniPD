@@ -145,29 +145,6 @@ public class DoctorClientManager extends BaseManager {
             messageManager.start();
             serverManager.timeToStart();
         }
-        /*else if (packet.get("TYPE").equals("WAITING_PATIENT")) {
-            System.out.println("Ricevuta richiesta ID paziente");
-            if (patientName != null) {
-                System.out.println("Sto inviando Nome paziente");
-                JSONObject packetToSend = new JSONObject();
-                packetToSend.put("TYPE", "PATIENT_NAME");
-                packetToSend.put("NAME", patientName);
-                
-                clientConnected.send(packetToSend.toJSONString());
-                
-                for (int i = 0; i < messagesToSend.size(); i++) {
-                    try {
-                        Thread.sleep(200);
-                    }
-                    catch(InterruptedException exc) {}
-                    clientConnected.send(messagesToSend.get(i));
-                }
-                
-                messagesToSend.clear();
-                managerReady();
-            }
-            
-        }*/
         return true;
     }
     

@@ -74,16 +74,14 @@ getListOfPatients: function() {
 			
 			try {
 				var arrayOfPatients = JSON.parse(message);
-				var listOfOption = '<option value=""></option>';
+				
+				$('<option>').val('').appendTo('#selectPatient');
+				
 				for (var i = 0; i < arrayOfPatients.length; i++) {
 					var patient = arrayOfPatients[i];
-					
-					listOfOption += '<option value="' + patient.ID + '">'
-								+ patient.SURNAME + " " + patient.NAME  
-								 + "</option>";
+								 
+					$('<option>').val(patient.ID).text(patient.SURNAME + " " + patient.NAME);
 				}
-				
-				$(listOfOption).appendTo('#selectPatient');
 			}
 			catch(error) {
 				console.log(error);
@@ -100,13 +98,13 @@ getListOfGames: function() {
 		success: function(message) {
 			
 			var arrayOfGames = JSON.parse(message);
-			var listOfOptions = '<option value="">- - - - -</option>';
+			
+			$('<option>').val('').text('- - - - -').appendTo('#selectGames');
 			
 			 for (var i = 0; i < arrayOfGames.length; i++) {
 				var game = arrayOfGames[i];
-				
-				listOfOptions += '<option value="' + game.ID + '">'
-							+ game.NAME + "</option>";
+							
+				$('<option>').val(game.ID).text(game.NAME).appendTo('#selectGames');
 				
 				arrayOfDescriptionGames[game.ID] = game.DESCRIPTION;
 				arrayOfFoldersGames[game.ID] = game.FOLDER;
@@ -154,8 +152,8 @@ goToGame: function() {
 					// lavoro con settings di catchMe
 					console.log("CatchMe to watch");
 					var packetToSend = {
-						'TYPE': "GAME",
-						'GAME_ID': gameIdentification
+						TYPE: "GAME",
+						GAME_ID: gameIdentification
 					};
 					websocket.send(JSON.stringify(packetToSend));
 					
@@ -163,8 +161,9 @@ goToGame: function() {
 						
 						try {
 							var data = JSON.parse(message.data);
+							console.log(data);
 							if (data.TYPE == "GAME" && data.RESULT == true) {
-								setTimeout(CatchMeSettingsNamespace.requestScreenClient, /*3000*/ 100);
+								setTimeout(CatchMeSettingsNamespace.requestScreenClient, 3000);
 							}
 							else if (data.TYPE == "GAME" && data.RESULT == false) {
 								console.log("No client connected");
@@ -185,8 +184,8 @@ goToGame: function() {
 					// lavoro con settings helpMe
 					// $('#divMainContent div').remove();
 					var packetToSend = {
-							'TYPE': "GAME",
-							'GAME_ID': gameIdentification
+							TYPE: "GAME",
+							GAME_ID: gameIdentification
 						};
 					websocket.send(JSON.stringify(packetToSend));
 					
@@ -312,12 +311,45 @@ initializePage: function() {
 	
 	$('<tbody>').appendTo(tableNewPatient);
 	
-	$('<tr id="rowName"><td class="label">Nome: </td><td><input type="text" class="inputText" name="name" id="name" /></td></tr>').appendTo(tableNewPatient);
-	$('<tr id="rowSurname"><td class="label">Cognome: </td><td><input class="inputText" type="text" name="surname" id="surname" /></td></tr>').appendTo(tableNewPatient);
-	$('<tr id="rowSex"><td><input type="radio" id="male" name="sex" value="M" checked="checked" /><label for="male">Maschio</label></td><td class="alignLeft"><input type="radio" id="female" name="sex" value="F" /><label for="female">Femmina</label></td></tr>').appendTo(tableNewPatient);
-	$('<tr><td class="label">Data Nascita: </td><td><input type="text" class="inputText" name="dateOfBirth" id="dateOfBirth" /></td></tr>').appendTo(tableNewPatient);
-	$('<tr id="rowDisability"><td class="label">Disabilità</td><td><select id="disabilita"><option value="L">Bassa</option><option value="M" selected="selected">Media</option><option value="H">Alta</option></select></td></tr>').appendTo(tableNewPatient);
-	$('#disabilita').parent().css('text-align', 'left');
+	var row = null;
+	
+	row = $('<tr>').attr('id', 'rowName').appendTo(tableNewPatient);
+	$('<td>').addClass('label').text('Nome: ').appendTo(row);
+	$('<input>').attr('type', 'text').attr('name', 'name').attr('id', 'name')
+		.addClass('inputText').appendTo(('<td>').appendTo(row));
+	
+	row = $('<tr>').attr('id', 'rowSurname').appendTo(tableNewPatient);
+	$('<td>').addClass('label').text('Cognome: ').appendTo(row);
+	$('<input>').attr('type', 'text').attr('name', 'surname').attr('id', 'surname')
+		.addClass('inputText').appendTo($('<td>').appendTo(row));
+		
+	row = $('<tr>').attr('id', 'rowSex').appendTo(tableNewPatient);
+	var td = $('<td>').appendTo(row);
+	
+	$('<input>').attr('type', 'radio').attr('id', 'male')
+		.attr('name', 'sex').val('M').attr('checked', 'checked').appendTo(td);
+		
+	$('<label>').attr('for', 'male').text('Maschio').appendTo(td);
+	
+	td = $('<td>').addClass('alignLeft').appendTo(row);
+	$('<input>').attr('type', 'radio').attr('id', 'female')
+		.attr('name', 'sex').val('F').appendTo(td);
+	$('<label>').attr('for', 'female').text('Femmina').appendTo(td);
+	
+	row = $('<tr>').appendTo(tableNewPatient);
+	td = $('<td>').addClass('label').text('Data Nascita: ').appendTo(row);
+	$('<input>').attr('type', 'text').attr('name', 'dateOfBirth')
+		.attr('id', 'dateOfBirth').addClass('inputText').appendTo($('<td>').appendTo(row));
+	
+	row = $('<tr>').attr('id', 'rowDisability').appendTo(tableNewPatient);
+	$('<td>').addClass('label').text('Disabilità: ').appendTo(row);
+	
+	var select = $('<select>').attr('id', 'disabilita').appendTo($('<td>').appendTo(row));
+	$('<option>').val('L').text('Bassa').appendTo(select);
+	$('<option>').val('M').text('Media').attr('selected', 'selected').appendTo(select);
+	$('<option>').val('H').text('Alta').appendTo(select);
+	
+	select.parent().css('text-align', 'left');
 	$('#dateOfBirth').datepicker({
 		changeMonth: true,
 		changeYear: true,
@@ -382,11 +414,9 @@ initializePage: function() {
 						var data = JSON.parse(message);
 						
 						if (data.OK == 'true') {
-							var optionToAdd = '<option value="' + data.ID 
-												+ '" selected>' + data.SURNAME + " " + data.NAME
-												+ "</option>";
 												
-							$(optionToAdd).appendTo('#selectPatient');
+							$('<option>').val(data.ID).attr('selected', 'selected')
+								.text(data.SURNAME + " " + data.NAME).appendTo('#selectPatient');
 							
 							var dialog = $('<div>').attr('id', 'dialogInsertOk').attr('title', 'Inserimento Avvenuto')
 								.appendTo('#divNewPatient');
@@ -411,7 +441,7 @@ initializePage: function() {
 							
 						}	
 						else {
-							$('<p>').text('Errore nell\'inserimento').appendTo(
+							$('<p>').text("Errore nell'inserimento").appendTo(
 								$('<div>').attr('id', 'dialogError').attr('title', 'Errore!').appendTo('#divNewPatient'));
 
 							$('<p>').text(data.ERROR).appendTo('#dialogError');
@@ -469,6 +499,5 @@ initializePage: function() {
 	$('<button>').attr('id', 'buttonStart').text('Comincia')
 		.button().click(NewVisitNamespace.startNewGame).appendTo(divButtons);
 	
-
 }
 }

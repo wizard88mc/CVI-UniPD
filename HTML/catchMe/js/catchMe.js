@@ -174,6 +174,7 @@ createTransitionCSS: function(time, endPosition) {
 	var stringTransition = 'left ' + time + 's, top ' + time + 's'; 
 	
 	addTransitionSpecifications($('#image'), stringTransition);
+	
 	$('#image').css({
 		left: endPosition.left + 'px',
 		top: endPosition.top + 'px'
@@ -187,12 +188,12 @@ timingFunction: function() {
 	canvasSettings.actual = new Point(Math.round(position.top), Math.round(position.left));
 		
 	var packet = {
-		"TYPE": "GAME_DATA",
-		"SUBTYPE": "POSITIONS",
-		"TIME": timeNow - gameManager.timeToStart,
-		"IMAGE": [canvasSettings.actual.left, canvasSettings.actual.top],
-		"TOUCH": [touchManager.posX, touchManager.posY],
-		"MOVEMENT": gameManager.currentAnimation.movement
+		TYPE: "GAME_DATA",
+		SUBTYPE: "POSITIONS",
+		TIME: timeNow - gameManager.timeToStart,
+		IMAGE: [canvasSettings.actual.left, canvasSettings.actual.top],
+		TOUCH: [touchManager.posX, touchManager.posY],
+		MOVEMENT: gameManager.currentAnimation.movement
 	}
 	
 	resetTouch();
@@ -256,46 +257,50 @@ trainingComplete: function() {
 
 waitingToStart: function(message) {
 	
-	var packet = JSON.parse(message.data);
-	try {
-		if (packet.TYPE == "START_WORKING") {
-			
-			gameManager.timeToStart = packet.START_TIME;
-			websocket.onmessage = function(message) { 
-				try {
-					var packet = JSON.parse(message.data);
-					// se ricevo messaggio che mi dice di 
-					// interrompere simulazione, stoppo gioco
-					if (packet.TYPE == "CHANGE_SPEED") {
-						gameSettings.speed = packet.NEW_SPEED;	
-					}
-					else if (packet.TYPE == "STOP_GAME") {
-						gameManager.gameInAction = false;
-						
-					}
-					else {
-						throw "Bad packet in waitingToStart";
-					}
+	var packet = JSON.parse(message.data || message);
+
+	if (packet.TYPE == "START_WORKING") {
+		
+		gameManager.timeToStart = packet.START_TIME;
+		
+		$()
+		
+		websocket.onmessage = function(message) { 
+			try {
+				var packet = JSON.parse(message.data);
+				// se ricevo messaggio che mi dice di 
+				// interrompere simulazione, stoppo gioco
+				if (packet.TYPE == "CHANGE_SPEED") {
+					gameSettings.speed = packet.NEW_SPEED;	
 				}
-				catch(error) {
-					console.log("Bad packet received: " + error);
-					console.log(message);
-					console.log(message.data);
+				else if (packet.TYPE == "STOP_GAME") {
+					gameManager.gameInAction = false;
+					
 				}
-			};
-			// devo recuperare istruzioni per disegnare
-			CatchMeNamespace.startGame();
-		}
-		else if (packet.TYPE == "START_TRAINING") {
-			
-			TrainingExamplesNamespace.startTraining();
-		}
-		else {
-			console.log("Bad message received during game");
-		}
+				else {
+					throw "Bad packet in waitingToStart";
+				}
+			}
+			catch(error) {
+				console.log("Bad packet received: " + error);
+				console.log(message);
+				console.log(message.data);
+			}
+		};
+		// devo recuperare istruzioni per disegnare
+		CatchMeNamespace.startGame();
 	}
-	catch(error) {
-		console.log("Bad message received waiting to start game");	
+	else if (packet.TYPE == "START_TRAINING") {
+		
+		TrainingExamplesNamespace.startTraining();
+	}
+	else if (packet.TYPE == "TRAINING_POSITION") {
+		
+		TrainingExamplesNamespace.messageManager(packet);
+	}
+	else {
+		console.log("Bad message received during game");
+		console.log(packet);
 	}
 },
 
@@ -367,9 +372,12 @@ startGame: function() {
 	websocket.send(JSON.stringify(packetSpeed));
 	
 	$('body').css({
+		background: 'none',
 		width: getScreenWidth(),
 		height: getScreenHeight()
 	});
+	
+	$('#imageTraining').remove();
 	
 	if (!gameSettings.isSpaceGame) {
 		$('body').css({
@@ -476,7 +484,7 @@ defineAnimationFunction: function(firstTime, timeToWait) {
 	
 	setTimeout(function() {
 		
-		CatchMeNamespace.createTransitionCSS(timeForAnimation, canvasSettings.);
+		CatchMeNamespace.createTransitionCSS(timeForAnimation, canvasSettings.finalPoint);
 		
 		if (firstTime) {
 			gameManager.timing = setInterval(CatchMeNamespace.timingFunction, gameManager.sensibility);	
@@ -1200,7 +1208,7 @@ function sendPacketsGameDefinitionOffline() {
         websocket.send(JSON.stringify(firstPacket));
         
         var secondPacket = {
-    		"TYPE": "READY_TO_PLAY", 
+    		TYPE: "READY_TO_PLAY", 
     		IMAGE_WIDTH: gameSettings.effectiveImageWidth,
     		IMAGE_HEIGHT: gameSettings.effectiveImageHeight,
     		SCREEN_WIDTH: getScreenWidth(),

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 07, 2012 at 10:20 AM
+-- Generation Time: Jan 10, 2013 at 05:17 PM
 -- Server version: 5.5.24-log
 -- PHP Version: 5.3.13
 
@@ -127,35 +127,39 @@ CREATE TABLE IF NOT EXISTS `CatchMeExercises` (
   `StartFromCenter` tinyint(1) NOT NULL DEFAULT '0',
   `MixMovements` tinyint(1) NOT NULL DEFAULT '0',
   `Speed` int(11) DEFAULT NULL,
-  `BackgroundColor` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `Background` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `ImageColor` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `ChangeImageColor` tinyint(1) DEFAULT NULL,
   `ImageID` int(11) DEFAULT NULL,
   `ImageWidth` int(11) DEFAULT NULL,
   `CurrentValidSettings` tinyint(1) DEFAULT NULL,
+  `IsSpaceGame` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=28 ;
 
 --
 -- Dumping data for table `CatchMeExercises`
 --
 
-INSERT INTO `CatchMeExercises` (`ID`, `DefaultGravity`, `IDPatient`, `Movements`, `StartFromCenter`, `MixMovements`, `Speed`, `BackgroundColor`, `ImageColor`, `ChangeImageColor`, `ImageID`, `ImageWidth`, `CurrentValidSettings`) VALUES
-(1, 'M', NULL, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, NULL),
-(2, 'H', NULL, 'L', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, NULL),
-(12, NULL, 1, 'L;R;B', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, 0),
-(13, NULL, 1, 'L;R;T;B', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, 0),
-(14, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 17, 0),
-(15, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 21, 0),
-(16, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 17, 0),
-(17, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 22, 0),
-(18, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 23, 0),
-(19, NULL, 1, 'L;R;B', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, 0),
-(20, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 19, 0),
-(21, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 0),
-(22, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 21, 0),
-(23, NULL, 1, 'L;B', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 1),
-(24, NULL, 4, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 4, 16, 1);
+INSERT INTO `CatchMeExercises` (`ID`, `DefaultGravity`, `IDPatient`, `Movements`, `StartFromCenter`, `MixMovements`, `Speed`, `Background`, `ImageColor`, `ChangeImageColor`, `ImageID`, `ImageWidth`, `CurrentValidSettings`, `IsSpaceGame`) VALUES
+(1, 'M', NULL, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, NULL, NULL),
+(2, 'H', NULL, 'L', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, NULL, NULL),
+(12, NULL, 1, 'L;R;B', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, 0, NULL),
+(13, NULL, 1, 'L;R;T;B', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, 0, NULL),
+(14, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 17, 0, NULL),
+(15, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 21, 0, NULL),
+(16, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 17, 0, NULL),
+(17, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 22, 0, NULL),
+(18, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 23, 0, NULL),
+(19, NULL, 1, 'L;R;B', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, 0, NULL),
+(20, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 19, 0, NULL),
+(21, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 0, NULL),
+(22, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 21, 0, NULL),
+(23, NULL, 1, 'T;R;L', 0, 1, 200, '#FF0000', '#FFFF00', 0, 3, 21, 0, NULL),
+(24, NULL, 4, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 4, 16, 1, NULL),
+(25, NULL, 1, 'L;R;T', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 0, NULL),
+(26, NULL, 1, 'L;T', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0),
+(27, NULL, 1, 'L;T', 0, 0, 100, '#FF0000', '#FFFF00', 0, 5, 21, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -529,7 +533,7 @@ INSERT INTO `MachinesOffset` (`ID`, `Offset`, `DateOffsetCalculation`) VALUES
 (186, '1.0,-0.8', '2012-11-14'),
 (187, '1.0,-0.8', '2012-11-14'),
 (188, '1.0,-0.8', '2012-11-14'),
-(189, '1.0,-0.8', '2012-11-14');
+(189, '1.0,-0.7', '2013-01-07');
 
 -- --------------------------------------------------------
 

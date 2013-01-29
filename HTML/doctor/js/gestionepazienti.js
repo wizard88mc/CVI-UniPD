@@ -692,9 +692,12 @@ $('document').ready(function() {
 	
 	row = $('<tr>').appendTo('#tableSelectOptions');
 	
-	$('<td class="alignRight"><label for="selectGame">Seleziona gioco: </label></td>').appendTo(row);
-	$('label[for="selectGame"]').addClass('label');
-	$('<td><select id="selectGame" name="selectGame"></select></td>').appendTo(row);
+	$('<label>').attr('for', 'selectGame').text('Seleziona gioco: ').addClass('label')
+		.appendTo($('<td>').addClass('alignRight').appendTo(row));
+	
+	$('<select>').attr('id', 'selectGame').attr('name', 'selectGame')
+		.appendTo($('<td'>).appendTo(row));
+	
 	$('#selectGame').change(function() {
 		
 		var value = $(this).val();
@@ -713,25 +716,26 @@ $('document').ready(function() {
 		});
 		
 	});
-	$('<option value=""> - - - </option>').appendTo('#selectGame');
-	$('<option value="catchMe">Prendimi!</option>').appendTo('#selectGame');
-	$('<option value="helpMe">Aiutami!</option>').appendTo('#selectGame');
+	$('<option>').val('').text(' - - - ').appendTo('#selectGame');
+	$('<option>').val('catchMe').text('Prendimi!').appendTo('#selectGame');
+	$('<option>').val('helpMe').text('Aiutami!').appendTo('#selectGame');
 	
-	var container = $('<p></p>').insertBefore('#divChooseOptions');
-	container.css({
-		width: '30%',
-		'text-align': 'left',
-		'margin-left': '5%'
-	});
+	var container = $('<p>').insertBefore('#divChooseOptions')
+		.css({
+			width: '30%',
+			'text-align': 'left',
+			'margin-left': '5%'
+		});
 	
-	var goBack = $('<img id="imgGoBack" src="../images/tasto_indietro.png" alt="Torna indietro" />').appendTo(container);
-	goBack.css({
-		cursor: 'pointer',
-		width: '40%'
-	});
-	goBack.on('click', function() {
-		location.replace('../index.html');
-	});
+	$('<img>').attr('id', 'imgGoBack').attr('src', '../images/tasto_indietro.png')
+		.attr('alt', 'Torna indietro').appendTo(container)
+		.css({
+			cursor: 'pointer',
+			width: '40%'
+		})
+		.on('click', function() {
+			location.replace('../index.html');
+		});
 	
 });
 

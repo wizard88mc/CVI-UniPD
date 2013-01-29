@@ -67,7 +67,7 @@ public class EyeTrackerSimulator extends Thread {
             @Override
             public void run() {
                 
-                long timeToWait = 10000;
+                long timeToWait = 2000;
                 try {
                 
                     Thread.sleep((long)(timeToWait));
@@ -77,7 +77,7 @@ public class EyeTrackerSimulator extends Thread {
                 }
                 
                 JSONObject firstMessage = new JSONObject();
-                firstMessage.put("TYPE", "TRAINING_POSITIONS");
+                firstMessage.put("TYPE", "TRAINING_POSITION");
                 firstMessage.put("POS_LEFT", Math.random() * screenWidth);
                 firstMessage.put("POS_TOP", Math.random() * screenHeight);
                 
@@ -91,7 +91,7 @@ public class EyeTrackerSimulator extends Thread {
                     System.out.println("Error in EyeTracker");
                 }
                 JSONObject secondMessage = new JSONObject();
-                secondMessage.put("TYPE", "TRAINING_POSITIONS");
+                secondMessage.put("TYPE", "TRAINING_POSITION");
                 secondMessage.put("POS_LEFT", Math.random() * screenWidth);
                 secondMessage.put("POS_TOP", Math.random() * screenHeight);
                 
@@ -106,7 +106,7 @@ public class EyeTrackerSimulator extends Thread {
                 }
                 
                 JSONObject thirdMessage = new JSONObject();
-                thirdMessage.put("TYPE", "TRAINING_POSITIONS");
+                thirdMessage.put("TYPE", "TRAINING_POSITION");
                 thirdMessage.put("POS_LEFT", Math.random() * screenWidth);
                 thirdMessage.put("POS_TOP", Math.random() * screenHeight);
                 
@@ -121,7 +121,7 @@ public class EyeTrackerSimulator extends Thread {
                 }
                 
                 JSONObject fourthMessage = new JSONObject();
-                fourthMessage.put("TYPE", "TRAINING_POSITIONS");
+                fourthMessage.put("TYPE", "TRAINING_POSITION");
                 fourthMessage.put("POS_LEFT", Math.random() * screenWidth);
                 fourthMessage.put("POS_TOP", Math.random() * screenHeight);
                 

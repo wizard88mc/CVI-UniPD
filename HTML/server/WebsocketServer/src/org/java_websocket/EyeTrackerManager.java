@@ -46,7 +46,7 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
                         messageManager.bufferSynchronizer.notifyAll();
                     }
                 }
-                else if (packet.get("TYPE").equals("TRAINING_POSITIONS")) {
+                else if (packet.get("TYPE").equals("TRAINING_POSITION")) {
 
                     patientManager.sendPacket(packet);
                 }
