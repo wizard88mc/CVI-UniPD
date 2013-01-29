@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# version 0.2.9
+# version 0.3.0
 
 # HTML
 index.html
@@ -41,6 +41,8 @@ js/PresentationManager.js
 js/HelpMe.js
 
 # SOUNDS
+sounds/animali.mp3
+sounds/animali.ogg
 sounds/bene.mp3
 sounds/bene.ogg
 sounds/brava.mp3
@@ -51,12 +53,24 @@ sounds/bravissimo.mp3
 sounds/bravissimo.ogg
 sounds/bravo.mp3
 sounds/bravo.ogg
+sounds/cinque.mp3
+sounds/cinque.ogg
 sounds/continua_cosi.mp3
 sounds/continua_cosi.ogg
+sounds/dieci.mp3
+sounds/dieci.ogg
+sounds/dolcetti.mp3
+sounds/dolcetti.ogg
+sounds/due.mp3
+sounds/due.ogg
 sounds/elfo_andare_riposare.mp3
 sounds/elfo_andare_riposare.ogg
+sounds/fiori.mp3
+sounds/fiori.ogg
 sounds/frenata.mp3
 sounds/frenata.ogg
+sounds/giocattoli.mp3
+sounds/giocattoli.ogg
 sounds/indicazione_secondo_dolcetto.mp3
 sounds/indicazione_secondo_dolcetto.ogg
 sounds/indicazione_trascina_dolcetto.mp3
@@ -83,10 +97,22 @@ sounds/introduzione.mp3
 sounds/introduzione.ogg
 sounds/intruso.mp3
 sounds/intruso.ogg
+sounds/macchinine.mp3
+sounds/macchinine.ogg
+sounds/materiale_per_disegnare.mp3
+sounds/materiale_per_disegnare.ogg
+sounds/messo_insieme.mp3
+sounds/messo_insieme.ogg
+sounds/messo_insieme2.mp3
+sounds/messo_insieme2.ogg
 sounds/molto_bene.mp3
 sounds/molto_bene.ogg
 sounds/no_dolcetto.mp3
 sounds/no_dolcetto.ogg
+sounds/nove.mp3
+sounds/nove.ogg
+sounds/oggetti_assomigliano.mp3
+sounds/oggetti_assomigliano.ogg
 sounds/oggetto_non_inserito_animali_peluche.mp3
 sounds/oggetto_non_inserito_animali_peluche.ogg
 sounds/oggetto_non_inserito_costruzioni.mp3
@@ -103,8 +129,12 @@ sounds/oggetto_non_inserito_strumenti_musica.mp3
 sounds/oggetto_non_inserito_strumenti_musica.ogg
 sounds/oggetto_non_inserito_vestiti_bambole.mp3
 sounds/oggetto_non_inserito_vestiti_bambole.ogg
+sounds/otto.mp3
+sounds/otto.ogg
 sounds/pronti_per_cominciare.mp3
 sounds/pronti_per_cominciare.ogg
+sounds/quattro.mp3
+sounds/quattro.ogg
 sounds/riprova.mp3
 sounds/riprova.ogg
 sounds/sacco_pronto_costruzioni.mp3
@@ -121,8 +151,21 @@ sounds/sacco_pronto_vestiti_bambole.mp3
 sounds/sacco_pronto_vestiti_bambole.ogg
 sounds/saluto_elfo_fine.ogg
 sounds/saluto_elfo_fine.mp3
+sounds/sei.mp3
+sounds/sei.ogg
+sounds/sette.mp3
+sounds/sette.ogg
 sounds/slitta_puo_partire.mp3
 sounds/slitta_puo_partire.ogg
+sounds/strumenti_musicali.mp3
+sounds/strumenti_musicali.ogg
+sounds/tre.mp3
+sounds/tre.ogg
+sounds/uno.mp3
+sounds/uno.ogg
+sounds/vestiti.mp3
+sounds/vestiti.ogg
+
 
 # IMAGES
 images/asino.png
