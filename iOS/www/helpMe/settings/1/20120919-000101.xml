@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<levels>
+<level targetFamily="animali" type="6x4" maxTimeImage="25">
+<image type="T" imageID="5" />
+</level>
+</levels>

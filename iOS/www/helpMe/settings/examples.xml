@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<examples>
+    <example image="images/biscuit.png" withHelp="true" insertIntoBag="true" soundBefore="indicazione_trascina_dolcetto" soundAfter="bene"/>
+    <example image="images/biscuit.png" withHelp="false" insertIntoBag="true" soundBefore="indicazione_secondo_dolcetto" soundAfter="molto_bene"/>
+    <example image="images/rosa.png" withHelp="true" insertIntoBag="false" soundBefore="no_dolcetto"/>
+    <example image="images/ferrari.png" withHelp="false" insertIntoBag="false" soundBefore="no_dolcetto" soundAfter="pronti_per_cominciare"/>
+</examples>

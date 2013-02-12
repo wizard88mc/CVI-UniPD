@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+
+<title>Prendimi!</title>
+<script src="../js/jquery-1.7.2.min.js"></script>
+<script src="../js/jquery-ui-1.8.21.custom.min.js"></script>
+
+<link rel="stylesheet" href="../style/baseStyle.css" />
+<link rel="stylesheet" href="style/catchMe.css" />
+
+<script type="text/javascript">
+
+	$('document').ready(function() {
+		
+		$('body').height($(window).height());
+		
+		$('body').css({
+		'background-color': '#000064',
+		'background-image': 'url("../images/background_training.png")',
+		'background-size': '100%',
+		'background-position': 'left bottom',
+		'background-repeat': 'no-repeat'
+		});
+		
+		$('<img>').attr('src', '../images/space_shuttle2.png').attr('id', 'imgTraining').appendTo('body');
+		
+		var imgWidth = 219, imgHeight = 512;
+		
+		var middleLeft = $(window).width() / 2; var middleTop = $(window).height() / 2;
+		
+		$('#imgTraining').css({
+			position: 'absolute',
+			left: middleLeft - imgWidth / 2,
+			top: middleTop - imgHeight / 2
+		});
+		
+		var pointTop = 0, pointLeft = $(window).width();
+		
+		var ipotenusa = Math.sqrt(Math.pow(pointTop - (middleTop), 2) + Math.pow(pointLeft - (middleLeft), 2));
+		
+		var cosAlfa = (Math.abs(pointTop - (middleTop))) / ipotenusa;
+		
+		var alfa = Math.acos(cosAlfa) * 180 / Math.PI;
+		
+		if (pointTop - middleTop <= 0 && pointLeft - middleLeft <= 0) {
+			alfa = -alfa;
+		}
+		else if (pointTop - middleTop >= 0 && pointLeft - middleLeft <= 0) {
+			alfa = alfa - 180;
+		}
+		else if (pointTop - middleTop >= 0 && pointLeft - middleLeft >= 0) {
+			alfa = 180 - alfa;
+		}
+		console.log(alfa);
+
+		var rotation = 'rotate(' + alfa + 'deg)';
+		
+		$('#imgTraining').css({
+			transform: rotation,
+			'-webkit-transform': rotation
+		});
+		
+		var centerMoveTop = pointTop - middleTop;
+		var centerMoveLeft = pointLeft - middleLeft;
+		
+		var movementTop = Math.round(centerMoveTop - imgWidth / 2 * Math.cos(alfa * Math.PI / 180));
+		var movementLeft = Math.round(centerMoveLeft - imgHeight / 2 * Math.sin(alfa * Math.PI / 180));
+		
+		console.log(movementTop);
+		console.log(movementLeft);
+		
+		var actualPosition = $('#imgTraining').position();
+		var finalPositionLeft = actualPosition.left + movementLeft;
+		var finalPositionTop = actualPosition.top + movementTop;
+		
+		if (finalPositionTop < 0) {
+			finalPositionTop = 0;
+		}
+		if (finalPositionLeft < 0) {
+			finalPositionLeft = 0;
+		}
+		
+		var transition = 'left 3s, top 3s';
+		$('#imgTraining').css({
+			'-webkit-transition': transition,
+			left: finalPositionLeft,
+			top: finalPositionTop
+		});
+	})
+</script>
+
+</head>
+
+<body>
+	<div id="divMainContent"></div>
+</body>
+</html>

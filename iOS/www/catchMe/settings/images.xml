@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listOfImages>
+<image id="1" imageName="Bugs Bunny intero" fileName="bugs_bunny.png" size="448x785" isForSpaceGame="false" />
+<image id="2" imageName="Bugs Bunny 2" fileName="bugs_bunny_target.png" size="300x400" isForSpaceGame="false" />
+<image id="3" imageName="Faccia Paperino" fileName="paperino.png" size="193x201" isForSpaceGame="false" />
+<image id="4" imageName="Pluto lingua" fileName="pluto_lingua.png" size="191x235" isForSpaceGame="false" />
+<image id="5" imageName="Razzo 1" fileName="space_shuttle2.png" size="219x512" isForSpaceGame="true" />
+</listOfImages>

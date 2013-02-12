@@ -1,0 +1,82 @@
+
+html, body {
+	max-width: 1024px;
+	font-size: 1.0em;
+	margin: auto;
+	background-color: #FFF;
+}
+
+#divHeader {
+	background-color: #9B0014;
+	color: #FFF;
+}
+
+#divHeader img {
+	float: left;
+	width: 30%;
+	margin: 0.5em;
+	
+}
+
+#divTitles {
+	padding: 0;
+	float: right;
+	width: 60%;
+	text-align: center;
+	margin-top: 2%;
+	margin-right: 3%;
+}
+
+#divTitles h1 {
+	padding-top: 0;
+	margin-top: 0.3em;
+	font-size: 2.5em;
+	margin-bottom: 0;
+}
+
+#divTitles h2 {
+	margin-top: 0.5em;
+}
+
+#divHeader p {
+	clear: both;
+	height: 0.1em;
+}
+
+#divNavigation {
+	width: 100%;
+	background-color: #9B0014;
+	text-align: center;
+	padding-top: 2.0em;
+}
+
+#navigationMenu {
+	list-style-type: none;
+	font-size: 1.3em;
+	padding-bottom: 0.5em;
+}
+
+#navigationMenu li {
+	display: inline;
+	margin: 0em;
+	padding: 0em;
+}
+
+#navigationMenu a {
+	background-color: #FFF;
+	padding: 1.0em 2.0em 0.6em 2.0em;
+	margin: 0em;
+}
+
+#divContent {
+	border: 1px solid #000000;
+}
+
+#divFooter {
+	clear: both;
+	width: 100%;
+	font-size: 0.9em;
+	font-style: italic;
+	text-align: center;
+}
+

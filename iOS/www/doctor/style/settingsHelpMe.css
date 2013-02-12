@@ -1,0 +1,80 @@
+
+.tableLevel {
+	border-width: 1px;
+	bborder-spacing: 0em;
+	border-style: none;
+	border-color: gray;
+	border-collapse: collapse;
+	margin: auto;
+	width: 90%;
+}
+
+.tableLevel th, .tableLevel td {
+	border-width: 1px;
+	padding: 0.1em;
+	border-style: inset;
+	border-color: gray;
+}
+
+.tableLevel td {
+	vertical-align: middle;
+}
+
+.columnImageType {
+	width: 20%;
+}
+
+.columnImageSelect {
+	width: 45%;
+	text-align: left;
+}
+
+td.columnImageSelect select {
+	width: 100%;
+}
+
+td.ui-selected {
+	background-color: #305071;
+	color: white;
+}
+
+.imgPreview {
+	width: 45%;
+}
+
+#divNewLevel {
+	width: 90%;
+	margin: auto;
+	margin-bottom: 0.5em;
+	padding: 0.5em;
+}
+
+#selectNewLevel {
+	margin: 0.3em;
+	vertical-align: middle;
+	width: 20%;
+	font-size: 0.9em;
+	padding: 0.1em;
+}
+
+#buttonAddLevel {
+	width: 25%;
+	margin: 0em 4%;
+}
+
+.divSelectTargetFamily {
+	margin-bottom: 0.3em;
+}
+
+.divSelectMaxTime {
+	margin-bottom: 0.3em;
+}
+
+.divSelectMaxTime select {
+	width: 20%;
+}
+
+.badSettings {
+	background-color: #FF0000;
+	font-weight: bold;
+}

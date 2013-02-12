@@ -19,64 +19,39 @@ import org.json.simple.JSONValue;
 public class FakeServerTest extends WebSocketServer {
     
     public WebSocket client = null;
+    
+    public void printStringInstructions() {
+     
+        System.out.println("Digitare il codice del pacchetto che si vuole"
+                        + " spedire all'eye-tracker");
+        System.out.println("0 - Esci");
+        System.out.println("1 - IDENTIFICATION_COMPLETE");
+        System.out.println("2 - OFFSET_CALCULATION");
+        System.out.println("3 - CALCULATING");
+        System.out.println("4 - OFFSET_CALCULATION_COMPLETE");
+        System.out.println("5 - TRAINING_SESSION");
+        System.out.println("6 - SCREEN_MEASURES");
+        System.out.println("7 - START_TRAINING");
+        System.out.println("8 - START_WORKING");
+    }
 
     @Override
     public boolean onMessage(WebSocket conn, String message) {
         
         JSONObject object = (JSONObject)JSONValue.parse(message);
         
-        if (object.get("TYPE").equals("IDENTIFICATION")) {
-            client = conn;
-            
-            JSONObject packetToSend = new JSONObject();
-            packetToSend.put("TYPE", "IDENTIFICATION_COMPLETE");
-            client.send(packetToSend.toJSONString());
-        }
-        else if (object.get("TYPE").equals("MACHINE_ID")) {
-            
-            String machineID = "";
-            
-            if (object.get("DATA") != null && object.get("DATA") != "") {
-                machineID = (String)object.get("DATA");
-            }
-            Scanner sc = new Scanner(System.in);
-            System.out.println("L'eye tracker ha appena spedito il suo ID: " + 
-                    machineID);
-            System.out.println("Che operazione si vuole eseguire?");
-            System.out.println("5 - Nessuna sincronizzazione");
-            System.out.println("6 - Sincronizza");
-            
-            int answer = sc.nextInt();
-            
-            switch(answer) {
-                case 5: {
-                    JSONObject packetAlreadySync = new JSONObject();
-                    packetAlreadySync.put("TYPE", "OFFSET_CALCULATION");
-                    packetAlreadySync.put("TODO", "false");
-                    
-                    client.send(packetAlreadySync.toJSONString());
-                    break;
-                }
-                case 6: {
-                    JSONObject packetStartCalcultation = new JSONObject();
-                    packetStartCalcultation.put("TYPE", "OFFSET_CALCULATION");
-                    packetStartCalcultation.put("TODO", "true");
-                    packetStartCalcultation.put("MANDATORY", "true");
-                    
-                    client.send(packetStartCalcultation.toJSONString());
-                    break;
-                }
-            }
-        }
-        else if (object.get("TYPE").equals("START_OFFSET_CALCULATION")) {
-            
-            
-        }
-        
         System.out.println("MESSAGE RECEIVED");
-        System.out.println(message);
+        System.out.println(object);
         System.out.println("* * * * * * * * * * * * * ");
         System.out.println("");
+        
+        if (object.get("TYPE").equals("IDENTIFICATION")) {
+            if (object.get("DATA").equals("EyeTrackerClient")) {
+                client = conn;
+            }
+        }
+        
+        this.printStringInstructions();
         
         return true;
     }
@@ -123,44 +98,73 @@ public class FakeServerTest extends WebSocketServer {
             
             while (!end) {
                 
-                System.out.println("Digitare il codice del pacchetto che si vuole"
-                        + " spedire all'eye-tracker");
-                System.out.println("1 - Spedisci misure schermo");
-                System.out.println("2 - Spedisci impostazioni training");
-                System.out.println("3 - Esci");
+                serverTest.printStringInstructions();
                 
                int result = sc.nextInt();
                
                switch(result) {
-                   
+                   case 0: {
+                       System.out.println("Closing");
+                       end = true;
+                       break;
+                   }
                    case 1: {
+                       JSONObject packet = new JSONObject();
+                       packet.put("TYPE", "IDENTIFICATION_COMPLETE");
+                       serverTest.client.send(packet.toJSONString());
+                       break;
+                   }
+                   case 2: {
+                       JSONObject packet = new JSONObject();
+                       packet.put("TYPE", "OFFSET_CALCULATION");
+                       packet.put("TODO", "true");
+                       serverTest.client.send(packet.toJSONString());
+                       break;
+                   }
+                   case 3: {
+                       JSONObject packet = new JSONObject();
+                       packet.put("TYPE", "CALCULATING");
+                       serverTest.client.send(packet.toJSONString());
+                       break;
+                   }
+                   case 4: {
+                       JSONObject packet = new JSONObject();
+                       packet.put("TYPE", "OFFSET_CALCULATION_COMPLETE");
+                       packet.put("MACHINE_ID", 100);
+                       serverTest.client.send(packet.toJSONString());
+                       break;
+                   }
+                   case 5: {
+                       JSONObject packet = new JSONObject();
+                       packet.put("TYPE", "TRAINING_SESSION");
+                       packet.put("PATIENT_ID", 5);
+                       serverTest.client.send(packet.toJSONString());
+                       break;
+                   }
+                   case 6: {
                        JSONObject packet = new JSONObject();
                        packet.put("TYPE", "SCREEN_MEASURES");
                        packet.put("SCREEN_WIDTH", 800);
                        packet.put("SCREEN_HEIGHT", 600);
                        serverTest.client.send(packet.toJSONString());
                        break;
-                       
                    }
-                   case 2: {
+                   case 7: {
                        JSONObject packet = new JSONObject();
-                       packet.put("TYPE", "TRAINING_SETTINGS");
+                       packet.put("TYPE", "START_TRAINING");
+                       packet.put("POINTS", 5);
+                       packet.put("SPEED", 5000); // da verificare questo valore
                        serverTest.client.send(packet.toJSONString());
                        break;
                    }
-                   case 3: {
-                       end = true;
+                   case 8: {
+                       JSONObject packet = new JSONObject();
+                       packet.put("TYPE", "START_WORKING");
+                       serverTest.client.send(packet.toJSONString());
                        break;
                    }
                }
-                
             }
-            
-            if (serverTest.client != null) {
-                serverTest.client.close(0);
-            }
-            
-            serverTest = null;
         }
         catch(UnknownHostException exc) {
             System.out.println("Error in creating Fake Server");

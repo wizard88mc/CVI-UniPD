@@ -358,9 +358,18 @@ function initPage() {
 		var tableLogin = $('<table>').attr('id', 'tableLogin');
 		$('<tbody>').appendTo(tableLogin);
 		tableLogin.appendTo('#divMainContent');
+        
+        $('<tr>').attr('id', 'usernameRow').appendTo(tableLogin);
+        $('<td>').addClass('label').text('Username: ').appendTo('#usernameRow');
+        $('<input').attr('type', 'text').attr('id', 'username').attr('name', 'username').appendTo($('<td>').appendTo('#usernameRow'));
 		
-		$('<tr id="usernameRow"><td class="label">Username: </td><td><input type="text" id="username" name="username" /></td></tr>').appendTo(tableLogin);
-		$('<tr id="passwordRow"><td class="label">Password: </td><td><input type="password" id="password" name="password" /></td></tr>').appendTo(tableLogin);
+		//$('<tr id="usernameRow"><td class="label">Username: </td><td><input type="text" id="username" name="username" /></td></tr>').appendTo(tableLogin);
+        
+        $('<tr>').attr('id', 'passwordRow').appendTo(tableLogin);
+        $('<td>').addClass('label').text('Password: ').appendTo('#passwordRow');
+        $('<input>').attr('type', 'password').attr('id', 'password').attr('name', 'password').appendTo($('<td>').appendTo('#passwordRow'));
+        
+		//$('<tr id="passwordRow"><td class="label">Password: </td><td><input type="password" id="password" name="password" /></td></tr>').appendTo(tableLogin);
 		
 		$('input').addClass('inputText');
 		
@@ -382,7 +391,7 @@ function initPage() {
 		if (!navigator.onLine && !getFromLocalStorage('username') 
 				&& !getFromLocalStorage('password') && !getFromLocalStorage('permission')) {
 			
-			$('<p>').text('Per poter utilizzare l\'applicazione in modalità offline è necessario collegarsi alla rete almeno una volta.').appendTo(
+			$('<p>').text("Per poter utilizzare l'applicazione in modalità offline è necessario collegarsi alla rete almeno una volta.").appendTo(
 					$('<div>').attr('id', 'dialogNeverConnected').attr('title', 'Errore!')
 					.appendTo('#divMainContent'));
 				

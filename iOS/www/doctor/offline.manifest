@@ -1,0 +1,63 @@
+CACHE MANIFEST
+# revision 0.1
+
+# HTML
+
+index.html
+
+CACHE:
+
+# Javascript
+
+../js/jquery-1.7.2.min.js"></script>
+../js/jquery-ui-1.8.21.custom.min.js"></script>
+../js/Utilities.js
+../js/WebSocketManager.js
+js/graphsettings.js
+../js/flot/jquery.flot.min.js
+../js/flot/jquery.flot.navigate.min.js
+../js/flot/jquery.flot.axislabels.js
+../js/jquery.slider.min.js
+../js/colorpicker/farbtastic.js
+../js/Utilities.js
+../js/TrainingManager.js
+js/nuovavisita.js
+js/CatchMeSettings.js
+js/HelpMeSettings.js
+js/graphsettings.js
+js/watchCatchMe.js
+js/watchHelpMe.js
+js/index.js
+
+
+
+# CSS
+
+style/index.css
+style/settingsHelpMe.css
+../style/custom-theme/jquery-ui-1.8.21.custom.css
+../style/jquery.slider.min.css
+style/watchHelpMe.css
+../js/colorpicker/farbtastic.css
+../style/baseStyle.css
+
+style/baseStyle.css
+style/index.css
+style/custom-theme/jquery-ui-1.8.21.custom.css
+style/custom-theme/images/ui-bg_flat_0_aaaaaa_40x100.png
+style/custom-theme/images/ui-bg_flat_20_305071_40x100.png
+style/custom-theme/images/ui-bg_flat_55_fbec88_40x100.png
+style/custom-theme/images/ui-bg_glass_75_d0e5f5_1x400.png
+style/custom-theme/images/ui-bg_glass_95_fef1ec_1x400.png
+style/custom-theme/images/ui-bg_highlight-hard_20_305071_1x100.png
+style/custom-theme/images/ui-bg_inset-hard_100_f5f8f9_1x100.png
+style/custom-theme/images/ui-bg_inset-hard_100_fcfdfd_1x100.png
+style/custom-theme/images/ui-icons_217bc0_256x240.png
+style/custom-theme/images/ui-icons_469bdd_256x240.png
+style/custom-theme/images/ui-icons_6da8d5_256x240.png
+style/custom-theme/images/ui-icons_cd0a0a_256x240.png
+style/custom-theme/images/ui-icons_d8e7f3_256x240.png
+style/custom-theme/images/ui-icons_f9bd01_256x240.png
+
+# Images
+images/preloader.gif

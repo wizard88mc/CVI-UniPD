@@ -1,0 +1,77 @@
+#tableResultsHelpMe {
+	margin: auto;
+	width: 70%;
+	border-width: 0.1em;
+	border-color: #305071;
+	border-style: inset;
+	border-collapse: collapse;
+}
+
+#tableResultsHelpMe thead th {
+	font-weight: bold; 
+	font-size: 1.1em;
+	padding: 0.8em 1.5em 0.8em 1.5em;
+}
+
+#tableResultsHelpMe th, #tableResultsHelpMe td {
+	border-width: 0.1em;
+	border-style: inset;
+	border-color: #096AC8;
+}
+
+#tableResultsHelpMe td {
+	padding-top: 0.4em;
+	padding-bottom: 0.4em;
+}
+
+#screenPreview {
+	margin: auto;
+	width: 90%;
+}
+
+
+#screenSimulator {
+	background: url('../../helpMe/images/sfondo_gioco.jpg');
+	background-size: 100% 100%;
+	border: 1px solid #000000;
+	float: left;
+	margin-bottom: 1.0em;
+	position: relative;
+}
+
+#divLegend {
+	width: 20%%;
+	float: right;
+	margin-bottom: 0.7em;
+	margin-right: 10%;
+	padding: 0.5em;
+	border: 1px solid #000;
+	text-align: left;
+}
+
+#divLegend li {
+	font-weight: bold;
+	margin-left: 1.5em;
+}
+
+.imageCenter  {
+	color: #FF0000;
+}
+
+.touchCenter {
+	color: #00FF00;
+}
+
+.eyesCenter {
+	color: #000000;
+}
+
+.mirino {
+	position: absolute;
+	visibility: hidden;
+}
+
+#divButtonStopGame {
+	margin-bottom: 0.3em;
+	margin-left: -7%;
+}

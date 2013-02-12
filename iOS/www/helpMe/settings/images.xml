@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<imageMaterials>
+    <family type="animali" audioFile="introduzione_sacco_animali_peluche" audioBagReady=""
+    	audioObjectNotInserted="oggetto_non_inserito_animali_peluche">
+        <image id="1" name="Oca" fileName="oca.png" />
+        <image id="2" name="Asino" fileName="asino.png" />
+        <image id="3" name="Coniglio" fileName="coniglio.png" />
+        <image id="4" name="Gallina" fileName="gallina.png" />
+        <image id="5" name="Gatto" fileName="gatto.png" />
+        <image id="6" name="Maiale" fileName="maiale.png" />
+        <image id="7" name="Tartaruga" fileName="tartaruga.png" />
+    </family>
+    <family type="macchine" audioFile="introduzione_sacco_macchinine" audioBagReady="sacco_pronto_macchinine"
+    	audioObjectNotInserted="oggetto_non_inserito_macchinine">
+        <image id="8" name="Ferrari" fileName="ferrari.png" />
+    </family>
+    <family type="Pennarelli_Matite" audioFile="introduzione_sacco_pennarelli_matite" audioBagReady="sacco_pronto_pennarelli_matite"
+    	audioObjectNotInserted="oggetto_non_inserito_pennarelli_matite">
+        <image id="9" name="Rosa" fileName="rosa.png" />
+    </family>
+    <family type="Costruzioni" audioFile="introduzione_sacco_costruzioni" audioBagReady="sacco_pronto_costruzioni"
+    	audioObjectNotInserted="oggetto_non_inserito_costruzioni">
+    	<image id="10" name="Biscotto" fileName="biscuit.png" />
+    	<image id="11" name="Occhiali" fileName="occhiali.png" />
+    	<image id="12" name="Ombrello" fileName="ombrello.png" />
+    	<image id="13" name="Orologio bambino" fileName="orologio-bambino.jpg" />
+    	<image id="14" name="Pipa" fileName="pipa.png" />
+    </family>
+    <family type="Soldatini" audioFile = "introduzione_sacco_soldatini" audioBagReady="sacco_pronto_soldatini"
+    	audioObjectNotInserted="oggetto_non_inserito_soldatini">
+    </family>
+    <family type="Strumenti musicali" audioFile="introduzione_sacco_strumenti_musica" audioBagReady="sacco_pronto_strumenti_musica"
+    	audioObjectNotInserted="oggetto_non_inserito_strumenti_musica">
+    </family>
+    <family type="Vestiti bambole" audioFile="introduzione_sacco_vestiti_bambole" audioBagReady="sacco_pronto_vestiti_bambole"
+    	audioObjectNotInserted="oggetto_non_inserito_vestiti_bambole">
+    </family>
+    <family type="Dolcetti" audioFile="introduzione_sacco_dolcetti" audioBagReady=""
+    	audioObjectNotInserted="oggetto_non_inserito_dolcetti">
+    </family>
+</imageMaterials>

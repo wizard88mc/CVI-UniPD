@@ -1,0 +1,43 @@
+CACHE MANIFEST
+# version 0.1.3
+
+# HTML
+index.html
+
+# Images
+images/bugs_bunny_target.png
+images/bugs_bunny.png
+images/paperino.png
+images/pluto_lingua.png
+../images/preloader.gif
+../images/close.png
+../images/background_training.png
+images/space_shuttle2.png
+../images/space_shuttle2.png
+
+# Javascript
+../js/jquery-1.7.2.min.js
+../js/jquery-ui-1.8.21.custom.min.js
+../js/jgestures.min.js
+../js/Utilities.js
+../js/WebSocketManager.js
+../js/TouchTracker.js
+../js/CanvasFilters.js
+../js/OfflineManager.js
+../js/TrainingManager.js
+../js/CacheManager.js
+js/catchMe.js
+
+# CSS
+
+../style/baseStyle.css
+style/catchMe.css
+../style/animate-custom.css
+
+# Sounds
+sounds/bene.mp3
+sounds/bene.ogg
+sounds/continua_cosi.mp3
+sounds/continua_cosi.ogg
+sounds/molto_bene.mp3
+sounds/molto_bene.ogg

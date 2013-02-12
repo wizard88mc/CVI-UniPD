@@ -1,0 +1,56 @@
+* {
+	margin: 0em;
+	padding: 0em;
+}
+
+#divMainContent {
+	background-image: url('../images/background_patient.png');
+	background-size: 100% 100%;
+	margin-top: 0em;
+	text-align: center;
+}
+
+h1 {
+	color: #000080;
+}
+
+h1.title {
+	padding: 1%;
+	font-size: 2.7em;
+}
+
+#divButtonsGames {
+	position: absolute;
+	width: 100%;
+	top: 35%;
+}
+
+div.buttonForGame {
+	display: inline-block;
+	width: 25%;
+	padding-top: 4%;
+	padding-bottom: 4%;
+	font-size: 1.5em;
+	margin: 1.0em;
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+	cursor: pointer;
+	color: #000;
+	font-weight: bold;
+	background-image: url("../images/pergamena_background.fw.png");
+	background-size: 100% 100%;
+}
+
+#buttonExit {
+	display: inline-block;
+	width: auto;
+	height: auto;
+	position: absolute;
+	top: 5%;
+	right: 2%;
+	padding: 1.0em;
+	background-image: url("../images/close.png");
+	background-size: 100% 100%;
+	cursor: pointer;
+	border: 0em;
+}

@@ -1,0 +1,205 @@
+#divMainContent {
+	text-align: center;
+	font-size: 1.1em;	
+	background-color: #FFF;
+	margin: auto;
+	max-width: 1024px;
+	background-color: #FFF;	
+	margin-top: 0em;
+	padding-bottom: 3.0em;
+}
+
+#divMainContent h1 {
+	margin: 0;
+	height: 100%;
+	padding: 0.5em;
+	margin-bottom: 1.0em;
+}
+
+#divChooseOptions {
+	font-size: 1.2em;
+	width: 50%;
+	margin: auto;
+}
+
+#divChooseOptions img {
+	width: 5%;
+	vertical-align: middle;
+	margin-left: 1.0em;
+	
+}
+
+#divChooseOptions table {
+	margin: auto;
+	width: 90%;
+}
+
+#divChooseOptions #divCheckboxExercises {
+	margin-top: 0.5em;
+}
+
+#divChooseOptions #divCheckboxExercises label {
+	font-size: 0.8em;
+	padding-left: 0.5em;
+}
+
+#selectPatient, #selectGame {
+	width: 95%;
+	height: 1.7em;
+	margin-left: 1.0em;
+	font-size: 0.6em;
+	vertical-align: middle;
+}
+
+.alignRight {
+	text-align: right;
+}
+
+
+#divTableContainer {
+	margin-top: 4%;
+	width: 100%;
+	font-size: 0.9em;
+}
+
+.label {
+	font-size: 1.0em;
+}
+
+#tableVisitsCatchMe, #tableVisitsHelpMe {
+	margin: auto;
+	width: 90%;
+	border-width: 0.1em;
+	border-color: #305071;
+	border-style: inset;
+	border-collapse: collapse;
+}
+
+#tableVisitsCatchMe thead th, #tableVisitsHelpMe thead th {
+	font-weight: bold; 
+	font-size: 1.1em;
+	padding: 0.8em 1.0em 0.8em 1.0em;
+}
+
+#tableVisitsCatchMe th, #tableVisitsCatchMe td,
+#tableVisitsHelpMe th, #tableVisitsHelpMe td {
+	border-width: 0.1em;
+	border-style: inset;
+	border-color: #096AC8;
+}
+
+#tableVisitsCatchMe td, #tableVisitsHelpMe td {
+	padding: 0.4em;
+}
+
+#tableVisitsCatchMe td img, #tableVisitsHelpMe td img {
+	width: 20%;
+	vertical-align: middle;
+	padding: 0.5em;
+}
+
+#tableVisitsCatchMe {
+	margin-bottom: 2em;
+}
+
+caption {
+	width: 50%;
+	margin: auto;
+	font-size: 1.1em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	border-bottom: none;
+	
+}
+
+table .smallColumn {
+	width: 15%;
+}
+
+.watchButton {
+	cursor: pointer; 
+}
+
+.alternate {
+	background-color: #7CC4E7;
+}
+
+#divNoVisitsFound {
+	width: 80%;
+	margin: auto;
+	padding: 0.5em;
+	display: none;
+}
+
+#divGrafo {
+	width: 95%;
+	margin: auto;
+	padding: 1.0em;
+}
+
+#divBackButtonContainer {
+	width: 30%;
+	margin-bottom: 0.5em;
+	text-align: left;
+	margin-left: 5%;
+	display: none;
+}
+
+#divBackButtonContainer img {
+	width: 40%;
+	cursor: pointer;
+}
+
+dt {
+	margin-top: 1.0em;
+	text-align: left;
+	margin-left: 1.5em;
+	padding: 0.3em;
+	padding-bottom: 0.7em;
+	font-weight: bold;
+}
+
+dt img {
+	width: 4%;
+	vertical-align: middle;
+	margin-right: 1.0em;
+	cursor: pointer;
+}
+
+dd {
+	margin-left: 2.0em;
+}
+
+dd table {
+	width: 70%;
+	margin-left: 1.0em;
+	border-width: 0.1em;
+	border-color: #305071;
+	border-style: inset;
+	border-collapse: collapse;
+}
+
+dd table th {
+	padding: 0.3em;
+}
+
+dd table th, dd table td {
+	border-width: 0.1em;
+	border-style: inset;
+	border-color: #096AC8;
+}
+
+dd table td {
+	padding-top: 0.4em;
+	padding-bottom: 0.4em;
+}
+
+table.smallerColumn {
+	width: 17%;
+}
+
+.imageAnswer {
+	width: 15%;
+	vertical-align: center;
+}
+

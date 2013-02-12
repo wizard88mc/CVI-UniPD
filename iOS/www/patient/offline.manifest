@@ -1,0 +1,47 @@
+CACHE MANIFEST
+# version 0.1 
+
+# HTML
+index.html
+
+# Javascript
+../js/jquery-1.7.2.min.js
+../js/jquery-ui-1.8.21.custom.min.js
+../js/jgestures.min.js
+../js/WebSocketManager.js
+../js/Utilities.js
+../js/TouchTracker.js
+../js/CanvasFilters.js
+../js/TimeSynchronization.js
+../js/CacheManager.js
+js/index.js
+
+# Stylesheet
+
+../style/custom-theme/jquery-ui-1.8.21.custom.css
+../style/baseStyle.css
+style/index.css
+../style/custom-theme/jquery-ui-1.8.21.custom.css
+../style/custom-theme/images/ui-bg_flat_0_aaaaaa_40x100.png
+../style/custom-theme/images/ui-bg_flat_20_305071_40x100.png
+../style/custom-theme/images/ui-bg_flat_55_fbec88_40x100.png
+../style/custom-theme/images/ui-bg_glass_75_d0e5f5_1x400.png
+../style/custom-theme/images/ui-bg_glass_95_fef1ec_1x400.png
+../style/custom-theme/images/ui-bg_highlight-hard_20_305071_1x100.png
+../style/custom-theme/images/ui-bg_inset-hard_100_f5f8f9_1x100.png
+../style/custom-theme/images/ui-bg_inset-hard_100_fcfdfd_1x100.png
+../style/custom-theme/images/ui-icons_217bc0_256x240.png
+../style/custom-theme/images/ui-icons_469bdd_256x240.png
+../style/custom-theme/images/ui-icons_6da8d5_256x240.png
+../style/custom-theme/images/ui-icons_cd0a0a_256x240.png
+../style/custom-theme/images/ui-icons_d8e7f3_256x240.png
+../style/custom-theme/images/ui-icons_f9bd01_256x240.png
+
+# Images
+../images/preloader.gif
+images/background_patient.png
+images/close.png
+images/esci.png
+images/pergamena_background.fw.png
+images/pergamena_background.jpg
+

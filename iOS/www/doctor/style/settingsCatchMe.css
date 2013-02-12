@@ -1,0 +1,9 @@
+div#divChooseTypeOfGame {
+	margin-top: 1.0em;
+}
+
+div#divChooseTypeOfGame label {
+	margin: 1.0em;
+	margin-left: 0.5em;
+}
+

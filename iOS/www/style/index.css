@@ -1,0 +1,63 @@
+#divMainContent {
+	margin: auto;
+	max-width: 1024px;
+	background-color: #FFF;	
+	margin-top: 0em;
+}
+
+#divHeader {
+	padding: 0.8em;
+}
+
+#divHeader h1 {
+	margin: 0;
+	font-size: 2.3em;
+}
+
+#divHeader h2 {
+	margin: 0.3em;
+	font-size: 1.7em;
+}
+
+#tableLogin {
+	margin: auto;
+	margin-top: 1.5em;
+	margin-bottom: 0.5em;
+}
+
+#tableLogin tr > td {
+	margin: 1.0em;
+	vertical-align: middle;
+}
+
+.inputText {
+	font-size: 0.8em;
+	padding: 0.3em;
+}
+
+#buttonLogin {
+	margin: 1.0em;
+}
+
+#welcomeDoctor {
+	margin-left: 5%;
+	text-align: left;
+}
+
+.buttonBig {
+	padding: 5%;
+}
+
+#buttonLogout {
+	position: absolute;
+	width: 11%;
+	right: 15%;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+#imgPreloaderSendigOfflineVisits {
+	margin: auto;
+	margin-top: 0.5em;
+	width: 10%;
+}

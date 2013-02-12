@@ -1,0 +1,280 @@
+* {
+	margin: 0em;
+	padding: 0em;
+}
+
+
+
+#divMainContent {
+	max-width: 1024px;
+	margin: auto;
+	background-color: #FFF;
+	margin-top: 0em;
+	text-align: center;
+	padding-bottom: 1.0em;
+}
+
+#divMainContent > h2 {
+	font-size: 1.8em;
+}
+
+.label, label {
+	font-size: 1.2em;
+}
+
+#divChooseOldPatient, #divNewPatient {
+	width: 40%;
+	text-align: left;
+	margin: 1.0em;
+	padding: 0em;
+	border: 1px solid #1D5987;
+	text-align: center;
+}
+
+#divChooseOldPatient h3, #divNewPatient h3 {
+	margin: 0em auto;
+	margin-bottom: 1.0em;
+	padding: 0.3em 0em 0.5em 0em;
+	border: none;
+}
+
+#divChooseOldPatient {
+	float: left;
+	margin-left: 5%;
+}
+
+#selectPatient {
+	min-width: 50%;
+	margin-bottom: 2.0em;
+	font-size: 0.9em;
+}
+
+#divNewPatient {
+	float: right;
+	margin-right: 5%;
+}
+
+#divNewPatient button {
+	margin: 0.8em 1% 0.7em 1%;
+}
+
+#tableNewPatient {
+	width: 90%;
+	margin: auto;
+	text-align: right;
+}
+
+.inputText {
+	font-size: 0.8em;
+	padding: 0.3em;
+	width: 90%;
+}
+
+#disabilita {
+	width: 95%;
+	margin-left: 0.7em;
+	font-size: 0.9em;
+}
+
+#divGames {
+	clear: both;
+	margin-bottom: 1.0em;
+	padding: 1.0em;
+	text-align: left;
+	margin-left: 5%;
+	width: 50%;
+}
+
+#divGames select {
+	margin-left: 1.0em;
+	min-width: 40%;
+}
+
+#divGames p {
+	font-size: 0.9em;
+	margin: 0.7em 0em 0.7em 0.5em;
+	font-style: italic;
+}
+
+/* #divButtons {
+	width: 50%;
+	margin: auto;
+	padding: 0.5em 0 0.5em 0;
+	margin-bottom: 1.0em;
+}
+
+
+#divButtons button {
+	margin-left: 0.6em;
+	margin-right: 0.6em;
+	font-size: 1.3em;
+} */
+
+.alignLeft {
+	text-align: left;
+}
+
+.leftSide {
+	clear: left;
+	float: left;
+	width: 50%;
+	margin: 1.0em;
+}
+
+.rightSide {
+	float: right;
+	width: 40%;
+	margin: 1.0em;
+}
+
+#divColoreSfondo, #divColoreImmagine, #divMovimenti, #divSpeed, #divDimensions {
+	margin-bottom: 1.0em;
+	padding-bottom: 0em;
+}
+
+#backgroundColor, #imageColor {
+	width: 50%;
+	margin: 1.0em;
+	display: inline-block;
+}
+
+#previewBackgroundColor, #previewImageColor {
+	width: 30%;
+	border: 1px solid #000;
+	margin-bottom: 8%;
+	display: inline-block;
+}
+
+#divMovimenti, #divSpeed {
+	padding-bottom: 1.0em;
+}
+
+#divMovimenti p, #divColoreImmagine p {
+	margin-bottom: 1.0em;
+}
+
+#divMovimenti label, #divColoreImmagine label {
+	padding: 0.5em;
+}
+
+#divMovimenti input, #divColoreImmagine input {
+	margin-left: 5%;
+	margin-bottom: 3%;
+}
+
+.divContainerSlider {
+	width: 60%;
+	margin: auto;
+	margin-top: 1.0em;
+	margin-bottom: 1.0em;
+}
+
+#labelSpeed {
+	display: inline-block;
+	margin-left: 46%;
+}
+
+#divImage img {
+	width: 40%;
+	display: block;
+	margin: auto;
+	margin-top: 1.0em;
+	padding-bottom: 1.5em;
+}
+
+#divImage select {
+	margin-top: 1.0em;
+}
+
+#idImage {
+	margin: 1.0em;
+	font-size: 0.9em;
+	width: 40%;
+}
+
+div > p {
+	padding: 0.3em;
+}
+
+div > p > span {
+	float:left;
+	margin: 0 0.5em;
+}
+
+#divBadContrast {
+	margin-top: 0em;
+	margin-bottom: 1.0em;
+}
+
+#divBadContrast p {
+	padding: 0.5em;
+}
+
+#divDimensions, #divImage {
+	text-align: center;
+}
+
+#divDimensions p, #divImage p {
+	text-align: left;
+}
+
+#divDimensions {
+	padding-bottom: 1.0em;
+}
+
+#sliderDimensions {
+	width: 70%;
+	margin: auto;
+	margin-top: 1.0em;
+	margin-bottom: 1.5em;
+}
+
+#exampleDimensions {
+	clear: both;
+	margin: auto;
+}
+
+#divButtons {
+	text-align: center;
+	border: none;
+	clear: both;
+	width: 80%;
+	margin: auto;
+}
+
+#divButtons button {
+	margin: 5%;
+	font-size: 1.5em;
+}
+
+#divManager {
+	text-align: center;
+	width: 80%;
+	margin: auto;
+}
+
+#divSliderSpeed {
+	float: left;
+	width: 25%;
+}
+
+#sliderSpeed {
+	margin: auto;
+	width: 60%;
+	margin-bottom: 1.0em;
+}
+
+#labelSpeed {
+	display: block;
+	width: 15%;
+	margin: auto;
+	font-size: 1.4em;
+	margin-bottom: 0.6em;
+}
+
+.arrow {
+	width: 3.0em;
+	margin: 1.0em;
+	margin-top: 0.3em;
+	cursor: pointer;
+}

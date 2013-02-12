@@ -1,0 +1,44 @@
+CACHE MANIFEST
+# revision 0.2.0
+
+# HTML
+
+index.html
+
+CACHE:
+
+# Javascript
+
+js/jquery-1.7.2.min.js
+js/jquery-ui-1.8.21.custom.min.js
+js/CacheManager.js
+js/Utilities.js
+js/MD5.js
+js/OfflineManager.js
+js/index.js
+
+
+
+# CSS
+
+style/baseStyle.css
+style/index.css
+style/custom-theme/jquery-ui-1.8.21.custom.css
+style/custom-theme/images/ui-bg_flat_0_aaaaaa_40x100.png
+style/custom-theme/images/ui-bg_flat_20_305071_40x100.png
+style/custom-theme/images/ui-bg_flat_55_fbec88_40x100.png
+style/custom-theme/images/ui-bg_glass_75_d0e5f5_1x400.png
+style/custom-theme/images/ui-bg_glass_95_fef1ec_1x400.png
+style/custom-theme/images/ui-bg_highlight-hard_20_305071_1x100.png
+style/custom-theme/images/ui-bg_inset-hard_100_f5f8f9_1x100.png
+style/custom-theme/images/ui-bg_inset-hard_100_fcfdfd_1x100.png
+style/custom-theme/images/ui-icons_217bc0_256x240.png
+style/custom-theme/images/ui-icons_469bdd_256x240.png
+style/custom-theme/images/ui-icons_6da8d5_256x240.png
+style/custom-theme/images/ui-icons_cd0a0a_256x240.png
+style/custom-theme/images/ui-icons_d8e7f3_256x240.png
+style/custom-theme/images/ui-icons_f9bd01_256x240.png
+
+# Images
+images/preloader.gif
+images/logout.png
