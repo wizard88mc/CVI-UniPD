@@ -105,7 +105,7 @@ var OfflineNamespace = {
     	var dialog = $('<div>').attr('id', 'divDialogAskToSendVisits')
     		.attr('title', 'Inviare visite salvate?').appendTo('body');
     	
-    	$('<p>').text('Ci sono delle visite non ancora salvate. Inviarle ora?')
+    	$('<p>').text('Ci sono delle visite non ancora spedite. Inviarle ora?')
     		.appendTo(dialog);
     	
     	var width = getScreenWidth() * 0.4;

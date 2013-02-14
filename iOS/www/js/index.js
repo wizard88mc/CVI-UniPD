@@ -360,9 +360,8 @@ function initPage() {
 		
 		builtHeader();
 		
-		var tableLogin = $('<table>').attr('id', 'tableLogin');
+		var tableLogin = $('<table>').attr('id', 'tableLogin').appendTo('#divMainContent');
 		$('<tbody>').appendTo(tableLogin);
-		tableLogin.appendTo('#divMainContent');
         
         $('<tr>').attr('id', 'usernameRow').appendTo(tableLogin);
         $('<td>').addClass('label').text('Username: ').appendTo('#usernameRow');
