@@ -118,9 +118,9 @@ public class ServerManager {
             
             System.out.println("Server Started");
             
-            Thread.sleep(3000);
-            EyeTrackerSimulator simulator = new EyeTrackerSimulator(host, 8000);
-            simulator.connect();
+            //Thread.sleep(3000);
+            //EyeTrackerSimulator simulator = new EyeTrackerSimulator(host, 8000);
+            //simulator.connect();
         }
         catch (Exception exc) {
             exc.printStackTrace();

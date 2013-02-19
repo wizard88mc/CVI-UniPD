@@ -4,10 +4,11 @@
  */
 package org.java_websocket;
 
-import com.sun.xml.internal.ws.transport.http.server.ServerAdapter;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import org.java_websocket.framing.CloseFrame;
 import org.java_websocket.handshake.ClientHandshake;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -32,7 +33,9 @@ public class FakeServerTest extends WebSocketServer {
         System.out.println("5 - TRAINING_SESSION");
         System.out.println("6 - SCREEN_MEASURES");
         System.out.println("7 - START_TRAINING");
-        System.out.println("8 - START_WORKING");
+        System.out.println("8 - VALIDATE_TRAINING");
+        System.out.println("9 - START_WORKING");
+        System.out.println("10 - STOP_GAME");
     }
 
     @Override
@@ -64,6 +67,7 @@ public class FakeServerTest extends WebSocketServer {
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
         
+        System.out.println("Apertura connessione");
         JSONObject message = new JSONObject();
         message.put("TYPE", "IDENTIFICATION");
         conn.send(message.toJSONString());
@@ -84,7 +88,8 @@ public class FakeServerTest extends WebSocketServer {
     public static void main(String args[]) {
         
         int eyeTrackerPort = 8000;
-        String host = "localhost";
+        String host = "ciman.math.unipd.it";
+        host = "localhost";
         
         if (args.length != 0) {
             host = args[0];
@@ -92,6 +97,7 @@ public class FakeServerTest extends WebSocketServer {
         
         try {
             FakeServerTest serverTest = new FakeServerTest(eyeTrackerPort);
+            serverTest.start();
             
             boolean end = false;
             Scanner sc = new Scanner(System.in);
@@ -152,19 +158,37 @@ public class FakeServerTest extends WebSocketServer {
                    case 7: {
                        JSONObject packet = new JSONObject();
                        packet.put("TYPE", "START_TRAINING");
-                       packet.put("POINTS", 5);
-                       packet.put("SPEED", 5000); // da verificare questo valore
+                       packet.put("POINTS", 5); // numero punti
+                       packet.put("POINT_DURATION", 10000); // da verificare questo valore
+                       packet.put("TRANSITION_DURATION", 2000);
                        serverTest.client.send(packet.toJSONString());
                        break;
                    }
                    case 8: {
                        JSONObject packet = new JSONObject();
+                       packet.put("TYPE", "TRAINING_VALIDATION");
+                       serverTest.client.send(packet.toJSONString());
+                       break;
+                   }
+                   case 9: {
+                       JSONObject packet = new JSONObject();
                        packet.put("TYPE", "START_WORKING");
                        serverTest.client.send(packet.toJSONString());
                        break;
                    }
+                   case 10: {
+                       JSONObject packet = new JSONObject();
+                       packet.put("TYPE", "STOP_GAME");
+                       serverTest.client.send(packet.toJSONString());
+                   }
                }
             }
+            
+            serverTest.client.close(CloseFrame.NORMAL);
+            try {
+                serverTest.stop();
+            }
+            catch(IOException exc) {System.out.println("Exception");}
         }
         catch(UnknownHostException exc) {
             System.out.println("Error in creating Fake Server");
