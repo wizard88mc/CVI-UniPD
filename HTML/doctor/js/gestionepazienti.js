@@ -231,8 +231,12 @@ function drawTable(newTable) {
 			}
 			
 			if ($('#divNoVisitsFound').length == 0) {
-				$('<div>').attr('id', 'divNoVisitsFound').addClass('ui-state-error ui-corner-all').appendTo('#divTableContainer');
-				$('<p>').text('Attenzione: Nessuna visita trovata per il paziente selezionato').appendTo('#divNoVisitsFound');
+				
+				$('<div>').attr('id', 'divNoVisitsFound').addClass('ui-state-error ui-corner-all')
+					.appendTo('#divTableContainer');
+				$('<p>').text('Attenzione: Nessuna visita trovata per il paziente selezionato')
+					.appendTo('#divNoVisitsFound');
+					
 				$('#divNoVisitsFound').fadeIn(2000);
 			}
 			else {
@@ -550,20 +554,22 @@ function drawHelpMeReport(differentValues) {
 				var row = $('<tr>').appendTo(table);
 				$('<td>').text(objectName).appendTo(row);
 				if (isTarget == "true") {
-					$('<img>').attr('src', '../images/correct.png').addClass('imageAnswer').attr('alt', 'Oggetto target')
-					.appendTo($('<td>').appendTo(row));
+					$('<img>').attr('src', '../images/correct.png').addClass('imageAnswer')
+						.attr('alt', 'Oggetto target').appendTo($('<td>').appendTo(row));
 				}
 				else {
-					$('<img>').attr('src', '../images/incorrect.png').addClass('imageAnswer').attr('alt', 'Oggetto non target')
-					.appendTo($('<td>').appendTo(row));
+					$('<img>').attr('src', '../images/incorrect.png').addClass('imageAnswer')
+						.attr('alt', 'Oggetto non target').appendTo($('<td>').appendTo(row));
 				}
 				$('<td>').text(frt).appendTo(row);
 				$('<td>').text(ct).appendTo(row);
 				if (rightAnswer == "true") {
-					$('<img>').attr('src', '../images/correct.png').addClass('imageAnswer').attr('alt', 'Risposta corretta').appendTo($('<td>').appendTo(row));
+					$('<img>').attr('src', '../images/correct.png').addClass('imageAnswer')
+						.attr('alt', 'Risposta corretta').appendTo($('<td>').appendTo(row));
 				}
 				else {
-					$('<img>').attr('src', '../images/incorrect.png').addClass('imageAnswer').attr('alt', 'Risposta corretta').appendTo($('<td>').appendTo(row));
+					$('<img>').attr('src', '../images/incorrect.png').addClass('imageAnswer')
+						.attr('alt', 'Risposta corretta').appendTo($('<td>').appendTo(row));
 				}
 				
 				totalFRT += frt;
@@ -696,7 +702,7 @@ $('document').ready(function() {
 		.appendTo($('<td>').addClass('alignRight').appendTo(row));
 	
 	$('<select>').attr('id', 'selectGame').attr('name', 'selectGame')
-		.appendTo($('<td'>).appendTo(row));
+		.appendTo($('<td>').appendTo(row));
 	
 	$('#selectGame').change(function() {
 		

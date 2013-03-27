@@ -4,10 +4,10 @@ require_once("DBParameters.php");
 $patientID = $_POST['patientID'];
 $gameSettings = json_decode($_POST['settings'], true);
 
-$rightMovement = $gameSettings['rightMovement'];
-$leftMovement = $gameSettings['leftMovement'];
-$upMovement = $gameSettings['upMovement'];
-$downMovement = $gameSettings['downMovement'];
+$rightMovement = $gameSettings['rightMovement'] ? 1 : 0;
+$leftMovement = $gameSettings['leftMovement'] ? 1 : 0;
+$upMovement = $gameSettings['upMovement'] ? 1 : 0;
+$downMovement = $gameSettings['downMovement'] ? 1 : 0;
 
 $stringMovements = "";
 
@@ -28,26 +28,27 @@ if (strpos($stringMovements, ";") == 0) {
 	$stringMovements = substr_replace($stringMovements, "", 0, 1);
 }
 
-$startFromCenter = $gameSettings['startFromCenter'];
-$mixMovements = $gameSettings['mixMovements'];
+$startFromCenter = $gameSettings['startFromCenter'] ? 1 : 0;
+$mixMovements = $gameSettings['mixMovements'] ? 1 : 0;
 $speed = $gameSettings['speed']; 
 $backgroundColor = $gameSettings['backgroundColor'];
 $foregroundColor = $gameSettings['foregroundColor'];
 $imageID = $gameSettings['imageID'];
-$changeImageColor = $gameSettings['changeImageColor'];
-if ($changeImageColor == "") {
-	$changeImageColor = 0;
-}
+$changeImageColor = $gameSettings['changeImageColor'] ? 1 : 0;
 $percentualImageWidth = $gameSettings['percentualImageWidth'];
-$isSpaceGame = $gameSettings['isSpaceGame'];
+$isSpaceGame = $gameSettings['isSpaceGame'] ? 1 : 0;
 
+print_r($startFromCenter);
 
 $queryCheckAlreadyExercise = "SELECT * FROM CatchMeExercises  
 		WHERE IDPatient = $patientID AND CurrentValidSettings = 1 
 		AND Movements = \"$stringMovements\" AND Speed = $speed 
+		AND StartFromCenter = $startFromCenter AND MixMovements = $mixMovements 
 		AND Background = \"$backgroundColor\" AND ImageColor = \"$foregroundColor\" 
 		AND ChangeImageColor = $changeImageColor AND ImageID = $imageID 
 		AND ImageWidth = $percentualImageWidth AND IsSpaceGame = $isSpaceGame" ;
+		
+echo "$queryCheckAlreadyExercise \n";
 
 $resultQueryCheckAlreadyExercise = mysqli_query($connection, $queryCheckAlreadyExercise) or die(mysqli_error($connection) . " $queryCheckAlreadyExercise");
 
@@ -61,7 +62,9 @@ if (mysqli_num_rows($resultQueryCheckAlreadyExercise) == 0) {
 	$gravity = $row["Gravity"];
 	
 	$queryCheckIfDefault = "SELECT * FROM CatchMeExercises
-		WHERE DefaultGravity = '$gravity' AND Movements = \"$stringMovements\" AND Speed = $speed
+		WHERE DefaultGravity = '$gravity' AND Movements = \"$stringMovements\" 
+		AND Speed = $speed AND StartFromCenter = $startFromCenter
+		AND MixMovements = $mixMovements
 		AND Background = \"$backgroundColor\" AND ImageColor = \"$foregroundColor\"
 		AND ChangeImageColor = $changeImageColor AND ImageID = $imageID
 		AND ImageWidth = $percentualImageWidth AND IsSpaceGame = $isSpaceGame";
@@ -74,8 +77,8 @@ if (mysqli_num_rows($resultQueryCheckAlreadyExercise) == 0) {
 		$queryChangeActive = "UPDATE CatchMeExercises SET CurrentValidSettings = 0 WHERE IDPatient = $patientID";
 		mysqli_query($connection, $queryChangeActive) or die(mysqli_error($connection));
 		
-		$queryInsertNewExercise = "INSERT INTO CatchMeExercises(IDPatient, Movements, Speed, Background, ImageColor, ChangeImageColor, ImageID, ImageWidth, CurrentValidSettings, IsSpaceGame) 
-				VALUES ($patientID, \"$stringMovements\", $speed, \"$backgroundColor\", \"$foregroundColor\", $changeImageColor, $imageID, $percentualImageWidth, 1, $isSpaceGame)";
+		$queryInsertNewExercise = "INSERT INTO CatchMeExercises(IDPatient, Movements, StartFromCenter, MixMovements, Speed, Background, ImageColor, ChangeImageColor, ImageID, ImageWidth, CurrentValidSettings, IsSpaceGame) 
+				VALUES ($patientID, \"$stringMovements\", $startFromCenter, $mixMovements, $speed, \"$backgroundColor\", \"$foregroundColor\", $changeImageColor, $imageID, $percentualImageWidth, 1, $isSpaceGame)";
 		
 		mysqli_query($connection, $queryInsertNewExercise) or die(mysqli_error($connection));
 		

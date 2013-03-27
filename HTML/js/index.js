@@ -73,7 +73,7 @@ function checkLogin(e) {
 		
 		if (navigator.onLine) {
 			var divDialog = $('<div>').attr('id', 'dialogLogin').attr('title', 'Attendere..');
-			$('<p>').text('Login in corso').appendTo(divDialog);
+			$('<p>').text('Login in corso . . .').appendTo(divDialog);
 			
 			divDialog.appendTo('#divMainContent');
 			

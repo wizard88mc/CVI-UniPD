@@ -104,21 +104,19 @@ public class DoctorClientManager extends BaseManager {
             eyeTrackerManager.sendPacket(packet);
             patientManager.sendPacket(packet);
         }
-        else if (packet.get("TYPE").equals("TRAINING_SETTINGS")) {
-            
-            /**
-             * Create a packet to send to the child client
-             * to inform that there will be a training session
-             */
-            JSONObject packetForChild = new JSONObject();
-            packetForChild.put("TYPE", "START_TRAINING");
-            patientManager.sendPacket(packetForChild);
-             // pacchetto deve essere start training anche per l'eye tracker
-            eyeTrackerManager.sendPacket(packet);
-        }
+        /*
+         * TODO: Provide a game without the eye-tracker
+         */
         else if (packet.get("TYPE").equals("WITHOUT_TRACKER")) {
             
         }
+        /*
+         * Everything is ready, the doctor has say that it is time to start
+         * the game: 
+         * 1. Creates a new visit in the DB
+         * 2. Defines folder where save packets
+         * 3. Call server method to calculate start time
+         */
         else if (packet.get("TYPE").equals("START_GAME")) {
             
             //patientID = (String)packet.get("PATIENT_ID");

@@ -150,8 +150,8 @@ public class FakeServerTest extends WebSocketServer {
                    case 6: {
                        JSONObject packet = new JSONObject();
                        packet.put("TYPE", "SCREEN_MEASURES");
-                       packet.put("SCREEN_WIDTH", 800);
-                       packet.put("SCREEN_HEIGHT", 600);
+                       packet.put("SCREEN_WIDTH", 1280);
+                       packet.put("SCREEN_HEIGHT", 1024);
                        serverTest.client.send(packet.toJSONString());
                        break;
                    }
@@ -159,7 +159,7 @@ public class FakeServerTest extends WebSocketServer {
                        JSONObject packet = new JSONObject();
                        packet.put("TYPE", "START_TRAINING");
                        packet.put("POINTS", 5); // numero punti
-                       packet.put("POINT_DURATION", 10000); // da verificare questo valore
+                       packet.put("POINT_DURATION", 2000); // da verificare questo valore
                        packet.put("TRANSITION_DURATION", 2000);
                        serverTest.client.send(packet.toJSONString());
                        break;

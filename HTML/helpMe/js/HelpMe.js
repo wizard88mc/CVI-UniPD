@@ -75,7 +75,10 @@ function presentationComplete() {
 		}
 		else if (data.TYPE == "START_TRAINING") {
 			
-			TrainingExamplesNamespace.startTraining();
+			TrainingExamplesNamespace.startTraining(data.TRANSITION_DURATION);
+		}
+		else if (data.TYPE == "CAL_POINT") {
+			TrainingExamplesNamespace.messageManager(packet);
 		}
 		else {
 			console.log(data);

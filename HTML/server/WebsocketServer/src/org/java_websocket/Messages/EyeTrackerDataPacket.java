@@ -13,8 +13,10 @@ public class EyeTrackerDataPacket extends BaseDataPacket {
     public EyeTrackerDataPacket(JSONObject packet) {
         super(packet);
         
-        eyes = new Point((Long)packet.get("POSX"),
-                        (Long)packet.get("POSY"));
+        String[] elements = ((String)packet.get("DATA")).split(" ");
+        
+        eyes = new Point(new Long(elements[0]),
+                        new Long(elements[1]));
     }
     
     @Override

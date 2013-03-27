@@ -95,7 +95,7 @@ var CatchMeNamespace = {
 			// dialog to start training session
 			TrainingManager.dialogSelectParameters();
 		}
-		else if (dataReceived.TYPE == "TRAINING_RESULT") {
+		else if (dataReceived.TYPE == "CAL_END") {
 			
 			TrainingManager.trainingResult(dataReceived.DATA);
 			TrainingManager.trainingComplete = CatchMeNamespace.trainingComplete;

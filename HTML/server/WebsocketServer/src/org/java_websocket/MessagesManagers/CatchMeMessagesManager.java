@@ -5,7 +5,6 @@ import org.java_websocket.BaseManager;
 import org.java_websocket.Messages.CatchMeDataPacket;
 import org.java_websocket.Messages.CatchMeDoctorMessage;
 import org.java_websocket.Messages.EyeTrackerDataPacket;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**

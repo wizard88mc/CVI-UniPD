@@ -1,4 +1,4 @@
-var ImageForTraining = function() {
+var ImageForTraining = function(secondsForTransition) {
 	
 	this.image = new Image();
 	this.image.onload = function() {
@@ -11,6 +11,7 @@ var ImageForTraining = function() {
 	this.height = 0;
 	this.center = new Point(0, 0);
 	this.drawPosition = new Point(0, 0);
+	this.secondsForTransition = secondsForTransition;
 	
 	this.moveObject = function(pointCenter) {
 		this.center = pointCenter;
@@ -37,7 +38,7 @@ var imageForTraining = null;
 
 var TrainingExamplesNamespace = {
 	
-	startTraining: function() {
+	startTraining: function(millisecondsTransition) {
 		
 		console.log('Starting training');
 		
@@ -50,7 +51,7 @@ var TrainingExamplesNamespace = {
 			'background-repeat': 'no-repeat'
 		});
 		
-		imageForTraining = new ImageForTraining();
+		imageForTraining = new ImageForTraining(millisecondsTransition / 1000);
 	},
 	
 	imageLoaded: function() {
@@ -80,7 +81,8 @@ var TrainingExamplesNamespace = {
 			position: 'absolute'
 		});
 		
-		var transition = 'left 3s, top 3s';
+		var transition = 'left ' + imageForTraining.secondsForTransition + 's, top ' 
+			+ imageForTraining.secondsForTransition + 's';
 		addTransitionSpecifications(imageForTraining.element, transition);
 		
 		imageForTraining.element.on('transitionend webkitTransitionEnd oTransitionEnd', function() {
@@ -93,12 +95,16 @@ var TrainingExamplesNamespace = {
 			
 		})
 	},
-	
+
 	messageManager: function(data) {
 		
-		if (data.TYPE == "TRAINING_POSITION") {
+		if (data.TYPE == "CAL_POINT") {
 			
-			var centerToDraw = new Point(data.POS_TOP, data.POS_LEFT);
+			// POINTS[0] = X position
+			// POINTS[1] = Y position
+			var points = (data.DATA).split(" ");
+			
+			var centerToDraw = new Point(points[1], points[0]);
 			
 			imageForTraining.moveObject(centerToDraw);
 			imageForTraining.drawObject();
@@ -116,9 +122,15 @@ var TrainingManager = {
 		$('<option>').attr('value', '9').text('9 punti').appendTo(selectNumberPoints);
 		
 		var selectTimePerPoint = $('<select>').attr('id', 'selectTimePerPoint');
-		$('<option>').attr('value', '10').attr('selected', 'selected').text('10 secondi').appendTo(selectTimePerPoint);
-		$('<option>').attr('value', '15').text('15 secondi').appendTo(selectTimePerPoint);
-		$('<option>').attr('value', '20').text('20 secondi').appendTo(selectTimePerPoint);
+		$('<option>').attr('value', '10000').attr('selected', 'selected').text('10 secondi').appendTo(selectTimePerPoint);
+		$('<option>').attr('value', '15000').text('15 secondi').appendTo(selectTimePerPoint);
+		$('<option>').attr('value', '20000').text('20 secondi').appendTo(selectTimePerPoint);
+		
+		var selectTimeTransition = $('<select>').attr('id', 'selectTimeTransition');
+		$('<option>').attr('value', '1000').attr('selected', 'selected').text('1 secondo').appendTo(selectTimeTransition);
+		$('<option>').attr('value', '2000').text('2 secondi').appendTo(selectTimeTransition);
+		$('<option>').attr('value', '3000').text('3 secondi').appendTo(selectTimeTransition);
+		$('<option>').attr('value', '5000').text('5 secondi').appendTo(selectTimeTransition);
 		
 		var tableForm = $('<table>');
 		$('<tbody>').appendTo(tableForm);
@@ -131,6 +143,10 @@ var TrainingManager = {
 		row = $('<tr>').appendTo(tableForm);
 		$('<td>').text('Tempo per ogni punto: ').appendTo(row);
 		$(selectTimePerPoint).appendTo($('<td>').appendTo(row));
+		
+		row = $('<tr>').appendTo(tableForm);
+		$('<td>').text('Tempo di transizione tra punti: ').appendTo(row);
+		$(selectTimeTransition).appendTo($('<td>').appendTo(row));
 		
 		var divContainer = $('<div>');
 		$('<h2>').text('Impostazioni per il training').appendTo(divContainer);
@@ -146,16 +162,22 @@ var TrainingManager = {
 				draggable: false,
 				closeOnEscape: false,
 				width: getScreenWidth() * 0.6,
+				position: {
+					my: "center top",
+					at: "center top+5%"
+				},
 				buttons: {
 					"Inizia": function() {
 						
 						var numberOfPoints = $('select#selectNumberOfPoints').val();
 						var totalSeconds = $('select#selectTimePerPoint').val();
+						var secondsTransition = $('select#selectTimeTransition').val();
 						
 						var packetWithSettings = {
-							TYPE: 'TRAINING_SETTINGS',
+							TYPE: 'START_TRAINING',
 							POINTS: numberOfPoints,
-							SPEED: totalSeconds // da capire cosa devo scegliere
+							POINT_DURATION: totalSeconds,
+							TRANSITION_DURATION: secondsTransition
 						};
 						
 						websocket.send(JSON.stringify(packetWithSettings));
@@ -163,15 +185,18 @@ var TrainingManager = {
 						$(this).dialog("close");
 						$(this).remove();
 						
-						$('<p>').text('Training in corso. Attendere ....').appendTo(
-							$('<div>').attr('id', 'dialogWaitingCompleteTraining').attr('title', 'Attendere')
-							.appendTo('#divMainContent').dialog({
-								modal: true,
-								resizable: false,
-								draggable: false,
-								closeOnEscape: false
-							})
-						);
+						
+						var dialog = $('<div>').attr('id', 'dialogWaitingCompleteTraining')
+							.attr('title', 'Attendere ...').appendTo('#divMainContent');
+							
+						$('<p>').text('Training in corso. Attendere ....').appendTo(dialog);
+								
+						dialog.dialog({
+							modal: true,
+							resizable: false,
+							draggable: false,
+							closeOnEscape: false
+						});
 					}
 				}
 			}));
@@ -182,8 +207,28 @@ var TrainingManager = {
 		$('#dialogWaitingCompleteTraining').dialog('close');
 		$('#dialogWaitingCompleteTraining').remove();
 		
-		$('<div>').attr('id', 'divDialogTrainingEvaluation').attr('title', 'Valutazione training')
-			.appendTo('#divMainContent').dialog({
+		var starsContainer = $('<p>');
+		
+		for (var i = 0; i < value; i++) {
+			$('<img>').attr('src', '../images/star.png').appendTo(starsContainer);
+		}
+		
+		for (var i = value; i < 5; i++) {
+			$('<img>').attr('src', '../images/star.png').css('opacity', '0.5').appendTo(starsContainer);
+		}
+		
+		starsContainer.children('img').css({
+			width: '15%',
+			display: 'inline',
+			'margin-left': '3%'
+		});
+		
+		var dialog = $('<div>').attr('id', 'divDialogTrainingEvaluation').attr('title', 'Risultato')
+			.appendTo('#divMainContent');
+		
+		$('<p>').text('Valutazione training: ').appendTo(dialog);
+		starsContainer.appendTo(dialog);
+		dialog.dialog({
 				modal: true,
 				closeOnEscape: false,
 				resizable: false,
@@ -194,6 +239,12 @@ var TrainingManager = {
 						$(this).remove();
 						
 						TrainingManager.trainingComplete();
+					}, 
+					"Ripeti": function() {
+						$(this).dialog("close");
+						$(this).remove();
+						
+						TrainingManager.dialogSelectParameters();
 					}
 				}
 			})

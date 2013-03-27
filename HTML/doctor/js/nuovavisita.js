@@ -75,12 +75,13 @@ getListOfPatients: function() {
 			try {
 				var arrayOfPatients = JSON.parse(message);
 				
-				$('<option>').val('').appendTo('#selectPatient');
+				$('<option>').val('').text(' - - - ').appendTo('#selectPatient');
 				
 				for (var i = 0; i < arrayOfPatients.length; i++) {
+					
 					var patient = arrayOfPatients[i];
 								 
-					$('<option>').val(patient.ID).text(patient.SURNAME + " " + patient.NAME);
+					$('<option>').val(patient.ID).text(patient.SURNAME + " " + patient.NAME).appendTo('#selectPatient');
 				}
 			}
 			catch(error) {
@@ -109,8 +110,6 @@ getListOfGames: function() {
 				arrayOfDescriptionGames[game.ID] = game.DESCRIPTION;
 				arrayOfFoldersGames[game.ID] = game.FOLDER;
 			}
-			
-			$(listOfOptions).appendTo('#selectGames');
 		}
 	})
 },
@@ -316,7 +315,7 @@ initializePage: function() {
 	row = $('<tr>').attr('id', 'rowName').appendTo(tableNewPatient);
 	$('<td>').addClass('label').text('Nome: ').appendTo(row);
 	$('<input>').attr('type', 'text').attr('name', 'name').attr('id', 'name')
-		.addClass('inputText').appendTo(('<td>').appendTo(row));
+		.addClass('inputText').appendTo($('<td>').appendTo(row));
 	
 	row = $('<tr>').attr('id', 'rowSurname').appendTo(tableNewPatient);
 	$('<td>').addClass('label').text('Cognome: ').appendTo(row);
