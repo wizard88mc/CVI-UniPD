@@ -31,15 +31,17 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
         try {
             boolean alreadyManaged = super.onMessage(conn, message);
             JSONObject packet = (JSONObject)JSONValue.parse(message);
+            
+            Object packetType = packet.get("TYPE");
 
             //System.out.println(packet);
-            if (packet.get("TYPE").equals("IDENTIFICATION") && clientConnected != null) {
+            if (packetType.equals("IDENTIFICATION") && clientConnected != null) {
                 BaseManager.eyeTrackerManager = this;
             }
 
             if (!alreadyManaged) {
 
-                if (packet.get("TYPE").equals("GAZE_DATA")) {
+                if (packetType.equals("GAZE_DATA")) {
 
                     synchronized(messageManager.bufferSynchronizer) {
                         messageManager.messagesEyeTrackerBuffer.add(packet);
@@ -49,11 +51,11 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
                 /*
                  * Packet with the coordinates for the calibration
                  */
-                else if (packet.get("TYPE").equals("CAL_POINT")) {
+                else if (packetType.equals("CAL_POINT")) {
 
                     patientManager.sendPacket(packet);
                 }
-                else if (packet.get("TYPE").equals("READY_TO_PLAY")) {
+                else if (packetType.equals("READY_TO_PLAY")) {
 
                     System.out.println("Eye_Tracker_Manager READY TO START");
                     
@@ -63,23 +65,24 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
                         clientConnected.send(packetWithScreenDimension.toJSONString());
                         
                         JSONObject packetForTraining = new JSONObject();
-                        packetForTraining.put("TYPE", "TRAINING");
-                        packetForTraining.put("CHILD_ID", patientID);
+                        packetForTraining.put("TYPE", "TRAINING_SESSION");
+                        packetForTraining.put("PATIENT_ID", patientID);
                         
                         clientConnected.send(packetForTraining.toJSONString());
                     }
                 }
-                else if (packet.get("TYPE").equals("TRAINING")) {
+                /*else if (packet.get("TYPE").equals("TRAINING")) {
                     
                     JSONObject packetForDoctor = new JSONObject();
                     packetForDoctor.put("TYPE", "EYE_TRACKER_READY");
                     packetForDoctor.put("DATA", packet.get("DATA"));
                     
                     doctorManager.sendPacket(packetForDoctor);
-                }
-                else if (packet.get("TYPE").equals("TRAINING_SESSION") || 
-                        packet.get("TYPE").equals("TRAINING_RESULT") || 
-                        packet.get("TYPE").equals("CAL_END")) {
+                }*/
+                else if (packetType.equals("TRAINING_SESSION") || 
+                        packetType.equals("TRAINING_RESULT") || 
+                        packetType.equals("CAL_END") || 
+                        packetType.equals("CAL_QUAL")) {
                     
                     doctorManager.sendPacket(packet);
                 }

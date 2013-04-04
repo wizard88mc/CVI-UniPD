@@ -361,7 +361,7 @@ function initPage() {
         
         $('<tr>').attr('id', 'usernameRow').appendTo(tableLogin);
         $('<td>').addClass('label').text('Username: ').appendTo('#usernameRow');
-        $('<input').attr('type', 'text').attr('id', 'username').attr('name', 'username').appendTo($('<td>').appendTo('#usernameRow'));
+        $('<input>').attr('type', 'text').attr('id', 'username').attr('name', 'username').appendTo($('<td>').appendTo('#usernameRow'));
 		
 		//$('<tr id="usernameRow"><td class="label">Username: </td><td><input type="text" id="username" name="username" /></td></tr>').appendTo(tableLogin);
         

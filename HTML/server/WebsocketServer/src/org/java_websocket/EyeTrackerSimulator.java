@@ -68,81 +68,92 @@ public class EyeTrackerSimulator extends Thread {
                 
                 long timeForPoint = new Long((String)packet.get("POINT_DURATION"));
                 long timeForTransition = new Long(new Long((String)packet.get("TRANSITION_DURATION")));
-                try {
+                System.out.println("Time point: " + timeForPoint);
+                System.out.println("Time transition: " + timeForTransition);
                 
-                    Thread.sleep((long)(2000));
-                }
-                catch(Exception exc) {
-                    System.out.println("Error in EyeTracker");
-                }
-                
+                /**
+                 * First point of training
+                 */
                 JSONObject firstMessage = new JSONObject();
                 firstMessage.put("TYPE", "CAL_POINT");
-                firstMessage.put("DATA", Math.random() * screenWidth + " " +
+                firstMessage.put("DATA", "1 " + Math.random() * screenWidth + " " +
                         Math.random() * screenHeight);
                 
                 clientConnecter.send(firstMessage.toJSONString());
                 
                 try {
                 
-                    Thread.sleep((long)(timeForPoint));
+                    Thread.sleep(500);
                 }
                 catch(Exception exc) {
                     System.out.println("Error in EyeTracker");
                 }
+                
+                /*
+                 * Second point
+                 */
                 JSONObject secondMessage = new JSONObject();
                 secondMessage.put("TYPE", "CAL_POINT");
-                secondMessage.put("DATA", Math.random() * screenWidth + " " +
+                secondMessage.put("DATA", "2 " + Math.random() * screenWidth + " " +
                         Math.random() * screenHeight);
                 
                 clientConnecter.send(secondMessage.toJSONString());
                 
                 try {
                 
-                    Thread.sleep((long)(timeForTransition));
-                    Thread.sleep(timeForPoint);
+                    Thread.sleep(500);
                 }
                 catch(Exception exc) {
                     System.out.println("Error in EyeTracker");
                 }
                 
+                /*
+                 * Third point
+                 */
                 JSONObject thirdMessage = new JSONObject();
                 thirdMessage.put("TYPE", "CAL_POINT");
-                thirdMessage.put("DATA", Math.random() * screenWidth + " " +
+                thirdMessage.put("DATA", "4 " + Math.random() * screenWidth + " " +
                         Math.random() * screenHeight);
                 
                 clientConnecter.send(thirdMessage.toJSONString());
                 
                 try {
                 
-                    Thread.sleep((long)(timeForTransition));
-                    Thread.sleep(timeForPoint);
+                    Thread.sleep(500);
                 }
                 catch(Exception exc) {
                     System.out.println("Error in EyeTracker");
                 }
                 
+                /**
+                 * Fourth point
+                 */
                 JSONObject fourthMessage = new JSONObject();
                 fourthMessage.put("TYPE", "CAL_POINT");
-                fourthMessage.put("DATA", Math.random() * screenWidth + " " + 
+                fourthMessage.put("DATA", "3 " + Math.random() * screenWidth + " " + 
                         Math.random() * screenHeight);
                 
                 clientConnecter.send(fourthMessage.toJSONString());
                 
                 try {
                 
-                    Thread.sleep((long)(timeForTransition));
-                    Thread.sleep(timeForPoint);
+                    Thread.sleep((long)(timeForPoint + timeForTransition));
+                    Thread.sleep((long)timeForPoint);
                 }
                 catch(Exception exc) {
                     System.out.println("Error in EyeTracker");
                 }
                 
-                JSONObject finalMessage = new JSONObject();
+                /*JSONObject finalMessage = new JSONObject();
                 finalMessage.put("TYPE", "CAL_END");
-                finalMessage.put("DATA", 3);
                 
                 clientConnecter.send(finalMessage.toJSONString());
+                
+                JSONObject packetEvaluation = new JSONObject();
+                packetEvaluation.put("TYPE", "CAL_QUAL");
+                packetEvaluation.put("DATA", 3);
+                
+                clientConnecter.send(packetEvaluation.toJSONString());*/
             }
         };
         
@@ -210,9 +221,9 @@ public class EyeTrackerSimulator extends Thread {
                 else if (packet.get("TYPE").equals("START_TRAINING")) {
                     EyeTrackerSimulator.this.simulateTraining(packet);
                 }
-                else if (packet.get("TYPE").equals("TRAINING")) {
+                else if (packet.get("TYPE").equals("TRAINING_SESSION")) {
                     
-                    packet.put("DATA", true);
+                    packet.put("DATA", "true");
                     clientConnecter.send(packet.toJSONString());
                 }
                 else if (packet.get("TYPE").equals("OFFSET_CALCULATION")) {

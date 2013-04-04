@@ -1,20 +1,27 @@
-var ImageForTraining = function(secondsForTransition) {
+var ImageForTraining = function(settings) {
 	
 	this.image = new Image();
 	this.image.onload = function() {
 		
 		TrainingExamplesNamespace.imageLoaded();
 	}
-	this.image.src = '../images/space_shuttle2.png';
+	this.image.src = '../images/nemo_training.png';
 	this.element = null;
 	this.width = 0;
 	this.height = 0;
 	this.center = new Point(0, 0);
 	this.drawPosition = new Point(0, 0);
-	this.secondsForTransition = secondsForTransition;
+	this.secondsForTransition = settings.TRANSITION_DURATION;
+	this.pointDuration = settings.POINT_DURATION;
+	this.pointsToDraw = new Array(4);
+	this.currentPoint = -1;
 	
 	this.moveObject = function(pointCenter) {
+		
+		console.log("Moving object");
 		this.center = pointCenter;
+		
+		console.log(this.center);
 		
 		this.drawPosition.top = this.center.top - 
 			this.height / 2;
@@ -38,7 +45,7 @@ var imageForTraining = null;
 
 var TrainingExamplesNamespace = {
 	
-	startTraining: function(millisecondsTransition) {
+	startTraining: function(settings) {
 		
 		console.log('Starting training');
 		
@@ -51,7 +58,7 @@ var TrainingExamplesNamespace = {
 			'background-repeat': 'no-repeat'
 		});
 		
-		imageForTraining = new ImageForTraining(millisecondsTransition / 1000);
+		imageForTraining = new ImageForTraining(settings);
 	},
 	
 	imageLoaded: function() {
@@ -69,9 +76,9 @@ var TrainingExamplesNamespace = {
 		imageForTraining.width = width;
 		imageForTraining.height = height;
 		
-		var centre = new Point(getScreenHeight() / 2, getScreenWidth() / 2);
+		var center = new Point(getScreenHeight() / 2, getScreenWidth() / 2);
 		
-		imageForTraining.moveObject(centre);
+		imageForTraining.moveObject(center);
 		imageForTraining.drawObject();
 		
 		imageForTraining.element.css({
@@ -81,33 +88,66 @@ var TrainingExamplesNamespace = {
 			position: 'absolute'
 		});
 		
-		var transition = 'left ' + imageForTraining.secondsForTransition + 's, top ' 
-			+ imageForTraining.secondsForTransition + 's';
+		var transition = 'left ' + imageForTraining.secondsForTransition / 1000 + 's, top ' 
+			+ imageForTraining.secondsForTransition / 1000 + 's';
 		addTransitionSpecifications(imageForTraining.element, transition);
 		
 		imageForTraining.element.on('transitionend webkitTransitionEnd oTransitionEnd', function() {
 			
-			imageForTraining.element.removeClass().addClass('animated bounceIn');
+			if (event.propertyName === "left") {
+				imageForTraining.element.removeClass().addClass('animated bounceIn');
+				
+				/*
+				 * Timeout to stop the animation of the image when reaches a point
+				 */
+				setTimeout(function() {
+					imageForTraining.element.removeClass().css('opacity', '1');
+				}, 1300);
+				
+				/*
+				 * Timeout to start moving from current point to the next one
+				 */
+				setTimeout(function() {
+					
+					console.log(imageForTraining.pointsToDraw);
+					imageForTraining.currentPoint++;
+					if (imageForTraining.currentPoint < imageForTraining.pointsToDraw.length) {
+						imageForTraining.moveObject(imageForTraining.pointsToDraw[imageForTraining.currentPoint]);
+						imageForTraining.drawObject();
+					}
+					else {
+						console.log("Training terminated");
+					}
+					
+				}, imageForTraining.pointDuration);
+			}
 			
-			setTimeout(function() {
-				imageForTraining.element.removeClass().css('opacity', '1');
-			}, 1300);
+		});
+		
+		setTimeout(function() {
 			
-		})
+			console.log(imageForTraining.pointsToDraw);
+			imageForTraining.currentPoint++;
+			if (imageForTraining.currentPoint < imageForTraining.pointsToDraw.length) {
+				imageForTraining.moveObject(imageForTraining.pointsToDraw[imageForTraining.currentPoint]);
+				imageForTraining.drawObject();
+			}
+			
+		}, imageForTraining.pointDuration)
 	},
 
 	messageManager: function(data) {
 		
 		if (data.TYPE == "CAL_POINT") {
 			
-			// POINTS[0] = X position
-			// POINTS[1] = Y position
-			var points = (data.DATA).split(" ");
+			// POINTS[0] = # POINT
+			// POINTS[1] = X position
+			// POINTS[2] = Y position
+			var elements = (data.DATA).split(" ");
 			
-			var centerToDraw = new Point(points[1], points[0]);
+			var centerToDraw = new Point(elements[2], elements[1]);
 			
-			imageForTraining.moveObject(centerToDraw);
-			imageForTraining.drawObject();
+			imageForTraining.pointsToDraw[elements[0] - 1] = centerToDraw;
 		}
 	}
 }
@@ -156,16 +196,18 @@ var TrainingManager = {
 		tableForm.appendTo(divContainer);
 		
 		divContainer.appendTo($('<div>').attr('id', 'dialogSettingsTraining').attr('title', 'Impostazioni')
-			.appendTo('#divMainContent').dialog({
+			.appendTo('#divMainContent'));
+		
+		$('#dialogSettingsTraining').dialog({
 				modal: true,
 				resizable: false,
 				draggable: false,
 				closeOnEscape: false,
 				width: getScreenWidth() * 0.6,
-				position: {
+				/*position: {
 					my: "center top",
 					at: "center top+5%"
-				},
+				},*/
 				buttons: {
 					"Inizia": function() {
 						
@@ -199,7 +241,7 @@ var TrainingManager = {
 						});
 					}
 				}
-			}));
+			});
 	}, 
 	
 	trainingResult: function(value) {

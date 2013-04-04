@@ -25,7 +25,7 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
     protected boolean endGame = false;
     protected static DoctorClientManager doctorManager = null;
     //protected static IPADClientManager patientManager = null;
-    protected TimeSyncCalculator offsetCalculator = new TimeSyncCalculator();
+    protected TimeSyncCalculator offsetCalculator = null;
     protected long timeStartPacket = 0L;
     
     WebSocketWithOffsetCalc(String clientType, int port) throws UnknownHostException {
@@ -43,6 +43,11 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
         long dateReception = System.currentTimeMillis();
         JSONObject packet = (JSONObject)JSONValue.parse(message);
         boolean managed = true;
+        
+        System.out.println("===============");
+        System.out.println("Client: " + clientType);
+        System.out.println(packet.toString());
+        System.out.println("===============");
         
         if (packet.get("TYPE").equals("CALCULATING")) {
             
@@ -78,6 +83,7 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
             
             System.out.println("StartOffsetCalculation");
             offsetCalculated = true;
+            offsetCalculator = new TimeSyncCalculator();
             sendPacketOffsetCalculation();
         }
         else if (packet.get("TYPE").equals("MACHINE_ID")) {
@@ -205,6 +211,8 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
             
             System.out.println("Invio pacchetto fine calcolo offset");
             clientConnected.send(packetToSend.toJSONString());
+            
+            offsetCalculator = null;
         }
         else {
             

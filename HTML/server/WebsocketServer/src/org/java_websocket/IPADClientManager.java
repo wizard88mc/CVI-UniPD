@@ -111,8 +111,8 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                 
                 if (eyeTrackerManager != null) {
                     JSONObject packetStartTraining = new JSONObject();
-                    packetStartTraining.put("TYPE", "TRAINING");
-                    packetStartTraining.put("CHILD_ID", patientID);
+                    packetStartTraining.put("TYPE", "TRAINING_SESSION");
+                    packetStartTraining.put("PATIENT_ID", patientID);
 
                     eyeTrackerManager.sendPacket(packetStartTraining);
                 }

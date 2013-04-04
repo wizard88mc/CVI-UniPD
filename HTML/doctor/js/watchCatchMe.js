@@ -1,15 +1,13 @@
-datiEyeTracker = null;
-maxEyeTracker =  null;
-datiTouch = null;
-maxTouch = null;
-movements = null;
-imagePositions = null;
-touchPositions = null;
-eyesPositions = null;
-
-	
-timing = null;
+datiEyeTracker = [];
+maxEyeTracker =  -1;
+datiTouch = [];
+maxTouch = -1;
+movements = new Object();
+imagePositions = new Object();
+touchPositions = new Object();
+eyesPositions = new Object();
 currentSpeedValue = -1;
+timing = null;
 	
 var CatchMeNamespace = {
 	
@@ -50,7 +48,7 @@ var CatchMeNamespace = {
 			// Mostro un dialog che dice che è tutto a posto,
 			// e di cliccare quando tutto è pronto x iniziare
 		}
-		else if (dataReceived.TYPE == "EYE_TRACKER_READY" && dataReceived.DATA == "false") {
+		else if (dataReceived.TYPE == "TRAINING_SESSION" && dataReceived.DATA == "false") {
 			
 			websocket.onmessage = CatchMeNamespace.manageMessagesGame;
 			
@@ -90,12 +88,12 @@ var CatchMeNamespace = {
 				}
 			});
 		}
-		else if (dataReceived.TYPE == "EYE_TRACKER_READY" && dataReceived.DATA == true) {
+		else if (dataReceived.TYPE == "TRAINING_SESSION" && dataReceived.DATA == "true") {
 			
 			// dialog to start training session
 			TrainingManager.dialogSelectParameters();
 		}
-		else if (dataReceived.TYPE == "CAL_END") {
+		else if (dataReceived.TYPE == "CAL_QUAL") {
 			
 			TrainingManager.trainingResult(dataReceived.DATA);
 			TrainingManager.trainingComplete = CatchMeNamespace.trainingComplete;

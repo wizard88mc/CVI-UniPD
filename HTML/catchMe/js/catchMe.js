@@ -292,7 +292,7 @@ waitingToStart: function(message) {
 	}
 	else if (packet.TYPE == "START_TRAINING") {
 		
-		TrainingExamplesNamespace.startTraining(packet.TRANSITION_DURATION);
+		TrainingExamplesNamespace.startTraining(packet);
 	}
 	else if (packet.TYPE == "CAL_POINT") {
 		

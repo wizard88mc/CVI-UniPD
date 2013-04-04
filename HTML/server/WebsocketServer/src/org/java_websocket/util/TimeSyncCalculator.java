@@ -119,6 +119,10 @@ public class TimeSyncCalculator {
         return finalb12;
     }
     
+    public void operationComplet() {
+        totalPackets = 0;
+    }
+    
     public static void main(String[] args) {
         
         double finala12 = 0.9996216420734014;

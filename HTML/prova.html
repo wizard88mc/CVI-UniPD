@@ -12,20 +12,169 @@ Remove this if you use the .htaccess -->
 
 <script src="js/jquery-1.7.2.min.js"></script>
 <script src="js/jquery-ui-1.8.20.custom.min.js"></script>
+<link href="style/animate-custom.css" rel="stylesheet" />
 
 
 <script>
+
+var imageProperties = new Object();
+imageProperties.scale = "";
+imageProperties.rotate = "";
+imageProperties.translate = "";
+
+imageProperties.transformString = function() {
+	
+	var string = "";
+	if (this.translate != "") {
+		string += " " + this.translate;
+	}
+	if (this.scale != "") {
+		string += this.scale;
+	}
+	if (this.rotate != "") {
+		string += " " + this.rotate;
+	}
+	
+	return string;
+}
+
+function calculateScale(newPointTop, newPointLeft) {
+	
+	if (imageProperties.centerImageLeft > newPointLeft) {
+		// devo ruotare immagine
+		imageProperties.scale = "scale(-1, 1)";
+	}
+	else if (imageProperties.centerImageLeft < newPointLeft) {
+		imageProperties.scale = "scale(1, 1)";
+	}
+}
+
+function calculateRotation(newPointTop, newPointLeft) {
+	
+	var catetoAdiacente = Math.abs(newPointLeft - imageProperties.centerImageLeft);
+	var catetoOpposto = Math.abs(newPointTop - imageProperties.centerImageTop);
+	var ipotenusa = Math.sqrt(Math.pow(catetoAdiacente, 2) + Math.pow(catetoOpposto, 2));
+	
+	var cosAlpha = catetoAdiacente / ipotenusa;
+	var alpha = Math.acos(cosAlpha) * 180 / Math.PI ;
+	
+	/**
+	 * Punto nel primo quadrante
+	 */
+	if (newPointTop < imageProperties.centerImageTop && 
+		newPointLeft < imageProperties.centerImageLeft) {
+		
+		alpha = -alpha;
+	}
+	else if (newPointTop < imageProperties.centerImageTop && 
+		newPointLeft > imageProperties.centerImageLeft) {
+
+		alpha = alpha - 90;	
+	}
+	else if (newPointTop > imageProperties.centerImageTop && 
+		newPointLeft > imageProperties.centerImageLeft) {
+	
+		alpha = alpha;
+	}
+	else if (newPointTop < imageProperties.centerImageTop && 
+		newPointLeft < imageProperties.centerImageLeft) {
+	
+		alpha = 90 - alpha;
+	}
+	
+	console.log(alpha);
+	imageProperties.rotate = 'rotate(' + alpha + 'deg)';
+}
+
+function sendToNewPoint() {
+	
+	var centerTopNew = 1000, centerLeftNew = 1000;
+	
+	calculateScale(centerTopNew, centerLeftNew);
+	calculateRotation(centerTopNew, centerLeftNew);
+	
+	$('#imageTraining').css({
+		'-webkit-transform': imageProperties.transformString(),
+		'transform': imageProperties.transformString()
+	});
+	
+	setTimeout(function() {
+		
+		var distanceX = centerLeftNew - imageProperties.centerImageLeft;
+		var distanceY = centerTopNew - imageProperties.centerImageTop;
+		
+		imageProperties.rotate = 'rotate(0)';
+		imageProperties.translate = 'translate(' + distanceX + 'px, ' + distanceY + 'px)';
+		
+		imageProperties.centerImageTop = centerTopNew;
+		imageProperties.centerImageLeft = centerLeftNew;
+		
+		$('#imageTraining').css({
+			'-webkit-transform': imageProperties.transformString(),
+			'transform': imageProperties.transformString(),
+			'-webkit-transition-duration': '2s',
+			'-webkit-transition-property': '-webkit-transform',
+			'-webkit-transition-timing-function': 'linear'
+		});
+		
+		$('#imageTraining').on('transitionend oTransitionEnd webkitTransitionEnd', function() {
+			
+			$('#imageTraining').css('opacity', '0');
+			
+			var image = $('<img>').attr('id', 'imageGetAttention')
+					.css({
+						position: 'absolute',
+						width: $('#imageTraining').width(),
+						height: $('imageTraining').height(),
+						top: $('#imageTraining').position().top,
+						left: $('#imageTraining').position().left
+					}).appendTo('body');
+			
+			if (imageProperties.centerImageLeft < $(window).width() / 2) {
+				
+				image.attr('src', 'images/nemo_left_nuovo.png')
+			}
+			else {
+				image.attr('src', 'images//nemo_right_nuovo.png');
+			}
+
+			$('#imageGetAttention').addClass('animated bounceIn');
+
+		})
+		
+	}, 1000);
+	
+}
 
 $(document).ready(function() {
 	
 	$('body').height($(window).height());
 	
 	$('body').css({
-		'background-color': '#000064',
-		'background-image': 'url("images/background-training.png")',
-		'background-size': '100%'
+		padding: '0',
+		margin: '0',
+		'background-color': 'blue'
 		
 	});
+	
+	imageProperties.imageWidth = $(window).height() * 0.3;
+	imageProperties.centerImageTop = $(window).height() / 2;
+	imageProperties.centerImageLeft = $(window).width() / 2;
+	var paintTop = imageProperties.centerImageTop - imageProperties.imageWidth / 2;
+	var paintLeft = imageProperties.centerImageLeft - imageProperties.imageWidth / 2;
+	
+	$('<img>').attr('src', 'images/nemo_training.png')
+		.attr('id', 'imageTraining').appendTo('body');
+		
+	$('#imageTraining').css({
+		position: 'absolute',
+		width: imageProperties.imageWidth + 'px',
+		height: imageProperties.imageWidth + 'px',
+		top: paintTop,
+		left: paintLeft
+	});
+	
+	sendToNewPoint();
 	
 })
 
@@ -34,6 +183,8 @@ $(document).ready(function() {
 </head>
 
 <body>
+	
+	
 
 </body>
 </html>
