@@ -177,8 +177,17 @@ var CatchMeNamespace = {
 	
 		$('#divGrafo').height(getScreenHeight() * 0.6);
 		
-		grafo = $.plot($('#divGrafo'), [{label: 'Delta Vista', data: [datiEyeTracker]}, 
-						{label: 'Delta Tocco', data: [datiTouch]}], opzioniGrafo);
+		grafo = $.plot($('#divGrafo'), [
+			{
+				label: 'Delta Vista', 
+				data: [datiEyeTracker],
+				color: '#000080'
+			}, 
+			{
+				label: 'Delta Tocco', 
+				data: [datiTouch],
+				color: 'rgb(204, 0, 5)'
+			}], opzioniGrafo);
 		
 		$('#divGrafo').bind('plothover', function(event, pos, item) {
 			

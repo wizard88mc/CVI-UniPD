@@ -473,11 +473,19 @@ function drawGraph(differentValues) {
 		if (differentValues) {
 			
 			$('#divBackButtonContainer, #divGrafo').fadeIn(function() {
-				grafo = $.plot($('#divGrafo'), [{label: 'Delta Vista', data: deltaEye}, 
-				{label: 'Delta Touch', data: deltaTouch}], opzioniGrafo);
+				grafo = $.plot($('#divGrafo'), [{
+						label: 'Delta Vista', 
+						data: deltaEye,
+						color: '#000080'
+					}, 
+					{
+						label: 'Delta Touch', 
+						data: deltaTouch,
+						color: 'rgb(204, 0, 5)'
+					}], opzioniGrafo);
 		
-				if (deltaEye[deltaEye.length -1][0] > 61000) {
-					grafo.getOptions().xaxes[0].max = 60000;
+				if (deltaEye[deltaEye.length -1][0] > 31000) {
+					grafo.getOptions().xaxes[0].max = 30000;
 				}
 				grafo.getOptions().yaxes[0].max = maxY;
 				

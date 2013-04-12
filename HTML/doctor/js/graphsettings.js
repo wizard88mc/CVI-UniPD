@@ -63,7 +63,7 @@ function createTooltip(posX, posY, time, scaleFactor) {
 		leftEyes = leftEyes - (dimension / 2);
 		topEyes = topEyes - (dimension / 2);
 		
-		$('<img src="images/eye.png" />').appendTo(divContent)
+		$('<img>').attr('src', 'images/eye.png').appendTo(divContent)
 			.css({
 				position: 'absolute',
 				width: dimension,
@@ -81,7 +81,7 @@ function createTooltip(posX, posY, time, scaleFactor) {
 		var topTouch = touchPosition.top * scaleFactor;
 		leftTouch = leftTouch - (dimension / 2);
 		
-		$('<img src="images/hand_finger.png" />').appendTo(divContent)
+		$('<img>').attr('src', 'images/hand_finger.png').appendTo(divContent)
 			.css({
 				position: 'absolute',
 				width: dimension,
@@ -105,27 +105,25 @@ function createTooltip(posX, posY, time, scaleFactor) {
 	var arrowLeft = tooltipObject['imageWidth'] / 2 - (tooltipObject['arrowWidth'] / 2);
 	var arrowTop = tooltipObject['imageHeight'] / 2 - (tooltipObject['arrowWidth'] / 2);
 	
-	var divImageSample = $('<div id="divImageSample"></div>');
-	divImageSample.appendTo(divContent);
+	var divImageSample = $('<div>').attr('id', 'divImageSample')
+		.appendTo(divContent)
+		.css({
+			position: 'absolute',
+			width: tooltipObject['imageWidth'] + 'px',
+			height: tooltipObject['imageHeight'] + 'px',
+			left: leftImage,
+			top: topImage,
+			'background-color': '#F00'
+		});
 	
-	divImageSample.css({
-		position: 'absolute',
-		width: tooltipObject['imageWidth'] + 'px',
-		height: tooltipObject['imageHeight'] + 'px',
-		left: leftImage,
-		top: topImage,
-		'background-color': '#F00'
-	});
-	
-	var imgArrow = $('<img src="../images/arrow_movement.png" alt="Movimento" />');
-	imgArrow.appendTo(divImageSample);
-	
-	imgArrow.css({
-		width: tooltipObject['arrowWidth'],
-		position: 'absolute',
-		left: arrowLeft + 'px',
-		top: arrowTop + 'px'
-	});
+	var imgArrow = $('<img>').attr('src', '../images/arrow_movement.png')
+		.attr('alt', 'Movimento);.appendTo(divImageSample)
+		.css({
+			width: tooltipObject['arrowWidth'],
+			position: 'absolute',
+			left: arrowLeft + 'px',
+			top: arrowTop + 'px'
+		});
 	
 	createCssRotation(imgArrow, movements[time]);
 	

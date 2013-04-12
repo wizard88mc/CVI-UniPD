@@ -76,7 +76,8 @@ public class EyeTrackerSimulator extends Thread {
                  */
                 JSONObject firstMessage = new JSONObject();
                 firstMessage.put("TYPE", "CAL_POINT");
-                firstMessage.put("DATA", "1 " + "828.4875360344915 281.8167152230036" );
+                firstMessage.put("DATA", "1 " + Math.random() * screenWidth + " "
+                        + Math.random() * screenHeight);
                 
                 clientConnecter.send(firstMessage.toJSONString());
                 
@@ -93,7 +94,8 @@ public class EyeTrackerSimulator extends Thread {
                  */
                 JSONObject secondMessage = new JSONObject();
                 secondMessage.put("TYPE", "CAL_POINT");
-                secondMessage.put("DATA", "2 " + "201.8226299181107 967.1939643505762");
+                secondMessage.put("DATA", "2 " + Math.random() * screenWidth + " "
+                        + Math.random() * screenHeight);
                 
                 clientConnecter.send(secondMessage.toJSONString());
                 
@@ -110,7 +112,8 @@ public class EyeTrackerSimulator extends Thread {
                  */
                 JSONObject thirdMessage = new JSONObject();
                 thirdMessage.put("TYPE", "CAL_POINT");
-                thirdMessage.put("DATA", "4 " + "609.6668308214003 965.2387815454426");
+                thirdMessage.put("DATA", "4 " + Math.random() * screenWidth + " "
+                        + Math.random() * screenHeight);
                 
                 clientConnecter.send(thirdMessage.toJSONString());
                 
@@ -127,7 +130,8 @@ public class EyeTrackerSimulator extends Thread {
                  */
                 JSONObject fourthMessage = new JSONObject();
                 fourthMessage.put("TYPE", "CAL_POINT");
-                fourthMessage.put("DATA", "3 " + "681.4477264785471 702.9207693110435");
+                fourthMessage.put("DATA", "3 " + Math.random() * screenWidth + " "
+                        + Math.random() * screenHeight);
                 
                 clientConnecter.send(fourthMessage.toJSONString());
                 
