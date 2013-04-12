@@ -110,6 +110,14 @@ public class DoctorClientManager extends BaseManager {
         else if (packet.get("TYPE").equals("WITHOUT_TRACKER")) {
             
         }
+        /**
+         * Training completed, the doctor decides if keep the current
+         * training session or to repeat it again
+         */
+        else if (packet.get("TYPE").equals("TRAINING_VALIDATION")) {
+            
+            eyeTrackerManager.sendPacket(packet);
+        }
         /*
          * Everything is ready, the doctor has say that it is time to start
          * the game: 

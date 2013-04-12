@@ -49,7 +49,8 @@ $('document').ready(function(e) {
 		'text-align': 'left',
 		'margin-left': '2%'
 	});
-	var image = $('<img id="imgGoBack" src="../images/tasto_indietro.png" alt="Torna Indietro" />').appendTo('#divMainContent p');
+	var image = $('<img>').attr('id', 'imgGoBack').attr('src', '../images/tasto_indietro.png')
+	 .attr('alt', 'Torna Indietro" />').appendTo('#divMainContent p');
 	image.css({
 		cursor: 'pointer',
 		width: '50%',

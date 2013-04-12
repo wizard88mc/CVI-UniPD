@@ -14,7 +14,7 @@ var CatchMeNamespace = {
 	trainingComplete: function() {
 		
 		var fakePacket = {
-			TYPE: 'EYE_TRACKER_READY',
+			TYPE: 'TRAINING_SESSION',
 			DATA: 'false'
 		};
 		
@@ -33,6 +33,8 @@ var CatchMeNamespace = {
 			tooltipObject['tooltipHeight'] = dataReceived.SCREEN_HEIGHT * 0.4;
 			tooltipObject['imageWidth'] = dataReceived.IMAGE_WIDTH * 0.4;
 			tooltipObject['imageHeight'] = dataReceived.IMAGE_HEIGHT * 0.4;
+			
+			TrainingManager.screenWidth = dataReceived.SCREEN_WIDTH;
 			
 			$('#divMainContent div').remove();
 			
@@ -99,6 +101,7 @@ var CatchMeNamespace = {
 			TrainingManager.trainingComplete = CatchMeNamespace.trainingComplete;
 		}
 		else if (dataReceived.TYPE == "EYE_TRACKER_NOT_READY") {
+			
 			$('<p>').text('Il sistema di eye-tracking non è collegato. Si desidera procedere con la visita senza analisi del movimento degli occhi?')
 			.appendTo($('<div>').attr('id', 'dialogTrackerNotReady').attr('title', 'Tracciamento degli occhi non collegato').appendTo('#divMainContent'))
 			.dialog({

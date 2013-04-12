@@ -38,7 +38,7 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
                 boolean removeMessageGame = false;
                 boolean removeMessageEyeTracker = false;
 
-                // Situazione in cui tutti e due i buffer hanno deti pacchetti 
+                // Situazione in cui tutti e due i buffer hanno dei pacchetti 
                 // al loro interno
                 // Se Delta tempi dentro un certo massimo, li metto insieme
                 // con tempo spedito che sarà il tempo medio, altrimenti 
@@ -92,7 +92,7 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
                     }
                     /**
                     * Ho solo informazioni riguardanti l'eye-tracker
-                    * oppure informazioni riguardanti gioco relative ad
+                    * oppure informazioni riguardanti gioco relative ad 
                     * istante successivo (CASO MOLTO RARO)
                     */
                     else if (timeEyeTrackerMessage < timeMessageGame) {

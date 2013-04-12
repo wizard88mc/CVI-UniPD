@@ -44,10 +44,10 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
         JSONObject packet = (JSONObject)JSONValue.parse(message);
         boolean managed = true;
         
-        System.out.println("===============");
+        /*System.out.println("===============");
         System.out.println("Client: " + clientType);
         System.out.println(packet.toString());
-        System.out.println("===============");
+        System.out.println("===============");*/
         
         if (packet.get("TYPE").equals("CALCULATING")) {
             

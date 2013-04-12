@@ -32,9 +32,12 @@ var offlineLogin = function(username, password) {
 		}
 		else {
 			
+			$('#dialogLogin').dialog("close");
+			$('dialogLogin').remove();
+			
 			$('<p>').text('La modalità offline è disponibile solamente per i bambini e non per i dottori.')
 				.appendTo($('<div>').attr('id', 'dialogOfflineDoctor')
-						.attr('Impossibile accedere').appendTo($('#divMainContent')));	
+						.attr('title', 'Impossibile accedere').appendTo('#divMainContent'));	
 			
 			var width = getScreenWidth() * 0.5;
 			

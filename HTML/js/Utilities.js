@@ -233,7 +233,7 @@ function addTransitionSpecifications(element, transition) {
 	
 	element.css({
 		transition: transition,
-		'webkit-transition': transition,
+		'-webkit-transition': transition,
 		'-moz-transition': transition,
 		'-o-transition': transition
 	});

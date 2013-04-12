@@ -13,169 +13,93 @@ Remove this if you use the .htaccess -->
 <script src="js/jquery-1.7.2.min.js"></script>
 <script src="js/jquery-ui-1.8.20.custom.min.js"></script>
 <link href="style/animate-custom.css" rel="stylesheet" />
+<script src="js/Utilities.js"></script>
 
 
 <script>
 
-var imageProperties = new Object();
-imageProperties.scale = "";
-imageProperties.rotate = "";
-imageProperties.translate = "";
-
-imageProperties.transformString = function() {
-	
-	var string = "";
-	if (this.translate != "") {
-		string += " " + this.translate;
-	}
-	if (this.scale != "") {
-		string += this.scale;
-	}
-	if (this.rotate != "") {
-		string += " " + this.rotate;
-	}
-	
-	return string;
+var Point = function(top, left) {
+	this.top = top;
+	this.left = left;
 }
 
-function calculateScale(newPointTop, newPointLeft) {
+function calculateRotation(center, destinationPoint) {
 	
-	if (imageProperties.centerImageLeft > newPointLeft) {
-		// devo ruotare immagine
-		imageProperties.scale = "scale(-1, 1)";
-	}
-	else if (imageProperties.centerImageLeft < newPointLeft) {
-		imageProperties.scale = "scale(1, 1)";
-	}
-}
-
-function calculateRotation(newPointTop, newPointLeft) {
-	
-	var catetoAdiacente = Math.abs(newPointLeft - imageProperties.centerImageLeft);
-	var catetoOpposto = Math.abs(newPointTop - imageProperties.centerImageTop);
+	var catetoAdiacente = Math.abs(destinationPoint.left - center.left);
+	var catetoOpposto = Math.abs(destinationPoint.top - center.top);
 	var ipotenusa = Math.sqrt(Math.pow(catetoAdiacente, 2) + Math.pow(catetoOpposto, 2));
 	
 	var cosAlpha = catetoAdiacente / ipotenusa;
 	var alpha = Math.acos(cosAlpha) * 180 / Math.PI ;
 	
+	console.log(alpha);
+	
 	/**
 	 * Punto nel primo quadrante
 	 */
-	if (newPointTop < imageProperties.centerImageTop && 
-		newPointLeft < imageProperties.centerImageLeft) {
+	if (destinationPoint.top < center.top && 
+		destinationPoint.left > center.left) {
 		
+		console.log("Primo quadrante");
 		alpha = -alpha;
 	}
-	else if (newPointTop < imageProperties.centerImageTop && 
-		newPointLeft > imageProperties.centerImageLeft) {
+	/**
+	 * Secondo quadrante 
+	 */
+	else if (destinationPoint.top > center.top && 
+		destinationPoint.left > center.left) {
 
-		alpha = alpha - 90;	
-	}
-	else if (newPointTop > imageProperties.centerImageTop && 
-		newPointLeft > imageProperties.centerImageLeft) {
-	
+		console.log("Secondo quadrante");
 		alpha = alpha;
 	}
-	else if (newPointTop < imageProperties.centerImageTop && 
-		newPointLeft < imageProperties.centerImageLeft) {
+	/**
+	 * Terzo quadrante 
+	 */
+	else if (destinationPoint.top > center.top && 
+		destinationPoint.left < center.left) {
 	
-		alpha = 90 - alpha;
+		console.log("Terzo quadrante");
+		alpha =  - alpha;
+	}
+	/**
+	 * Quarto quadrante 
+	 */
+	else if (destinationPoint.top < center.top && 
+		destinationPoint.left < center.left) {
+	
+		console.log("Quarto quadrante");
+		alpha = alpha;
 	}
 	
 	console.log(alpha);
-	imageProperties.rotate = 'rotate(' + alpha + 'deg)';
-}
-
-function sendToNewPoint() {
-	
-	var centerTopNew = 1000, centerLeftNew = 1000;
-	
-	calculateScale(centerTopNew, centerLeftNew);
-	calculateRotation(centerTopNew, centerLeftNew);
-	
-	$('#imageTraining').css({
-		'-webkit-transform': imageProperties.transformString(),
-		'transform': imageProperties.transformString()
-	});
-	
-	setTimeout(function() {
-		
-		var distanceX = centerLeftNew - imageProperties.centerImageLeft;
-		var distanceY = centerTopNew - imageProperties.centerImageTop;
-		
-		imageProperties.rotate = 'rotate(0)';
-		imageProperties.translate = 'translate(' + distanceX + 'px, ' + distanceY + 'px)';
-		
-		imageProperties.centerImageTop = centerTopNew;
-		imageProperties.centerImageLeft = centerLeftNew;
-		
-		$('#imageTraining').css({
-			'-webkit-transform': imageProperties.transformString(),
-			'transform': imageProperties.transformString(),
-			'-webkit-transition-duration': '2s',
-			'-webkit-transition-property': '-webkit-transform',
-			'-webkit-transition-timing-function': 'linear'
-		});
-		
-		$('#imageTraining').on('transitionend oTransitionEnd webkitTransitionEnd', function() {
-			
-			$('#imageTraining').css('opacity', '0');
-			
-			var image = $('<img>').attr('id', 'imageGetAttention')
-					.css({
-						position: 'absolute',
-						width: $('#imageTraining').width(),
-						height: $('imageTraining').height(),
-						top: $('#imageTraining').position().top,
-						left: $('#imageTraining').position().left
-					}).appendTo('body');
-			
-			if (imageProperties.centerImageLeft < $(window).width() / 2) {
-				
-				image.attr('src', 'images/nemo_left_nuovo.png')
-			}
-			else {
-				image.attr('src', 'images//nemo_right_nuovo.png');
-			}
-
-			$('#imageGetAttention').addClass('animated bounceIn');
-
-		})
-		
-	}, 1000);
-	
+	return alpha;
 }
 
 $(document).ready(function() {
+
+
+	var center = new Point(201.8226299181107, 967.1939643505762 );
+	var destinationPoint = new Point(681.4477264785471, 702.9207693110435 );
 	
-	$('body').height($(window).height());
+	var angle = calculateRotation(center, destinationPoint);
+	console.log(angle);
+	var transformString = 'rotate('+angle+'deg)';
 	
-	$('body').css({
-		padding: '0',
-		margin: '0',
-		'background-color': 'blue'
-		
-	});
+	if (destinationPoint.left < center.left || 
+		destinationPoint.left == center.left && destinationPoint.top < center.top) {
+		transformString += ' scale(-1, 1)';
+	}
 	
-	imageProperties.imageWidth = $(window).height() * 0.3;
-	imageProperties.centerImageTop = $(window).height() / 2;
-	imageProperties.centerImageLeft = $(window).width() / 2;
-	var paintTop = imageProperties.centerImageTop - imageProperties.imageWidth / 2;
-	var paintLeft = imageProperties.centerImageLeft - imageProperties.imageWidth / 2;
-	
-	$('<img>').attr('src', 'images/nemo_training.png')
-		.attr('id', 'imageTraining').appendTo('body');
-		
-	$('#imageTraining').css({
-		position: 'absolute',
-		width: imageProperties.imageWidth + 'px',
-		height: imageProperties.imageWidth + 'px',
-		top: paintTop,
-		left: paintLeft
-	});
-	
-	sendToNewPoint();
-	
+	$('<img>').attr('id', 'prova').attr('src', 'images/nemo_training.png')
+		.appendTo('body').css({
+			width: '100px',
+			height: '100px',
+			position: 'absolute',
+			left: center.left - 50,
+			top: center.top - 50,
+			'-webkit-transform': 'scale(-1, 1) rotate(-47.56deg)',
+			'transform': 'scale(-1, 1) rotate(-47.56deg)'
+		});
 })
 
 </script>

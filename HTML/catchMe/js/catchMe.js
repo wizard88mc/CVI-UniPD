@@ -263,8 +263,6 @@ waitingToStart: function(message) {
 		
 		gameManager.timeToStart = packet.START_TIME;
 		
-		$()
-		
 		websocket.onmessage = function(message) { 
 			try {
 				var packet = JSON.parse(message.data);
