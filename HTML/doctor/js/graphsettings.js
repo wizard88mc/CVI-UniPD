@@ -117,7 +117,7 @@ function createTooltip(posX, posY, time, scaleFactor) {
 		});
 	
 	var imgArrow = $('<img>').attr('src', '../images/arrow_movement.png')
-		.attr('alt', 'Movimento);.appendTo(divImageSample)
+		.attr('alt', 'Movimento').appendTo(divImageSample)
 		.css({
 			width: tooltipObject['arrowWidth'],
 			position: 'absolute',
@@ -141,7 +141,7 @@ function createCssRotation(image, movement) {
 		angle = 'rotate(90deg)';
 	}
 	if (movement == 'TR') {
-		angle = 'rotate(135deg)'
+		angle = 'rotate(135deg)';
 	}
 	if (movement == 'R') {
 		angle = 'rotate(180deg)';
@@ -150,7 +150,7 @@ function createCssRotation(image, movement) {
 		angle = 'rotate(225deg)';
 	}
 	if (movement == 'B') {
-		angle = 'rotate(270deg)'
+		angle = 'rotate(270deg)';
 	}
 	if (movement == 'BL') {
 		angle = 'rotate(315deg)';

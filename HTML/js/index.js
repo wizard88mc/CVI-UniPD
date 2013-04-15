@@ -53,10 +53,10 @@ var offlineLogin = function(username, password) {
 						$(this).remove();
 					}
 				}
-			})
+			});
 		}
 	}
-}
+};
 
 function checkLogin(e) {
 	
@@ -94,7 +94,7 @@ function checkLogin(e) {
 				open: function() {
 					$('a.ui-dialog-titlebar-close').hide();
 				}
-			})
+			});
 			
 			var pageAddress = SERVER_ADDRESS + '/server/CheckLogin.php'; 
 			
@@ -202,7 +202,7 @@ function secondStepPage() {
 		removeFromSessionStorage("doctorName");
 		removeFromSessionStorage("doctorSurname");
 		removeFromSessionStorage("doctorID");
-		removeFromSessionStorage("permission")
+		removeFromSessionStorage("permission");
 		location.replace('index.html');
 	});
 	
@@ -422,7 +422,7 @@ function initPage() {
 		
 		        window.requestFileSystem(window.PERSISTENT, grantedBytes, OfflineNamespace.initFs, function(error) {
 		            console.log("No space received");
-		        })
+		        });
 		    }, function(error) {
 		        console.log("No space allowed");
 		        console.log(error);

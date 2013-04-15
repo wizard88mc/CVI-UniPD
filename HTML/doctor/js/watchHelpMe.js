@@ -39,7 +39,7 @@ var HelpMeNamespace = {
 			
 			var packetToSend = {
 				TYPE: "STOP_GAME"
-			}
+			};
 			
 			websocket.send(JSON.stringify(packetToSend));
 			
@@ -52,7 +52,7 @@ var HelpMeNamespace = {
 	trainingComplete: function() {
 		
 		var fakePacket = {
-			TYPE: 'EYE_TRACKER_READY',
+			TYPE: 'TRAINING_SESSION',
 			DATA: 'false'
 		};
 		
@@ -61,9 +61,9 @@ var HelpMeNamespace = {
 	
 	entryFunction: function(message) {
 		
-		var data = JSON.parse(message.data || message);
+		var packet = JSON.parse(message.data || message);
 		
-		if (data.TYPE == "EYE_TRACKER_READY" && data.DATA == false) {
+		if (packet.TYPE == "TRAINING_SESSION" && packet.DATA == "false") {
 			
 			useEyeTracker = true;
 			
@@ -100,18 +100,25 @@ var HelpMeNamespace = {
 				}
 			}));
 		}
-		else if (data.TYPE == "EYE_TRACKER_READY" && data.DATA == true) {
+		/**
+		 * Show dialog to select training parameters 
+		 */
+		else if (packet.TYPE == "TRAINING_SESSION" && packet.DATA == "true") {
 			
+			TrainingManager.screenWidth = screenWidth;
 			TrainingManager.dialogSelectParameters();
 		}
-		else if (dataReceived.TYPE == "TRAINING_RESULT") {
+		/**
+		 * Training is ended, show evaluation from the eye tracker 
+		 */
+		else if (packet.TYPE == "CAL_QUAL") {
 			
-			TrainingManager.trainingResult(dataReceived.DATA);
+			TrainingManager.trainingResult(packet.DATA);
 			TrainingManager.trainingComplete = HelpMeNamespace.trainingComplete;
 		}
-		else if (data.TYPE == "EYE_TRACKER_NOT_READY") {
+		else if (packet.TYPE == "EYE_TRACKER_NOT_READY") {
 			
-			$('<p>').text('Il sistema di eye-tracking non è collegato. Si desidera procedere con la visita senza analisi del movimento degli occhi?')
+			$('<p>').text('Il sistema di eye-tracking non � collegato. Si desidera procedere con la visita senza analisi del movimento degli occhi?')
 			.appendTo($('<div>').attr('id', 'dialogTrackerNotReady').attr('title', 'Tracciamento degli occhi non collegato').appendTo('#divMainContent'))
 			.dialog({
 				modal: true,
@@ -120,7 +127,7 @@ var HelpMeNamespace = {
 				draggable: false,
 				width: getScreenWidth() * 0.5,
 				buttons: {
-					"Continua senza": function() {
+					"Prosegui senza": function() {
 						$(this).dialog("close");
 						$(this).remove();
 						
@@ -157,7 +164,7 @@ var HelpMeNamespace = {
 				}
 			});
 		}
-		else if (data.TYPE == 'PRESENTATION_COMPLETE') {
+		else if (packet.TYPE == 'PRESENTATION_COMPLETE') {
 			
 			$('#dialogWaitingEndPresentation').dialog("close").remove();
 			
@@ -292,6 +299,7 @@ var HelpMeNamespace = {
 			
 		}
 		else if (data.TYPE == 'LEVEL_ENDED') {
+			
 			changeCurrentIndexLevel = true; 
 		}
 		else if (data.TYPE == 'SESSION_RESULTS') {
@@ -449,8 +457,8 @@ var HelpMeNamespace = {
 		var list = $('<ul>').appendTo(divLegend);
 		$('<li>').addClass('imageCenter').text('Image center').appendTo(list);
 		$('<li>').addClass('touchCenter').text('Touch position').appendTo(list);
-		$('<li>').addClass('eyeCenter').text('Eyes position').appendTo(list)
+		$('<li>').addClass('eyeCenter').text('Eyes position').appendTo(list);
 		
 	}
 	
-}
+};

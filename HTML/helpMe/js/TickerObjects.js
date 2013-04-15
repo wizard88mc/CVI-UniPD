@@ -317,7 +317,7 @@ var frameAnimatorNamespace = {
     		imageObjectOnScreen.element.one(eventEndAnimation, function() {
     			
     			timeExpired(true);
-    		})
+    		});
     		
     		addTransitionSpecifications(imageObjectOnScreen.element, 'all 2s linear');
         	

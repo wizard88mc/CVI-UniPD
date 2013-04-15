@@ -59,7 +59,7 @@ this.arrivedAtCenter = function() {
 	this.height = this.targetHeight;
 	this.center.top = this.targetCenter.top;
 	this.center.left = this.targetCenter.left;
-}
+};
 
 this.moveObject = function(delta, intoSacco) {
 
@@ -114,5 +114,5 @@ this.moveObject = function(delta, intoSacco) {
         this.center.y = y;
         this.bitmap.x = this.center.x - this.width / 2;
         this.bitmap.y = this.center.y - this.height / 2;
-    }
+    };
 }

@@ -27,7 +27,7 @@ this.timeIsPassing = function(factor) {
     this.element.css({
         width: realWidth
     });
-}
+};
 
 this.reset = function() {
 
@@ -35,7 +35,7 @@ this.reset = function() {
         width: this.width,
         display: 'none'
     });
-}
+};
 
 this.elementForStage = function() {
 
@@ -51,5 +51,5 @@ this.elementForStage = function() {
     this.shape.shadow = this.shadow;
 
     return this.shape;
-}
+};
 }

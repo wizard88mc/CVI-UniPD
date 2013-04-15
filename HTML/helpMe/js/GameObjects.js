@@ -61,7 +61,7 @@ this.getSystemImages = function() {
         });
         
         utilsNamespace.anotherImageRetrieved();
-    }
+    };
     imageGoodAnswer.src="images/spongebob_ok.gif";
 
     var imageBadAnswer = new Image();
@@ -94,7 +94,7 @@ this.getSystemImages = function() {
         });
 
         utilsNamespace.anotherImageRetrieved();
-    }
+    };
     imageBadAnswer.src = "images/spongebob_sad.png";
 };
 
@@ -151,10 +151,8 @@ this.getSystemSounds = function() {
     
     for (x in numbers) {
     	utilsNamespace.addSoundSource($('<audio>').attr('id', 'correct' + (x+1)).appendTo(divObjects), numbers[x]);
-    }
-    
-    
-}
+    }  
+};
 
 }
 

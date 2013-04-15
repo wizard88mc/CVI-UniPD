@@ -36,7 +36,7 @@ this.reduceArrowHeight = function(delta) {
 		height: height,
 		top: top
 	});
-}
+};
 },
 
     Example: function(img, help, insertInto, soundB, soundA) {
@@ -147,7 +147,7 @@ this.loadImage = function() {
         }
 
     	//gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.managerIngressoImmagine);
-        gameManager.timeLastFrame = new Date().getTime()
+        gameManager.timeLastFrame = new Date().getTime();
         setTimeout(frameAnimatorNamespace.managerIngressoImmagine, 500);
         
     }
@@ -172,4 +172,4 @@ this.loadImage = function() {
 	        ExampleNamespace.iterateOnExamples();
 	    }
 	}
-}
+};

@@ -47,8 +47,8 @@ var CatchMeNamespace = {
 			CatchMeNamespace.prepareChart();
 			
 			//timing = setInterval(CatchMeNamespace.updateChart, 5000);
-			// Mostro un dialog che dice che √® tutto a posto,
-			// e di cliccare quando tutto √® pronto x iniziare
+			// Mostro un dialog che dice che Ë tutto a posto,
+			// e di cliccare quando tutto Ë pronto x iniziare
 		}
 		else if (dataReceived.TYPE == "TRAINING_SESSION" && dataReceived.DATA == "false") {
 			
@@ -64,7 +64,7 @@ var CatchMeNamespace = {
 			eyesPositions = new Object();
 			currentSpeedValue = -1;
 		
-			$('<p>').text('Non appena tutto sar√† pronto, cliccare su Ok per iniziare').appendTo($('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Pronto a cominciare').appendTo('#divMainContent'));
+			$('<p>').text('Non appena tutto sar‡ pronto, cliccare su Ok per iniziare').appendTo($('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Pronto a cominciare').appendTo('#divMainContent'));
 			$('#dialogWaitingToStart').dialog({
 				modal: true,
 				resizable: false,
@@ -102,7 +102,7 @@ var CatchMeNamespace = {
 		}
 		else if (dataReceived.TYPE == "EYE_TRACKER_NOT_READY") {
 			
-			$('<p>').text('Il sistema di eye-tracking non √® collegato. Si desidera procedere con la visita senza analisi del movimento degli occhi?')
+			$('<p>').text('Il sistema di eye-tracking non Ë collegato. Si desidera procedere con la visita senza analisi del movimento degli occhi?')
 			.appendTo($('<div>').attr('id', 'dialogTrackerNotReady').attr('title', 'Tracciamento degli occhi non collegato').appendTo('#divMainContent'))
 			.dialog({
 				modal: true,
@@ -153,7 +153,7 @@ var CatchMeNamespace = {
 		if (maxTouch > maxEyeTracker) {
 			maxY = maxTouch; 
 		}
-		else { maxY = maxEyeTracker };
+		else { maxY = maxEyeTracker; };
 		grafo.setData([{label: 'Delta Vista', data: datiEyeTracker}, 
 			{label: 'Delta Tocco', data: datiTouch}]);
 			
@@ -249,7 +249,7 @@ var CatchMeNamespace = {
 			}).appendTo('#divManager');
 		
 		
-		var leftArrow = $('<img>').attr('id', 'leftArrow').attr('alt', 'Muovi grafico a sinistra')
+		$('<img>').attr('id', 'leftArrow').attr('alt', 'Muovi grafico a sinistra')
 			.attr('src', '../images/leftarrow.png').addClass('arrow')
 			.appendTo(divArrows)
 			.click(function(e) {
@@ -258,7 +258,7 @@ var CatchMeNamespace = {
 				grafo.pan({left: -1000});
 		});
 			
-		var rightArrow = $('<img>').attr('id', 'rightArrow')
+		$('<img>').attr('id', 'rightArrow')
 			.addClass('arrow').attr('src', '../images/rightarrow.png')
 			.attr('alt', 'Muovi grafo verso destra')
 			.appendTo(divArrows)
@@ -348,4 +348,4 @@ var CatchMeNamespace = {
 			console.log("Bad Message Received in manageMessagesGame");
 		}
 	}
-}
+};

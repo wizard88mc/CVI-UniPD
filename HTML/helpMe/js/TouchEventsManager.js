@@ -87,4 +87,4 @@ var touchManagerNamespace = {
     TouchManagerObject: function() {
         this.position = new Point();
     }
-}
+};

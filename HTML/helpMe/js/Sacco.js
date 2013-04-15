@@ -54,6 +54,6 @@ function Sacco() {
     	this.secondElement.css({
     		top: this.halfBagTop
     	});
-    }
+    };
 
 }

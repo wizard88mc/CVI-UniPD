@@ -32,7 +32,7 @@ function GnomoElement() {
             presentationManager.gnomo.naturalHeight;
         
         presentationManager.loadComplete();
-    }
+    };
     this.image.src = this.imageFile;
     
     this.width = 0;
@@ -51,7 +51,7 @@ function GnomoElement() {
             left: this.left,
             top: this.top
         });
-    }
+    };
     
     this.calculateTargetDimensions = function() {
         this.targetWidth = getScreenWidth() / 10;
@@ -64,8 +64,7 @@ function GnomoElement() {
         }
         
         this.targetScale = this.targetWidth / this.image.naturalWidth;
-        
-    }
+    };
     
     this.moveElement = function(left, delta) {
         
@@ -88,7 +87,7 @@ function GnomoElement() {
     			presentationManager.timeToPerformMovement);
     	this.width = this.image.naturalWidth * this.currentScale;
         this.height = this.image.naturalHeight * this.currentScale;
-    }
+    };
 }
 
 function SlittaElement() {
@@ -106,7 +105,7 @@ function SlittaElement() {
             presentationManager.slitta.naturalHeight;
         
         presentationManager.loadComplete();
-    }
+    };
     
     this.image.src = this.imageFile;
     
@@ -143,8 +142,7 @@ function SlittaElement() {
 	    
         this.left = presentationManager.gnomo.left - 
         	(this.width - presentationManager.gnomo.width) / 2;
-	    
-	}
+	};
     
     this.increaseDimensions = function(delta) {
         
@@ -152,8 +150,8 @@ function SlittaElement() {
     			presentationManager.timeToPerformMovement);
     	this.width = this.image.naturalWidth * this.currentScale;
         this.height = this.image.naturalHeight * this.currentScale;
-    }
-}
+    };
+};
 
 function PresentationManager() {
 
@@ -188,12 +186,12 @@ this.loadComplete = function() {
         this.slitta.calculateTargetDimensions();
         presentationManager.buildPresentation();
     }
-}
+};
 
 this.createElements = function() {
     this.gnomo = new GnomoElement();
     this.slitta = new SlittaElement();
-}
+};
 
 this.buildPresentation = function() {
 	$('body').css({
@@ -286,6 +284,6 @@ this.buildPresentation = function() {
     this.timeLastFrame = new Date().getTime();
     this.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.functionMoveGnomo);
     //this.currentAnimationFrame = window.requestAnimationFrame(moveGnomoToCenter);
-}
+};
 
 }

@@ -19,13 +19,13 @@ this.getBackgroundRGB = function() {
 	return new Array(hexToR(this.backgroundColor),
 					hexToG(this.backgroundColor),
 					hexToB(this.backgroundColor));
-}
+};
 
 this.getForegroundRGB = function() {
 	return new Array(hexToR(this.foregroundColor),
 					hexToG(this.foregroundColor),
 					hexToB(this.foregroundColor));
-}
+};
 	
 };
 var gameSettings = new GameSettings();
@@ -126,7 +126,7 @@ requestGameSettings: function() {
 			location.replace('../index.html');
 		});
 		
-	})
+	});
 	
 	$('<div>').attr('id', 'divHeaderSettings').appendTo('#divMainContent');
 	$('<h1>').text('Impostazioni di gioco').appendTo('#divHeaderSettings');
@@ -284,7 +284,7 @@ setGameSettings: function(data) {
 	imagePicker.setColor(data.IMG_COLOR);
 	
 	$('<div>').attr('id', 'divBadContrast').addClass('ui-state-error ui-corner-all').appendTo(divLeft);
-	$('<p><span class="ui-icon ui-icon-alert"></span>Attenzione: il contrasto tra colore di sfondo e dell\'immagine √® troppo basso.</p>').appendTo('#divBadContrast');
+	$('<p><span class="ui-icon ui-icon-alert"></span>Attenzione: il contrasto tra colore di sfondo e dell\'immagine Ë troppo basso.</p>').appendTo('#divBadContrast');
 	
 	if (data.CHANGE_IMG_COLOR == '0') {
 		gameSettings.changeImageColor = false;
@@ -356,7 +356,7 @@ setGameSettings: function(data) {
 		.attr('name', 'mixMovements').appendTo(divMovimenti)
 		.change(function() {
 			gameSettings.mixMovements = !gameSettings.mixMovements;
-	})
+	});
 	
 	$('<label>').attr('for', 'mixMovements').text('Combina movimenti').appendTo(divMovimenti);
 	
@@ -397,7 +397,7 @@ setGameSettings: function(data) {
 		.addClass('ui-widget-content ui-corner-all')
 		.appendTo(divRight);
 	
-	paragraph = $('<p>').text('Velocit√† spostamento')
+	paragraph = $('<p>').text('Velocit‡† spostamento')
 		.addClass('ui-state-default ui-corner-all ui-helper-clearfix')
 		.appendTo(divSpeed);
 	$('<span>').addClass('ui-icon ui-icon-pencil').prependTo(paragraph);
@@ -422,7 +422,7 @@ setGameSettings: function(data) {
 		.appendTo($('<div>').addClass('divContainerSlider').appendTo(divSpeed));
 	
 	$('<span>').attr('id', 'labelSpeed').appendTo(divSpeed);
-	$('#sliderSpeed').attr('value', gameSettings.speed)
+	$('#sliderSpeed').attr('value', gameSettings.speed);
 	$('#sliderSpeed').slider({
 		from: 1, to: 10, step: 1, format: {format: '#'},
 		onstatechange: CatchMeSettingsNamespace.updateLabelSpeed
@@ -434,7 +434,7 @@ setGameSettings: function(data) {
 	
 	paragraph = $('<p>').text('Immagine in movimento')
 		.addClass('ui-state-default ui-corner-all ui-helper-clearfix')
-		paragraph.appendTo(divImage);
+		.appendTo(divImage);
 	
 	$('<span>').addClass('ui-icon ui-icon-pencil').prependTo(paragraph);
 	
@@ -490,7 +490,7 @@ setGameSettings: function(data) {
 			'IS_FOR_SPACE_GAME': otherImages[imageID].IS_FOR_SPACE_GAME};
 		
 		$('<option>').val(imageID).text(otherImages[imageID].IMG_NAME)
-			.appendTo('#selectImage')
+			.appendTo('#selectImage');
 	}
 	
 	if (checkColorContrast(gameSettings.backgroundColor, gameSettings.foregroundColor)) {
@@ -594,7 +594,7 @@ setGameSettings: function(data) {
 							$(this).dialog("close");
 						}
 					}
-				})
+				});
 			}
 			else {
 				CatchMeSettingsNamespace.personalizationComplete();
@@ -650,7 +650,7 @@ personalizationComplete: function() {
 			//messaggio ok se tutt ok
 			console.log(message);
 		}
-	})
+	});
 	
 	var packetToSend = {
 		TYPE: "GAME_SETTINGS",
@@ -671,17 +671,5 @@ personalizationComplete: function() {
 	$('#divMainContent > h1').text('Prendimi!');
 	
 	websocket.onmessage = CatchMeNamespace.entryFunction;
-	
-	/*$.getScript('js/watchCatchMe.js')
-		.done(function(data, textStatus) {
-			console.log("CatchMe loaded");
-						
-		})
-		.fail(function(jqxhr, settings, exception) {
-			console.log("Error loading file catchMe");
-			console.log(jqxhr);
-			console.log(settings);
-			console.log(exception);
-		});*/
-}
-}
+	}
+};

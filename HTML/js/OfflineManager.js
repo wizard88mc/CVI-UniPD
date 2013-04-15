@@ -37,7 +37,7 @@ var OfflineNamespace = {
     	}, function(error) {
     		console.log("Error in creating root directory");
     		console.log(error);
-    	})
+    	});
     },
 
     initFolderForGame: function() {
@@ -237,11 +237,11 @@ var OfflineNamespace = {
 						}
 						
 					});
-				}
+				};
 				
 				readerPackets.readAsText(filePackets);
-			})
-		})
+			});
+		});
     },
     
     sendFromLocalStorage: function() {
@@ -271,7 +271,7 @@ var OfflineNamespace = {
     						OfflineNamespace.anotherVisitSend();
     					}
     				}
-    			})
+    			});
     		}
     	
     	}
@@ -306,7 +306,7 @@ var OfflineNamespace = {
   	    			}
   	    		}
   	    	});
-    	}
+    	};
     	
     	if (window.requestFileSystem) {
 	    	offlineObjectManager.visitsSent++;

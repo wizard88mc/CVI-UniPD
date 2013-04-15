@@ -20,7 +20,7 @@ function handlePresentation(message) {
 	}
 	else if (packet.TYPE == 'IDENTIFICATION_COMPLETE') {
 		
-		console.log("Identification Complete")
+		console.log("Identification Complete");
 		
 		presentationComplete(); // deve essere implementata dalla pagina che attiva una connessione tramite websocket
 	}
@@ -36,7 +36,7 @@ function openWebSocket(webPort) {
 	
 	websocket.onopen = function(e) {
 		console.log("Opening websocket");
-	}
+	};
 	
 	websocket.onclose = manageOnCloseWebsocket;
 	

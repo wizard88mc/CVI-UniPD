@@ -39,9 +39,9 @@ function presentationComplete() {
 		}
 		else {
 			console.log("Bad packet received");
-			console.log(message)
+			console.log(message);
 		}
-	}
+	};
 }
 
 var centerImage = new Point();
@@ -62,7 +62,7 @@ function Animation(startP, endP, finalA, mov) {
 this.calculateAnimationTime = function() {
 					
 	return Math.round(this.distance / (gameSettings.speed * 5));
-}
+};
 }
 
 function GameSettings() {
@@ -86,13 +86,13 @@ this.getBackgroundRGB = function() {
 	return new Array(hexToR(this.backgroundColor),
 					hexToG(this.backgroundColor),
 					hexToB(this.backgroundColor));
-}
+};
 
 this.getForegroundRGB = function() {
 	return new Array(hexToR(this.foregroundColor),
 					hexToG(this.foregroundColor),
 					hexToB(this.foregroundColor));
-}
+};
 	
 };
 var gameSettings = null;
@@ -112,8 +112,8 @@ function CanvasSettings() {
 	
 this.isArrivedToDestination = function() {
 	return (this.actual.left == this.finalPoint.left && 
-			this.actual.top == this.finalPoint.top)
-}
+			this.actual.top == this.finalPoint.top);
+};
 }
 var canvasSettings = null;
 
@@ -194,7 +194,7 @@ timingFunction: function() {
 		IMAGE: [canvasSettings.actual.left, canvasSettings.actual.top],
 		TOUCH: [touchManager.posX, touchManager.posY],
 		MOVEMENT: gameManager.currentAnimation.movement
-	}
+	};
 	
 	resetTouch();
 	
@@ -245,7 +245,7 @@ putInWaiting: function() {
 		"IMAGE_HEIGHT": gameSettings.effectiveImageHeight,
 		"SCREEN_WIDTH": getScreenWidth(),
 		"SCREEN_HEIGHT": getScreenHeight()
-	}
+	};
 	
 	websocket.send(JSON.stringify(packetToSend));
 },
@@ -262,6 +262,8 @@ waitingToStart: function(message) {
 	if (packet.TYPE == "START_WORKING") {
 		
 		gameManager.timeToStart = packet.START_TIME;
+		
+		$('#imageGetAttention').remove();
 		
 		websocket.onmessage = function(message) { 
 			try {
@@ -314,7 +316,7 @@ drawCanvas: function() {
 	image.src = 'images/' + canvasSettings.fileName;
 	$(image).load(function() {
 		context.drawImage(image, 0, 0, canvasSettings.width, canvasSettings.height);
-	})
+	});
 	
 	
 	canvas.css('width', gameSettings.percentualImageWidth + '%');
@@ -389,7 +391,7 @@ startGame: function() {
 			'background-size': '100%',
 			'background-position': 'left bottom',
 			'background-repeat': 'no-repeat'
-		})
+		});
 	}
 	
 	/**
@@ -565,7 +567,7 @@ defineSingleAnimation: function() {
 				startPoint = new Point(bottomCenterScreen.top, bottomCenterScreen.left);
 			}
 			endPoint = new Point(topCenterScreen.top, topCenterScreen.left);
-			movement = 'T'
+			movement = 'T';
 		}
 		animations.push(new Animation(startPoint, endPoint, true, movement));
 	}
@@ -633,7 +635,7 @@ defineSingleAnimation: function() {
 		var movement = '';
 		if (randomValue > 0.5) {
 			endPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
-			movement = 'L'
+			movement = 'L';
 		}
 		else {
 			endPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
@@ -1041,7 +1043,7 @@ animationEndGame: function() {
 	console.log("Animazione fine gioco + ritorno stato iniziale");
 	
 	setTimeout(location.replace('../patient/index.html'), 2000);
-}}
+}};
 
 $('document').ready(function(e) {
 	
@@ -1092,7 +1094,7 @@ function manageOnCloseWebsocket(e) {
 	
 	        window.requestFileSystem(window.PERSISTENT, grantedBytes, OfflineNamespace.initFs, function(error) {
 	            console.log("No space received");
-	        })
+	        });
 	    }, function(error) {
 	        console.log("No space allowed");
 	        console.log(error);
@@ -1237,7 +1239,7 @@ function folderForOfflineSavingCreated() {
     }, function(error) {
     	console.log("Error in creating packets.txt");
     	console.log(error);
-    })
+    });
 }
 
 // costruire cartella in localStorage con nome giusto
@@ -1317,9 +1319,9 @@ function readFile() {
 
             reader.onloadend = function(e) {
                 console.log(this.result);
-            }
+            };
 
             reader.readAsText(file);
-        })
-    })
+        });
+    });
 }

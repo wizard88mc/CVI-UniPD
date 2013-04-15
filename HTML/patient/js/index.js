@@ -24,7 +24,7 @@ function presentationComplete() {
 					
 					var dialog = $('<div>').attr('id', 'dialogAskSynch').attr('title', 'Sincronizzazione').appendTo('#divMainContent');
 					$('<p>').text('Computer non ancora sincronizzato con il server. Eseguire sincronizzazione ora?').appendTo(dialog);
-					$('<p>').text('Attenzione: se non si effettua sincronizzazione non sarà possibile giocare..').appendTo(dialog);
+					$('<p>').text('Attenzione: se non si effettua sincronizzazione non sar� possibile giocare..').appendTo(dialog);
 					dialog.dialog({
 						modal: true,
 						resizable: false,
@@ -61,7 +61,7 @@ function presentationComplete() {
 				else {
 					
 					var dialog = $('<div>').attr('id', 'dialogAskSynch').attr('title', 'Sincronizzazione').appendTo('#divMainContent');
-					$('<p>').text('Il computer non è stato sincronizzato recentemente e sarebbe opportuno effettuarla per avere dati più precisi.').appendTo(dialog);
+					$('<p>').text('Il computer non � stato sincronizzato recentemente e sarebbe opportuno effettuarla per avere dati più precisi.').appendTo(dialog);
 					$('<p>').text('Sincronizzare nuovamente?').appendTo(dialog);
 					dialog.dialog({
 						modal: true,
@@ -100,7 +100,7 @@ function presentationComplete() {
 				putInWaitingToStart();
 			}
 		}
-	}
+	};
 }
 
 function timeSyncCompleted() {
@@ -130,7 +130,7 @@ function putInWaitingToStart() {
 			console.log(data);
 			console.log(message);
 		}
-	}
+	};
 }
 
 $('document').ready(function(e) {
@@ -195,7 +195,7 @@ function initPage() {
 			location.replace('../catchMe/index.html');
 		});
 		divHelpMe.on('click', function() {
-			location.replace('../helpMe/index.html')
+			location.replace('../helpMe/index.html');
 		});
 		
 		var logout = $('<div>').attr('id', 'buttonExit')
@@ -207,7 +207,7 @@ function initPage() {
 			removeFromSessionStorage("patientName");
 			removeFromSessionStorage("patientSurname");
 			removeFromSessionStorage("patientID");
-			removeFromSessionStorage("permission")
+			removeFromSessionStorage("permission");
 			removeFromSessionStorage("patientSex");
 			location.replace('../index.html');
 		});

@@ -89,7 +89,7 @@ getListOfPatients: function() {
 				console.log(message);
 			}
 		}
-	})
+	});
 },
 
 getListOfGames: function() {
@@ -111,12 +111,12 @@ getListOfGames: function() {
 				arrayOfFoldersGames[game.ID] = game.FOLDER;
 			}
 		}
-	})
+	});
 },
 
 goToGame: function() {
 	
-	$('<p>').text('Sto recuperando le impostazioni di gioco...')
+	$('<p>').text('Sto recuperando le impostazioni di gioco ...')
 		.appendTo($('<div>').attr('id', 'waitingParameters')
 				.attr('title', 'Recupero informazioni').appendTo('#divMainContent'));
 
@@ -147,9 +147,11 @@ goToGame: function() {
 				NewVisitNamespace.noServerWorking();
 			}
 			else {
+				/**
+				 * CatchMe game choosed
+				 */
 				if (gameIdentification == "CATCH_ME") {
-					// lavoro con settings di catchMe
-					console.log("CatchMe to watch");
+					
 					var packetToSend = {
 						TYPE: "GAME",
 						GAME_ID: gameIdentification
@@ -174,14 +176,14 @@ goToGame: function() {
 							console.log(error);
 							console.log(message);
 						}
-					}
-					
-					
+					};
 					
 				}
+				/**
+				 * HelpMe game chooses
+				 */
 				else if (gameIdentification == "HELP_ME") {
-					// lavoro con settings helpMe
-					// $('#divMainContent div').remove();
+					
 					var packetToSend = {
 							TYPE: "GAME",
 							GAME_ID: gameIdentification
@@ -203,14 +205,14 @@ goToGame: function() {
 							console.log(error);
 							console.log(message);
 						}
-					}
+					};
 					
 					console.log("HelpMe to watch");
 					
 				}
 			}
 		}
-	})
+	});
 },
 
 noServerWorking: function() {
@@ -242,7 +244,7 @@ noClientConnected: function() {
 	
 	$('<p>').text('Attenzione: nessun dispositivo per il paziente connesso. Collegarlo e riprovare')
 		.appendTo($('<div>').attr('id', 'divDialogNoClientConnected').attr('title', 'Errore')
-		.appendTo('#divMainContent'))
+		.appendTo('#divMainContent'));
 	
 	$('#divDialogNoClientConnected').dialog({
 		modal: true,
@@ -354,7 +356,7 @@ initializePage: function() {
 		changeYear: true,
 		dateFormat: 'yy-mm-dd',
 		yearRange: "-20:+2"
-	})
+	});
 	
 	$('<button>').text('Inserisci').button()
 		.click(function() {
@@ -421,7 +423,7 @@ initializePage: function() {
 								.appendTo('#divNewPatient');
 							
 							$('<p>').text('Operazione completata').appendTo(dialog);
-							$('<p>').text('Il nuovo bambino √® gi√† selezionato nell\'elenco a sinistra.').appendTo(dialog);
+							$('<p>').text('Il nuovo bambino Ë gi‡† selezionato nell\'elenco a sinistra.').appendTo(dialog);
 							
 							dialog.dialog({
 								modal: true, 
@@ -464,39 +466,39 @@ initializePage: function() {
 			
 			
 		}).appendTo(divTableNewPatient);
-	$('<button>').text('Annulla').button()
-		.click(function() {
-			
-			$('#divTableNewPatient').hide();
-			$('#btnStartInsert').fadeIn();			
-		}).appendTo(divTableNewPatient);
 	
-	divTableNewPatient.hide();
-	
-	var divGames = $('<div>').attr('id', 'divGames').addClass('ui-widget-content ui-corner-all')
-		.appendTo('#divMainContent');
-	
-	$('<label>').attr('for', 'selectGames').addClass('label').text('Seleziona il gioco: ').appendTo(divGames);
-	$('<select>').attr('id', 'selectGames').attr('name', 'selectGames').appendTo(divGames);
-	$('<p>').attr('id', 'gameDescription').appendTo(divGames);
-	NewVisitNamespace.getListOfGames();
-	
-	$('#selectGames').change(function() {
-		var gameID = $(this).val();
+		$('<button>').text('Annulla').button()
+			.click(function() {
+				
+				$('#divTableNewPatient').hide();
+				$('#btnStartInsert').fadeIn();			
+			}).appendTo(divTableNewPatient);
 		
-		if (gameID == "") {
-			$('#gameDescription').text("");
-		}
-		else {
-			$('#gameDescription').text(arrayOfDescriptionGames[gameID]);
-		}
-	})
-	
-	var divButtons = $('<div>').attr('id', 'divButtons')
-		.addClass('alignCenter').appendTo('#divMainContent');
-	
-	$('<button>').attr('id', 'buttonStart').text('Comincia')
-		.button().click(NewVisitNamespace.startNewGame).appendTo(divButtons);
-	
-}
-}
+		divTableNewPatient.hide();
+		
+		var divGames = $('<div>').attr('id', 'divGames').addClass('ui-widget-content ui-corner-all')
+			.appendTo('#divMainContent');
+		
+		$('<label>').attr('for', 'selectGames').addClass('label').text('Seleziona il gioco: ').appendTo(divGames);
+		$('<select>').attr('id', 'selectGames').attr('name', 'selectGames').appendTo(divGames);
+		$('<p>').attr('id', 'gameDescription').appendTo(divGames);
+		NewVisitNamespace.getListOfGames();
+		
+		$('#selectGames').change(function() {
+			var gameID = $(this).val();
+			
+			if (gameID == "") {
+				$('#gameDescription').text("");
+			}
+			else {
+				$('#gameDescription').text(arrayOfDescriptionGames[gameID]);
+			}
+		});
+		
+		var divButtons = $('<div>').attr('id', 'divButtons')
+			.addClass('alignCenter').appendTo('#divMainContent');
+		
+		$('<button>').attr('id', 'buttonStart').text('Comincia')
+			.button().click(NewVisitNamespace.startNewGame).appendTo(divButtons);	
+	}
+};

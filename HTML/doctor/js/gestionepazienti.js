@@ -312,7 +312,7 @@ function savePatientVisits(patientID) {
 				error: function(event, textStatus) {
 					// in caso di errore
 				}
-			})
+			});
 		});
 	}
 }
@@ -455,7 +455,7 @@ function drawGraph(differentValues) {
 			deltaEye.push([time, eye]);
 			movements[time] = objectInfo.MOVEMENT;
 			
-			var imagePos = objectInfo.IMAGE_POS
+			var imagePos = objectInfo.IMAGE_POS;
 			imagePositions[time] = new Point(imagePos[0], imagePos[1]);
 			
 			var touchPos = objectInfo.TOUCH_POS;
@@ -492,13 +492,13 @@ function drawGraph(differentValues) {
 				grafo.setupGrid();
 				grafo.resize();
 				grafo.draw();	
-			})
+			});
 			
 		}
 		else {
 			$('#divGrafo, #divBackButtonContainer').fadeIn();
 		}
-	})
+	});
 }
 
 function drawHelpMeReport(differentValues) {
@@ -510,7 +510,7 @@ function drawHelpMeReport(differentValues) {
 		$('#divBackButtonContainer, #listExercises').fadeOut('fast', function() {
 			$('#imgPreloaderMiddle').fadeIn('fast', function() {
 				drawTable(false);	
-			})
+			});
 		});
 	});
 	
@@ -679,7 +679,7 @@ $('document').ready(function() {
 		}, 300);
 		
 		
-	})
+	});
 	
 	$.ajax({
 		url: SERVER_ADDRESS + '/server/GetPatientsList.php',
@@ -702,7 +702,7 @@ $('document').ready(function() {
 				$('#imgPreloaderPatients').hide();
 			}	
 		}
-	})
+	});
 	
 	row = $('<tr>').appendTo('#tableSelectOptions');
 	

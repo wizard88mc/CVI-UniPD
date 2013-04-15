@@ -312,14 +312,13 @@ function savePatientVisits(patientID) {
 				error: function(event, textStatus) {
 					// in caso di errore
 				}
-			})
+			});
 		});
 	}
 }
 
 function makeRequestForGraphData(visitID) {
 	
-			
 	$.ajax({
 		url: SERVER_ADDRESS + '/server/GetGraphData.php',
 		type: 'POST', 
@@ -410,7 +409,7 @@ function drawGraph(differentValues) {
 		deltaEye.push([time, eye]);
 		movements[time] = objectInfo.MOVEMENT;
 			
-		var imagePos = objectInfo.IMAGE_POS
+		var imagePos = objectInfo.IMAGE_POS;
 		imagePositions[time] = new Point(imagePos[0], imagePos[1]);
 			
 		var touchPos = objectInfo.TOUCH_POS;
@@ -449,7 +448,7 @@ function drawHelpMeReport(differentValues) {
 		$('#divBackButtonContainer, #listExercises').fadeOut('fast', function() {
 			$('#imgPreloaderMiddle').fadeIn('fast', function() {
 				drawTable(false);	
-			})
+			});
 		});
 	});
 	
@@ -467,6 +466,7 @@ function drawHelpMeReport(differentValues) {
 			
 			var listOfExercises = lastDataReceived[element];
 			var dataTerm = $('<dt>').text('Famiglia target: ' + element).appendTo(list);
+			
 			$('<img>').attr('src', '../images/show_more.png').attr('alt', 'Dettagli')
 				.prependTo(dataTerm).on('click', moreDetails);
 			

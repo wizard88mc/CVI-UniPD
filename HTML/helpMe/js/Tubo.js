@@ -22,7 +22,7 @@ function Tubo() {
 
 this.reset = function() {
     this.goBack = false;
-}
+};
 
 this.incremenentHeight = function(delta) {
 
@@ -33,7 +33,7 @@ this.incremenentHeight = function(delta) {
     });
 
     return this.actualHeight >= this.height;
-}
+};
 
 this.decrementHeight = function(delta) {
 
@@ -44,5 +44,5 @@ this.decrementHeight = function(delta) {
     });
 
     return this.actualHeight <= 0;
-}
+};
 }

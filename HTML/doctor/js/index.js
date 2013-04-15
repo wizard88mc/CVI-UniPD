@@ -50,7 +50,7 @@ $('document').ready(function(e) {
 		'margin-left': '2%'
 	});
 	var image = $('<img>').attr('id', 'imgGoBack').attr('src', '../images/tasto_indietro.png')
-	 .attr('alt', 'Torna Indietro" />').appendTo('#divMainContent p');
+	 .attr('alt', 'Torna Indietro').appendTo('#divMainContent p');
 	image.css({
 		cursor: 'pointer',
 		width: '50%',
@@ -59,7 +59,7 @@ $('document').ready(function(e) {
 	image.off('click');
 	image.on('click', function() {
 		location.replace('../index.html');
-	})
+	});
 	
 	openWebSocket(port);
 	NewVisitNamespace.initializePage();

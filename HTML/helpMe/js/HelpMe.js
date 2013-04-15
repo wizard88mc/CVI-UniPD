@@ -24,17 +24,12 @@ function presentationComplete() {
 	
 	websocket.onmessage = function(message) {
 		
-		var data = JSON.parse(message.data);
+		var packet = JSON.parse(message.data);
 		
-		if (data.TYPE == "GAME_SETTINGS") {
+		if (packet.TYPE == "GAME_SETTINGS") {
 			
-			livelliGioco = data.LEVELS;
+			livelliGioco = packet.LEVELS;
 			
-			/*var packetToSend = {
-				'TYPE': 'SCREEN_MEASURES',
-				'SCREEN_WIDTH': getScreenWidth(),
-				'SCREEN_HEIGHT': getScreenHeight()
-			}*/
 			var packetToSend = {
 				'TYPE': 'READY_TO_PLAY',
 				'MACHINE_ID': checkAlreadySync()
@@ -43,49 +38,53 @@ function presentationComplete() {
 			
 			websocket.send(JSON.stringify(packetToSend));
 		}
-		else if (data.TYPE == "START_PRESENTATION") {
+		else if (packet.TYPE == "START_PRESENTATION") {
+			
+			$('#imageGetAttention').remove();
 			
 			presentationManager = new PresentationManager();
 			presentationManager.createElements();
 			
 		}
-		else if (data.TYPE == 'START_WORKING') {
+		else if (packet.TYPE == 'START_WORKING') {
 			
-			gameManager.timeToStart = data.START_TIME;
+			gameManager.timeToStart = packet.START_TIME;
 			allInfosRetrieved();
 		}
-		else if (data.TYPE == "SCREEN_MEASURES") {
+		else if (packet.TYPE == "SCREEN_MEASURES") {
 			
 			var packetToSend = {
 				'TYPE': 'SCREEN_MEASURES',
 				'RESULT': true,
 				'SCREEN_WIDTH': getScreenWidth(),
 				'SCREEN_HEIGHT': getScreenHeight()
-			}
+			};
 				
 			websocket.send(JSON.stringify(packetToSend));
 		}
-		else if (data.TYPE == 'GO_BACK') {
+		else if (packet.TYPE == 'GO_BACK') {
 			
 			websocket.close();
 			location.replace('../patient/index.html');
 		}
-		else if (data.TYPE == "STOP_GAME") {
+		else if (packet.TYPE == "STOP_GAME") {
+			
 			gameManager.gameInProgress = false;
 		}
-		else if (data.TYPE == "START_TRAINING") {
+		else if (packet.TYPE == "START_TRAINING") {
 			
-			TrainingExamplesNamespace.startTraining(data.TRANSITION_DURATION);
+			TrainingExamplesNamespace.startTraining(packet);
 		}
-		else if (data.TYPE == "CAL_POINT") {
+		else if (packet.TYPE == "CAL_POINT") {
+			
 			TrainingExamplesNamespace.messageManager(packet);
 		}
 		else {
-			console.log(data);
+			console.log(packet);
 			console.log(message);
 		}
 		
-	}
+	};
 }
 
 function allInfosRetrieved() {
@@ -98,7 +97,7 @@ function allInfosRetrieved() {
         $(this).off('mousemove');
         gameManager.touchManagerObject.position.left = -1;
         gameManager.touchManagerObject.position.top = -1;
-    })
+    });
 
     setTimeout(function() {
     	manageLevels(false);
@@ -114,7 +113,6 @@ function allExamplesCompleted() {
 	    $('#divSounds #soundBefore').remove();
 	    $('#divSounds #soundAfter').remove();
 	    $('#imgArrow').remove();
-	    
 	    
 	    if (!playingWithoutWebSocket) {
 		    var packetToSend = {
@@ -152,7 +150,6 @@ function initGame() {
 
     cestino = new Cestino();
     cestino.element.appendTo('#divMainContent');
-   
 }
 
 function resetLevel() {
@@ -292,7 +289,7 @@ function levelComplete() {
 	    sacco.secondElement.css({
 	    	top: topSecondElement 
 	    });
-    }
+    };
     
     if ($('#divSounds #audioBagComplete').length != 0) {
     	$('#divSounds #audioBagComplete').on('ended', levelCompletion).get(0).play();
@@ -347,7 +344,7 @@ function objectInsertedIntoSacco() {
         playBadAnswerSound();
     }
 
-    websocket.send(JSON.stringify(gameManager.packetWithResults))
+    websocket.send(JSON.stringify(gameManager.packetWithResults));
 }
 
 /**
@@ -383,7 +380,7 @@ function timeExpired(intoBin) {
         playGoodAnswerSound();
     }
 
-    websocket.send(JSON.stringify(gameManager.packetWithResults))
+    websocket.send(JSON.stringify(gameManager.packetWithResults));
 }
 
 function waitingToStart(message) {
@@ -402,7 +399,7 @@ function waitingToStart(message) {
                 console.log("Bad message received during game: ");
                 console.log(packet);
             }
-        }
+        };
 
         allInfosRetrieved();
     }
@@ -443,7 +440,7 @@ function manageOnCloseWebsocket(e) {
 	websocket.send = function() {};
 	websocket.close = function() {
 		websocket = null;
-	}
+	};
 
     window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
 
@@ -452,7 +449,7 @@ function manageOnCloseWebsocket(e) {
 	
 	        window.requestFileSystem(window.PERSISTENT, grantedBytes, OfflineNamespace.initFs, function(error) {
 	            console.log("No space received");
-	        })
+	        });
 	    }, function(error) {
 	        console.log("No space allowed");
 	        console.log(error);
@@ -565,7 +562,7 @@ function folderForOfflineSavingCreated() {
             console.log("Error in creating packets.txt");
             console.log(error);
         });
-    })
+    });
 }
 
 function offlineSavingWithLocalStorage() {
@@ -641,10 +638,10 @@ function readFile() {
 
             reader.onloadend = function(e) {
                 console.log(this.result);
-            }
+            };
 
             reader.readAsText(file);
-        })
+        });
     });
 }
 

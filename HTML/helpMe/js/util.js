@@ -57,7 +57,7 @@ getImagesFromSettings: function() {
                     var imageID = $(this).attr('id');
 
                     immaginiADisposizione[family].push(new ImageObject(name, fileName, imageID));
-                })
+                });
             });
 
         }
@@ -112,7 +112,7 @@ retrieveLevels: function(fileName) {
         				isTarget = false;
         			}
         			sequenceOfImages.push(new ImageLevel(isTarget, imageID));
-        		})
+        		});
         		
         		livelliGioco.push(new Level(type, targetsAndDistracters[0], targetsAndDistracters[1],
 	        				targetFamily, sequenceOfImages, familySound[targetFamily]['audioFile'], 
@@ -178,7 +178,7 @@ istantiateLevel: function(level) {
     	for (var j = 0; j < arrayToSearch.length && objectImage == null; j++ ) {
     		
     		if (arrayToSearch[j].imageID == currentImageLevel.imageID) {
-    			objectImage = arrayToSearch[j]
+    			objectImage = arrayToSearch[j];
     		}
     		
     	}

@@ -20,7 +20,7 @@ function ImageLevel(isTarget, imageID) {
 	this.compare = function(otherImage) {
 		return (this.isTarget == otherImage.isTarget && 
 				this.imageID == otherImage.imageID);
-	}
+	};
 }
 
 function Level(type, targets, distracters, targetFamily, sequence, maxTimeImage, sound) {
@@ -51,7 +51,7 @@ function Level(type, targets, distracters, targetFamily, sequence, maxTimeImage,
 			}
 		}
 		return true;
-	}
+	};
 }
 
 var HelpMeSettingsNamespace = {
@@ -95,11 +95,12 @@ var HelpMeSettingsNamespace = {
 			for (var index in familyImages) {
 				
 				var image = familyImages[index];
-				var selected = ''
+				var option = $('<option>');
+				
 				if (image.imageID == imageID) {
-					selected = ' selected="selected" ';
+					option.attr('selected', 'selected');
 				}
-				$('<option'+selected+'>'+image.name+'</option>').attr('value', image.imageID).appendTo(group);
+				option.text(image.name).attr('value', image.imageID).appendTo(group);
 			}
 		}
 		
@@ -123,7 +124,7 @@ var HelpMeSettingsNamespace = {
 				totalErrors--;
 			}
 			
-		})
+		});
 		
 		return select;
 	},
@@ -138,11 +139,11 @@ var HelpMeSettingsNamespace = {
 		
 		for (var family in imagesFamily) {
 			
-			var selected = '';
+			var option = $('<option>');
 			if (family == targetFamily) {
-				selected = ' selected="selected" ';
+				option.attr('selected', 'selected');
 			}
-			$('<option'+selected+'>'+family+'</option>').attr('value', family).appendTo(select);
+			option.text(family).attr('value', family).appendTo(select);
 		}
 		
 		return select;
@@ -157,11 +158,12 @@ var HelpMeSettingsNamespace = {
 		}
 		
 		for (var i = 20; i <= 40; i += 1) {
-			var selected = '';
+
+			var option = $('<option>');
 			if (i == timeDefined) {
-				selected = ' selected="selected" ';
+				$('<option>').attr('selected', 'selected');
 			}
-			$('<option'+selected+'>'+i+'</option>').attr('value', i).appendTo(select);
+			option.text(i).attr('value', i).appendTo(select);
 		}
 		
 		return select;
@@ -170,7 +172,7 @@ var HelpMeSettingsNamespace = {
 	buildLevelTitle: function(index, targets, distracters) {
 		
 		return "Livello <span class=\"levelIndex\">" + (index + 1) + "</span> - T: " + targets 
-		+ " x D: " + distracters;
+		+ ' x D: ' + distracters;
 	},
 	
 	makeRowSelectable: function(row) {
@@ -226,7 +228,7 @@ var HelpMeSettingsNamespace = {
 		
 		var packetToSend = {
 			TYPE: 'SCREEN_MEASURES'
-		}
+		};
 		
 		websocket.onmessage = function(message) {
 			
@@ -351,7 +353,7 @@ var HelpMeSettingsNamespace = {
 	        				isTarget = false;
 	        			}
 	        			sequenceOfImages.push(new ImageLevel(isTarget, imageID));
-	        		})
+	        		});
 	        		
 	        		listOfLevels.push(new Level(type, targetsAndDistracters[0], targetsAndDistracters[1],
 	        				targetFamily, sequenceOfImages, maxTime));
@@ -360,7 +362,7 @@ var HelpMeSettingsNamespace = {
 	        	
 	        	HelpMeSettingsNamespace.buildDivSettings();
 	        }
-		})
+		});
 	},
 	
 	buildDivSettings: function() {
@@ -389,7 +391,7 @@ var HelpMeSettingsNamespace = {
 			divTabs = null;
 			
 			NewVisitNamespace.initializePage();
-		})
+		});
 		
 		var divContainerAll = $('<div>').attr('id', 'divContainerAll').appendTo('#divMainContent')
 			.css({
@@ -478,7 +480,7 @@ var HelpMeSettingsNamespace = {
 			HelpMeSettingsNamespace.updateLabelsTabs();
 			
 			divTabs.tabs("option", 'selected', (indexToInsert + 1));
-		})
+		});
 		
 		divTabs = $('<div>').attr('id', 'tabsLevels').appendTo(divContainerAll)
 			.css({
@@ -553,7 +555,7 @@ var HelpMeSettingsNamespace = {
 			 if (rowIndex > 0) {
 				 rowSelected.insertBefore(rowSelected.parent().children().get(rowIndex - 1));
 			 }
-		})
+		});
 		$('<idv>').attr('id', 'buttonMoveDown').html("&darr;").appendTo(divButtons).button();
 		$('#buttonMoveDown').on('click', function() {
 			var rowSelected = $('tr.ui-selected');
@@ -573,7 +575,7 @@ var HelpMeSettingsNamespace = {
 			divTabs.tabs("remove", index);
 			
 			HelpMeSettingsNamespace.updateLabelsTabs();
-		})
+		});
 		
 		$('<div>').attr('id', 'buttonComplete').text('Livelli completati').appendTo(divButtons).button()
 			.on('click', function() {
@@ -605,8 +607,8 @@ var HelpMeSettingsNamespace = {
 			
 			var currentLevel = divsLevels.get(index);
 			var levelType = $(currentLevel).children('input[name="levelType"]').val();
-			var numberOfTargets = $(currentLevel).children('input[name="numberTargets"]').val()
-			var numberOfDistracters = $(currentLevel).children('input[name="numberDistracters"]').val()
+			var numberOfTargets = $(currentLevel).children('input[name="numberTargets"]').val();
+			var numberOfDistracters = $(currentLevel).children('input[name="numberDistracters"]').val();
 			var targetFamily = $(currentLevel).children().children('select[class="selectTargetFamily"]').val();
 			var maxTimeWaiting = $(currentLevel).children().children('select[class="selectMaxTime"]').val();
 			var sound = familySound[targetFamily];
@@ -673,7 +675,7 @@ var HelpMeSettingsNamespace = {
 						HelpMeSettingsNamespace.sendLevelsToClient(listOfNewLevels);
 					}
 				}
-			})
+			});
 			
 		}
 		HelpMeSettingsNamespace.sendLevelsToClient(listOfNewLevels);
@@ -693,4 +695,4 @@ var HelpMeSettingsNamespace = {
 		HelpMeNamespace.initializePage();
 		
 	}
-}
+};

@@ -4,7 +4,7 @@ var ImageForTraining = function(settings) {
 	this.image.onload = function() {
 		
 		TrainingExamplesNamespace.imageLoaded();
-	}
+	};
 	this.image.src = '../images/nemo_training.png';
 	this.element = null;
 	this.width = settings.POINT_DIAMETER;
@@ -61,7 +61,7 @@ var ImageForTraining = function(settings) {
 			top: drawTop,
 			left: drawLeft
 		});
-	}
+	};
 	
 	this.drawObject = function() {
 		
@@ -70,7 +70,7 @@ var ImageForTraining = function(settings) {
 			top: this.drawPosition.top,
 			opacity: '1'
 		});*/	
-	}
+	};
 	
 	this.transformString = function() {
 		var string = "";
@@ -189,7 +189,7 @@ var ImageForTraining = function(settings) {
 			imageForTraining.element.remove();
 			
 			imageForTraining.initializeImage();
-			imageForTraining.element.css({opacity: '0'})
+			imageForTraining.element.css({opacity: '0'});
 			
 			var image = $('<img>').attr('id', 'imageGetAttention')
 					.css({
@@ -202,7 +202,7 @@ var ImageForTraining = function(settings) {
 				
 			if (imageForTraining.center.left < $(window).width() / 2) {
 				
-				image.attr('src', '../images/nemo_left_nuovo.png')
+				image.attr('src', '../images/nemo_left_nuovo.png');
 			}
 			else {
 				image.attr('src', '../images/nemo_right_nuovo.png');
@@ -232,9 +232,8 @@ var ImageForTraining = function(settings) {
 					
 			}, imageForTraining.pointDuration);
 		}
-	}
-	
-}
+	};
+};
 
 var imageForTraining = null;
 
@@ -288,7 +287,7 @@ var TrainingExamplesNamespace = {
 				//imageForTraining.drawObject();
 			}
 			
-		}, imageForTraining.pointDuration)
+		}, imageForTraining.pointDuration);
 	},
 
 	messageManager: function(data) {
@@ -305,7 +304,7 @@ var TrainingExamplesNamespace = {
 			imageForTraining.pointsToDraw[elements[0] - 1] = centerToDraw;
 		}
 	}
-}
+};
 
 var TrainingManager = {
 	
@@ -472,9 +471,9 @@ var TrainingManager = {
 						TrainingManager.dialogSelectParameters();
 					}
 				}
-			})
+			});
 	},
 	
 	trainingComplete: function() {}
 
-}
+};

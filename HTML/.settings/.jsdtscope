@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="js/examples/|js/" kind="src" path="catchMe"/>
+	<classpathentry excluding="examples/" kind="src" path="catchMe/js"/>
+	<classpathentry kind="src" path="catchMe/js/examples"/>
+	<classpathentry kind="src" path="doctor/js"/>
+	<classpathentry kind="src" path="helpMe/js"/>
+	<classpathentry kind="src" path="helpMeProve/js"/>
+	<classpathentry excluding="flot/|colorpicker/" kind="src" path="js"/>
+	<classpathentry kind="src" path="js/colorpicker"/>
+	<classpathentry kind="src" path="js/flot"/>
+	<classpathentry kind="src" path="patient/js"/>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path=""/>
+</classpath>
