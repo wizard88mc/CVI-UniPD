@@ -47,8 +47,8 @@ var CatchMeNamespace = {
 			CatchMeNamespace.prepareChart();
 			
 			//timing = setInterval(CatchMeNamespace.updateChart, 5000);
-			// Mostro un dialog che dice che è tutto a posto,
-			// e di cliccare quando tutto è pronto x iniziare
+			// Mostro un dialog che dice che ï¿½ tutto a posto,
+			// e di cliccare quando tutto ï¿½ pronto x iniziare
 		}
 		else if (dataReceived.TYPE == "TRAINING_SESSION" && dataReceived.DATA == "false") {
 			
@@ -64,7 +64,7 @@ var CatchMeNamespace = {
 			eyesPositions = new Object();
 			currentSpeedValue = -1;
 		
-			$('<p>').text('Non appena tutto sarà pronto, cliccare su Ok per iniziare').appendTo($('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Pronto a cominciare').appendTo('#divMainContent'));
+			$('<p>').text('Non appena tutto sarÃ  pronto, cliccare su Ok per iniziare').appendTo($('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Pronto a cominciare').appendTo('#divMainContent'));
 			$('#dialogWaitingToStart').dialog({
 				modal: true,
 				resizable: false,
@@ -102,7 +102,7 @@ var CatchMeNamespace = {
 		}
 		else if (dataReceived.TYPE == "EYE_TRACKER_NOT_READY") {
 			
-			$('<p>').text('Il sistema di eye-tracking non è collegato. Si desidera procedere con la visita senza analisi del movimento degli occhi?')
+			$('<p>').text('Il sistema di eye-tracking non ï¿½ collegato. Si desidera procedere con la visita senza analisi del movimento degli occhi?')
 			.appendTo($('<div>').attr('id', 'dialogTrackerNotReady').attr('title', 'Tracciamento degli occhi non collegato').appendTo('#divMainContent'))
 			.dialog({
 				modal: true,

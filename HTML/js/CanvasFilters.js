@@ -1,4 +1,4 @@
-Filters = {}
+Filters = {};
 Filters.getPixels = function(img) {
 	
 	var c, ctx;
@@ -14,7 +14,7 @@ Filters.getPixels = function(img) {
 	}
 	
 	return ctx.getImageData(0, 0, c.width, c.height);
-}
+};
 
 Filters.getCanvas = function(w, h) {
 	
@@ -23,7 +23,7 @@ Filters.getCanvas = function(w, h) {
 	c.height(h);
 	
 	return c;
-}
+};
 
 Filters.filterImage = function(filter, image, var_args) {
 	
@@ -33,7 +33,7 @@ Filters.filterImage = function(filter, image, var_args) {
 	}
 
 	return filter.apply(null, args);
-}
+};
 
 Filters.setSpecificColor = function(pixels, red, green, blue) {
 	
@@ -52,7 +52,7 @@ Filters.setSpecificColor = function(pixels, red, green, blue) {
 	}
 	
 	return pixels;
-}
+};
 
 function runFilter(id, filter, arg1, arg2, arg3) {
 	
@@ -66,4 +66,4 @@ function runFilter(id, filter, arg1, arg2, arg3) {
 setSpecificColor = function(id, red, green, blue) {
 	
 	runFilter(id, Filters.setSpecificColor, red, green, blue);
-}
+};

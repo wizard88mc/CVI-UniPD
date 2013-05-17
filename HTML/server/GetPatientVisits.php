@@ -21,7 +21,7 @@ while ($visit = mysqli_fetch_assoc($resultQuery)) {
 	$date = $visit['Date'];
 	$touchEvaluation = $visit['TouchEvaluation'];
 	$eyeEvaluation = $visit['EyeEvaluation'];
-	$isAtHome = $visit['IsAtHome'];
+	$isAtHome = (bool)$visit['IsAtHome'];
 	
 	array_push($arrayResult["CatchMe"],
 		array(

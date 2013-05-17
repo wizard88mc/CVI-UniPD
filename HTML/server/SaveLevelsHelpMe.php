@@ -31,6 +31,7 @@ for ($i = 0; $i < count($levels); $i++) {
 	$stringObject = "<level targetFamily=\"" . $targetFamily . "\" type=\"" . $levelType . 
 	"\" maxTimeImage=\"" . $maxTimeWaiting . "\">\r\n";
 	$listOfImages = $currentLevel["sequence"];
+	$stringImage = "";
 	
 	for ($j = 0; $j < count($listOfImages); $j++) {
 		
@@ -42,7 +43,7 @@ for ($i = 0; $i < count($levels); $i++) {
 		}
 		
 		
-		$stringImage = "<image type=\"" . $isTarget . "\" imageID=\"" . $imageID . "\" />\r\n";
+		$stringImage .= "<image type=\"" . $isTarget . "\" imageID=\"" . $imageID . "\" />\r\n";
 	}
 	
 	$stringObject .= "$stringImage</level>\r\n";

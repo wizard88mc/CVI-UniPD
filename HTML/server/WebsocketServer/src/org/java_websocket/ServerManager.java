@@ -21,44 +21,6 @@ public class ServerManager {
     private boolean gameReady = false;
     private boolean doctorClientReady = false;
     
-    /*public long eyeTrackerReady() {
-        System.out.println("*** EYE TRACKER READY ***");
-        eyeTrackerReady = true;
-        if (gameReady & doctorClientReady) {
-            long timeToStart = calculateStartTime();
-            clientIpad.comunicateStartTime(timeToStart);
-            return timeToStart;
-        }
-        else {
-            return -1;
-        }
-    }
-    
-    public long gameReady() {
-        System.out.println("*** CLIENT GAME READY ***");
-        gameReady = true;
-        if (eyeTrackerReady && doctorClientReady) {
-            long timeStart = calculateStartTime();
-            System.out.println(new Date());
-            System.out.println(new Date(timeStart).toString());
-            clientEyeTracker.comunicateStartTime(timeStart);
-            return timeStart;
-        }
-        else {
-            return -1;
-        }
-    }
-    
-    public void doctorClientReady() {
-        System.out.println("*** DOCTOR CLIENT READY ***");
-        doctorClientReady = true;
-        if (gameReady && eyeTrackerReady) {
-            long timeStart = calculateStartTime();
-            clientEyeTracker.comunicateStartTime(timeStart);
-            clientIpad.comunicateStartTime(timeStart);
-        }
-    }*/
-    
     protected void timeToStart() {
         long minimumIncrement = 10000;
         

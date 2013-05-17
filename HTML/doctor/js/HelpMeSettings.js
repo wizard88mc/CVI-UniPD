@@ -56,6 +56,16 @@ function Level(type, targets, distracters, targetFamily, sequence, maxTimeImage,
 
 var HelpMeSettingsNamespace = {
 	
+	/**
+	 * Checks if the image choosed is a target if it has to
+	 * be a target image or if that is a distractor if it
+	 * is a distractor
+	 *  
+	 * @param imageID: imageID
+	 * @param typeElement: T or D
+	 * @param targetFamily: target family of the level
+	 * @returns {Boolean}: if it is correct or not
+	 */
 	checkImageType: function(imageID, typeElement, targetFamily) {
 		
 		if (targetFamily == "") {
@@ -114,7 +124,6 @@ var HelpMeSettingsNamespace = {
 
 			var isImageCorrect = HelpMeSettingsNamespace.checkImageType(imageID, typeElement, targetFamily);
 			
-			console.log(isImageCorrect);
 			if (!isImageCorrect) {
 				$(this).parent().parent('tr').children('td').addClass('badSettings');
 				totalErrors++;
@@ -180,12 +189,22 @@ var HelpMeSettingsNamespace = {
 		$(row).bind('mousedown', function(e) {
 			e.metaKey = true;
 		}).selectable({
-			//selected: function() {
-				/*console.log("selected");
-				$(this).children().addClass('ui-selected');
-				$(this).addClass('ui-selected');*/
+			selected: function(event, ui) {
 				
-			//}
+				if ($(ui.selected.parentElement).siblings('.ui-selected').length > 0) {
+					$(ui.selected.parentElement).siblings('.ui-selected').children('td').removeClass('ui-selected');
+					$(ui.selected.parentElement).siblings('.ui-selected').removeClass('ui-selected');
+				}
+				
+				$(ui.selected.parentElement).addClass('ui-selected');
+				$(ui.selected.parentElement).children().addClass('ui-selected');
+				
+			},
+			unselected: function(event, ui) {
+				$(ui.unselected.parentElement).removeClass('ui-selected');
+				$(ui.unselected.parentElement).children().removeClass('ui-selected');
+				console.log($(this));
+			}
 			/*stop: function() {
 				$('td.ui-selected, tr.ui-selected').removeClass('ui-selected');
 				
@@ -418,23 +437,33 @@ var HelpMeSettingsNamespace = {
 		
 		$('#buttonAddLevel').on('click', function() {
 			
+			/**
+			 * Retrieve the number of target and distractor elements
+			 * elements[0] = target, elements[1] = distractors
+			 */
 			var valueLevel = $('#selectNewLevel').children('option:selected').val();
 			var elements = valueLevel.split('x');
-			// in element[0] ho target, element[1] distrattori
 			var indexLevel = $('#menuTabs').children('li').length;
 			
+			/**
+			 * Create the title of the level and the link for the div
+			 */
 			var link = "#level" + indexLevel;
 			var levelTitle = HelpMeSettingsNamespace.buildLevelTitle(indexLevel, elements[0], elements[1]);
 			var divLevel = $('<div>').attr('id', 'level'+indexLevel)
 				.appendTo('#tabsLevels');
-			$('<h2>').text(levelTitle).appendTo(divLevel);
+			$('<h2>').html(levelTitle).appendTo(divLevel);
 			
 			var select = HelpMeSettingsNamespace.buildSelectTargetFamily();
-			select.appendTo($('<div>').addClass('divSelectTargetFamily').text('Famiglia target: ')).appendTo(divLevel);
+			select.appendTo($('<div>').addClass('divSelectTargetFamily').text('Famiglia target: ').appendTo(divLevel));
 			
 			var selectTime = HelpMeSettingsNamespace.buildMaxTimeSelect();
 			selectTime.appendTo($('<div>').addClass('divSelectMaxTime').text('Tempo massimo immagine: ').appendTo(divLevel));
 			
+			/**
+			 * Creating the table necessary to build the level
+			 * for the doctor
+			 */
 			var table = $('<table>').addClass('tableLevel').appendTo(divLevel);
 			
 			for (var i = 0; i < elements[0]; i++) {
@@ -522,15 +551,14 @@ var HelpMeSettingsNamespace = {
 				
 				var selectImage = HelpMeSettingsNamespace.buildSelectImages(image.imageID);
 				
-				var row = $('<tr>').appendTo(table)
-					.addClass('ui-widget-content');
+				var row = $('<tr>').appendTo(table).addClass('ui-widget-content');
 				$('<td>').addClass('columnImageType').text(target).appendTo(row);
 				$('<td>').addClass('columnImageSelect').appendTo(row);
 				selectImage.appendTo($('td.columnImageSelect').last());
 				
 				$('<img>').addClass('imgPreview')
-				.attr('src', '../helpMe/images/'+HelpMeSettingsNamespace.getImageFilename(image.imageID))
-				.appendTo($('<td></td>').appendTo(row));
+					.attr('src', '../helpMe/images/'+HelpMeSettingsNamespace.getImageFilename(image.imageID))
+					.appendTo($('<td>').appendTo(row));
 				
 				HelpMeSettingsNamespace.makeRowSelectable(row);
 			}
@@ -556,7 +584,7 @@ var HelpMeSettingsNamespace = {
 				 rowSelected.insertBefore(rowSelected.parent().children().get(rowIndex - 1));
 			 }
 		});
-		$('<idv>').attr('id', 'buttonMoveDown').html("&darr;").appendTo(divButtons).button();
+		$('<div>').attr('id', 'buttonMoveDown').html("&darr;").appendTo(divButtons).button();
 		$('#buttonMoveDown').on('click', function() {
 			var rowSelected = $('tr.ui-selected');
 			var rowIndex = rowSelected.parent().children().index(rowSelected);
@@ -670,6 +698,7 @@ var HelpMeSettingsNamespace = {
 				},
 				success: function(message) {
 
+					console.log(message);
 					if (message == 1) {
 						console.log("Complete");
 						HelpMeSettingsNamespace.sendLevelsToClient(listOfNewLevels);
@@ -678,7 +707,9 @@ var HelpMeSettingsNamespace = {
 			});
 			
 		}
-		HelpMeSettingsNamespace.sendLevelsToClient(listOfNewLevels);
+		else {
+			HelpMeSettingsNamespace.sendLevelsToClient(listOfNewLevels);
+		}
 	},
 	
 	sendLevelsToClient: function(levels) {

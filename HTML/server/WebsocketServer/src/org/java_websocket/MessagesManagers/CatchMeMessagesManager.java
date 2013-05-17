@@ -84,8 +84,7 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
 
                         JSONObject stupidEye = new JSONObject();
                         stupidEye.put("TIME", messageGame.getTime());
-                        stupidEye.put("POSX", -1L);
-                        stupidEye.put("POSY", -1L);
+                        stupidEye.put("DATA", "-1 -1");
 
                         messageEyeTracker = new EyeTrackerDataPacket(stupidEye);
                         writeEyeTrackerMessage(messageEyeTracker);
@@ -118,8 +117,7 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
 
                         JSONObject stupidEye = new JSONObject();
                         stupidEye.put("TIME", messageGame.getTime());
-                        stupidEye.put("POSX", -1L);
-                        stupidEye.put("POSY", -1L);
+                        stupidEye.put("DATA", "-1 -1");
 
                         messageEyeTracker = new EyeTrackerDataPacket(stupidEye);
                         writeEyeTrackerMessage(messageEyeTracker);
@@ -167,8 +165,7 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
                     writeGameMessage(packet);
                     JSONObject stupidEye = new JSONObject();
                     stupidEye.put("TIME", packet.getTime());
-                    stupidEye.put("POSX", -1L);
-                    stupidEye.put("POSY", -1L);
+                    stupidEye.put("DATA", "-1 -1");
 
                     EyeTrackerDataPacket messageEyeTracker = new EyeTrackerDataPacket(stupidEye);
                     writeEyeTrackerMessage(messageEyeTracker);

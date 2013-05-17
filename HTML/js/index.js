@@ -76,7 +76,7 @@ function checkLogin(e) {
 		
 		if (navigator.onLine) {
 			var divDialog = $('<div>').attr('id', 'dialogLogin').attr('title', 'Attendere..');
-			$('<p>').text('Login in corso . . .').appendTo(divDialog);
+			$('<p>').text('Login in corso ...').appendTo(divDialog);
 			
 			divDialog.appendTo('#divMainContent');
 			
@@ -208,9 +208,11 @@ function secondStepPage() {
 	
 	var divSceltaOperazione = 
 		$('<div>').attr('id', 'divSceltaOperazione')
-		.css('width', '70%')
-		.css('margin', 'auto')
-		.css('padding-bottom', '2.0em');
+			.css({
+				width: '70%',
+				margin: 'auto',
+				'padding-bottom': '2.0em'
+			});
 						
 	var buttonManagePatients = $('<button>').attr('id', 'managePatients').text('Gestione Bambini').button();
 	buttonManagePatients.click(managePatients);
@@ -365,14 +367,10 @@ function initPage() {
         $('<tr>').attr('id', 'usernameRow').appendTo(tableLogin);
         $('<td>').addClass('label').text('Username: ').appendTo('#usernameRow');
         $('<input>').attr('type', 'text').attr('id', 'username').attr('name', 'username').appendTo($('<td>').appendTo('#usernameRow'));
-		
-		//$('<tr id="usernameRow"><td class="label">Username: </td><td><input type="text" id="username" name="username" /></td></tr>').appendTo(tableLogin);
         
         $('<tr>').attr('id', 'passwordRow').appendTo(tableLogin);
         $('<td>').addClass('label').text('Password: ').appendTo('#passwordRow');
         $('<input>').attr('type', 'password').attr('id', 'password').attr('name', 'password').appendTo($('<td>').appendTo('#passwordRow'));
-        
-		//$('<tr id="passwordRow"><td class="label">Password: </td><td><input type="password" id="password" name="password" /></td></tr>').appendTo(tableLogin);
 		
 		$('input').addClass('inputText');
 		

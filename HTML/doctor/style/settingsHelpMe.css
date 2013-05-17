@@ -33,7 +33,7 @@ td.columnImageSelect select {
 	width: 100%;
 }
 
-td.ui-selected {
+td.ui-selected, tr.ui-selected {
 	background-color: #305071;
 	color: white;
 }

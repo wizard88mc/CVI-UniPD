@@ -18,89 +18,47 @@ Remove this if you use the .htaccess -->
 
 <script>
 
-var Point = function(top, left) {
-	this.top = top;
-	this.left = left;
+function addSoundSource(element, sourceFileName) {
+	
+	$('<source>').attr('src', 'helpMe/sounds/' + sourceFileName + '.ogg')
+		.attr('type', 'audio/ogg').attr('preload', 'auto').appendTo(element);
+	$('<source>').attr('src', 'helpMe/sounds/' + sourceFileName + '.mp3')
+		.attr('type', 'audio/mpeg').attr('preload', 'auto').appendTo(element);
 }
 
-function calculateRotation(center, destinationPoint) {
-	
-	var catetoAdiacente = Math.abs(destinationPoint.left - center.left);
-	var catetoOpposto = Math.abs(destinationPoint.top - center.top);
-	var ipotenusa = Math.sqrt(Math.pow(catetoAdiacente, 2) + Math.pow(catetoOpposto, 2));
-	
-	var cosAlpha = catetoAdiacente / ipotenusa;
-	var alpha = Math.acos(cosAlpha) * 180 / Math.PI ;
-	
-	console.log(alpha);
-	
-	/**
-	 * Punto nel primo quadrante
-	 */
-	if (destinationPoint.top < center.top && 
-		destinationPoint.left > center.left) {
+$('document').ready(function() {
+	$('<div>').attr('id', 'finalFeedback').appendTo('#divSounds');
+
+	addSoundSource($('<audio>').attr('id', 'messoInsieme').appendTo('#divSounds #finalFeedback'), 'messo_insieme');
+	addSoundSource($('<audio>').attr('id', 'oggettiAssomigliano').appendTo('#divSounds #finalFeedback'), 'oggetti_assomigliano');
+
+	var divObjects = $('<div>').attr('id', 'numberOfObjects').appendTo('#divSounds div#finalFeedback');
+
+	var numbers = new Array('uno', 'due', 'tre', 'quattro', 'cinque', 'sei', 'sette', 'otto', 'nove');
+
+	for (x in numbers) {
+		addSoundSource($('<audio>').attr('id', 'correct' + (Number(x)+1)).appendTo(divObjects), numbers[x]);
+	}
+
+	$('#divSounds #finalFeedback #messoInsieme').on('ended', function() {
 		
-		console.log("Primo quadrante");
-		alpha = -alpha;
-	}
-	/**
-	 * Secondo quadrante 
-	 */
-	else if (destinationPoint.top > center.top && 
-		destinationPoint.left > center.left) {
-
-		console.log("Secondo quadrante");
-		alpha = alpha;
-	}
-	/**
-	 * Terzo quadrante 
-	 */
-	else if (destinationPoint.top > center.top && 
-		destinationPoint.left < center.left) {
+		$('#divSounds #finalFeedback #numberOfObjects #correct' + 9).on('ended', function() {
+			
+			$('#divSounds #finalFeedback #oggettiAssomigliano').on('ended', function() {
+				
+				console.log("At the end");
+				
+			}).get(0).play();
+		}).get(0).play();
+		
+	}).get(0).play();
 	
-		console.log("Terzo quadrante");
-		alpha =  - alpha;
-	}
-	/**
-	 * Quarto quadrante 
-	 */
-	else if (destinationPoint.top < center.top && 
-		destinationPoint.left < center.left) {
-	
-		console.log("Quarto quadrante");
-		alpha = alpha;
-	}
-	
-	console.log(alpha);
-	return alpha;
-}
-
-$(document).ready(function() {
-
-
-	var center = new Point(201.8226299181107, 967.1939643505762 );
-	var destinationPoint = new Point(681.4477264785471, 702.9207693110435 );
-	
-	var angle = calculateRotation(center, destinationPoint);
-	console.log(angle);
-	var transformString = 'rotate('+angle+'deg)';
-	
-	if (destinationPoint.left < center.left || 
-		destinationPoint.left == center.left && destinationPoint.top < center.top) {
-		transformString += ' scale(-1, 1)';
-	}
-	
-	$('<img>').attr('id', 'prova').attr('src', 'images/nemo_training.png')
-		.appendTo('body').css({
-			width: '100px',
-			height: '100px',
-			position: 'absolute',
-			left: center.left - 50,
-			top: center.top - 50,
-			'-webkit-transform': 'scale(-1, 1) rotate(-47.56deg)',
-			'transform': 'scale(-1, 1) rotate(-47.56deg)'
-		});
-})
+	setTimeout(function() {
+		
+		$('#messoInsieme').get(0).play();
+		
+	}, 1000);
+});
 
 </script>
 
@@ -108,7 +66,7 @@ $(document).ready(function() {
 
 <body>
 	
-	
+<div id="divSounds"></div>
 
 </body>
 </html>
