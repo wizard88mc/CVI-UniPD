@@ -185,7 +185,9 @@ istantiateLevel: function(level) {
     	oggettiPerLivello.push(objectImage);
     }
 
-    // adding audios specific for the level
+    /**
+     * Add audio file specific for the level
+     */
     utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioLevel').appendTo('#divSounds'), 
     		familySound[targetFamily].audioFile);
     

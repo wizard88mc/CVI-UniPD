@@ -107,7 +107,7 @@ this.getSystemSounds = function() {
     
     // array with the name of the files to play in case of 
     // good answer or bad answer
-    var goodSounds = new Array("bene", "molto_bene", "continua_cosi");
+    var goodSounds = new Array("bene", "molto_bene", "continua_cosi", "clapping");
     var badSounds = new Array("intruso");
     
     if (getFromSessionStorage("patientSex") == "M") {
