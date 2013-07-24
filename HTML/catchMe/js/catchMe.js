@@ -171,7 +171,7 @@ defineGame: function(settings) {
 
 createTransitionCSS: function(time, endPosition) {
 	
-	var stringTransition = 'left ' + time + 's, top ' + time + 's'; 
+	var stringTransition = 'left ' + time + 's linear, top ' + time + 's linear'; 
 	
 	addTransitionSpecifications($('#image'), stringTransition);
 	
@@ -342,7 +342,7 @@ buildAnimations: function() {
 	CatchMeNamespace.drawCanvas();
 	$('#image').css('visibility', 'hidden');
 	
-	//canvas è definito in tutte le sue forme / misure, 
+	// canvas è definito in tutte le sue forme / misure, 
 	// posso iniziare a costruire animazioni
 	
 	centerImage.top = Math.floor(getScreenHeight() / 2 - (gameSettings.effectiveImageHeight / 2));
@@ -362,13 +362,19 @@ buildAnimations: function() {
 		
 		gameManager.sequenceOfAnimations = gameManager.sequenceOfAnimations.concat(animations);	
 	}
-	// ho definito tutte le animazioni, sono pronto con tutto
+	/**
+	 * All animations defined, the game is ready to start
+	 * Put it in waiting for the beginning of the game
+	 */
 	CatchMeNamespace.putInWaiting();
 },
 
 startGame: function() {
 	
-	var packetSpeed = {'TYPE': 'SPEED_VALUE', 'SPEED': gameSettings.speed};
+	var packetSpeed = {
+			'TYPE': 'SPEED_VALUE', 
+			'SPEED': gameSettings.speed
+		};
 	websocket.send(JSON.stringify(packetSpeed));
 	
 	$('body').css({
@@ -395,7 +401,7 @@ startGame: function() {
 	}
 	
 	/**
-	 * Registro gli eventi per la gestione del tocco
+	 * Events necessary to manage touch
 	 */
 	$('body').on('touchstart touchmove', function(e) {
 		e.preventDefault();
@@ -403,21 +409,6 @@ startGame: function() {
 	$('body').on('mousedown touchstart', touchTouch)
 			.on('mousemove touchmove', touchMove)
 			.on('mouseup touchend', touchUp);
-	
-	$('#image').on('mousemove touchmove touchstart mousedown', function(e) {
-
-		e.preventDefault();
-		var time = new Date().getTime();
-		if (time - gameManager.lastTimePlayedGoodSound > 5000) {
-			
-			var number = $('#divSounds audio').length;
-			
-			var index = Math.floor(Math.random() * number);
-			$('#divSounds audio').get(index).play();
-			
-			gameManager.lastTimePlayedGoodSound = time;
-		}
-	});
 	
 	$('<div>').attr('id', 'divCloseGame').appendTo('body')
 		.css({
@@ -478,6 +469,21 @@ defineAnimationFunction: function(firstTime, timeToWait) {
 	$('#image').css({
 		left: startPoint.left,
 		top: startPoint.top
+	});
+	
+	$('#image').on('mousemove touchmove touchstart mousedown', function(e) {
+
+		e.preventDefault();
+		var time = new Date().getTime();
+		if (time - gameManager.lastTimePlayedGoodSound > 5000) {
+			
+			var number = $('#divSounds audio').length;
+			
+			var index = Math.floor(Math.random() * number);
+			$('#divSounds audio').get(index).play();
+			
+			gameManager.lastTimePlayedGoodSound = time;
+		}
 	});
 
 	var timeForAnimation = animationToPerform.calculateAnimationTime();
@@ -745,11 +751,13 @@ defineSingleAnimation: function() {
 		gameSettings.rightMovement && gameSettings.mixMovements /*&& !gameSettings.upMovement*/) {
 			
 			if (Math.random() > 0.5) {
-				// primo movimento verso sinistra
+				/**
+				 * First movement to left
+				 */
 				if (!gameSettings.startFromCenter) {
 					startPoint = new Point(topCenterScreen.top,
 								topCenterScreen.left + Math.floor(Math.random() * topCenterScreen.left));
-					endPoint = new Point(leftMiddleScreen.top, leftMidlleScreen.left);
+					endPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
 				}
 				else {
 					endPoint = new Point(leftMiddleScreen.top + Math.floor(Math.random() * (leftMiddleScreen.top / 2)));
@@ -765,7 +773,9 @@ defineSingleAnimation: function() {
 				
 			}
 			else {
-				// primo movimento verso destra
+				/**
+				 * First movement to right
+				 */
 				if (!gameSettings.startFromCenter) {
 					startPoint = new Point(topCenterScreen.top,
 								topCenterScreen.left - Math.floor(Math.random() * topCenterScreen.left));
@@ -791,13 +801,16 @@ defineSingleAnimation: function() {
 		var direction = Math.random();
 		
 		if (firsPoint < 0.25) {
-			// punto di partenza in alto
+			/**
+			 * Starting point at the top of the screen
+			 */
 			if (!gameSettings.startFromCenter) {
 				startPoint = new Point(topCenterScreen.top, topCenterScreen.left);	
 			}
 			if (direction < 0.5) {
-				// primo spostamento verso destra
-				
+				/**
+				 * First movement to right
+				 */
 				endPoint = new Point(rightMiddleScreen.top + Math.floor(Math.random() * (rightMiddleScreen.top / 2)),
 							rightMiddleScreen.left);
 				
@@ -822,7 +835,9 @@ defineSingleAnimation: function() {
 				
 			}
 			else {
-				// primo spostamento verso sinistra	
+				/**
+				 * First movement to the left
+				 */
 				endPoint = new Point(leftMiddleScreen.top,
 							leftMiddleScreen.left + Math.floor(Math.random() * (leftMiddleScreen.left / 2)));
 				
@@ -847,14 +862,17 @@ defineSingleAnimation: function() {
 			}
 		}
 		else if (firstPoint >= 0.25 && firsPoint < 0.5) {
-			// punto di partenza a destra
 			
+			/**
+			 * Starting point on the right of the screen
+			 */
 			if (!gameSettings.startFromCenter) {
 				startPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
 			}
 			if (direction < 0.5) {
-				// primo spostamento verso basso
-				
+				/*
+				 * To the bottom of the screen
+				 */
 				endPoint = new Point(bottomCenterScreen.top,
 							bottomCenterScreen.left - Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
 				
@@ -879,7 +897,9 @@ defineSingleAnimation: function() {
 				
 			}
 			else {
-				// primo spostamento verso alto	
+				/**
+				 * First movement to the top of the screen
+				 */
 				endPoint = new Point(topCenterScreen.top,
 							topCenterScreen.left - Math.floor(Math.random() * (topCenterScreen.left / 2)));
 				
@@ -936,7 +956,9 @@ defineSingleAnimation: function() {
 				
 			}
 			else {
-				// primo spostamento verso sinistra	
+				/**
+				 * First movement to the left
+				 */
 				endPoint = new Point(leftMiddleScreen.top - Math.floor(Math.random() * (leftMiddleScreen.top / 2)),
 							leftMiddleScreen.left);
 				
@@ -961,14 +983,16 @@ defineSingleAnimation: function() {
 			}	
 		}
 		else if (firstPoint >= 0.75) {
-			// punto di partenza a sinistra
-			
+			/**
+			 * Starting point on the left of the screen
+			 */
 			if (!gameSettings.startFromCenter) {
 				startPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
 			}
 			if (direction < 0.5) {
-				// primo spostamento verso basso
-				
+				/**
+				 * First movement to the bottom of the screen
+				 */
 				endPoint = new Point(bottomCenterScreen.top,
 							bottomCenterScreen.left + Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
 				
@@ -993,7 +1017,9 @@ defineSingleAnimation: function() {
 				
 			}
 			else {
-				// primo spostamento verso alto	
+				/**
+				 * First movement to the top
+				 */
 				endPoint = new Point(topCenterScreen.top,
 							topCenterScreen.left + Math.floor(Math.random() * (topCenterScreen.left / 2)));
 				

@@ -97,7 +97,7 @@ var ImageForTraining = function(settings) {
 		var paintTop = this.center.top - this.width / 2;
 		var paintLeft = this.center.left - this.height / 2;
 		
-		this.element = $(this.image).attr('id', 'imageTraining'+this.currentPoint)
+		this.element = $(this.image).attr('id', 'imageTraining' + this.currentPoint)
 			.appendTo('body');
 			
 		addTransitionSpecifications(this.element, 'none');
@@ -129,6 +129,11 @@ var ImageForTraining = function(settings) {
 		console.log(this.scale);
 	};
 	
+	/**
+	 * Calculates the rotation angle necessary to make 
+	 * a more real animation of the Nemo fish while
+	 * performing training
+	 */
 	this.calculateRotation = function(destinationPoint) {
 	
 		var catetoAdiacente = Math.abs(destinationPoint.left - this.center.left);
@@ -202,10 +207,10 @@ var ImageForTraining = function(settings) {
 				
 			if (imageForTraining.center.left < $(window).width() / 2) {
 				
-				image.attr('src', '../images/nemo_left_nuovo.png');
+				image.attr('src', '../images/nemo_left_nuovo.fw.png');
 			}
 			else {
-				image.attr('src', '../images/nemo_right_nuovo.png');
+				image.attr('src', '../images/nemo_right_nuovo.fw.png');
 			}
 	
 			image.addClass('animated bounceIn');
@@ -450,7 +455,7 @@ var TrainingManager = {
 						
 						var packetForValidation = {
 							TYPE: 'TRAINING_VALIDATION',
-							DATA: "true"
+							DATA: true
 						};
 						
 						websocket.send(JSON.stringify(packetForValidation));
@@ -463,7 +468,7 @@ var TrainingManager = {
 						
 						var packetRetry = {
 							TYPE: 'TRAINING_VALIDATION',
-							DATA: 'false'
+							DATA: false
 						};
 						
 						websocket.send(JSON.stringify(packetRetry));

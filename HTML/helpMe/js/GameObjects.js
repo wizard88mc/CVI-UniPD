@@ -150,7 +150,7 @@ this.getSystemSounds = function() {
     var numbers = new Array('uno', 'due', 'tre', 'quattro', 'cinque', 'sei', 'sette', 'otto', 'nove');
     
     for (x in numbers) {
-    	utilsNamespace.addSoundSource($('<audio>').attr('id', 'correct' + (x+1)).appendTo(divObjects), numbers[x]);
+    	utilsNamespace.addSoundSource($('<audio>').attr('id', 'correct' + (Number(x)+1)).appendTo(divObjects), numbers[x]);
     }  
 };
 

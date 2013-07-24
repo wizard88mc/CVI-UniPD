@@ -77,6 +77,7 @@ public class FakeServerTest extends WebSocketServer {
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         
         System.out.println("CLOSED CONNECTION");
+        System.out.println(code);
         System.out.println(reason);
     }
 
@@ -161,12 +162,14 @@ public class FakeServerTest extends WebSocketServer {
                        packet.put("POINTS", 5); // numero punti
                        packet.put("POINT_DURATION", 2000); // da verificare questo valore
                        packet.put("TRANSITION_DURATION", 2000);
+                       packet.put("POINT_DIAMETER", 50);
                        serverTest.client.send(packet.toJSONString());
                        break;
                    }
                    case 8: {
                        JSONObject packet = new JSONObject();
                        packet.put("TYPE", "TRAINING_VALIDATION");
+                       packet.put("DATA", true);
                        serverTest.client.send(packet.toJSONString());
                        break;
                    }

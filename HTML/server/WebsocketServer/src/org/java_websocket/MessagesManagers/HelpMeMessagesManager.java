@@ -87,8 +87,6 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
 
                         writeEyeTrackerMessage(eyeTrackerInformations);
                         writeImageMessage(imageInformations);
-                        System.out.println("Entrambi");
-
                     }
                     else if (timeMessageGame < timeEyeTrackerMessage) {
                         // devo spedire solo pacchetto relativo all'immagine
@@ -97,12 +95,9 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
 
                         JSONObject stupidEye = new JSONObject();
                         stupidEye.put("TIME", imageInformations.getTime());
-                        stupidEye.put("POSX", -1L);
-                        stupidEye.put("POSY", -1L);
+                        stupidEye.put("DATA", "-1 -1");
 
                         writeEyeTrackerMessage(new EyeTrackerDataPacket(stupidEye));
-
-                        System.out.println("Solo immagine");
                     }
                     else if (timeEyeTrackerMessage < timeMessageGame) {
                         // devo spedire solo pacchetto relativo all'eye-tracker
@@ -146,8 +141,7 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
 
                         JSONObject stupidEye = new JSONObject();
                         stupidEye.put("TIME", imageInformations.getTime());
-                        stupidEye.put("POSX", -1L);
-                        stupidEye.put("POSY", -1L);
+                        stupidEye.put("DATA", "-1 -1");
 
                         writeEyeTrackerMessage(new EyeTrackerDataPacket(stupidEye));
 
@@ -191,8 +185,7 @@ public class HelpMeMessagesManager extends BaseMessagesManager {
 
                     JSONObject stupidEye = new JSONObject();
                     stupidEye.put("TIME", packet.getTime());
-                    stupidEye.put("POSX", -1L);
-                    stupidEye.put("POSY", -1L);
+                    stupidEye.put("DATA", "-1 -1");
 
                     writeEyeTrackerMessage(new EyeTrackerDataPacket(stupidEye));
                     

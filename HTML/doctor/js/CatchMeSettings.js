@@ -284,7 +284,7 @@ setGameSettings: function(data) {
 	imagePicker.setColor(data.IMG_COLOR);
 	
 	$('<div>').attr('id', 'divBadContrast').addClass('ui-state-error ui-corner-all').appendTo(divLeft);
-	$('<p><span class="ui-icon ui-icon-alert"></span>Attenzione: il contrasto tra colore di sfondo e dell\'immagine è troppo basso.</p>').appendTo('#divBadContrast');
+	$('<p><span class="ui-icon ui-icon-alert"></span>Attenzione: il contrasto tra colore di sfondo e dell\'immagine ï¿½ troppo basso.</p>').appendTo('#divBadContrast');
 	
 	if (data.CHANGE_IMG_COLOR == '0') {
 		gameSettings.changeImageColor = false;
@@ -397,7 +397,7 @@ setGameSettings: function(data) {
 		.addClass('ui-widget-content ui-corner-all')
 		.appendTo(divRight);
 	
-	paragraph = $('<p>').text('Velocità  spostamento')
+	paragraph = $('<p>').text('VelocitÃ  spostamento')
 		.addClass('ui-state-default ui-corner-all ui-helper-clearfix')
 		.appendTo(divSpeed);
 	$('<span>').addClass('ui-icon ui-icon-pencil').prependTo(paragraph);

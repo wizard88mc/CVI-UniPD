@@ -40,7 +40,7 @@ function drawCatchMeTable(visits) {
 	$('<th>').text('Casa/Studio').addClass('smallColumn').appendTo(thead);
 	$('<th>').text('Visualizza Grafico').appendTo(thead);
 			
-	var body;
+	var body = null;
 	if (visits.length > 0) {
 		
 		body = $('<tbody>').appendTo(table);
@@ -81,6 +81,7 @@ function drawCatchMeTable(visits) {
 							
 		image.click(function() {
 
+			console.log("clicking");
 			var id = $(this).parent().children('input[name=visitID]').attr('value');
 			makeRequestForGraphData(id);
 		});
@@ -88,8 +89,10 @@ function drawCatchMeTable(visits) {
 		var cell = $('<td>').appendTo(row);
 		image.appendTo(cell);
 		$('<input>').attr('type', 'hidden').attr('name', 'visitID').val(visitID).appendTo(cell);
-				
-		row.appendTo(body);
+		
+		if (body != null) {
+			row.appendTo(body);
+		}
 	}
 			
 	table.css('display', 'none');
@@ -127,7 +130,7 @@ function drawHelpMeTable(visits) {
 	$('<th>').text('Casa/Studio').addClass('smallColumn').appendTo(thead);
 	$('<th>').text('Dettagli').appendTo(thead);
 			
-	var body;
+	var body = null;
 	if (visits.length > 0) {
 		
 		body = $('<tbody>').appendTo(table);
@@ -171,8 +174,10 @@ function drawHelpMeTable(visits) {
 		
 		image.appendTo(cell);
 		$('<input>').attr('type', 'hidden').attr('name', 'visitID').val(visitID).appendTo(cell);
-				
-		row.appendTo(body);
+		
+		if (body != null) {
+			row.appendTo(body);
+		}
 	}
 			
 	table.css('display', 'none');
@@ -319,34 +324,38 @@ function savePatientVisits(patientID) {
 
 function makeRequestForGraphData(visitID) {
 	
+	var alreadyMadeRequest = false;
 	$('#divTableContainer table').fadeOut(500, function() {
 	
-		if (visitID != currentVisitID) {
-			
-			$('#imgPreloaderMiddle').fadeIn('fast', function() {
-				
-				$.ajax({
-					url: SERVER_ADDRESS + '/server/GetGraphData.php',
-					type: 'POST', 
-					data: {visitID: visitID},
-					success: function(data) {
-						
-						//console.log(data);
-						try {
-							lastDataReceived = JSON.parse(data);
+		if (!alreadyMadeRequest) {
+			alreadyMadeRequest = true;
+		
+			if (visitID != currentVisitID) {
+				$('#imgPreloaderMiddle').fadeIn('fast', function() {
+					
+					$.ajax({
+						url: SERVER_ADDRESS + '/server/GetGraphData.php',
+						type: 'POST', 
+						data: {visitID: visitID},
+						success: function(data) {
 							
-							drawGraph(true);
+							//console.log(data);
+							try {
+								lastDataReceived = JSON.parse(data);
+								currentVisitID = visitID;
+								drawGraph(true);
+							}
+							catch(Err) {
+								console.log("Error in makeRequestForGraphData");
+								console.log(Err);
+							}
 						}
-						catch(Err) {
-							console.log("Error in makeRequestForGraphData");
-							console.log(Err);
-						}
-					}
+					});
 				});
-			});
-		}
-		else {
-			drawGraph(false);
+			}
+			else {
+				drawGraph(false);
+			}
 		}
 	});
 	
@@ -390,7 +399,8 @@ function drawGraph(differentValues) {
 	$('#imgGoBack').off('click');
 	$('#imgGoBack').on('click', function() {
 		
-		$('#divBackButtonContainer, #divGrafo').fadeOut('fast', function() {
+		$('#graphContainer h2, #graphContainer h3, #graphContainer img').remove();
+		$('#divBackButtonContainer, #graphContainer').fadeOut('fast', function() {
 			$('#imgPreloaderMiddle').fadeIn('fast', function() {
 				drawTable(false);	
 			});
@@ -400,7 +410,8 @@ function drawGraph(differentValues) {
 	if (differentValues) {
 		
 		if ($('#divGrafo').length == 0) {
-			$('<div>').attr('id', 'divGrafo').appendTo('#divTableContainer');
+			$('<div>').attr('id', 'graphContainer').appendTo('#divTableContainer');
+			$('<div>').attr('id', 'divGrafo').appendTo('#graphContainer');
 			$('#divGrafo').height(getScreenHeight() * 0.5);
 			
 			$('#divGrafo').bind('plothover', function(event, pos, item) {
@@ -419,6 +430,38 @@ function drawGraph(differentValues) {
 			});
 		}
 		
+		var patientVisits = listOfPatients[currentPatientID].CatchMe;
+		for (var index in patientVisits) {
+			
+			//console.log(patientVisits[index].VISIT_ID);
+			if (patientVisits[index].VISIT_ID == currentVisitID) {
+				
+				if (patientVisits[index].IS_AT_HOME == true) {
+					$('<img>').attr('alt', 'Esercizio a casa').attr('src', 'images/home.png')
+						.prependTo('#graphContainer');
+				}
+				else {
+					$('<img>').attr('alt', 'Esercizio in ospedale').attr('src', 'images/hospital.png')
+						.prependTo('#graphContainer');
+				}
+				
+				$('#graphContainer img').css({
+					width: '2.0em',
+					'vertical-align': 'bottom'
+				});
+				
+				$('<h2>').text(patientVisits[index].DATE).css({
+						display: 'inline',
+						'margin-left': '0.3em'
+					}).insertBefore('#divGrafo');
+				
+				$('<h3>').text('Valutazione Vista: ' + patientVisits[index].EYE_EVAL + 
+						" - Valutazione Tocco: " + patientVisits[index].TOUCH_EVAL)
+						.insertBefore('#divGrafo');
+			}
+		}
+		
+		
 		deltaTouch = [];
 		deltaEye = []; 
 		var maxY = -1;
@@ -431,12 +474,23 @@ function drawGraph(differentValues) {
 		tooltipObject['tooltipWidth'] = parseInt(settings.SCREEN_SPECS[0]) * 0.3;
 		tooltipObject['tooltipHeight'] = parseInt(settings.SCREEN_SPECS[1]) * 0.3;
 		
+		var maxDistanceAllowed = settings.SCREEN_SPECS[0] > settings.SCREEN_SPECS[1] ? 
+				settings.SCREEN_SPECS[0] : settings.SCREEN_SPECS[1];
+		
+		maxDistanceAllowed = maxDistanceAllowed * 1.5;
+		
 		for (var time in lastDataReceived) {
 			
 			var objectInfo = lastDataReceived[time];
 			
 			var eye = parseInt(objectInfo.DELTA_EYE);
+			if (eye > maxDistanceAllowed) {
+				eye = maxDistanceAllowed;
+			}
 			var touch = parseInt(objectInfo.DELTA_TOUCH);
+			if (touch > maxDistanceAllowed) {
+				touch = maxDistanceAllowed;
+			}
 			
 			if (eye > touch && eye > maxY) {
 				if (eye > maxY) {
@@ -472,7 +526,7 @@ function drawGraph(differentValues) {
 		
 		if (differentValues) {
 			
-			$('#divBackButtonContainer, #divGrafo').fadeIn(function() {
+			$('#divBackButtonContainer, #graphContainer').fadeIn(function() {
 				grafo = $.plot($('#divGrafo'), [{
 						label: 'Delta Vista', 
 						data: deltaEye,
@@ -496,7 +550,7 @@ function drawGraph(differentValues) {
 			
 		}
 		else {
-			$('#divGrafo, #divBackButtonContainer').fadeIn();
+			$('#graphContainer, #divBackButtonContainer').fadeIn();
 		}
 	});
 }
@@ -696,7 +750,7 @@ $('document').ready(function() {
 					var patient = message[i];
 					var name = patient.NAME + " " + patient.SURNAME;
 					listOfPatients[patient.ID] = name;
-					$('<option value="' + patient.ID + '">' + name + '</option>').appendTo('#selectPatient');
+					$('<option>').attr('value',patient.ID).text(name).appendTo('#selectPatient');
 				}
 				
 				$('#imgPreloaderPatients').hide();

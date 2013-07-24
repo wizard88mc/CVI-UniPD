@@ -24,7 +24,7 @@ function presentationComplete() {
 					
 					var dialog = $('<div>').attr('id', 'dialogAskSynch').attr('title', 'Sincronizzazione').appendTo('#divMainContent');
 					$('<p>').text('Computer non ancora sincronizzato con il server. Eseguire sincronizzazione ora?').appendTo(dialog);
-					$('<p>').text('Attenzione: se non si effettua sincronizzazione non sar� possibile giocare..').appendTo(dialog);
+					$('<p>').text('Attenzione: se non si effettua sincronizzazione non sarà possibile giocare..').appendTo(dialog);
 					dialog.dialog({
 						modal: true,
 						resizable: false,
@@ -61,7 +61,7 @@ function presentationComplete() {
 				else {
 					
 					var dialog = $('<div>').attr('id', 'dialogAskSynch').attr('title', 'Sincronizzazione').appendTo('#divMainContent');
-					$('<p>').text('Il computer non � stato sincronizzato recentemente e sarebbe opportuno effettuarla per avere dati più precisi.').appendTo(dialog);
+					$('<p>').text('Il computer non è stato sincronizzato recentemente e sarebbe opportuno effettuarla per avere dati più precisi.').appendTo(dialog);
 					$('<p>').text('Sincronizzare nuovamente?').appendTo(dialog);
 					dialog.dialog({
 						modal: true,
@@ -75,7 +75,7 @@ function presentationComplete() {
 								$(this).remove();
 								startSynchronization();
 								
-								$('<p>').text('Sincronizzazione in corso. Attendere.')
+								$('<p>').text('Sincronizzazione in corso. Attendere...')
 								.appendTo($('<div>').attr('id', 'dialogWait')
 										.attr('title', 'Attendere')
 										.appendTo('#divMainContent'));
