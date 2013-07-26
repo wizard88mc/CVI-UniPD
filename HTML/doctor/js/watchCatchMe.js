@@ -47,8 +47,10 @@ var CatchMeNamespace = {
 			CatchMeNamespace.prepareChart();
 			
 			//timing = setInterval(CatchMeNamespace.updateChart, 5000);
-			// Mostro un dialog che dice che � tutto a posto,
-			// e di cliccare quando tutto � pronto x iniziare
+			/**
+			 * Everything is ready to start, showing a dialog to the doctor
+			 * to start the game
+			 */
 		}
 		else if (dataReceived.TYPE == "TRAINING_SESSION" && dataReceived.DATA == "false") {
 			
@@ -86,7 +88,9 @@ var CatchMeNamespace = {
 		}
 		else if (dataReceived.TYPE == "TRAINING_SESSION" && dataReceived.DATA == "true") {
 			
-			// dialog to start training session
+			/**
+			 * Showing dialog to start training session
+			 */
 			TrainingManager.dialogSelectParameters();
 		}
 		else if (dataReceived.TYPE == "CAL_QUAL") {

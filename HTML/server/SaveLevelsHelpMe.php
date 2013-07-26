@@ -57,6 +57,7 @@ $stringFileLevel .= "</levels>";
 $fileWriterLevel = fopen($completeNewFile, "w");
 fwrite($fileWriterLevel, $stringFileLevel);
 fclose($fileWriterLevel);
+chmod($completeNewFile, 777);
 
 // recupero gli attuali esercizi validi per il bambino
 // che siano o quelli di default oppure quelli suoi specifici

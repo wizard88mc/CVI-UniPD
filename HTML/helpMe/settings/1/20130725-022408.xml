@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<levels>
+<level targetFamily="animali" type="6x4" maxTimeImage="20">
+<image type="T" imageID="5" />
+<image type="T" imageID="3" />
+<image type="D" imageID="11" />
+<image type="D" imageID="13" />
+<image type="T" imageID="7" />
+<image type="D" imageID="12" />
+<image type="T" imageID="6" />
+<image type="T" imageID="2" />
+<image type="D" imageID="14" />
+<image type="T" imageID="4" />
+</level>
+<level targetFamily="macchine" type="6x4" maxTimeImage="20">
+<image type="T" imageID="8" />
+<image type="D" imageID="10" />
+<image type="T" imageID="8" />
+<image type="D" imageID="2" />
+<image type="T" imageID="8" />
+<image type="D" imageID="12" />
+<image type="T" imageID="8" />
+<image type="D" imageID="6" />
+<image type="T" imageID="8" />
+<image type="D" imageID="4" />
+</level>
+</levels>

@@ -104,7 +104,7 @@ var frameAnimatorNamespace = {
                 }
             }
             /**
-             * The example has to go to the bin on the left of
+             * The example has to go to the bin in the left of
              * the screen
              */
             else {
@@ -115,9 +115,15 @@ var frameAnimatorNamespace = {
         		var objectTransition = function() {      		
 	            	imageObjectOnScreen.element.one(eventEndAnimation, function() {
 	        			
-	            		imageObjectOnScreen.element.one(eventEndAnimation, function() {
+	            		imageObjectOnScreen.element.one(eventEndAnimation, function(event) {
 	            			
-	            			ExampleNamespace.exampleCompleted();
+	            			if (event.originalEvent.propertyName === "left") {
+	                			
+	                			imageObjectOnScreen.element.off(eventEndAnimation);
+	                			imageObjectOnScreen.element.remove();
+	                			
+	            	            ExampleNamespace.exampleCompleted();
+	                		}
 	            		});
 	            		
 	            		addTransitionSpecifications(imageObjectOnScreen.element, 'all 2s linear');
@@ -142,7 +148,15 @@ var frameAnimatorNamespace = {
 	            	if (exampleManager.arrow != null) {
             			addTransitionSpecifications(exampleManager.arrow, 'all 2s linear');
             			
-            			exampleManager.arrow.css({
+            			exampleManager.arrow.on(eventEndAnimation, function(event) {
+                			
+                			if (event.originalEvent.propertyName == "height") {
+                				
+                				exampleManager.arrow.remove();
+                				addTransitionSpecifications(exampleManager.arrow, 'none');
+            	                exampleManager.arrow = null;
+                			}
+                		}).css({
             				height: '0px',
             				left: exampleManager.arrow.position().left - exampleManager.arrow.height()
             			});

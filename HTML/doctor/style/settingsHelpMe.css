@@ -78,3 +78,13 @@ td.ui-selected, tr.ui-selected {
 	background-color: #FF0000;
 	font-weight: bold;
 }
+
+#divTotalErrors {
+	visibility: hidden;
+	color: #FF0000;
+	margin-bottom: 0.3em;
+}
+
+#divTotalErrors #numberTotalErrorsSpan {
+	font-weight: bold;
+}

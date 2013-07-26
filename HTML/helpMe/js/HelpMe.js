@@ -200,33 +200,40 @@ function manageLevels(repeatLevel) {
 	        gameManager.gameInProgress = false;
     	}
         
-    	$('#divSounds #sledCanLeave').on('ended', function() {
-    		
-    		$('#divSacco').remove();
-    		$('#divSaccoMezzo').remove();
-    		$('#divCestino').remove();
-            
-            $('body').css({
-            	'background-image': 'url(images/ZZ10042.jpg)'
-            });
-            
-            presentationManager.gnomo.element.css({
-            	'visibility': 'visible'
-            });
-            presentationManager.slitta.element.css({
-            	'visibility': 'visible'
-            });
-            
-            setTimeout(function() {
-	            $('#divSounds #gnomoSaysGoodbye').on('ended', function() {
-	                
-	                frameAnimatorNamespace.gnomoReturnsOnSlitta();
-	                
-	            }).get(0).play();
-            }, 1000);
-    	
-    	}).get(0).play();
+    	prepareSledToLeave();
     }
+}
+
+function prepareSledToLeave() {
+	
+	$('#divSounds #sledCanLeave').on('ended', function() {
+		
+		$('#divSacco').remove();
+		$('#divSaccoMezzo').remove();
+		$('#divCestino').remove();
+		imageObjectOnScreen.element.remove();
+		$('#divSystemImage').hide();
+    
+		$('body').css({
+			'background-image': 'url(images/ZZ10042.jpg)'
+		});
+        
+        presentationManager.gnomo.element.css({
+        	'visibility': 'visible'
+        });
+        presentationManager.slitta.element.css({
+        	'visibility': 'visible'
+        });
+        
+        setTimeout(function() {
+            $('#divSounds #gnomoSaysGoodbye').on('ended', function() {
+                
+                frameAnimatorNamespace.gnomoReturnsOnSlitta();
+                
+            }).get(0).play();
+        }, 1000);
+	
+	}).get(0).play();
 }
 
 function manageImageObjectsLevel() {
@@ -368,7 +375,12 @@ function timeExpired(intoBin) {
         gameManager.imageBadAnswer.show();
         gameManager.levelCompletedCorrectly = false;
         
-        $('#divSounds #audioObjectNotInserted').get(0).play();
+        if (intoBin) {
+        	$('#divSounds #audioObjectNotInserted').get(0).play();
+        }
+        else {
+        	playBadAnswerSound();
+        }
         
     }
     // Not a target object: CORRECT
@@ -393,7 +405,8 @@ function waitingToStart(message) {
         websocket.onmessage = function(message) {
             var packet = JSON.parse(message);
             if (packet.TYPE == "STOP_GAME") {
-            	
+            	gameManager.gameInProgress = false;
+            	prepareSledToLeave();
             }
             else {
                 console.log("Bad message received during game: ");
@@ -410,22 +423,24 @@ function gameIsEnded() {
 	websocket.close();
 	
 	setTimeout(function() {
-		// suono che fa complimenti al bambino per il suo comportamento??
 		
-		$('#divSounds #finalFeedback #messoInsieme').on('ended', function() {
-			
-			$('#divSounds #finalFeedback #numberOfObjects #correct' + gameManager.maxCorrectAnswer).on('ended', function() {
+		//TODO cosa fare se risposte esatte = 0?'
+		if (gameManager.maxCorrectAnswers > 0) {
+		
+			$('#divSounds #finalFeedback #messoInsieme').on('ended', function() {
 				
-				$('#divSounds #finalFeedback #oggettiAssomigliano').on('ended', function() {
+				$('#divSounds #finalFeedback #numberOfObjects #correct' + gameManager.maxCorrectAnswer).on('ended', function() {
 					
-					setTimeout(function() {
-						location.replace('../patient/index.html');
-					}, 1000);
+					$('#divSounds #finalFeedback #oggettiAssomigliano').on('ended', function() {
+						
+						setTimeout(function() {
+							location.replace('../patient/index.html');
+						}, 1000);
+					}).get(0).play();
 				}).get(0).play();
+				
 			}).get(0).play();
-			
-		}).get(0).play();
-		
+		}
 		
 	}, 500);
 	

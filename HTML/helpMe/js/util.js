@@ -85,58 +85,6 @@ anotherImageRetrieved: function() {
     }
 },
 
-// NON UTILIZZATO
-retrieveLevels: function(fileName) {
-
-	$.ajax({
-        type: 'GET',
-        url: 'settings/' + fileName,
-        dataType: 'xml',
-        cahce: 'false',
-        success: function(xml) {
-
-
-        	$(xml).find('level').each(function() {
-	        		
-        		var type = $(this).attr('type');
-        		var targetsAndDistracters = type.split('x');
-        		var targetFamily = $(this).attr('targetFamily');
-        		var maxTime = $(this).attr('maxTimeImage');
-        		var sequenceOfImages = [];
-        		
-        		$(this).find('image').each(function() {
-        			var type = $(this).attr('type');
-        			var imageID = $(this).attr('imageID');
-        			var isTarget = true;
-        			if (type == 'D') {
-        				isTarget = false;
-        			}
-        			sequenceOfImages.push(new ImageLevel(isTarget, imageID));
-        		});
-        		
-        		livelliGioco.push(new Level(type, targetsAndDistracters[0], targetsAndDistracters[1],
-	        				targetFamily, sequenceOfImages, familySound[targetFamily]['audioFile'], 
-	        				familySound[targetFamily]['audioBagCompleted'], 
-	        				familySound[targetFamily]['audioObjectNotInserted'], maxTime));
-	        		
-        	});
-        	
-			// console.log(livelliGioco);
-
-            //ExampleNamespace.prepareExamples();
-
-            /*initGame();
-            openWebSocket(port);
-            gameManager.timeToStart = new Date().getTime();
-            allInfosRetrieved();*/
-        	
-        	initGame();
-        	gameManager.timeToStart = new Date().getTime();
-        	allInfosRetrieved();
-        }
-    });
-},
-
 istantiateLevel: function(level) {
 
     var distrattori = [];
@@ -191,13 +139,13 @@ istantiateLevel: function(level) {
     utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioLevel').appendTo('#divSounds'), 
     		familySound[targetFamily].audioFile);
     
-    if (level.soundBagComplete != "") {
+    if (familySound[targetFamily].audioBagCompleted) {
     	utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioBagComplete').appendTo('#divSounds'),
-    		level.soundBagComplete);
+    			familySound[targetFamily].audioBagCompleted);
     }
     
     utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioObjectNotInserted').appendTo('#divSounds'),
-    		level.soundObjectNotInserted);
+    		familySound[targetFamily].audioObjectNotInserted);
     
     $('#divSounds #audioObjectNotInserted').on('ended', function() {
     	utilsNamespace.resetGame();

@@ -120,7 +120,9 @@ var ImageForTraining = function(settings) {
 		if (Number(this.center.left) > Number(newPoint.left) || 
 			(Number(this.center.left == Number(newPoint.left) && 
 				Number(this.center.top) > Number(newPoint.top)) )) {
-			// devo ruotare immagine
+			/**
+			 * Need to rotate image
+			 */
 			this.scale = "scale(-1, 1)";
 		}
 		else {
@@ -144,7 +146,7 @@ var ImageForTraining = function(settings) {
 		var alpha = Math.acos(cosAlpha) * 180 / Math.PI ;
 		
 		/**
-		 * Punto nel primo quadrante
+		 * First quadrant
 		 */
 		if (destinationPoint.top < this.center.top && 
 			destinationPoint.left > this.center.left) {
@@ -153,7 +155,7 @@ var ImageForTraining = function(settings) {
 			alpha = -alpha;
 		}
 		/**
-		 * Secondo quadrante 
+		 * Second quadrant 
 		 */
 		else if (destinationPoint.top > this.center.top && 
 			destinationPoint.left > this.center.left) {
@@ -162,7 +164,7 @@ var ImageForTraining = function(settings) {
 			alpha = alpha;	
 		}
 		/**
-		 * Terzo quadrante 
+		 * Third quadrant 
 		 */
 		else if (destinationPoint.top > this.center.top && 
 			destinationPoint.left < this.center.left) {
@@ -171,7 +173,7 @@ var ImageForTraining = function(settings) {
 			alpha =  alpha;
 		}
 		/**
-		 * Quarto quadrante 
+		 * Fourth quadrant
 		 */
 		else if (destinationPoint.top < this.center.top && 
 			destinationPoint.left < this.center.left) {
@@ -299,9 +301,11 @@ var TrainingExamplesNamespace = {
 		
 		if (data.TYPE == "CAL_POINT") {
 			
-			// POINTS[0] = # POINT
-			// POINTS[1] = X position
-			// POINTS[2] = Y position
+			/**
+			 * POINTS[0] = # POINT
+			 * POINTS[1] = X position
+			 * POINTS[2] = Y position
+			 */ 
 			var elements = (data.DATA).split(" ");
 			
 			var centerToDraw = new Point(Number(elements[2]), Number(elements[1]));
@@ -324,6 +328,7 @@ var TrainingManager = {
 		
 		var selectTimePerPoint = $('<select>').attr('id', 'selectTimePerPoint');
 		$('<option>').attr('value', '2000').attr('selected', 'selected').text('2 secondi').appendTo(selectTimePerPoint);
+		$('<option>').attr('value', '5000').text('5 secondi').appendTo(selectTimePerPoint);
 		$('<option>').attr('value', '10000').text('10 secondi').appendTo(selectTimePerPoint);
 		$('<option>').attr('value', '15000').text('15 secondi').appendTo(selectTimePerPoint);
 		$('<option>').attr('value', '20000').text('20 secondi').appendTo(selectTimePerPoint);

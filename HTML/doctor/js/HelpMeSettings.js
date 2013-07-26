@@ -89,12 +89,31 @@ var HelpMeSettingsNamespace = {
 		return false;
 	},
 	
+	updateErrors: function() {
+		
+		if (totalErrors > 0) {
+			$('#buttonComplete').button('disable');
+			$('#divTotalErrors #numberTotalErrorsSpan').text(totalErrors);
+			$('#divTotalErrors').css({
+				visibility: 'visible'
+			});
+		}
+		else {
+			$('#buttonComplete').button('enable');
+			$('#divTotalErrors #numberTotalErrorsSpan').text(0);
+		}
+		
+	},
+	
 	buildSelectImages: function(imageID) {
 		
 		var select = $('<select>');
 		
 		if (imageID == -1) {
 			$('<option>').attr('value', "").attr('selected', 'selected').appendTo(select);
+		}
+		else {
+			$('<option>').attr('value', '').appendTo(select);
 		}
 		
 		for (var family in imagesFamily ) {
@@ -132,6 +151,8 @@ var HelpMeSettingsNamespace = {
 				$(this).parent().parent('tr').children('td').removeClass('badSettings');
 				totalErrors--;
 			}
+			
+			HelpMeSettingsNamespace.updateErrors();
 			
 		});
 		
@@ -509,6 +530,10 @@ var HelpMeSettingsNamespace = {
 			HelpMeSettingsNamespace.updateLabelsTabs();
 			
 			divTabs.tabs("option", 'selected', (indexToInsert + 1));
+			
+			totalErrors += Number(elements[0]) + Number(elements[1]);
+			
+			HelpMeSettingsNamespace.updateErrors();
 		});
 		
 		divTabs = $('<div>').attr('id', 'tabsLevels').appendTo(divContainerAll)
@@ -613,6 +638,10 @@ var HelpMeSettingsNamespace = {
 		divButtons.children().css({
 				margin: '0.5em'
 			});
+		
+		$('<div>').attr('id', 'divTotalErrors').appendTo(divButtons);
+		$('<span>').text('Numero di errori: ').appendTo('#divTotalErrors');
+		$('<span>').attr('id', 'numberTotalErrorsSpan').text('0').appendTo('#divTotalErrors');
 		
 		$('#tabsLevels h2').css({
 			'margin-bottom': '0.2em'
