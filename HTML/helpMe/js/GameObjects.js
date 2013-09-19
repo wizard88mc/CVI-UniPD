@@ -142,15 +142,18 @@ this.getSystemSounds = function() {
     	
     $('<div>').attr('id', 'finalFeedback').appendTo('#divSounds');
     
-    utilsNamespace.addSoundSource($('<audio>').attr('id', 'messoInsieme').appendTo('#divSounds #finalFeedback'), 'messo_insieme');
-    utilsNamespace.addSoundSource($('<audio>').attr('id', 'oggettiAssomigliano').appendTo('#divSounds #finalFeedback'), 'oggetti_assomigliano');
+    utilsNamespace.addSoundSource($('<audio>').attr('id', 'messoInsieme')
+    		.appendTo('#divSounds #finalFeedback'), 'messo_insieme');
+    utilsNamespace.addSoundSource($('<audio>').attr('id', 'oggettiAssomigliano')
+    		.appendTo('#divSounds #finalFeedback'), 'oggetti_assomigliano');
     
     var divObjects = $('<div>').attr('id', 'numberOfObjects').appendTo('#divSounds div#finalFeedback');
     
     var numbers = new Array('uno', 'due', 'tre', 'quattro', 'cinque', 'sei', 'sette', 'otto', 'nove');
     
     for (x in numbers) {
-    	utilsNamespace.addSoundSource($('<audio>').attr('id', 'correct' + (Number(x)+1)).appendTo(divObjects), numbers[x]);
+    	utilsNamespace.addSoundSource($('<audio>').attr('id', 'correct' + (Number(x)+1))
+    		.appendTo(divObjects), numbers[x]);
     }  
 };
 

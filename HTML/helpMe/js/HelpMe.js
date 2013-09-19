@@ -418,6 +418,11 @@ function waitingToStart(message) {
     }
 }
 
+/**
+ * Function called when the sled move away, it plays the sound 
+ * to provide a feedback to the child about his/her perfomance.
+ * 
+ */
 function gameIsEnded() {
 	
 	websocket.close();

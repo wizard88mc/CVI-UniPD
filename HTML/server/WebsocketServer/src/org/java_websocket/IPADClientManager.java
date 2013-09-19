@@ -10,12 +10,6 @@ package org.java_websocket;
  */
 
 import java.net.UnknownHostException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import org.java_websocket.Messages.OnlyImageGameDataPacket;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;

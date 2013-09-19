@@ -165,15 +165,16 @@ var frameAnimatorNamespace = {
         		
         		if (exampleManager.currentExample.withHelp) {
         			
-        			exampleManager.arrow = $(exampleManager.arrowImage).attr('id', 'imgArrow').appendTo('#divMainContent');
+        			exampleManager.arrow = $(exampleManager.arrowImage).attr('id', 'imgArrow')
+        				.appendTo('#divMainContent');
         			var bottomPositionImage = imageObjectOnScreen.drawingPosition.top + imageObjectOnScreen.height;
-        			var hypotenuse = Math.sqrt(Math.pow(sacco.center.left, 2) + Math.pow(getScreenHeight() - bottomPositionImage, 2));
+        			var hypotenuse = Math.sqrt(Math.pow(sacco.center.left, 2) 
+        					+ Math.pow(getScreenHeight() - bottomPositionImage, 2));
         			
         			var sinAngle = sacco.center.left / hypotenuse;
-        			var angle = Math.asin(sinAngle) * 180 / Math.PI;
+        			//var angle = Math.asin(sinAngle) * 180 / Math.PI;
         			
         			var heightArrow = (cestino.width) / sinAngle;
-        			
                     
                     exampleManager.arrow.width(imageObjectOnScreen.element.width() / 3);
                     exampleManager.arrowStartingHeight = sacco.center.top - bottomPositionImage;
@@ -184,12 +185,14 @@ var frameAnimatorNamespace = {
                         left: imageObjectOnScreen.center.left - exampleManager.arrow.width() / 2,
                         'z-index': 200
                     });
-                    exampleManager.arrow.css({
+                    addTransformSpecifications(exampleManager.arrow, 'center top');
+                    
+                    /*exampleManager.arrow.css({
                     	'transform-origin': 'center top',
                     	'-webkit-transform-origin': 'center top',
                     	'-moz-transform-origin': 'center top',
                     	'-o-transform-origin': 'center top'
-                    });
+                    });*/
                     
                     addTransformSpecifications(exampleManager.arrow, 'rotate(90deg)');
         		}

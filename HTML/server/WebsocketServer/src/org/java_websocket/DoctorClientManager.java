@@ -2,6 +2,7 @@ package org.java_websocket;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Date;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.java_websocket.Messages.DoctorClientPacket;
@@ -99,9 +100,22 @@ public class DoctorClientManager extends BaseManager {
             
             patientManager.sendPacket(packet);
         }
+        /**
+         * Packet identifies the beginning of the training session. 
+         * Calculates a starting time and sends it to the eye tracker 
+         * and the patient client.
+         */
         else if (packet.get("TYPE").equals("START_TRAINING")) {
             
-            eyeTrackerManager.sendPacket(packet);
+            long timeToStart = new Date().getTime() + 3000;
+            long timeForEyeTracker = eyeTrackerManager.calculateTimeWithOffset(timeToStart);
+            long timeForPatient = patientManager.calculateTimeWithOffset(timeToStart);
+            
+            JSONObject packetEyeTracker = (JSONObject)packet.clone();
+            packetEyeTracker.put("STAR_TIME", timeForEyeTracker);
+            packet.put("START_TIME", timeForPatient);
+            
+            eyeTrackerManager.sendPacket(packetEyeTracker);
             patientManager.sendPacket(packet);
         }
         /*

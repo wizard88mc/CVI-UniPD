@@ -516,9 +516,12 @@ var HelpMeSettingsNamespace = {
 				HelpMeSettingsNamespace.makeRowSelectable(row);
 			}
 			
-			$('<input>').attr('type', 'hidden').attr('name', 'levelType').attr('value', valueLevel).appendTo(divLevel);
-			$('<input>').attr('type', 'hidden').attr('name', 'numberTargets').attr('value', elements[0]).appendTo(divLevel);
-			$('<input>').attr('type', 'hidden').attr('name', 'numberDistracters').attr('value', elements[1]).appendTo(divLevel);
+			$('<input>').attr('type', 'hidden').attr('name', 'levelType')
+				.attr('value', valueLevel).appendTo(divLevel);
+			$('<input>').attr('type', 'hidden').attr('name', 'numberTargets')
+				.attr('value', elements[0]).appendTo(divLevel);
+			$('<input>').attr('type', 'hidden').attr('name', 'numberDistracters')
+				.attr('value', elements[1]).appendTo(divLevel);
 			
 			var lastSimilarLevel = divLevel.prevAll('div[id^="level"]:has(input[name="levelType"][value="'+valueLevel+'"])').first();
 			divLevel.insertAfter(lastSimilarLevel);
@@ -550,7 +553,8 @@ var HelpMeSettingsNamespace = {
 			index = Number(index);
 			var currentLevel = listOfLevels[index];
 
-			$('<a>').attr('href', '#level' + index).text(index + 1).appendTo($('<li>').appendTo('#menuTabs'));
+			$('<a>').attr('href', '#level' + index).text(index + 1)
+				.appendTo($('<li>').appendTo('#menuTabs'));
 			
 			var title = HelpMeSettingsNamespace.buildLevelTitle(index, currentLevel.numberOfTargets, currentLevel.numberOfDistracters);
 			
@@ -558,10 +562,12 @@ var HelpMeSettingsNamespace = {
 			$('<h2>').html(title).appendTo(divLevel);
 			
 			var select = HelpMeSettingsNamespace.buildSelectTargetFamily(currentLevel.targetFamily);
-			select.appendTo($('<div>').addClass('divSelectTargetFamily').text('Famiglia target: ').appendTo(divLevel));
+			select.appendTo($('<div>').addClass('divSelectTargetFamily')
+					.text('Famiglia target: ').appendTo(divLevel));
 			
 			var selectTime = HelpMeSettingsNamespace.buildMaxTimeSelect(currentLevel.maxTimeImage);
-			selectTime.appendTo($('<div>').addClass('divSelectMaxTime').text('Tempo massimo immagine: ').appendTo(divLevel));
+			selectTime.appendTo($('<div>').addClass('divSelectMaxTime')
+					.text('Tempo massimo immagine: ').appendTo(divLevel));
 			
 			var sequenceImages = currentLevel.sequence;
 			var table = $('<table>').addClass('tableLevel').appendTo(divLevel);
@@ -588,9 +594,12 @@ var HelpMeSettingsNamespace = {
 				HelpMeSettingsNamespace.makeRowSelectable(row);
 			}
 			
-			$('<input>').attr('type', 'hidden').attr('name', 'levelType').attr('value', currentLevel.type).appendTo(divLevel);
-			$('<input>').attr('type', 'hidden').attr('name', 'numberTargets').attr('value', currentLevel.numberOfTargets).appendTo(divLevel);
-			$('<input>').attr('type', 'hidden').attr('name', 'numberDistracters').attr('value', currentLevel.numberOfDistracters).appendTo(divLevel);
+			$('<input>').attr('type', 'hidden').attr('name', 'levelType')
+				.attr('value', currentLevel.type).appendTo(divLevel);
+			$('<input>').attr('type', 'hidden').attr('name', 'numberTargets')
+				.attr('value', currentLevel.numberOfTargets).appendTo(divLevel);
+			$('<input>').attr('type', 'hidden').attr('name', 'numberDistracters')
+				.attr('value', currentLevel.numberOfDistracters).appendTo(divLevel);
 		}
 		
 		var divButtons = $('<div>').attr('id', 'buttons').appendTo(divContainerAll)

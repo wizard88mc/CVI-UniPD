@@ -217,8 +217,10 @@ function checkColorContrast(backgroundColor, foregroundColor) {
 
 function addSoundSource(element, sourceFileName) {
 	
-	$('<source>').attr('src', 'sounds/' + sourceFileName + '.ogg').attr('type', 'audio/ogg').attr('preload', 'auto').appendTo(element);
-	$('<source>').attr('src', 'sounds/' + sourceFileName + '.mp3').attr('type', 'audio/mpeg').attr('preload', 'auto').appendTo(element);
+	$('<source>').attr('src', 'sounds/' + sourceFileName + '.ogg')
+		.attr('type', 'audio/ogg').attr('preload', 'auto').appendTo(element);
+	$('<source>').attr('src', 'sounds/' + sourceFileName + '.mp3')
+		.attr('type', 'audio/mpeg').attr('preload', 'auto').appendTo(element);
 }
 
 function checkForLocalStorageIfFolder(folder) {

@@ -38,11 +38,6 @@ var ImageForTraining = function(settings) {
 		
 		addTransformSpecifications(this.element, this.transformString());
 		
-		/*this.distanceX = pointCenter.left - this.center.left;
-		this.distanceY = pointCenter.top - this.center.top;
-		
-		this.translate = 'translate(' + distanceX + 'px, ' + distanceY + 'px)';*/
-		
 		var transition = 'top ' + this.secondsForTransition / 1000 + 's, ' +
 			'left ' + this.secondsForTransition / 1000 + 's';
 		
@@ -170,7 +165,9 @@ var ImageForTraining = function(settings) {
 			destinationPoint.left < this.center.left) {
 		
 			console.log("Terzo quadrante");
-			alpha =  alpha;
+			/**
+			 * In this case alpha remains the same
+			 */
 		}
 		/**
 		 * Fourth quadrant
@@ -193,10 +190,13 @@ var ImageForTraining = function(settings) {
 			console.log(imageForTraining.element.css('-webkit-transform'));
 			console.log(imageForTraining.element.css('transform'));
 				
+			/**
+			 * Removes the moving fish and instantiate 
+			 * a new image 
+			 */
 			imageForTraining.element.remove();
 			
-			imageForTraining.initializeImage();
-			imageForTraining.element.css({opacity: '0'});
+			//imageForTraining.element.css({opacity: '0'});
 			
 			var image = $('<img>').attr('id', 'imageGetAttention')
 					.css({
@@ -223,13 +223,17 @@ var ImageForTraining = function(settings) {
 			setTimeout(function() {
 				
 				imageForTraining.currentPoint++;
+				/**
+				 * If there is another training position reach it
+				 */
 				if (imageForTraining.currentPoint < imageForTraining.pointsToDraw.length) {
 					
 					$('#imageGetAttention').remove();
 						
 					//imageForTraining.prepareImage();
+					imageForTraining.initializeImage();
 					imageForTraining.element.css({opacity: '1'});
-					imageForTraining.moveObject(), 1000;
+					imageForTraining.moveObject();
 					//imageForTraining.moveObject();
 					//imageForTraining.drawObject();
 				}
@@ -266,6 +270,12 @@ var TrainingExamplesNamespace = {
 		imageForTraining = new ImageForTraining(settings);
 	},
 	
+	/**
+	 * Function performed when the image has been loaded. 
+	 * Calculates the width and height for the image and 
+	 * draws it in the center of the screen
+	 * 
+	 */
 	imageLoaded: function() {
 			
 		var aspectRatio = imageForTraining.image.naturalWidth / 
@@ -282,7 +292,6 @@ var TrainingExamplesNamespace = {
 		/**
 		 * Operations to perform when the image arrives at the target point 
 		 */
-		
 		setTimeout(function() {
 			
 			
@@ -434,7 +443,8 @@ var TrainingManager = {
 		}
 		
 		for (var i = value; i < 5; i++) {
-			$('<img>').attr('src', '../images/star.png').css('opacity', '0.5').appendTo(starsContainer);
+			$('<img>').attr('src', '../images/star.png').css('opacity', '0.5')
+				.appendTo(starsContainer);
 		}
 		
 		starsContainer.children('img').css({
@@ -443,8 +453,8 @@ var TrainingManager = {
 			'margin-left': '3%'
 		});
 		
-		var dialog = $('<div>').attr('id', 'divDialogTrainingEvaluation').attr('title', 'Risultato')
-			.appendTo('#divMainContent');
+		var dialog = $('<div>').attr('id', 'divDialogTrainingEvaluation')
+			.attr('title', 'Risultato').appendTo('#divMainContent');
 		
 		$('<p>').text('Valutazione training: ').appendTo(dialog);
 		starsContainer.appendTo(dialog);
