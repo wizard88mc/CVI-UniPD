@@ -25,11 +25,6 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
         super("GAME_CLIENT", port);
     }
     
-    /*@Override
-    public long managerReady() {
-        return serverManager.gameReady();
-    }*/
-    
     public void changeSpeedValue(JSONObject packet) {
         
         clientConnected.send(packet.toJSONString());
@@ -41,12 +36,12 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
         boolean alreadyManaged = super.onMessage(conn, message);
         JSONObject packet = (JSONObject)JSONValue.parse(message);
         
-        if (packet.get("TYPE").equals("IDENTIFICATION") && clientConnected != null) {
+        if (packet.get(BaseManager.MESSAGE_TYPE).equals(BaseManager.IDENTIFICATION) && clientConnected != null) {
             patientManager = this;
         }
         if (!alreadyManaged) {
             
-            String packetType = (String)packet.get("TYPE");
+            String packetType = (String)packet.get(BaseManager.MESSAGE_TYPE);
             if (packetType.equals("GAME_DATA")) {
             
                 if (packet.get("SUBTYPE").equals("POSITIONS")) {
@@ -62,7 +57,7 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
             }
             else if (packetType.equals("SPEED_VALUE") || 
                     packetType.equals("PRESENTATION_COMPLETE") ||
-                    packetType.equals("SCREEN_MEASURES") ||
+                    packetType.equals(BaseManager.SCREEN_MEASURES) ||
                     packetType.equals("LEVEL_ENDED"))  {
                 
                 doctorManager.sendPacket(packet);
@@ -71,7 +66,7 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                  * If the eye-tracker software is already connected, 
                  * send it the screen dimension
                  */
-                if (packetType.equals("SCREEN_MEASURES")) {
+                if (packetType.equals(BaseManager.SCREEN_MEASURES)) {
                     
                     if (eyeTrackerManager == null) {
                         EyeTrackerManager.packetWithScreenDimension = packet;
@@ -83,13 +78,13 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
             }
             else if (packetType.equals("READY_TO_PLAY")) {                
 
-                if (packet.containsKey("IMAGE_WIDTH")) {
+                if (packet.containsKey(BaseManager.IMAGE_WIDTH)) {
                     
-                    imageWidth = (Long)packet.get("IMAGE_WIDTH");                    
-                    imageHeight = (Long)packet.get("IMAGE_HEIGHT");
+                    imageWidth = (Long)packet.get(BaseManager.IMAGE_WIDTH);                    
+                    imageHeight = (Long)packet.get(BaseManager.IMAGE_HEIGHT);
 
-                    screenWidth = (Long)packet.get("SCREEN_WIDTH");
-                    screenHeight = (Long)packet.get("SCREEN_HEIGHT");
+                    screenWidth = (Long)packet.get(BaseManager.SCREEN_WIDTH);
+                    screenHeight = (Long)packet.get(BaseManager.SCREEN_HEIGHT);
 
                     OnlyImageGameDataPacket.setImageSpecification(imageWidth, imageHeight);
                     
@@ -97,23 +92,23 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                         messageManager.writeGameSpecs(imageWidth, imageHeight, 
                                 screenWidth, screenHeight);
                     }
-                    packet.remove("TYPE");
-                    packet.put("TYPE", "IMAGE_SPECIFICATION");
+                    packet.remove(BaseManager.MESSAGE_TYPE);
+                    packet.put(BaseManager.MESSAGE_TYPE, "IMAGE_SPECIFICATION");
 
                     doctorManager.sendPacket(packet);
                 }
                 
                 if (eyeTrackerManager != null) {
                     JSONObject packetStartTraining = new JSONObject();
-                    packetStartTraining.put("TYPE", "TRAINING_SESSION");
-                    packetStartTraining.put("PATIENT_ID", patientID);
+                    packetStartTraining.put(BaseManager.MESSAGE_TYPE, "TRAINING_SESSION");
+                    packetStartTraining.put(BaseManager.PATIENT_ID, patientID);
 
                     eyeTrackerManager.sendPacket(packetStartTraining);
                 }
                 else {
                     
                     JSONObject packetEyeTrackerNotReady = new JSONObject();
-                    packetEyeTrackerNotReady.put("TYPE", "EYE_TRACKER_NOT_READY");
+                    packetEyeTrackerNotReady.put(BaseManager.MESSAGE_TYPE, "EYE_TRACKER_NOT_READY");
                     
                     doctorManager.sendPacket(packetEyeTrackerNotReady);
                 }

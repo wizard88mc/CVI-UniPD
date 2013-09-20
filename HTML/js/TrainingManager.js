@@ -19,6 +19,8 @@ var ImageForTraining = function(settings) {
 	this.rotate = "";
 	this.distanceX = 0;
 	this.distanceY = 0;
+	this.fixedWaitingForFirstPoint = 2000;
+	this.timeToStart = settings.START_TIME;
 	
 	this.prepareImage = function() {
 		
@@ -44,9 +46,6 @@ var ImageForTraining = function(settings) {
 		addTransitionSpecifications(this.element, transition);
 		
 		this.center = pointCenter;
-		
-		console.log("Uguale al precedente");
-		console.log(this.center);
 		
 		var drawLeft = this.center.left - this.width / 2;
 		var drawTop = this.center.top - this.height / 2;
@@ -187,16 +186,12 @@ var ImageForTraining = function(settings) {
 		
 		if (event.propertyName === "left") {
 			
-			console.log(imageForTraining.element.css('-webkit-transform'));
-			console.log(imageForTraining.element.css('transform'));
-				
 			/**
 			 * Removes the moving fish and instantiate 
-			 * a new image 
+			 * the image to get attention on the particular
+			 * position for the training
 			 */
-			imageForTraining.element.remove();
-			
-			//imageForTraining.element.css({opacity: '0'});
+			imageForTraining.element.css({opacity: '0'});
 			
 			var image = $('<img>').attr('id', 'imageGetAttention')
 					.css({
@@ -231,7 +226,6 @@ var ImageForTraining = function(settings) {
 					$('#imageGetAttention').remove();
 						
 					//imageForTraining.prepareImage();
-					imageForTraining.initializeImage();
 					imageForTraining.element.css({opacity: '1'});
 					imageForTraining.moveObject();
 					//imageForTraining.moveObject();
@@ -290,7 +284,8 @@ var TrainingExamplesNamespace = {
 		imageForTraining.initializeImage();
 		
 		/**
-		 * Operations to perform when the image arrives at the target point 
+		 * Start to move the image contemporary with
+		 * the eye tracker 
 		 */
 		setTimeout(function() {
 			
@@ -303,13 +298,16 @@ var TrainingExamplesNamespace = {
 				//imageForTraining.drawObject();
 			}
 			
-		}, imageForTraining.pointDuration);
+		}, imageForTraining.timeToStart - (new Date().getTime())
+			+ imageForTraining.fixedWaitingForFirstPoint);
 	},
 
 	messageManager: function(data) {
 		
 		if (data.TYPE == "CAL_POINT") {
 			
+			console.log("Ricevuto punto");
+			console.log(imageForTraining.pointsToDraw);
 			/**
 			 * POINTS[0] = # POINT
 			 * POINTS[1] = X position
