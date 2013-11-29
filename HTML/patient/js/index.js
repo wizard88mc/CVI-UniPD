@@ -61,7 +61,7 @@ function presentationComplete() {
 				else {
 					
 					var dialog = $('<div>').attr('id', 'dialogAskSynch').attr('title', 'Sincronizzazione').appendTo('#divMainContent');
-					$('<p>').text('Il computer non Ã¨ stato sincronizzato recentemente e sarebbe opportuno effettuarla per avere dati piÃ¹ precisi.').appendTo(dialog);
+					$('<p>').text('Il computer non è stato sincronizzato recentemente e sarebbe opportuno effettuarla per avere dati più precisi.').appendTo(dialog);
 					$('<p>').text('Sincronizzare nuovamente?').appendTo(dialog);
 					dialog.dialog({
 						modal: true,
@@ -118,12 +118,17 @@ function putInWaitingToStart() {
 		
 		if (data.TYPE == "GAME") {
 			
-			if (data.GAME_ID == "CATCH_ME") {
-				location.replace('../catchMe/index.html');
-			}
-			else if (data.GAME_ID == "HELP_ME") {
-				location.replace('../helpMe/index.html');
-			}
+			websocket.close();
+			websocket = null;
+			setTimeout(function() {
+				if (data.GAME_ID == "CATCH_ME") {
+					location.replace('../catchMe/index.html');
+				}
+				else if (data.GAME_ID == "HELP_ME") {
+					location.replace('../helpMe/index.html');
+				}
+			}, 1000);
+			
 		}
 		else {
 			console.log("Bad message received");

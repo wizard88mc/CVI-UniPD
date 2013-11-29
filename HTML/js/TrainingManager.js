@@ -315,7 +315,8 @@ var TrainingExamplesNamespace = {
 			 */ 
 			var elements = (data.DATA).split(" ");
 			
-			var centerToDraw = new Point(Number(elements[2]), Number(elements[1]));
+			var centerToDraw = new Point(Number(elements[2].replace(",", ".")), 
+					Number(elements[1].replace(",", ".")));
 			
 			imageForTraining.pointsToDraw[elements[0] - 1] = centerToDraw;
 		}

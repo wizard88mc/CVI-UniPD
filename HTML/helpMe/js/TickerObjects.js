@@ -4,7 +4,7 @@ var frameAnimatorNamespace = {
 
     /**
      * 
-     * defines the transition that moves the image from
+     * Defines the transition that moves the image from
      * the red machine of the environment to the center
      * of the screen, changing its positions and its
      * size
@@ -60,10 +60,6 @@ var frameAnimatorNamespace = {
                 stop: touchManagerNamespace.touchEnd
             });
 
-            // devo aggiungere gestione evento mouseMove +
-            // mouselick x il sacco mezzo e nel caso in cui
-            // la posizione del mouse sia dentro oggetto giro 
-            // evento a suo gestore (evento deve essere tocco + sposto)
             gameManager.startTimeObjectOnScreen = new Date().getTime();
             gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.realGameManager);
         }
@@ -88,6 +84,30 @@ var frameAnimatorNamespace = {
                         'z-index': 200
                     });
                 }
+                /**
+                 * If the example has no help, show the hand
+                 * that follows the object from the starting
+                 * position to the end of the transition
+                 */
+                else {
+                	exampleManager.hand = $(exampleManager.handImage).attr('id', 'imgHand').appendTo('#divMainContent');
+                	
+                	var startTopPositionHand = imageObjectOnScreen.drawingPosition.top + 
+                		imageObjectOnScreen.height * 2 / 3;
+                	var startLeftPositionHand = imageObjectOnScreen.drawingPosition.left +
+                		imageObjectOnScreen.width / 2;
+                	exampleManager.hand.width(imageObjectOnScreen.element.width() * 2 / 3);
+                	exampleManager.hand.height(exampleManager.hand.width());
+                	exampleManager.hand.css({
+                		position: 'absolute',
+                		top: startTopPositionHand,
+                		left: startLeftPositionHand,
+                		'z-index': 200
+                	});
+                	
+                	addTransformSpecifications(exampleManager.hand, 'rotate(-20deg)');
+                	
+                }
                 if ($('#divSounds #soundBefore').length > 0) {
 
                     $('#divSounds #soundBefore').on('ended', function() {
@@ -104,15 +124,16 @@ var frameAnimatorNamespace = {
                 }
             }
             /**
-             * The example has to go to the bin in the left of
-             * the screen
+             * The example has to go inside the bin 
+             * on the left of the screen
              */
             else {
             		
-            	// Defines the transition for the example from its 
-            	// position to the bin
-            	
-        		var objectTransition = function() {      		
+            	/**
+            	 * Defines the transition for the example from it
+            	 * starting position to the bin on the left side
+            	 */
+        		var objectTransition = function() {	
 	            	imageObjectOnScreen.element.one(eventEndAnimation, function() {
 	        			
 	            		imageObjectOnScreen.element.one(eventEndAnimation, function(event) {
@@ -150,24 +171,44 @@ var frameAnimatorNamespace = {
             			
             			exampleManager.arrow.on(eventEndAnimation, function(event) {
                 			
-                			if (event.originalEvent.propertyName == "height") {
+                			if (event.originalEvent.propertyName == "left") {
                 				
                 				exampleManager.arrow.remove();
                 				addTransitionSpecifications(exampleManager.arrow, 'none');
             	                exampleManager.arrow = null;
                 			}
                 		}).css({
-            				height: '0px',
-            				left: exampleManager.arrow.position().left - exampleManager.arrow.height()
+            				width: '0px',
+            				left: cestino.width + 'px'
             			});
             		}
+	            	
+	            	if (exampleManager.hand != null) {
+	            		addTransitionSpecifications(exampleManager.hand, 'all 2s linear');
+	            		
+	            		exampleManager.hand.on(eventEndAnimation, function(event) {
+	            			
+		            		if (event.originalEvent.propertyName == "left") {
+		            			
+		            			exampleManager.hand.remove();
+		            			addTransitionSpecifications(exampleManager.hand, 'none');
+		            			exampleManager.hand = null;
+		            		}
+	            		}).css({
+	            			left: (cestino.width + imageObjectOnScreen.width * 2 / 3) + 'px'
+	            		});
+	            	}
+	            	
+	            	
         		};
         		
         		if (exampleManager.currentExample.withHelp) {
         			
         			exampleManager.arrow = $(exampleManager.arrowImage).attr('id', 'imgArrow')
         				.appendTo('#divMainContent');
-        			var bottomPositionImage = imageObjectOnScreen.drawingPosition.top + imageObjectOnScreen.height;
+        			
+        			var bottomPositionImage = imageObjectOnScreen.drawingPosition.top + 
+        				(imageObjectOnScreen.height / 2);
         			var hypotenuse = Math.sqrt(Math.pow(sacco.center.left, 2) 
         					+ Math.pow(getScreenHeight() - bottomPositionImage, 2));
         			
@@ -179,22 +220,42 @@ var frameAnimatorNamespace = {
                     exampleManager.arrow.width(imageObjectOnScreen.element.width() / 3);
                     exampleManager.arrowStartingHeight = sacco.center.top - bottomPositionImage;
                     exampleManager.arrow.height(heightArrow);
+                    
+                    bottomPositionImage += (exampleManager.arrow.width() * 2 / 3);
+                    
                     exampleManager.arrow.css({
                         position: 'absolute',
                         top: bottomPositionImage,
-                        left: imageObjectOnScreen.center.left - exampleManager.arrow.width() / 2,
+                        left: imageObjectOnScreen.center.left - exampleManager.arrow.height() * 2 / 3,
                         'z-index': 200
                     });
+                    
                     addTransformSpecifications(exampleManager.arrow, 'center top');
-                    
-                    /*exampleManager.arrow.css({
-                    	'transform-origin': 'center top',
-                    	'-webkit-transform-origin': 'center top',
-                    	'-moz-transform-origin': 'center top',
-                    	'-o-transform-origin': 'center top'
-                    });*/
-                    
                     addTransformSpecifications(exampleManager.arrow, 'rotate(90deg)');
+        		}
+        		else {
+        			/**
+        			 * Show the hand that follows the object
+        			 * to the bin
+        			 */
+    				exampleManager.hand = $(exampleManager.handImage).attr('id', 'imgHand').appendTo('#divMainContent');
+                	
+                	var startTopPositionHand = imageObjectOnScreen.drawingPosition.top + 
+                		imageObjectOnScreen.height * 2 / 3;
+                	var startLeftPositionHand = imageObjectOnScreen.drawingPosition.left +
+                		imageObjectOnScreen.width / 2;
+                	exampleManager.hand.width(imageObjectOnScreen.element.width() * 2 / 3);
+                	exampleManager.hand.height(exampleManager.hand.width());
+                	exampleManager.hand.css({
+                		position: 'absolute',
+                		top: startTopPositionHand,
+                		left: startLeftPositionHand,
+                		'z-index': 200
+                	});
+                	
+                	addTransformSpecifications(exampleManager.hand, 'rotate(-20deg)');
+        			
+        			
         		}
         		
         		if ($('#divSounds #soundBefore').length > 0) {
@@ -213,7 +274,6 @@ var frameAnimatorNamespace = {
     },
 
     /**
-     * 
      * Moves the example inside the bag
      */
     moveExampleIntoBag: function() {
@@ -247,16 +307,34 @@ var frameAnimatorNamespace = {
     		
     		exampleManager.arrow.on(eventEndAnimation, function(event) {
     			
-    			if (event.originalEvent.propertyName == "height") {
+    			if (event.originalEvent.propertyName === "height") {
     				
-    				exampleManager.arrow.remove();
+    				exampleManager.arrow.off(eventEndAnimation);
     				addTransitionSpecifications(exampleManager.arrow, 'none');
+    				exampleManager.arrow.remove();
 	                exampleManager.arrow = null;
     			}
     		}).css({
     			height: '0px',
     			top: finalTopArrow
     		});
+    	}
+    	if (exampleManager.hand != null) {
+    		
+    		addTransitionSpecifications(exampleManager.hand, transition);
+    		
+    		exampleManager.hand.on(eventEndAnimation, function(event) {
+    			
+    			if (event.originalEvent.propertyName === "top") {
+    				
+    				exampleManager.hand.off(eventEndAnimation);
+    				addTransitionSpecifications(exampleManager.hand, 'none');
+    				exampleManager.hand.remove();
+    				exampleManager.hand = null;
+    			}
+    		}).css({
+    			top: finalTopObject
+    		})
     	}
     	
         /*gameManager.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.moveExampleIntoBag);
@@ -286,7 +364,6 @@ var frameAnimatorNamespace = {
      * Works during the game, sending a packet with all the informations
      * every maxSensibility milliseconds, and checks if the time is expired
      */
-
     realGameManager: function(time) {
 
         gameManager.currentAnimationFrame = 

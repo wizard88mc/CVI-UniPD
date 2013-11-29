@@ -99,7 +99,8 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
             if (result.isEmpty()) {
                     
                 JSONObject packetStartCalcultation = new JSONObject();
-                packetStartCalcultation.put(BaseManager.MESSAGE_TYPE, BaseManager.OFFSET_CALCULATION);
+                packetStartCalcultation.put(BaseManager.MESSAGE_TYPE, 
+                        BaseManager.OFFSET_CALCULATION);
                 packetStartCalcultation.put("TODO", "true");
                 packetStartCalcultation.put("MANDATORY", "true");
 

@@ -63,7 +63,7 @@ public class ServerManager {
      * che deve però essere invocato da un utente esterno
      */
     public static void main(String args[]) {
-        WebSocket.DEBUG = false;
+        WebSocket.DEBUG = true;
         String host = "localhost";
         
         if (args.length != 0) {
@@ -81,8 +81,8 @@ public class ServerManager {
             System.out.println("Server Started");
             
             Thread.sleep(3000);
-            //EyeTrackerSimulator simulator = new EyeTrackerSimulator(host, 8000);
-            //simulator.connect();
+            EyeTrackerSimulator simulator = new EyeTrackerSimulator(host, 8000);
+            simulator.connect();
         }
         catch (Exception exc) {
             exc.printStackTrace();

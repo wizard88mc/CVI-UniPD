@@ -42,16 +42,20 @@ function presentationComplete() {
 			
 			$('#imageGetAttention').remove();
 			
-			presentationManager = new PresentationManager();
-			presentationManager.createElements();
-			
+			/**
+			 * To avoid presentation, delete after tests
+			 */
+			//presentationManager = new PresentationManager();
+			//presentationManager.createElements();
+			initGame();
+			allExamplesCompleted();
 		}
 		else if (packet.TYPE == 'START_WORKING') {
 			
 			gameManager.timeToStart = packet.START_TIME;
 			allInfosRetrieved();
 		}
-		else if (packet.TYPE == "SCREEN_MEASURES") {
+		else if (packet.TYPE == 'SCREEN_MEASURES') {
 			
 			var packetToSend = {
 				'TYPE': 'SCREEN_MEASURES',
@@ -67,15 +71,15 @@ function presentationComplete() {
 			websocket.close();
 			location.replace('../patient/index.html');
 		}
-		else if (packet.TYPE == "STOP_GAME") {
+		else if (packet.TYPE == 'STOP_GAME') {
 			
 			gameManager.gameInProgress = false;
 		}
-		else if (packet.TYPE == "START_TRAINING") {
+		else if (packet.TYPE == 'START_TRAINING') {
 			
 			TrainingExamplesNamespace.startTraining(packet);
 		}
-		else if (packet.TYPE == "CAL_POINT") {
+		else if (packet.TYPE == 'CAL_POINT') {
 			
 			TrainingExamplesNamespace.messageManager(packet);
 		}
@@ -189,7 +193,10 @@ function manageLevels(repeatLevel) {
 
     }
     else {
-        // Gioco completato: faccio animazione finale e invio pacchetto
+        /**
+         * Game Completed: sends the final packet
+         * and prepares the sled to leave
+         */
     	if (gameManager.gameInProgress) {
 	        var packetEnd = {
 	            TYPE: "STOP_GAME"
@@ -240,7 +247,6 @@ function manageImageObjectsLevel() {
 
     gameManager.indexImageObject++;
 
-
     if (gameManager.indexImageObject < oggettiPerLivello.length && gameManager.gameInProgress) {
         gameManager.currentImage = oggettiPerLivello[gameManager.indexImageObject];
 
@@ -260,11 +266,11 @@ function manageImageObjectsLevel() {
     }
     else {
 
-        levelComplete();
+        levelCompleted();
     }
 }
 
-function levelComplete() {
+function levelCompleted() {
 
     gameManager.indexImageObject = -1;
     
@@ -276,17 +282,18 @@ function levelComplete() {
     var packetEndLevel = {
 		TYPE: "LEVEL_ENDED"
     };
-    
     websocket.send(JSON.stringify(packetEndLevel));
+    
     var levelCompletion = function() { 
 	    sacco.element.css({
 	    	top: getScreenHeight()
-	    }).one('transitionend webkitTransitionEnd oTransitionEnd', function() {
+	    }).one('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
 	    	
-	    	
-	    	setTimeout(function() {
-	    		manageLevels(!gameManager.levelCompletedCorrectly);
-	    	}, 1000);
+	    	if (event.originalEvent.propertyName === "top") {
+		    	setTimeout(function() {
+		    		manageLevels(!gameManager.levelCompletedCorrectly);
+		    	}, 1000);
+	    	}
 	    	
 	    });
 	    
@@ -307,6 +314,10 @@ function levelComplete() {
     
 }
 
+/**
+ * Plays an audio track to underline
+ * the correctness of the answer
+ */
 function playGoodAnswerSound() {
 	
 	var numberOfElements = $('#divSounds #soundsGoodAnswer audio').length;
@@ -314,6 +325,10 @@ function playGoodAnswerSound() {
 	$('#divSounds #soundsGoodAnswer audio').get(Math.floor(Math.random() * numberOfElements)).play();
 }
 
+/**
+ * Plays an audio track to underline
+ * the wrongness of the answer
+ */
 function playBadAnswerSound() {
 	
 	var numberOfElements = $('#divSounds #soundsBadAnswer audio').length;

@@ -34,17 +34,18 @@ var HelpMeNamespace = {
 		HelpMeNamespace.prepareLegend();
 		HelpMeNamespace.prepareCanvas();
 		
-		$('<div>').attr('id', 'divButtonStopGame').text('Stop game').insertBefore('#tableResultsHelpMe')
-		.button().on('click', function() {
-			
-			var packetToSend = {
-				TYPE: "STOP_GAME"
-			};
-			
-			websocket.send(JSON.stringify(packetToSend));
-			
-			$(this).remove();
-		});
+		$('<div>').attr('id', 'divButtonStopGame').text('Stop game')
+			.insertBefore('#tableResultsHelpMe')
+			.button().on('click', function() {
+				
+				var packetToSend = {
+					TYPE: "STOP_GAME"
+				};
+				
+				websocket.send(JSON.stringify(packetToSend));
+				
+				$(this).remove();
+			});
 		
 		websocket.onmessage = HelpMeNamespace.entryFunction;
 	},
@@ -59,6 +60,10 @@ var HelpMeNamespace = {
 		HelpMeNamespace.entryFunction(JSON.stringify(fakePacket));
 	},
 	
+	/**
+	 * Manages the messages received during 
+	 * the exercises of the child
+	 */
 	entryFunction: function(message) {
 		
 		var packet = JSON.parse(message.data || message);
@@ -67,43 +72,45 @@ var HelpMeNamespace = {
 			
 			useEyeTracker = true;
 			
-			$('<p>').text('Non appena tutto sarà pronto, cliccare su Ok per iniziare la presentazione...').appendTo(
-			$('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Pronto').appendTo('#divMainContent')
-			.dialog({
-				modal: true,
-				resizable: false,
-				closeOnEscape: false,
-				draggable: false,
-				buttons: {
-					Ok: function() {
-						$(this).dialog("remove");
-						$(this).remove();
+			$('<p>').text('Non appena tutto sarà pronto, cliccare su Ok per iniziare la presentazione...')
+			.appendTo(
+				$('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Pronto').appendTo('#divMainContent')
+				.dialog({
+					modal: true,
+					resizable: false,
+					closeOnEscape: false,
+					draggable: false,
+					buttons: {
+						Ok: function() {
+							$(this).dialog('remove');
+							$(this).remove();
+							
+							$('#divMainContent > h1').text('HelpMe!');
+							
+							var packetToSend = {
+								'TYPE': 'START_PRESENTATION'
+							};
+							
+							websocket.send(JSON.stringify(packetToSend));
+							
+							$('<p>').text('Presentazione in corso. Attendere ....').appendTo(
+								$('<div>').attr('id', 'dialogWaitingEndPresentation').attr('title', 'Attendere')
+								.appendTo('#divMainContent').dialog({
+									modal: true,
+									resizable: false,
+									closeOnEscape: false,
+									draggable: false
+								}));
+						}
 						
-						$('#divMainContent > h1').text('HelpMe!');
-						
-						var packetToSend = {
-							'TYPE': 'START_PRESENTATION'
-						};
-						
-						websocket.send(JSON.stringify(packetToSend));
-						
-						$('<p>').text('Presentazione in corso. Attendere ....').appendTo(
-							$('<div>').attr('id', 'dialogWaitingEndPresentation').attr('title', 'Attendere')
-							.appendTo('#divMainContent').dialog({
-								modal: true,
-								resizable: false,
-								closeOnEscape: false,
-								draggable: false
-							}));
 					}
-					
-				}
-			}));
+				})
+			);
 		}
 		/**
 		 * Show dialog to select training parameters 
 		 */
-		else if (packet.TYPE == "TRAINING_SESSION" && packet.DATA == "true") {
+		else if (packet.TYPE == 'TRAINING_SESSION' && packet.DATA == "true") {
 			
 			TrainingManager.screenWidth = screenWidth;
 			TrainingManager.dialogSelectParameters();
@@ -111,15 +118,18 @@ var HelpMeNamespace = {
 		/**
 		 * Training is ended, show evaluation from the eye tracker 
 		 */
-		else if (packet.TYPE == "CAL_QUAL") {
+		else if (packet.TYPE == 'CAL_QUAL') {
 			
 			TrainingManager.trainingResult(packet.DATA);
 			TrainingManager.trainingComplete = HelpMeNamespace.trainingComplete;
 		}
-		else if (packet.TYPE == "EYE_TRACKER_NOT_READY") {
+		else if (packet.TYPE == 'EYE_TRACKER_NOT_READY') {
 			
-			$('<p>').text('Il sistema di eye-tracking non � collegato. Si desidera procedere con la visita senza analisi del movimento degli occhi?')
-			.appendTo($('<div>').attr('id', 'dialogTrackerNotReady').attr('title', 'Tracciamento degli occhi non collegato').appendTo('#divMainContent'))
+			$('<p>').text('Il sistema di eye-tracking non è collegato. Si desidera procedere con la visita senza analisi del movimento degli occhi?')
+			.appendTo(
+					$('<div>').attr('id', 'dialogTrackerNotReady').attr('title', 'Tracciamento degli occhi non collegato')
+					.appendTo('#divMainContent')
+			)
 			.dialog({
 				modal: true,
 				resizable: false,
@@ -127,7 +137,7 @@ var HelpMeNamespace = {
 				draggable: false,
 				width: getScreenWidth() * 0.5,
 				buttons: {
-					"Prosegui senza": function() {
+					'Prosegui senza': function() {
 						$(this).dialog("close");
 						$(this).remove();
 						
@@ -140,7 +150,7 @@ var HelpMeNamespace = {
 						HelpMeNamespace.entryFunction(JSON.stringify(fakePacket));
 						
 					},
-					"Attendi collegamento": function() {
+					'Attendi collegamento': function() {
 						console.log("Attendi collegamento");
 						$(this).dialog("close");
 						$(this).remove();
@@ -166,10 +176,12 @@ var HelpMeNamespace = {
 		}
 		else if (packet.TYPE == 'PRESENTATION_COMPLETE') {
 			
-			$('#dialogWaitingEndPresentation').dialog("close").remove();
+			$('#dialogWaitingEndPresentation').dialog('close').remove();
 			
-			$('<p>').text('Presentazione completata. Premere Ok per iniziare il gioco').appendTo(
-			$('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Cominciamo!').appendTo('#divMainContent')
+			$('<p>').text('Presentazione completata. Premere Ok per iniziare il gioco')
+			.appendTo(
+			$('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Cominciamo!')
+			.appendTo('#divMainContent')
 			.dialog({
 				modal: true,
 				resizable: false,
@@ -177,7 +189,7 @@ var HelpMeNamespace = {
 				draggable: false,
 				buttons: {
 					Ok: function() {
-						$(this).dialog("remove");
+						$(this).dialog('remove');
 						$(this).remove();
 						
 						$('#divMainContent > h1').text('HelpMe!');
@@ -194,7 +206,8 @@ var HelpMeNamespace = {
 						websocket.onmessage = HelpMeNamespace.messagesDuringGame;
 					}
 				}
-			}));
+			})
+			);
 		}
 		else {
 			console.log("Bad Message in entryFunction:");
@@ -208,7 +221,9 @@ var HelpMeNamespace = {
 		
 		var data = JSON.parse(message.data);
 		
-		// devo fare disegno del canvas con le varie posizioni
+		/**
+		 * GAME_POSITIONS: positions to show
+		 */
 		if (data.TYPE == 'GAME_POSITIONS') {
 			
 			var pointTouch = data.TOUCH_SPECS;
@@ -296,18 +311,27 @@ var HelpMeNamespace = {
 				drawingSettings.firstPointImage = false;
 			}
 			
-			
 		}
+		/**
+		 * LEVEL_ENDED: level complete, prepare next row
+		 */
 		else if (data.TYPE == 'LEVEL_ENDED') {
 			
-			changeCurrentIndexLevel = true; 
+			//changeCurrentIndexLevel = true;
+			indexCurrentLevel++;
 		}
+		/**
+		 * SESSION_RESULT: the patient gave an answer, 
+		 * add the statistics to the table
+		 */
 		else if (data.TYPE == 'SESSION_RESULTS') {
 			
 			var targetFamily = data.TARGET_FAMILY;
 			
+			/**
+			 * First value for the level, initialize values
+			 */
 			if (!firstResponseTimeValues[indexCurrentLevel]) {
-				// livello non ancora iniziato, inizializzo valori
 				firstResponseTimeValues[indexCurrentLevel] = new Array();
 				completionTimeValues[indexCurrentLevel] = new Array();
 				goodAnswers[indexCurrentLevel] = 0;
@@ -315,7 +339,39 @@ var HelpMeNamespace = {
 				
 				var row = $('<tr>').attr('id', targetFamily + indexCurrentLevel)
 					.css('font-weight', 'bold').appendTo(tableBody);
-				$('<td>').text('Resume').appendTo(row);
+				
+				var image = $('<img>').attr('src', '../images/less_details.png')
+					.css({
+						width: '15%',
+						'vertical-align': 'middle',
+						'margin-left': '0.2em',
+						'margin-right': '0.2em',
+						cursor: 'pointer'
+					});
+				
+				var clickLessDetails = function(e) {
+					e.preventDefault();
+					var parentID = $(this).parent().parent('tr').attr('id');
+					$('tr.sub'+parentID).fadeOut();
+					
+					image.off('click');
+					image.attr('src', '../images/show_more.png');
+					image.on('click', clickMoreDetails);
+				};
+				
+				var clickMoreDetails = function(e) {
+					e.preventDefault();
+					var parentID = $(this).parent().parent('tr').attr('id');
+					$('tr.sub'+parentID).fadeIn();
+					
+					image.off('click');
+					image.attr('src', '../images/less_details.png');
+					image.on('click', clickLessDetails);
+				}
+				
+				image.on('click', clickLessDetails);
+				
+				image.appendTo($('<td>').text('Resume').appendTo(row));	
 				$('<td>').text(targetFamily).appendTo(row);
 				$('<td>').addClass('meanValueFRT').appendTo(row);
 				$('<td>').addClass('meanValueCT').appendTo(row);
@@ -334,19 +390,35 @@ var HelpMeNamespace = {
 			
 			HelpMeNamespace.updateFamilyRow(targetFamily);
 			
-			var newRow = $('<tr>').appendTo(tableBody);
+			var newRow = $('<tr>').attr('class', 'sub'+targetFamily+indexCurrentLevel)
+				.appendTo(tableBody);
 			$('<td>').text(data.OBJECT_NAME).appendTo(newRow);
-			$('<td>').text(targetFamily).appendTo(newRow);
+			//$('<td>').text(targetFamily).appendTo(newRow);
+			$('<td>').appendTo(newRow);
 			$('<td>').text(data.FIRST_RESPONSE_TIME).appendTo(newRow);
 			$('<td>').text(data.COMPLETION_TIME).appendTo(newRow);
-			$('<td>').text(data.RIGHT_ANSWER).appendTo(newRow);
+			
+			if (data.RIGHT_ANSWER == true) {
+				$('<img>').attr('src', '../images/correct.png').attr('alt', 'Risposta corretta')
+				.css('width', '15%')
+				.appendTo(
+						$('<td>').appendTo(newRow)
+				);
+			}
+			else {
+				$('<img>').attr('src', '../images/incorrect.png').attr('alt', 'Risposta errata')
+				.css('width', '15%')
+				.appendTo(
+						$('<td>').appendTo(newRow)
+				)
+			}
 			
 			HelpMeNamespace.resetCanvas();
 			
-			if (changeCurrentIndexLevel) {
+			/*if (changeCurrentIndexLevel) {
 				indexCurrentLevel++;
 				changeCurrentIndexLevel = false;
-			}
+			}*/
 		}
 		else {
 			console.log("Bad message received in Entry Function: ");
@@ -394,11 +466,11 @@ var HelpMeNamespace = {
 		
 		var table = $('<table>').attr('id', 'tableResultsHelpMe').appendTo('#divMainContent');
 		var row = $('<tr>').appendTo($('<thead>').addClass('ui-widget-header').appendTo(table));
-		$('<th>').text('Object').appendTo(row);
-		$('<th>').text('Target Family').appendTo(row);
-		$('<th>').text('First Response Time (ms)').appendTo(row);
-		$('<th>').text('Completion Time (ms)').appendTo(row);
-		$('<th>').text('Correct / Wrong').appendTo(row);
+		$('<th>').text('Oggetto').appendTo(row);
+		$('<th>').text('Famiglia Target').appendTo(row);
+		$('<th>').text('Tempo risposta (ms)').appendTo(row);
+		$('<th>').text('Tempo completamento (ms)').appendTo(row);
+		$('<th>').text('Corrette / Errate').appendTo(row);
 			
 		tableBody = $('<tbody>').appendTo(table);		
 	},
@@ -443,6 +515,9 @@ var HelpMeNamespace = {
 		drawingSettings.lastPointTouch = null;
 	},
 	
+	/**
+	 * Prepares the legend of the report for the doctor
+	 */
 	prepareLegend: function() {
 		
 		var divLegend = $('<div>').attr('id', 'divLegend').appendTo('#screenPreview');

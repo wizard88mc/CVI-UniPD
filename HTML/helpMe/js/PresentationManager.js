@@ -90,6 +90,9 @@ function GnomoElement() {
     };
 }
 
+/**
+ * Class that manages the snow vehicle and its movements
+ */
 function SlittaElement() {
     this.element = null;
     this.imageFile = 'images/slitta.fw.png';
@@ -126,6 +129,10 @@ function SlittaElement() {
         });
     };
     
+    /**
+     * Calculates the final dimensions that the snow vehicle
+     * has to reach
+     */
     this.calculateTargetDimensions = function() {
         
         var ratioBetweenImages = presentationManager.gnomo.naturalWidth / 
@@ -177,113 +184,120 @@ function PresentationManager() {
     utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioFrenata').appendTo('#divSounds'), 
     		"frenata");
 
-this.loadComplete = function() {
-    presentationManager.imagesLoaded++;
-    
-    if (presentationManager.imagesLoaded == presentationManager.totalImages) {
-        
-        this.gnomo.calculateTargetDimensions();
-        this.slitta.calculateTargetDimensions();
-        presentationManager.buildPresentation();
-    }
-};
+    /**
+     * Method called whenever an image is loaded
+     * Once all images are loaded starts the presentation
+     */
+	this.loadComplete = function() {
+	    presentationManager.imagesLoaded++;
+	    
+	    if (presentationManager.imagesLoaded == presentationManager.totalImages) {
+	        
+	        this.gnomo.calculateTargetDimensions();
+	        this.slitta.calculateTargetDimensions();
+	        presentationManager.buildPresentation();
+	    }
+	};
 
-this.createElements = function() {
-    this.gnomo = new GnomoElement();
-    this.slitta = new SlittaElement();
-};
+	/**
+	 * Creates the pixie and snow vehicle elements
+	 */
+	this.createElements = function() {
+	    this.gnomo = new GnomoElement();
+	    this.slitta = new SlittaElement();
+	};
 
-this.buildPresentation = function() {
-	$('body').css({
-		'background-image': 'url(images/ZZ10042.jpg)',
-		'background-repeat': 'no-repeat',
-		'background-size': '100% 100%'
-	});
-    this.gnomo.element = $(this.gnomo.image);
-    this.gnomo.drawElement();
-    this.gnomo.element.appendTo('#divMainContent');
-    this.slitta.element = $(this.slitta.image);
-    this.slitta.drawElement();
-    this.slitta.element.appendTo('#divMainContent');
-    
-    /**
-     * First target point for gnomo, at some height
-     * of the screen on the left
-     */
-    this.firstPoint = new DestinationPoint(4, 6, true);
-   
-    /**
-     * Second target point for gnomo, at some height
-     * (higher than the first point) of the screen on
-     * the right
-     */
-    this.secondPoint = new DestinationPoint(2, 3, false);
-    
-    /**
-     * Defines the top position of the gnomo and the slitta
-     * at the end of the presentation
-     */
-    this.thirdPoint = new DestinationPoint(1, 1, true);
-    this.thirdPoint.slitta.left = -this.thirdPoint.slitta.left + getScreenWidth();
-    this.thirdPoint.gnomo.left = this.thirdPoint.slitta.left + (this.thirdPoint.slitta.width + this.thirdPoint.gnomo.left);
-    if (this.thirdPoint.slitta.top + this.thirdPoint.slitta.height > getScreenHeight()) {
-    	
-    	var newPosition = getScreenHeight() - (this.thirdPoint.slitta.height + this.thirdPoint.slitta.height / 2);
-    	var difference = this.thirdPoint.slitta.top - newPosition;
-    	this.thirdPoint.gnomo.top = this.thirdPoint.gnomo.top - difference;
-    	this.thirdPoint.slitta.top = newPosition;
-    }
-    
-    /**
-     * Point that the gnomo and slitta have to 
-     * arrive to stop down
-     */
-    this.fourthPoint = new DestinationPoint(1, 1, true);
-    this.fourthPoint.slitta.top = this.thirdPoint.slitta.top;
-    this.fourthPoint.gnomo.top = this.thirdPoint.gnomo.top;
-    this.fourthPoint.slitta.left = Math.round(getScreenWidth() / 2 - this.fourthPoint.slitta.width / 2);
-    var difference = this.thirdPoint.slitta.left - this.fourthPoint.slitta.left;
-    this.fourthPoint.gnomo.left = this.thirdPoint.gnomo.left - difference;
-    
-    /**
-     * First point that the gnomo has to reach to move
-     * down from the slitta, the gnomo is moving to the
-     * top
-     */
-    this.fifthPoint = new DestinationPoint(1, 1, true);
-    this.fifthPoint.gnomo.left = this.fourthPoint.gnomo.left;
-    this.fifthPoint.gnomo.top = this.fourthPoint.gnomo.top + 
-    	(this.fourthPoint.slitta.top - (this.fourthPoint.gnomo.top + this.fourthPoint.gnomo.height)) / 2;
-    this.fifthPoint.slitta.top = this.fourthPoint.slitta.top;
-    
-    /**
-     * Last point for the gnomo down from the slitta
-     */
-    this.sixthPoint = new DestinationPoint(1, 1, true);
-    this.sixthPoint.gnomo.top = this.fifthPoint.slitta.top + this.fifthPoint.slitta.height +
-    	(getScreenHeight() - (this.fifthPoint.slitta.top + this.fifthPoint.slitta.height)) / 2 - 
-    	this.fifthPoint.gnomo.height;
-    
-    this.pointSlittaOutsideForAway = new DestinationPoint(1, 1, true);
-    this.pointSlittaOutsideForAway.gnomo.top = this.sixthPoint.gnomo.top;
-    this.pointSlittaOutsideForAway.slitta.top = this.fifthPoint.slitta.top;
-    
-    this.pointSlittaAway = new DestinationPoint(1, 1, false);
-    this.pointSlittaAway.gnomo.width = 0;
-    this.pointSlittaAway.gnomo.height = 0;
-    this.pointSlittaAway.slitta.width = 0;
-    this.pointSlittaAway.slitta.height = 0;
-    this.pointSlittaAway.gnomo.top = 0;
-    this.pointSlittaAway.gnomo.left = getScreenWidth();
-    this.pointSlittaAway.slitta.top = 0;
-    this.pointSlittaAway.slitta.left = getScreenWidth();
-    
-    this.totalScaleFactorIncrease = this.slitta.targetScale / 6;
-    this.totalDistanceTop = getScreenHeight() / 6;
-    this.totalDistanceLeft = getScreenWidth() + this.slitta.image.naturalWidth * this.totalScaleFactorIncrease;
-    this.timeLastFrame = new Date().getTime();
-    this.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.functionMoveGnomo);
-    //this.currentAnimationFrame = window.requestAnimationFrame(moveGnomoToCenter);
-};
+	this.buildPresentation = function() {
+		$('body').css({
+			'background-image': 'url(images/ZZ10042.jpg)',
+			'background-repeat': 'no-repeat',
+			'background-size': '100% 100%'
+		});
+	    this.gnomo.element = $(this.gnomo.image);
+	    this.gnomo.drawElement();
+	    this.gnomo.element.appendTo('#divMainContent');
+	    this.slitta.element = $(this.slitta.image);
+	    this.slitta.drawElement();
+	    this.slitta.element.appendTo('#divMainContent');
+	    
+	    /**
+	     * First target point for gnomo, at some height
+	     * of the screen on the left
+	     */
+	    this.firstPoint = new DestinationPoint(4, 6, true);
+	   
+	    /**
+	     * Second target point for gnomo, at some height
+	     * (higher than the first point) of the screen on
+	     * the right
+	     */
+	    this.secondPoint = new DestinationPoint(2, 3, false);
+	    
+	    /**
+	     * Defines the top position of the gnomo and the slitta
+	     * at the end of the presentation
+	     */
+	    this.thirdPoint = new DestinationPoint(1, 1, true);
+	    this.thirdPoint.slitta.left = -this.thirdPoint.slitta.left + getScreenWidth();
+	    this.thirdPoint.gnomo.left = this.thirdPoint.slitta.left + (this.thirdPoint.slitta.width + this.thirdPoint.gnomo.left);
+	    if (this.thirdPoint.slitta.top + this.thirdPoint.slitta.height > getScreenHeight()) {
+	    	
+	    	var newPosition = getScreenHeight() - (this.thirdPoint.slitta.height + this.thirdPoint.slitta.height / 2);
+	    	var difference = this.thirdPoint.slitta.top - newPosition;
+	    	this.thirdPoint.gnomo.top = this.thirdPoint.gnomo.top - difference;
+	    	this.thirdPoint.slitta.top = newPosition;
+	    }
+	    
+	    /**
+	     * Point that the gnomo and slitta have to 
+	     * arrive to stop down
+	     */
+	    this.fourthPoint = new DestinationPoint(1, 1, true);
+	    this.fourthPoint.slitta.top = this.thirdPoint.slitta.top;
+	    this.fourthPoint.gnomo.top = this.thirdPoint.gnomo.top;
+	    this.fourthPoint.slitta.left = Math.round(getScreenWidth() / 2 - this.fourthPoint.slitta.width / 2);
+	    var difference = this.thirdPoint.slitta.left - this.fourthPoint.slitta.left;
+	    this.fourthPoint.gnomo.left = this.thirdPoint.gnomo.left - difference;
+	    
+	    /**
+	     * First point that the gnomo has to reach to move
+	     * down from the slitta, the gnomo is moving to the
+	     * top
+	     */
+	    this.fifthPoint = new DestinationPoint(1, 1, true);
+	    this.fifthPoint.gnomo.left = this.fourthPoint.gnomo.left;
+	    this.fifthPoint.gnomo.top = this.fourthPoint.gnomo.top + 
+	    	(this.fourthPoint.slitta.top - (this.fourthPoint.gnomo.top + this.fourthPoint.gnomo.height)) / 2;
+	    this.fifthPoint.slitta.top = this.fourthPoint.slitta.top;
+	    
+	    /**
+	     * Last point for the gnomo down from the slitta
+	     */
+	    this.sixthPoint = new DestinationPoint(1, 1, true);
+	    this.sixthPoint.gnomo.top = this.fifthPoint.slitta.top + this.fifthPoint.slitta.height +
+	    	(getScreenHeight() - (this.fifthPoint.slitta.top + this.fifthPoint.slitta.height)) / 2 - 
+	    	this.fifthPoint.gnomo.height;
+	    
+	    this.pointSlittaOutsideForAway = new DestinationPoint(1, 1, true);
+	    this.pointSlittaOutsideForAway.gnomo.top = this.sixthPoint.gnomo.top;
+	    this.pointSlittaOutsideForAway.slitta.top = this.fifthPoint.slitta.top;
+	    
+	    this.pointSlittaAway = new DestinationPoint(1, 1, false);
+	    this.pointSlittaAway.gnomo.width = 0;
+	    this.pointSlittaAway.gnomo.height = 0;
+	    this.pointSlittaAway.slitta.width = 0;
+	    this.pointSlittaAway.slitta.height = 0;
+	    this.pointSlittaAway.gnomo.top = 0;
+	    this.pointSlittaAway.gnomo.left = getScreenWidth();
+	    this.pointSlittaAway.slitta.top = 0;
+	    this.pointSlittaAway.slitta.left = getScreenWidth();
+	    
+	    this.totalScaleFactorIncrease = this.slitta.targetScale / 6;
+	    this.totalDistanceTop = getScreenHeight() / 6;
+	    this.totalDistanceLeft = getScreenWidth() + this.slitta.image.naturalWidth * this.totalScaleFactorIncrease;
+	    this.timeLastFrame = new Date().getTime();
+	    this.currentAnimationFrame = window.requestAnimationFrame(frameAnimatorNamespace.functionMoveGnomo);
+	    //this.currentAnimationFrame = window.requestAnimationFrame(moveGnomoToCenter);
+	};
 
 }

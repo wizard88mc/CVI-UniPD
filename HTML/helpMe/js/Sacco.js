@@ -1,9 +1,13 @@
-
+/**
+ * Represents the bag element
+ */
 function Sacco() {
     this.element = $('<div>').attr('id', 'divSacco');
     this.secondElement = $('<div>').attr('id', 'divSaccoMezzo');
     
-    	
+    /**
+     * Minimum width for the bag
+     */	
 	this.width = getScreenWidth() / 5 * 3;
     if (this.width < 768 / 2) {
         this.width = 768 / 2;
@@ -25,6 +29,10 @@ function Sacco() {
     this.halfBagHeight = this.height * 0.7;
     this.halfBagTop = getScreenHeight() - this.halfBagHeight;
     
+    /**
+     * Second part of the bag to put in front 
+     * of the first part
+     */
     this.secondElement.css({
     	width: this.width + 'px',
         height: this.halfBagHeight + 'px',
