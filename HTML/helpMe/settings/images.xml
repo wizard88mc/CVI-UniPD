@@ -3,37 +3,78 @@
     <family type="animali" audioFile="introduzione_sacco_animali_peluche" audioBagReady=""
     	audioObjectNotInserted="oggetto_non_inserito_animali_peluche">
         <image id="1" name="Oca" fileName="oca.png" />
-        <image id="2" name="Asino" fileName="asino.png" />
-        <image id="3" name="Coniglio" fileName="coniglio.png" />
-        <image id="4" name="Gallina" fileName="gallina.png" />
-        <image id="5" name="Gatto" fileName="gatto.png" />
-        <image id="6" name="Maiale" fileName="maiale.png" />
-        <image id="7" name="Tartaruga" fileName="tartaruga.png" />
+        <image id="2" name="Aquila" fileName="animali/aquila.png" />
+        <image id="3" name="Balena" fileName="animali/balena.png" />
+        <image id="4" name="Cammello" fileName="animali/cammello.png" />
+        <image id="5" name="Cane" fileName="animali/cane.png" />
+        <image id="6" name="Canguro" fileName="animali/canguro.png" />
+        <image id="7" name="Coccodrillo" fileName="animali/coccodrillo.png" />
+        <image id="8" name="Delfino" fileName="animali/delfino.png" />
+        <image id="9" name="Dromedario" fileName="animali/dromedario.png" />
+        <image id="10" name="Elefante" fileName="animali/elefante.png" />
+        <image id="11" name="Gatto" fileName="animali/gatto.png" />
+        <image id="12" name="Giraffa" fileName="animali/giraffa.png" />
+        <image id="13" name="Gufo" fileName="animali/gufo.png" />
+        <image id="14" name="Leone" fileName="animali/leone.png" />
+        <image id="15" name="Ippopotamo" fileName="animali/ippopotamo.png" />
+        <image id="16" name="Maiale" fileName="animali/maiale.png" />
+        <image id="17" name="Orso" fileName="animali/orso.png" />
+        <image id="18" name="Panda" fileName="animali/panda.png" />
+        <image id="19" name="Pantera" fileName="animali/pantera.png" />
+        <image id="20" name="Pappagallo" fileName="animali/pappagallo.png" />
+        <image id="21" name="Rinoceronte" fileName="animali/rinoceronte.png" />
+        <image id="22" name="Scimmia" fileName="animali/scimmia.png" />
+        <image id="23" name="Serpente" fileName="animali/serpente.png" />
+        <image id="24" name="Struzzo" fileName="animali/struzzo.png" />
+        <image id="25" name="Tigre" fileName="animali/tigre.png" />
+        <image id="26" name="Zebra" fileName="animali/zebra.png" />
     </family>
     <family type="macchine" audioFile="introduzione_sacco_macchinine" audioBagReady="sacco_pronto_macchinine"
     	audioObjectNotInserted="oggetto_non_inserito_macchinine">
-        <image id="8" name="Ferrari" fileName="ferrari.png" />
+        <image id="27" name="Ferrari" fileName="ferrari.png" />
+        <image id="28" name="Auto" fileName="macchine/auto.png" />
+        <image id="29" name="Bicicletta" fileName="macchine/biciclette.png" />
+        <image id="30" name="Camion" fileName="macchine/camion.png" />
+        <image id="31" name="Camion cisterna" fileName="macchine/camion_cisterna.png" />
+        <image id="32" name="Ciclomotore" fileName="macchine/ciclomotore.png" />
+        <image id="33" name="Moto" fileName="macchine/moto.png" />
+        <image id="34" name="Pullman" fileName="macchine/pullman.png" />
     </family>
     <family type="Pennarelli_Matite" audioFile="introduzione_sacco_pennarelli_matite" audioBagReady="sacco_pronto_pennarelli_matite"
     	audioObjectNotInserted="oggetto_non_inserito_pennarelli_matite">
-        <image id="9" name="Rosa" fileName="rosa.png" />
+        <image id="35" name="Pennarello viola" fileName="pennarelli_matite/pennarello_viola.png" />
     </family>
     <family type="Costruzioni" audioFile="introduzione_sacco_costruzioni" audioBagReady="sacco_pronto_costruzioni"
     	audioObjectNotInserted="oggetto_non_inserito_costruzioni">
-    	<image id="10" name="Biscotto" fileName="biscuit.png" />
-    	<image id="11" name="Occhiali" fileName="occhiali.png" />
-    	<image id="12" name="Ombrello" fileName="ombrello.png" />
-    	<image id="13" name="Orologio bambino" fileName="orologio-bambino.jpg" />
-    	<image id="14" name="Pipa" fileName="pipa.png" />
+    	
     </family>
     <family type="Soldatini" audioFile = "introduzione_sacco_soldatini" audioBagReady="sacco_pronto_soldatini"
     	audioObjectNotInserted="oggetto_non_inserito_soldatini">
     </family>
     <family type="Strumenti musicali" audioFile="introduzione_sacco_strumenti_musica" audioBagReady="sacco_pronto_strumenti_musica"
     	audioObjectNotInserted="oggetto_non_inserito_strumenti_musica">
+    	<image id="36" name="Chitarra" fileName="strumenti_musicali/chitarra.png" />
+    	<image id="37" name="Flauto" fileName="strumenti_musicali/flauto.png" />
+    	<image id="38" name="Pianola" fileName="strumenti_musicali/pianola.png" />
+    	<image id="39" name="Tamburino" fileName="strumenti_musicali/tamburino.png" />
+    	<image id="40" name="Tromba" fileName="strumenti_musicali/tromba.png" />
+    	<image id="41" name="Violino" fileName="strumenti_musicali/violino.png" />
+    	<image id="42" name="Xilofono" fileName="strumenti_musicali/xilofono.png" />
     </family>
     <family type="Vestiti bambole" audioFile="introduzione_sacco_vestiti_bambole" audioBagReady="sacco_pronto_vestiti_bambole"
     	audioObjectNotInserted="oggetto_non_inserito_vestiti_bambole">
+    	<image id="43" name="Bavaglino" fileName="vestiti/bavaglino.png" />
+    	<image id="44" name="Camicia da notte" fileName="vestiti/camicia_notte.png" />
+    	<image id="45" name="Cappotto" fileName="vestiti/cappotto.png" />
+    	<image id="46" name="Gonna" fileName="vestiti/gonna.png" />
+    	<image id="47" name="Pantaloni" fileName="vestiti/pantaloni.png" />
+    	<image id="48" name="Pigiamino" fileName="vestiti/pigiamino.png" />
+    	<image id="49" name="Pigiamino 2" fileName="vestiti/pigiamino2.png" />
+    	<image id="50" name="Salopette" fileName="vestiti/salopette.png" />
+    	<image id="51" name="Scarpette" fileName="vestiti/scarpette.png" />
+    	<image id="52" name="Tuta" fileName="vestiti/tuta.png" />
+    	<image id="53" name="Vestaglia" fileName="vestiti/vestaglia.png" />
+    	<image id="54" name="Vestito" fileName="vestiti/vestito.png" />
     </family>
     <family type="Dolcetti" audioFile="introduzione_sacco_dolcetti" audioBagReady=""
     	audioObjectNotInserted="oggetto_non_inserito_dolcetti">
