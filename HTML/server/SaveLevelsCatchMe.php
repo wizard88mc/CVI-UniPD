@@ -2,45 +2,96 @@
 require_once("DBParameters.php");
 
 $patientID = $_POST['patientID'];
-$gameSettings = json_decode($_POST['settings'], true);
+$gameLevels = json_decode($_POST['settings'], true);
+$queryToTest = array();
 
-$rightMovement = $gameSettings['rightMovement'] ? 1 : 0;
-$leftMovement = $gameSettings['leftMovement'] ? 1 : 0;
-$upMovement = $gameSettings['upMovement'] ? 1 : 0;
-$downMovement = $gameSettings['downMovement'] ? 1 : 0;
+$finalQuery = "INSERT INTO CatchMeExercises(IDPatient, Movements, StartFromCenter, MixMovements, Speed,
+	Background, ImageColor, ChangeImageColor, ImageID, ImageWidth, CurrentValidSettings, ExerciseOrder, NumberOfRepetitions) VALUES";
 
-$stringMovements = "";
+foreach($gameLevels as $key => $levelSettings) {
 
-if ($leftMovement) {
-	$stringMovements = $stringMovements . "L";
+	$rightMovement = $levelSettings['rightMovement'] ? 1 : 0;
+	$leftMovement = $levelSettings['leftMovement'] ? 1 : 0;
+	$upMovement = $levelSettings['upMovement'] ? 1 : 0;
+	$downMovement = $levelSettings['downMovement'] ? 1 : 0;
+
+	$stringMovements = "";
+
+	if ($leftMovement) {
+		$stringMovements = $stringMovements . "L";
+	}
+	if ($rightMovement) {
+		$stringMovements = $stringMovements . ";R";
+	}
+	if ($upMovement) {
+		$stringMovements = $stringMovements . ";T";
+	}
+	if ($downMovement) {
+		$stringMovements = $stringMovements . ";B";
+	}
+
+	if (strpos($stringMovements, ";") == 0) {
+		$stringMovements = substr_replace($stringMovements, "", 0, 1);
+	}
+
+	$startFromCenter = $levelSettings['startFromCenter'] ? 1 : 0;
+	$mixMovements = $levelSettings['mixMovements'] ? 1 : 0;
+	$speed = $levelSettings['speed']; 
+	$backgroundColor = $levelSettings['backgroundColor'];
+	$foregroundColor = $levelSettings['foregroundColor'];
+	$imageID = $levelSettings['imageID'];
+	$changeImageColor = $levelSettings['changeImageColor'] ? 1 : 0;
+	$percentualImageWidth = $levelSettings['percentualImageWidth'];
+	$numberOfRepetitions = $levelSettings['numberOfRepetitions'];
+
+	$finalQuery .= "($patientID, \"$stringMovements\", $startFromCenter, $mixMovements, $speed, \"$backgroundColor\", \"$foregroundColor\"
+		, $changeImageColor, $imageID, $percentualImageWidth, 1, $key, $numberOfRepetitions),";
+	
+	
+	$queryToTest[] = "SELECT * FROM CatchMeExercises WHERE IDPatient = $patientID AND Movements = \"$stringMovements\" AND StartFromCenter = $startFromCenter AND MixMovements = $mixMovements AND 
+			Speed = $speed AND Background = \"$backgroundColor\" AND ImageColor = \"$foregroundColor\" AND ChangeImageColor = $changeImageColor AND ImageID = $imageID AND 
+			CurrentValidSettings = 1 AND NumberOfRepetitions = $numberOfRepetitions AND ExerciseOrder = $key";
 }
-if ($rightMovement) {
-	$stringMovements = $stringMovements . ";R";
-}
-if ($upMovement) {
-	$stringMovements = $stringMovements . ";T";
-}
-if ($downMovement) {
-	$stringMovements = $stringMovements . ";B";
+
+print_r($queryToTest);
+
+$oldExercise = true;
+echo count($queryToTest);
+for ($i = 0; $i < count($queryToTest) && $oldExercise; $i++) {
+	
+	$resultTest = mysqli_query($connection, $queryToTest[$i]) or die(mysqli_error($connection));
+	echo $resultTest->num_rows;
+	if ($resultTest->num_rows == 0) {
+		$oldExercise = false;
+	}
 }
 
-if (strpos($stringMovements, ";") == 0) {
-	$stringMovements = substr_replace($stringMovements, "", 0, 1);
+if (!$oldExercise) {
+	echo "Nuovo esercizio";
 }
+else {
+	echo "Vecchio esercizio";
+}
+/*
+if ($newExercise == true) {
 
-$startFromCenter = $gameSettings['startFromCenter'] ? 1 : 0;
-$mixMovements = $gameSettings['mixMovements'] ? 1 : 0;
-$speed = $gameSettings['speed']; 
-$backgroundColor = $gameSettings['backgroundColor'];
-$foregroundColor = $gameSettings['foregroundColor'];
-$imageID = $gameSettings['imageID'];
-$changeImageColor = $gameSettings['changeImageColor'] ? 1 : 0;
-$percentualImageWidth = $gameSettings['percentualImageWidth'];
-$isSpaceGame = $gameSettings['isSpaceGame'] ? 1 : 0;
+	$finalQuery = substr($finalQuery, 0, strlen($finalQuery) - 1);
+	
+	print_r($finalQuery);
+	
+	$queryRemoveAllCurrentActiveExercises = "UPDATE CatchMeExercises SET CurrentValidSettings = 0 WHERE IDPatient = $patientID";
+	
+	mysqli_query($connection, $queryRemoveAllCurrentActiveExercises) or die(mysqli_error($connection));
+	
+	mysqli_query($connection, $finalQuery) or die(mysqli_error($connection));
+	
+	echo "Nuovo esercizio inserito correttamente";
+}
+else {
+	echo "Esercizio vecchio";
+}*/
 
-print_r($startFromCenter);
-
-$queryCheckAlreadyExercise = "SELECT * FROM CatchMeExercises  
+/*$queryCheckAlreadyExercise = "SELECT * FROM CatchMeExercises  
 		WHERE IDPatient = $patientID AND CurrentValidSettings = 1 
 		AND Movements = \"$stringMovements\" AND Speed = $speed 
 		AND StartFromCenter = $startFromCenter AND MixMovements = $mixMovements 
@@ -90,6 +141,6 @@ if (mysqli_num_rows($resultQueryCheckAlreadyExercise) == 0) {
 }
 else {
 	echo "Stesso esercizio già inserito";
-}
+}*/
 
 ?>

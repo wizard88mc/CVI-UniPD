@@ -7,3 +7,36 @@ div#divChooseTypeOfGame label {
 	margin-left: 0.5em;
 }
 
+div.divSetExercises {
+	width: 95%;
+	margin: auto;
+	margin-top: 1.5em;
+}
+
+div.divLeft {
+	float: left;
+	width: 45%;
+}
+
+div.divRight {
+	float: right;
+	width: 50%;
+}
+
+.inline_block {
+	display: inline-block;
+}
+
+img.imgYesOrNo {
+	width: 10%;
+	margin-left: 0.7em;
+}
+
+div#divDialogMovimenti label {
+	margin-left: 0.5em;
+}
+
+.smallLabel {
+	font-weight: bold;
+	font-size: 0.9em;
+}

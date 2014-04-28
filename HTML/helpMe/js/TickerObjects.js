@@ -368,6 +368,8 @@ var frameAnimatorNamespace = {
 
         gameManager.currentAnimationFrame = 
             window.requestAnimationFrame(frameAnimatorNamespace.realGameManager);
+        
+        time = new Date().getTime();
 
         if (time - gameManager.lastTimeMessageSent > gameManager.maxSensibility) {
             var packetPositions = {
@@ -386,7 +388,7 @@ var frameAnimatorNamespace = {
         if (!imageObjectOnScreen.moveInsideSacco && !imageObjectOnScreen.moveInsideCestino) {
         	
             var elapsedTime = time - gameManager.startTimeObjectOnScreen;
-
+            
             if (elapsedTime >= gameManager.maxTimeObjectOnScreen) {
                 window.cancelAnimationFrame(gameManager.currentAnimationFrame);
                 // devo richiamare funzione per fine tempo

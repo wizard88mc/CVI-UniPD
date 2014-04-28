@@ -254,8 +254,8 @@ var HelpMeNamespace = {
 			
 			
 			var pointEye = data.EYE_SPECS;
-			
-			if (pointEye != null && pointEye.LEFT != -1) {
+			console.log(pointEye);
+			if (pointEye.LEFT != null && pointEye.LEFT != -1) {
 				pointEye.LEFT = pointEye.LEFT * ratio;
 				pointEye.TOP = pointEye.TOP * ratio;
 				

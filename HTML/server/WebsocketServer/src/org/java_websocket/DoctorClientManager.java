@@ -107,7 +107,7 @@ public class DoctorClientManager extends BaseManager {
          */
         else if (packet.get(BaseManager.MESSAGE_TYPE).equals(BaseManager.START_TRAINING)) {
             
-            long timeToStart = new Date().getTime() + 3000;
+            long timeToStart = new Date().getTime() + 15000; // Audio presentation lasts 12 seconds
             long timeForEyeTracker = eyeTrackerManager.calculateTimeWithOffset(timeToStart);
             long timeForPatient = patientManager.calculateTimeWithOffset(timeToStart);
             

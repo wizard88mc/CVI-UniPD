@@ -223,6 +223,14 @@ function addSoundSource(element, sourceFileName) {
 		.attr('type', 'audio/mpeg').attr('preload', 'auto').appendTo(element);
 }
 
+function addGeneralSound(element, sourceFileName) {
+	
+	$('<source>').attr('src', sourceFileName + '.ogg')
+		.attr('type', 'audio/ogg').attr('preload', 'auto').appendTo(element);
+	$('<source>').attr('src', sourceFileName + '.mp3')
+		.attr('type', 'audio/mpeg').attr('preload', 'auto').appendTo(element);
+}
+
 function checkForLocalStorageIfFolder(folder) {
 	
 	var pattern = /^\d_\d{4}_\d+_\d+_\d+_\d+_\d+/i;

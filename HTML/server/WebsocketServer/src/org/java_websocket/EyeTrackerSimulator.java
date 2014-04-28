@@ -214,7 +214,7 @@ public class EyeTrackerSimulator extends Thread {
                     
                     JSONObject packetToSend = new JSONObject();
                     packetToSend.put("TYPE", "MACHINE_ID");
-                    packetToSend.put("DATA", "189");
+                    packetToSend.put("DATA", "194");
                     
                     clientConnecter.send(packetToSend.toJSONString());
                 }

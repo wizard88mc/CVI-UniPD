@@ -1,3 +1,9 @@
+var audioNemoPresentation = null;
+var audioSourceNemoArrived = ["../sounds/che_limpido", "../sounds/guardiamo_qui", "../sounds/sono_qua" ];
+var audioSourceNemoMoving  = ["../sounds/ora_vado_questa_parte", "../sounds/seguimi_andiamo_questa_parte"];
+var audioNemoArrived = new Array();
+var audioNemoMoving = new Array();
+
 var ImageForTraining = function(settings) {
 	
 	this.image = new Image();
@@ -14,6 +20,7 @@ var ImageForTraining = function(settings) {
 	this.secondsForTransition = settings.TRANSITION_DURATION;
 	this.pointDuration = settings.POINT_DURATION;
 	this.pointsToDraw = new Array(4);
+	this.pointsArrived = 0;
 	this.currentPoint = -1;
 	this.scale = "";
 	this.rotate = "";
@@ -33,37 +40,36 @@ var ImageForTraining = function(settings) {
 		
 		var pointCenter = this.pointsToDraw[this.currentPoint];
 		
-		console.log("End point: " + pointCenter.top + ", " + pointCenter.left);
-		
-		this.calculateRotation(pointCenter);
-		this.calculateScale(pointCenter);
-		
-		addTransformSpecifications(this.element, this.transformString());
-		
-		var transition = 'top ' + this.secondsForTransition / 1000 + 's, ' +
-			'left ' + this.secondsForTransition / 1000 + 's';
-		
-		addTransitionSpecifications(this.element, transition);
-		
-		this.center = pointCenter;
-		
-		var drawLeft = this.center.left - this.width / 2;
-		var drawTop = this.center.top - this.height / 2;
-		this.element.css({
-			'transition-timing-function': 'linear',
-			'-webkit-transition-timing-function': 'linear',
-			top: drawTop,
-			left: drawLeft
-		});
-	};
-	
-	this.drawObject = function() {
-		
-		/*this.element.css({
-			left: this.drawPosition.left,
-			top: this.drawPosition.top,
-			opacity: '1'
-		});*/	
+		if (pointCenter != null) {
+			console.log("End point: " + pointCenter.top + ", " + pointCenter.left);
+			
+			this.calculateRotation(pointCenter);
+			this.calculateScale(pointCenter);
+			
+			addTransformSpecifications(this.element, this.transformString());
+			
+			var transition = 'top ' + this.secondsForTransition / 1000 + 's, ' +
+				'left ' + this.secondsForTransition / 1000 + 's';
+			
+			addTransitionSpecifications(this.element, transition);
+			
+			this.center = pointCenter;
+			
+			var drawLeft = this.center.left - this.width / 2;
+			var drawTop = this.center.top - this.height / 2;
+			this.element.css({
+				'transition-timing-function': 'linear',
+				'-webkit-transition-timing-function': 'linear',
+				top: drawTop,
+				left: drawLeft
+			});
+			
+			/**
+			 * Reproduces random audio while Nemo moving
+			 */
+			var randomPosition = Math.floor(Math.random() * (audioNemoMoving.length - 1));
+			audioNemoMoving[randomPosition].get(0).play();
+		}
 	};
 	
 	this.transformString = function() {
@@ -97,6 +103,8 @@ var ImageForTraining = function(settings) {
 		addTransitionSpecifications(this.element, 'none');
 		addTransformSpecifications(this.element, 'none');
 			
+		this.element.on('transitionend webkitTransitionEnd oTransitionEnd', this.imageArrived);
+		
 		this.element.css({
 			opacity: '1',
 			position: 'absolute',
@@ -105,8 +113,6 @@ var ImageForTraining = function(settings) {
 			top: paintTop,
 			left: paintLeft,
 		});
-		
-		this.element.on('transitionend webkitTransitionEnd oTransitionEnd', this.imageArrived);
 	};
 	
 	this.calculateScale = function(newPoint) {
@@ -211,7 +217,13 @@ var ImageForTraining = function(settings) {
 			}
 	
 			image.addClass('animated bounceIn');
-				
+			
+			/**
+			 * Reproduces a sound to get the attention of the child
+			 */
+			var randomPosition = Math.floor(Math.random() * (audioNemoArrived.length - 1));
+			audioNemoArrived[randomPosition].get(0).play();
+			
 			/*
 			 * Timeout to start moving from current point to the next one
 			 */
@@ -225,11 +237,8 @@ var ImageForTraining = function(settings) {
 					
 					$('#imageGetAttention').remove();
 						
-					//imageForTraining.prepareImage();
 					imageForTraining.element.css({opacity: '1'});
 					imageForTraining.moveObject();
-					//imageForTraining.moveObject();
-					//imageForTraining.drawObject();
 				}
 				else {
 					console.log("Training terminated");
@@ -246,8 +255,6 @@ var TrainingExamplesNamespace = {
 	
 	startTraining: function(settings) {
 		
-		console.log('Starting training');
-		
 		$('body').css({
 			height: getScreenHeight(),
 			'background-color': '#000064',
@@ -262,6 +269,46 @@ var TrainingExamplesNamespace = {
 		}
 		
 		imageForTraining = new ImageForTraining(settings);
+		
+		/**
+		 * Loading audio for when Nemo reaches a target point for the traing
+		 */
+		if (audioNemoArrived.length == 0) {
+			
+			if ($('#divSounds #audioTraining').length == 0) {
+				$('<div>').attr('id', 'audioTraining').appendTo('#divSounds');
+			}
+			/**
+			 * Iterating over the string sources with the file names
+			 */
+			for (var x in audioSourceNemoArrived) {
+				var audioToAdd = $('<audio>').appendTo('#audioTraining');
+				addGeneralSound(audioToAdd, audioSourceNemoArrived[x]);
+				
+				audioNemoArrived.push(audioToAdd);
+			}
+		} 
+		
+		if (audioNemoMoving.length == 0) {
+			
+			if ($('#divSounds #audioTraining').length == 0) {
+				$('<div>').attr('id', 'audioTraining').appendTo('#divSounds');
+			}
+			/**
+			 * Iterating over the string sources with the file names
+			 */
+			for (var x in audioSourceNemoMoving) {
+				var audioToAdd = $('<audio>').appendTo('#audioTraining');
+				addGeneralSound(audioToAdd, audioSourceNemoMoving[x]);
+				
+				audioNemoMoving.push(audioToAdd);
+			}
+		}
+		
+		soundNemoPresentation = $('<audio>').attr('id', 'audioNemoPresentation').appendTo('#audioTraining');
+		addGeneralSound(soundNemoPresentation, '../sounds/nemoPresentazione');
+		
+		soundNemoPresentation.get(0).play();
 	},
 	
 	/**
@@ -287,27 +334,28 @@ var TrainingExamplesNamespace = {
 		 * Start to move the image contemporary with
 		 * the eye tracker 
 		 */
-		setTimeout(function() {
-			
-			
+		/*setTimeout(function() {
+
+
 			imageForTraining.currentPoint++;
 			if (imageForTraining.currentPoint < imageForTraining.pointsToDraw.length) {
-				
+
 				//imageForTraining.prepareImage()
 				imageForTraining.moveObject();
 				//imageForTraining.drawObject();
 			}
-			
+
 		}, imageForTraining.timeToStart - (new Date().getTime())
-			+ imageForTraining.fixedWaitingForFirstPoint);
+			+ imageForTraining.fixedWaitingForFirstPoint);*/
+		
 	},
 
 	messageManager: function(data) {
 		
 		if (data.TYPE == "CAL_POINT") {
 			
-			console.log("Ricevuto punto");
-			console.log(imageForTraining.pointsToDraw);
+			imageForTraining.pointsArrived++;
+			
 			/**
 			 * POINTS[0] = # POINT
 			 * POINTS[1] = X position
@@ -319,6 +367,22 @@ var TrainingExamplesNamespace = {
 					Number(elements[1].replace(",", ".")));
 			
 			imageForTraining.pointsToDraw[elements[0] - 1] = centerToDraw;
+			
+			if (imageForTraining.pointsArrived == 1) {
+				
+				setTimeout(function() {
+					
+					imageForTraining.currentPoint++;
+					console.log("Current point: " + imageForTraining.currentPoint + ",Length: " + imageForTraining.pointsToDraw.length);
+					if (imageForTraining.currentPoint < imageForTraining.pointsToDraw.length) {
+						
+						//imageForTraining.prepareImage()
+						imageForTraining.moveObject();
+						//imageForTraining.drawObject();
+					}
+					
+				}, imageForTraining.fixedWaitingForFirstPoint);
+			}
 		}
 	}
 };
@@ -388,10 +452,7 @@ var TrainingManager = {
 				draggable: false,
 				closeOnEscape: false,
 				width: getScreenWidth() * 0.6,
-				/*position: {
-					my: "center top",
-					at: "center top+5%"
-				},*/
+
 				buttons: {
 					"Inizia": function() {
 						
@@ -412,7 +473,6 @@ var TrainingManager = {
 						
 						$(this).dialog("close");
 						$(this).remove();
-						
 						
 						var dialog = $('<div>').attr('id', 'dialogWaitingCompleteTraining')
 							.attr('title', 'Attendere ...').appendTo('#divMainContent');

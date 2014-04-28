@@ -148,7 +148,7 @@ goToGame: function() {
 			}
 			else {
 				/**
-				 * CatchMe game choosed
+				 * CatchMe game
 				 */
 				if (gameIdentification == "CATCH_ME") {
 					
@@ -166,7 +166,7 @@ goToGame: function() {
 							if (data.TYPE == "GAME" && data.RESULT == true) {
 								setTimeout(CatchMeSettingsNamespace.requestScreenClient, 3000);
 							}
-							else if (data.TYPE == "GAME" && data.RESULT == false) {
+							else if (data.TYPE == "GAME" && data.RESULT == false) {	
 								console.log("No client connected");
 								NewVisitNamespace.noClientConnected();
 							}
@@ -180,7 +180,7 @@ goToGame: function() {
 					
 				}
 				/**
-				 * HelpMe game chooses
+				 * HelpMe game
 				 */
 				else if (gameIdentification == "HELP_ME") {
 					
@@ -423,7 +423,7 @@ initializePage: function() {
 								.appendTo('#divNewPatient');
 							
 							$('<p>').text('Operazione completata').appendTo(dialog);
-							$('<p>').text('Il nuovo bambino Ë gi‡† selezionato nell\'elenco a sinistra.').appendTo(dialog);
+							$('<p>').text('Il nuovo bambino √® gi√† selezionato nell\'elenco a sinistra.').appendTo(dialog);
 							
 							dialog.dialog({
 								modal: true, 

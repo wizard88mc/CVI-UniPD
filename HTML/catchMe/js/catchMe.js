@@ -12,6 +12,7 @@ var stringForOfflineFile = "";
 var packetsIntoOfflineString = 0;
 var timerWriter = null;
 var folderNameLocalStorage = "";
+var machineID = -1;
 
 function presentationComplete() {
 	
@@ -30,7 +31,7 @@ function presentationComplete() {
 
 			console.log("CatchMeGame Settings");
 				
-			CatchMeNamespace.defineGame(data.SETTINGS);
+			CatchMeNamespace.defineGame(data);
 		}
 		else if (data.TYPE == 'GO_BACK') {
 			websocket.close();
@@ -61,7 +62,7 @@ function Animation(startP, endP, finalA, mov) {
 					
 this.calculateAnimationTime = function() {
 					
-	return Math.round(this.distance / (gameSettings.speed * 5));
+	return Math.round(this.distance / (levelsToPerform[gameManager.levelIterator].speed * 5));
 };
 }
 
@@ -77,10 +78,13 @@ function GameSettings() {
 	this.backgroundColor = '';
 	this.foregroundColor = '';
 	this.changeImageColor = true;
-	this.isSpaceGame = false;
 	this.percentualImageWidth = 0; // percentual of the image width, used for CSS
 	this.effectiveImageWidth = 0; // image width in pixels, useful for calculations
 	this.effectiveImageHeight = 0; // image height in pixels, used for calculation	
+	this.imageID = -1;
+	this.repetitionsOfMovements = 1;
+	this.iteratorAnimations = -1;
+	this.animations = new Array();
 	
 this.getBackgroundRGB = function() {
 	return new Array(hexToR(this.backgroundColor),
@@ -95,9 +99,10 @@ this.getForegroundRGB = function() {
 };
 	
 };
-var gameSettings = null;
+//var gameSettings = null;
 
-var aviableImages = new Array();
+var levelsToPerform = new Object();
+var availableImages = new Array();
 var timeCloseIconShowed = 0;
 var patientID = null;
 
@@ -116,17 +121,18 @@ this.isArrivedToDestination = function() {
 };
 }
 var canvasSettings = null;
+var listCanvasSettings = new Array();
 
 function GameManager() {
 	this.gameInAction = true;
 	this.sensibility = 1000 / 25;
-	this.repetitionBasicMovements = 2;
-	this.idImageChoosed = -1;
 	this.timing;
 	this.timeToStart = null;
 	this.lastMessageSent = 0;
-	this.sequenceOfAnimations = [];
-	this.animationsIterator = 0;
+	//this.sequenceOfAnimations = [];
+	//this.animationsIterator = 0;
+	this.levelIterator = 0;
+	this.currentRepetitionAnimation = 0;
 	this.currentAnimation = null;
 	this.lastTimePlayedGoodSound = 0;
 }
@@ -135,37 +141,50 @@ var gameManager = null;
 var CatchMeNamespace = {
 
 defineGame: function(settings) {
-	canvasSettings = new CanvasSettings();
+	
 	gameManager = new GameManager();
-	gameSettings = new GameSettings();
+	canvasSettings = new CanvasSettings();
+	availableImages = settings.IMAGES_SPECS;
 	
-	gameSettings.rightMovement = settings.rightMovement || settings.RIGHT_MOV;
-	gameSettings.downMovement = settings.downMovement || settings.DOWN_MOV;
-	gameSettings.upMovement = settings.upMovement || settings.UP_MOV;
-	gameSettings.leftMovement = settings.leftMovement || settings.LEFT_MOV;
-	gameSettings.startFromCenter = Boolean(settings.startFromCenter || settings.START_CENTER);
-	gameSettings.mixMovements = Boolean(settings.mixMovements || settings.MIX_MOVEMENTS);
-	gameSettings.backgroundColor = settings.backgroundColor || settings.BACK_COLOR;
-	gameSettings.foregroundColor = settings.foregroundColor || settings.IMG_COLOR;
-	gameSettings.speed = Number(settings.speed || settings.SPEED);
-	gameSettings.changeImageColor = Boolean(settings.changeImageColor || settings.CHANGE_IMG_COLOR);
-	gameSettings.percentualImageWidth = Number(settings.percentualImageWidth || settings.IMG_WIDTH);
-	gameSettings.isSpaceGame = Boolean(settings.IS_SPACE_GAME || settings.isSpaceGame);
+	var levels = settings.EXERCISES;
 	
-	var dimensions = (settings.canvasSize || settings.CANVAS_SIZE).split("x");
-	canvasSettings.width = Number(dimensions[0]);
-	canvasSettings.height = Number(dimensions[1]);
-	canvasSettings.fileName = settings.imageFileName || settings.IMG_SPECS.IMG_FILE;
 	
-	var divSounds = $('<div>').attr('id', 'divSounds').appendTo('body');
-	
-	var arraySounds = ['bene', 'molto_bene', 'continua_cosi'];
-	
-	for (index in arraySounds) {
+	for (var index in levels) {
 		
-		addSoundSource($('<audio>').addClass('soundGreetings').appendTo(divSounds), arraySounds[index]);
+		levelsToPerform[index] = new GameSettings();
+		
+		levelsToPerform[index].rightMovement = levels[index].rightMovement || levels[index].RIGHT_MOV;
+		levelsToPerform[index].downMovement = levels[index].downMovement || levels[index].DOWN_MOV;
+		levelsToPerform[index].upMovement = levels[index].upMovement || levels[index].UP_MOV;
+		levelsToPerform[index].leftMovement = levels[index].leftMovement || levels[index].LEFT_MOV;
+		levelsToPerform[index].startFromCenter = Boolean(levels[index].startFromCenter || levels[index].START_CENTER);
+		levelsToPerform[index].mixMovements = Boolean(levels[index].mixMovements || levels[index].MIX_MOVEMENTS);
+		levelsToPerform[index].backgroundColor = levels[index].backgroundColor || levels[index].BACK_COLOR;
+		levelsToPerform[index].foregroundColor = levels[index].foregroundColor || levels[index].IMG_COLOR;
+		levelsToPerform[index].speed = Number(levels[index].speed || levels[index].SPEED);
+		levelsToPerform[index].changeImageColor = Boolean(levels[index].changeImageColor || levels[index].CHANGE_IMG_COLOR);
+		levelsToPerform[index].percentualImageWidth = Number(levels[index].percentualImageWidth || levels[index].IMG_WIDTH);
+		levelsToPerform[index].imageID = Number(levels[index].imageID || levels[index].IMG_ID);
+		levelsToPerform[index].repetitionsOfMovements = Number(levels[index].numberOfRepetitions || levels[index].NUM_REPETITIONS);
+		
+		var imageID = levelsToPerform[index].imageID;
+		
+		listCanvasSettings[index] = new CanvasSettings();
+		
+		var dimensions = (availableImages[imageID].IMG_SIZE).split("x");
+		listCanvasSettings[index].width = Number(dimensions[0]);
+		listCanvasSettings[index].height = Number(dimensions[1]);
+		listCanvasSettings[index].fileName = availableImages[imageID].IMG_FILE;
+		
+		var divSounds = $('<div>').attr('id', 'divSounds').appendTo('body');
+		
+		var arraySounds = ['bene', 'molto_bene', 'continua_cosi'];
+		
+		for (var soundIndex in arraySounds) {
+			
+			addSoundSource($('<audio>').addClass('soundGreetings').appendTo(divSounds), arraySounds[soundIndex]);
+		}
 	}
-	
 	CatchMeNamespace.buildAnimations();
 },
 
@@ -185,13 +204,13 @@ timingFunction: function() {
 	
 	var timeNow = new Date().getTime();
 	var position = $('#image').position();
-	canvasSettings.actual = new Point(Math.round(position.top), Math.round(position.left));
+	listCanvasSettings[gameManager.levelIterator].actual = new Point(Math.round(position.top), Math.round(position.left));
 		
 	var packet = {
 		TYPE: "GAME_DATA",
 		SUBTYPE: "POSITIONS",
 		TIME: timeNow - gameManager.timeToStart,
-		IMAGE: [canvasSettings.actual.left, canvasSettings.actual.top],
+		IMAGE: [listCanvasSettings[gameManager.levelIterator].actual.left, listCanvasSettings[gameManager.levelIterator].actual.top],
 		TOUCH: [touchManager.posX, touchManager.posY],
 		MOVEMENT: gameManager.currentAnimation.movement
 	};
@@ -202,7 +221,7 @@ timingFunction: function() {
 
 	gameManager.lastMessageSent = timeNow - gameManager.timeToStart;
 		
-	if (canvasSettings.isArrivedToDestination()) {
+	if (listCanvasSettings[gameManager.levelIterator].isArrivedToDestination()) {
 		
 		if (gameManager.currentAnimation.finalAnimation == true) {
 			// funzione di arrivo a destinazione
@@ -218,7 +237,7 @@ timingFunction: function() {
 		websocket.close();
 		websocket = null;
 		
-		CatchMeNamespace.createTransitionCSS(0, canvasSettings.actual);
+		CatchMeNamespace.createTransitionCSS(0, listCanvasSettings[gameManager.levelIterator].actual);
 		clearInterval(gameManager.timing);
 		CatchMeNamespace.animationEndGame(); 
 	}
@@ -227,27 +246,31 @@ timingFunction: function() {
 		$('#divCloseGame img').css('visibility', 'hidden');
 		$('#divCloseGame img').unbind('click');
 	}
+},
+
+sendPacketImageScreenInfo: function() {
 	
+	var packetToSend = {
+			"TYPE": "READY_TO_PLAY", 
+			"MACHINE_ID": machineID,
+			"IMAGE_WIDTH": levelsToPerform[gameManager.levelIterator].effectiveImageWidth,
+			"IMAGE_HEIGHT": levelsToPerform[gameManager.levelIterator].effectiveImageHeight,
+			"SCREEN_WIDTH": getScreenWidth(),
+			"SCREEN_HEIGHT": getScreenHeight()
+		};
+		
+		websocket.send(JSON.stringify(packetToSend));
 },
 
 putInWaiting: function() {
 	
 	$('#divMainContent').remove();
 	
-	var machineID = checkAlreadySync();
+	machineID = checkAlreadySync();
 	
 	websocket.onmessage = CatchMeNamespace.waitingToStart;
 	
-	var packetToSend = {
-		"TYPE": "READY_TO_PLAY", 
-		"MACHINE_ID": machineID,
-		"IMAGE_WIDTH": gameSettings.effectiveImageWidth,
-		"IMAGE_HEIGHT": gameSettings.effectiveImageHeight,
-		"SCREEN_WIDTH": getScreenWidth(),
-		"SCREEN_HEIGHT": getScreenHeight()
-	};
-	
-	websocket.send(JSON.stringify(packetToSend));
+	CatchMeNamespace.sendPacketImageScreenInfo();
 },
 
 trainingComplete: function() {
@@ -268,11 +291,16 @@ waitingToStart: function(message) {
 		websocket.onmessage = function(message) { 
 			try {
 				var packet = JSON.parse(message.data);
-				// se ricevo messaggio che mi dice di 
-				// interrompere simulazione, stoppo gioco
+				/**
+				 * Message with information about the new speed
+				 * of the image
+				 */
 				if (packet.TYPE == "CHANGE_SPEED") {
 					gameSettings.speed = packet.NEW_SPEED;	
 				}
+				/**
+				 * The doctor requires to stop the game
+				 */
 				else if (packet.TYPE == "STOP_GAME") {
 					gameManager.gameInAction = false;
 					
@@ -287,7 +315,9 @@ waitingToStart: function(message) {
 				console.log(message.data);
 			}
 		};
-		// devo recuperare istruzioni per disegnare
+		/**
+		 * Time to start the game
+		 */
 		CatchMeNamespace.startGame();
 	}
 	else if (packet.TYPE == "START_TRAINING") {
@@ -304,32 +334,47 @@ waitingToStart: function(message) {
 	}
 },
 
-drawCanvas: function() {
+drawCanvas: function(drawCanvas) {
 	
-	var canvas = $('<canvas>').attr('id', 'image')
-		.appendTo('body').css('z-index', '10');
-	
-	canvas[0].width = canvasSettings.width;
-	canvas[0].height = canvasSettings.height;
-	var context = canvas[0].getContext('2d');
-	var image = new Image();
-	image.src = 'images/' + canvasSettings.fileName;
-	$(image).load(function() {
-		context.drawImage(image, 0, 0, canvasSettings.width, canvasSettings.height);
-	});
-	
-	
-	canvas.css('width', gameSettings.percentualImageWidth + '%');
-	canvas.css('position', 'absolute');
-	
-	gameSettings.effectiveImageWidth = canvas.width();
-	gameSettings.effectiveImageHeight = canvas.height();
-	
-	if (gameSettings.changeImageColor) {
+	if (drawCanvas) {
 		
-		var arrayForeground = gameSettings.getForegroundRGB();
-		setSpecificColor('image', arrayForeground[0],
-						arrayForeground[1], arrayForeground[2]);
+		var canvas = $('<canvas>').attr('id', 'image')
+			.appendTo('body').css('z-index', '10');
+	
+		canvas[0].width = listCanvasSettings[gameManager.levelIterator].width;
+		canvas[0].height = listCanvasSettings[gameManager.levelIterator].height;
+		var context = canvas[0].getContext('2d');
+		var image = new Image();
+		image.src = 'images/' + listCanvasSettings[gameManager.levelIterator].fileName;
+		$(image).load(function() {
+			context.drawImage(image, 0, 0, 
+					listCanvasSettings[gameManager.levelIterator].width, 
+					listCanvasSettings[gameManager.levelIterator].height);
+		});
+		
+		
+		canvas.css('width', levelsToPerform[gameManager.levelIterator].percentualImageWidth + '%');
+		canvas.css('position', 'absolute');
+		
+		levelsToPerform[gameManager.levelIterator].effectiveImageWidth = canvas.width();
+		levelsToPerform[gameManager.levelIterator].effectiveImageHeight = canvas.height();
+		
+		if (levelsToPerform[gameManager.levelIterator].changeImageColor) {
+			
+			var arrayForeground = levelsToPerform[gameManager.levelIterator].getForegroundRGB();
+			setSpecificColor('image', arrayForeground[0],
+							arrayForeground[1], arrayForeground[2]);
+		}
+	}
+	else {
+		for (var i = 0; i < Object.keys(levelsToPerform).length; i++) {
+			
+			var ratioDimensions = listCanvasSettings[i].width / listCanvasSettings[i].height;
+			
+			levelsToPerform[i].effectiveImageWidth = Math.round(getScreenWidth() * levelsToPerform[i].percentualImageWidth / 100);
+			levelsToPerform[i].effectiveImageHeight = Math.round(levelsToPerform[i].effectiveImageWidth / ratioDimensions);
+			
+		}
 	}
 },
 
@@ -339,28 +384,28 @@ buildAnimations: function() {
 		margin: '0em',
 		padding: '0em'
 	});
-	CatchMeNamespace.drawCanvas();
-	$('#image').css('visibility', 'hidden');
+	CatchMeNamespace.drawCanvas(false);
+	//$('canvas#image').css('visibility', 'hidden');
 	
-	// canvas è definito in tutte le sue forme / misure, 
-	// posso iniziare a costruire animazioni
+	/**
+	 * Defining standard points
+	 */
 	
-	centerImage.top = Math.floor(getScreenHeight() / 2 - (gameSettings.effectiveImageHeight / 2));
-	centerImage.left = Math.floor(getScreenWidth() / 2 - (gameSettings.effectiveImageWidth / 2)); 
-	
-	topCenterScreen.top = 0;
-	topCenterScreen.left = centerImage.left;
-	bottomCenterScreen.top = getScreenHeight() - gameSettings.effectiveImageHeight;
-	bottomCenterScreen.left = centerImage.left;
-	leftMiddleScreen.top = centerImage.top;
-	leftMiddleScreen.left = 0;
-	rightMiddleScreen.left = getScreenWidth() - gameSettings.effectiveImageWidth;
-	rightMiddleScreen.top = centerImage.top; 
-	
-	for (var i = 0; i < 100; i++) {
-		var animations = CatchMeNamespace.defineSingleAnimation();
+	for (var i = 0; i < Object.keys(levelsToPerform).length; i++) {
 		
-		gameManager.sequenceOfAnimations = gameManager.sequenceOfAnimations.concat(animations);	
+		centerImage.top = Math.floor(getScreenHeight() / 2 - (levelsToPerform[i].effectiveImageHeight / 2));
+		centerImage.left = Math.floor(getScreenWidth() / 2 - (levelsToPerform[i].effectiveImageWidth / 2));
+		
+		topCenterScreen.top = 0;
+		topCenterScreen.left = centerImage.left;
+		bottomCenterScreen.top = getScreenHeight() - levelsToPerform[i].effectiveImageHeight;
+		bottomCenterScreen.left = centerImage.left;
+		leftMiddleScreen.top = centerImage.top;
+		leftMiddleScreen.left = 0;
+		rightMiddleScreen.left = getScreenWidth() - levelsToPerform[i].effectiveImageWidth;
+		rightMiddleScreen.top = centerImage.top; 
+		
+		levelsToPerform[i].animations = CatchMeNamespace.defineSingleAnimation(levelsToPerform[i]);
 	}
 	/**
 	 * All animations defined, the game is ready to start
@@ -373,7 +418,7 @@ startGame: function() {
 	
 	var packetSpeed = {
 			'TYPE': 'SPEED_VALUE', 
-			'SPEED': gameSettings.speed
+			'SPEED': levelsToPerform[0].speed
 		};
 	websocket.send(JSON.stringify(packetSpeed));
 	
@@ -384,21 +429,6 @@ startGame: function() {
 	});
 	
 	$('#imageTraining').remove();
-	
-	if (!gameSettings.isSpaceGame) {
-		$('body').css({
-			'background-color': gameSettings.backgroundColor
-		});
-	}
-	else {
-		$('body').css({
-			'background-color': '#000064',
-			'background-image': 'url("../images/background_training.png")',
-			'background-size': '100%',
-			'background-position': 'left bottom',
-			'background-repeat': 'no-repeat'
-		});
-	}
 	
 	/**
 	 * Events necessary to manage touch
@@ -440,6 +470,11 @@ startGame: function() {
 	
 	$('#image').css('visibility', 'visible');
 	
+	var audioExplanation = $('<audio>').attr('id', 'audioIntroduction').appendTo('#divSounds');
+	addGeneralSound(audioExplanation, '../sounds/paperino.mp3');
+	
+	audioExplanation.get(0).play();
+	
 	CatchMeNamespace.defineAnimationFunction(true);
 },
 
@@ -455,63 +490,85 @@ defineAnimationFunction: function(firstTime, timeToWait) {
 		timeToWait = gameManager.timeToStart - new Date().getTime();
 	}
 	
-	if (gameManager.animationsIterator >= gameManager.sequenceOfAnimations.length) {
-		gameManager.animationsIterator = 0;
+	//gameManager.currentRepetitionAnimation++;
+	levelsToPerform[gameManager.levelIterator].iteratorAnimations++;
+	//if (gameManager.currentRepetitionAnimation > levelsToPerform[gameManager.levelIterator].repetitionsOfMovements) {
+		//levelsToPerform[gameManager.levelIterator].iteratorAnimation++;
+		//gameManager.currentRepetitionAnimation = 1;
+	//}
+	if (levelsToPerform[gameManager.levelIterator].iteratorAnimations >= 
+		levelsToPerform[gameManager.levelIterator].animations.length) {
+		gameManager.levelIterator++;
+		
+		if (gameManager.levelIterator < Object.keys(levelsToPerform).length) {
+			levelsToPerform[gameManager.levelIterator].iteratorAnimations = 0;
+			CatchMeNamespace.sendPacketImageScreenInfo();
+		}
 	}
-	var animationToPerform = gameManager.sequenceOfAnimations[gameManager.animationsIterator];
-	gameManager.animationsIterator++;
-	gameManager.currentAnimation = animationToPerform;
-	var startPoint = animationToPerform.startPoint;
-	var endPoint = animationToPerform.endPoint;
 	
-	canvasSettings.finalPoint = new Point(endPoint.top, endPoint.left);
-	
-	$('#image').css({
-		left: startPoint.left,
-		top: startPoint.top
-	});
-	
-	$('#image').on('mousemove touchmove touchstart mousedown', function(e) {
-
-		e.preventDefault();
-		var time = new Date().getTime();
-		if (time - gameManager.lastTimePlayedGoodSound > 5000) {
-			
-			var number = $('#divSounds audio').length;
-			
-			var index = Math.floor(Math.random() * number);
-			$('#divSounds audio').get(index).play();
-			
-			gameManager.lastTimePlayedGoodSound = time;
-		}
-	});
-
-	var timeForAnimation = animationToPerform.calculateAnimationTime();
-	
-	setTimeout(function() {
+	if (gameManager.levelIterator < Object.keys(levelsToPerform).length) {
 		
-		CatchMeNamespace.createTransitionCSS(timeForAnimation, canvasSettings.finalPoint);
+		CatchMeNamespace.drawCanvas(true);
 		
-		if (firstTime) {
-			gameManager.timing = setInterval(CatchMeNamespace.timingFunction, gameManager.sensibility);	
-		}
+		var currentLevel = levelsToPerform[gameManager.levelIterator];
 		
-	}, timeToWait);
+		$('body').css({
+			'background-color': currentLevel.backgroundColor
+		});
+		
+		var animationToPerform = currentLevel.animations[currentLevel.iteratorAnimations];
+		gameManager.currentAnimation = animationToPerform;
+		var startPoint = animationToPerform.startPoint;
+		var endPoint = animationToPerform.endPoint;
+		
+		listCanvasSettings[gameManager.levelIterator].finalPoint = new Point(endPoint.top, endPoint.left);
+		
+		$('#image').css({
+			left: startPoint.left,
+			top: startPoint.top
+		});
+		
+		$('#image').on('mousemove touchmove touchstart mousedown', function(e) {
 	
+			e.preventDefault();
+			var time = new Date().getTime();
+			if (time - gameManager.lastTimePlayedGoodSound > 5000) {
+				
+				var number = $('#divSounds audio').length;
+				
+				var index = Math.floor(Math.random() * number);
+				$('#divSounds audio').get(index).play();
+				
+				gameManager.lastTimePlayedGoodSound = time;
+			}
+		});
+	
+		var timeForAnimation = animationToPerform.calculateAnimationTime();
+		
+		setTimeout(function() {
+			
+			CatchMeNamespace.createTransitionCSS(timeForAnimation, listCanvasSettings[gameManager.levelIterator].finalPoint);
+			
+			if (firstTime) {
+				gameManager.timing = setInterval(CatchMeNamespace.timingFunction, gameManager.sensibility);	
+			}
+			
+		}, timeToWait);
+	}
 },
 
-defineSingleAnimation: function() {
+defineSingleAnimation: function(levelSettings) {
 	
 	var animations = [];
 	var startPoint = null, endPoint = null;
 							
-	if (gameSettings.startFromCenter) {
+	if (levelSettings.startFromCenter) {
 		startPoint = new Point(centerImage.top, centerImage.left);
 	}
-	if (gameSettings.upMovement) {
+	if (levelSettings.upMovement) {
 		
-		for (var i = 0; i < gameManager.repetitionBasicMovements; i++) { 
-			if (!gameSettings.startFromCenter) {
+		for (var i = 0; i < levelSettings.repetitionsOfMovements; i++) {
+			if (!levelSettings.startFromCenter) {
 				startPoint = new Point(bottomCenterScreen.top, bottomCenterScreen.left);
 			}
 			
@@ -519,10 +576,10 @@ defineSingleAnimation: function() {
 			animations.push(new Animation(startPoint, endPoint, true, 'T'));
 		}
 	}
-	if (gameSettings.downMovement) {
+	if (levelSettings.downMovement) {
 		
-		for (var i = 0; i < gameManager.repetitionBasicMovements; i++) {
-			if (!gameSettings.startFromCenter) {
+		for (var i = 0; i < levelSettings.repetitionsOfMovements; i++) {
+			if (!levelSettings.startFromCenter) {
 				startPoint = new Point(topCenterScreen.top, topCenterScreen.left);
 			}
 			
@@ -530,11 +587,11 @@ defineSingleAnimation: function() {
 			animations.push(new Animation(startPoint, endPoint, true, 'B'));
 		}
 	}
-	if (gameSettings.leftMovement /*&& !gameSettings.rightMovement && 
+	if (levelSettings.leftMovement /*&& !gameSettings.rightMovement && 
 		!gameSettings.upMovement && !gameSettings.downMovement*/) {
 			
-		for (var i = 0; i < gameManager.repetitionBasicMovements; i++) {
-			if (!gameSettings.startFromCenter) {
+		for (var i = 0; i < levelSettings.repetitionsOfMovements; i++) {
+			if (!levelSettings.startFromCenter) {
 				startPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
 			}
 			
@@ -542,11 +599,11 @@ defineSingleAnimation: function() {
 			animations.push(new Animation(startPoint, endPoint, true, 'L'));
 		}
 	}
-	if (gameSettings.rightMovement /*&& !gameSettings.leftMovement && 
+	if (levelSettings.rightMovement /*&& !gameSettings.leftMovement && 
 		!gameSettings.upMovement && !gameSettings.downMovement*/) {
 		
-		for (var i = 0; i < gameManager.repetitionBasicMovements; i++) {
-			if (!gameSettings.startFromCenter) {
+		for (var i = 0; i < levelSettings.repetitionsOfMovements; i++) {
+			if (!levelSettings.startFromCenter) {
 				startPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);	
 			}
 	
@@ -555,108 +612,119 @@ defineSingleAnimation: function() {
 		}
 	}
 	
-	if (gameSettings.upMovement && gameSettings.downMovement && gameSettings.mixMovements
+	if (levelSettings.upMovement && levelSettings.downMovement && levelSettings.mixMovements
 		/* && !gameSettings.leftMovement && !gameSettings.rightMovement*/) {
 		
-		var movement = '';
-		if (Math.random() > 0.5) {
-			// movimento da alto verso basso
-			if (!gameSettings.startFromCenter) {
-				startPoint = new Point(topCenterScreen.top, topCenterScreen.left);
-			}
-			endPoint = new Point(bottomCenterScreen.top, bottomCenterScreen.left);
-			movement = 'B';
-		}
-		else {
-			// movimento da basso verso alto
-			if (!gameSettings.startFromCenter) {
-				startPoint = new Point(bottomCenterScreen.top, bottomCenterScreen.left);
-			}
-			endPoint = new Point(topCenterScreen.top, topCenterScreen.left);
-			movement = 'T';
-		}
-		animations.push(new Animation(startPoint, endPoint, true, movement));
-	}
-	if (gameSettings.upMovement && gameSettings.leftMovement && gameSettings.mixMovements  
-		/* && !gameSettings.downMovement && !gameSettings.rightMovement*/) {
-	
-		if (!gameSettings.startFromCenter) {
-			startPoint = new Point(bottomCenterScreen.top,
-							bottomCenterScreen.left + Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
-		}
-		endPoint = new Point(topCenterScreen.top, 
-					topCenterScreen.left - Math.floor(Math.random() * topCenterScreen.left));
-
-		animations.push(new Animation(startPoint, endPoint, true, 'TL'));
-	}
-	if (gameSettings.upMovement && gameSettings.rightMovement && gameSettings.mixMovements 
-		/*&& !gameSettings.downMovement && !gameSettings.leftMovement */) {
-		
-		if (!gameSettings.startFromCenter) {
-			startPoint = new Point(bottomCenterScreen.top,
-						bottomCenterScreen.left - Math.floor(Math.random() * bottomCenterScreen.left));
-		}
-		endPoint = new Point(topCenterScreen.top,
-					topCenterScreen.left + Math.floor(Math.random() * topCenterScreen.left));
-		
-		animations.push(new Animation(startPoint, endPoint, true, 'TR'));
-	}
-	if (gameSettings.downMovement && gameSettings.leftMovement && gameSettings.mixMovements
-		/*&& !gameSettings.upMovement && !gameSettings.rightMovement*/) {
-	
-		if (!gameSettings.startFromCenter) {
-			startPoint = new Point(topCenterScreen.top,
-						topCenterScreen.left + Math.floor(Math.random() * topCenterScreen.left));
-		}
-		endPoint = new Point(bottomCenterScreen.top,
-					bottomCenterScreen.left - Math.floor(Math.random() * bottomCenterScreen.left));
-		
-		animations.push(new Animation(startPoint, endPoint, true, 'BL'));
-	}
-	if (gameSettings.downMovement && gameSettings.rightMovement && gameSettings.mixMovements
-		/*&& !gameSettings.upMovement && !gameSettings.leftMovement*/) {
-			
-		if (!gameSettings.startFromCenter) {
-			startPoint = new Point(topCenterScreen.top,
-						topCenterScreen.left - Math.floor(Math.random() * topCenterScreen.left));
-		}
-		endPoint = new Point(bottomCenterScreen.top,
-					bottomCenterScreen.left + Math.floor(Math.random() * bottomCenterScreen.left));
-		
-		animations.push(new Animation(startPoint, endPoint, true, 'BR'));
-	}
-	if (gameSettings.leftMovement && gameSettings.rightMovement && gameSettings.mixMovements 
-		/*&& !gameSettings.upMovement && !gameSettings.downMovement*/) {
-		
-		var randomValue = Math.random();
-		if (!gameSettings.startFromCenter) {
-			if (randomValue > 0.5) {
-				//da destra verso sinistra
-				startPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
+		for (var i = 0; i < levelSettings.repetitionsOfMovements; i++) {
+			var movement = '';
+			if (Math.random() > 0.5) {
+				// movimento da alto verso basso
+				if (!levelSettings.startFromCenter) {
+					startPoint = new Point(topCenterScreen.top, topCenterScreen.left);
+				}
+				endPoint = new Point(bottomCenterScreen.top, bottomCenterScreen.left);
+				movement = 'B';
 			}
 			else {
-				startPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
+				// movimento da basso verso alto
+				if (!levelSettings.startFromCenter) {
+					startPoint = new Point(bottomCenterScreen.top, bottomCenterScreen.left);
+				}
+				endPoint = new Point(topCenterScreen.top, topCenterScreen.left);
+				movement = 'T';
 			}
+			animations.push(new Animation(startPoint, endPoint, true, movement));
 		}
-		var movement = '';
-		if (randomValue > 0.5) {
-			endPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
-			movement = 'L';
-		}
-		else {
-			endPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
-			movement = 'R';
-		}
-		animations.push(new Animation(startPoint, endPoint, true, movement));
-		
-		
 	}
-	if (gameSettings.upMovement && gameSettings.downMovement && 
-		gameSettings.leftMovement && gameSettings.mixMovements /*&& !gameSettings.rightMovement*/) {
+	if (levelSettings.upMovement && levelSettings.leftMovement && levelSettings.mixMovements  
+		/* && !gameSettings.downMovement && !gameSettings.rightMovement*/) {
+	
+		for (var i = 0; i < levelSettings.repetitionsOfMovements; i++) { 
+			if (!levelSettings.startFromCenter) {
+				startPoint = new Point(bottomCenterScreen.top,
+								bottomCenterScreen.left + Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
+			}
+			endPoint = new Point(topCenterScreen.top, 
+						topCenterScreen.left - Math.floor(Math.random() * topCenterScreen.left));
+	
+			animations.push(new Animation(startPoint, endPoint, true, 'TL'));
+		}
+	}
+	if (levelSettings.upMovement && levelSettings.rightMovement && levelSettings.mixMovements 
+		/*&& !gameSettings.downMovement && !gameSettings.leftMovement */) {
 		
+		for (var i = 0; i < levelSettings.repetitionsOfMovements; i++) {
+			if (!levelSettings.startFromCenter) {
+				startPoint = new Point(bottomCenterScreen.top,
+							bottomCenterScreen.left - Math.floor(Math.random() * bottomCenterScreen.left));
+			}
+			endPoint = new Point(topCenterScreen.top,
+						topCenterScreen.left + Math.floor(Math.random() * topCenterScreen.left));
+			
+			animations.push(new Animation(startPoint, endPoint, true, 'TR'));
+		}
+	}
+	if (levelSettings.downMovement && levelSettings.leftMovement && levelSettings.mixMovements
+		/*&& !gameSettings.upMovement && !gameSettings.rightMovement*/) {
+	
+		for (var i = 0; i < levelSettings.repetitionsOfMovements; i++) {
+			if (!levelSettings.startFromCenter) {
+				startPoint = new Point(topCenterScreen.top,
+							topCenterScreen.left + Math.floor(Math.random() * topCenterScreen.left));
+			}
+			endPoint = new Point(bottomCenterScreen.top,
+						bottomCenterScreen.left - Math.floor(Math.random() * bottomCenterScreen.left));
+			
+			animations.push(new Animation(startPoint, endPoint, true, 'BL'));
+		}
+	}
+	if (levelSettings.downMovement && levelSettings.rightMovement && levelSettings.mixMovements
+		/*&& !gameSettings.upMovement && !gameSettings.leftMovement*/) {
+			
+		for (var i = 0; i < levelSettings.repetitionsOfMovements; i++) {
+			if (!levelSettings.startFromCenter) {
+				startPoint = new Point(topCenterScreen.top,
+							topCenterScreen.left - Math.floor(Math.random() * topCenterScreen.left));
+			}
+			endPoint = new Point(bottomCenterScreen.top,
+						bottomCenterScreen.left + Math.floor(Math.random() * bottomCenterScreen.left));
+			
+			animations.push(new Animation(startPoint, endPoint, true, 'BR'));
+		}
+	}
+	if (levelSettings.leftMovement && levelSettings.rightMovement && levelSettings.mixMovements 
+		/*&& !gameSettings.upMovement && !gameSettings.downMovement*/) {
+		
+		for (var i = 0; i < levelSettings.repetitionsOfMovements; i++) {
+			var randomValue = Math.random();
+			if (!levelSettings.startFromCenter) {
+				if (randomValue > 0.5) {
+					//da destra verso sinistra
+					startPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
+				}
+				else {
+					startPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
+				}
+			}
+			var movement = '';
+			if (randomValue > 0.5) {
+				endPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
+				movement = 'L';
+			}
+			else {
+				endPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
+				movement = 'R';
+			}
+			animations.push(new Animation(startPoint, endPoint, true, movement));
+		}
+	}
+	if (levelSettings.upMovement && levelSettings.downMovement && 
+			levelSettings.leftMovement && levelSettings.mixMovements /*&& !gameSettings.rightMovement*/) {
+		
+		for (var i = 0; i < levelSettings.repetitionsOfMovements; i++) {
 			if (Math.random() > 0.5) {
 				// primo movimento verso l'alto
-				if (!gameSettings.startFromCenter) {
+				if (!levelSettings.startFromCenter) {
 					startPoint = new Point(rightMiddleScreen.left,
 								rightMiddleScreen.top + Math.floor(Math.random() * rightMiddleScreen.top));
 					
@@ -678,7 +746,7 @@ defineSingleAnimation: function() {
 			}
 			else {
 				// primo movimento verso il basso 
-				if (!gameSettings.startFromCenter) {
+				if (!levelSettings.startFromCenter) {
 					startPoint = new Point(rightMiddleScreen.left,
 								rightMiddleScreen.top - Math.floor(Math.random() * rightMiddleScreen.top));
 					
@@ -697,14 +765,16 @@ defineSingleAnimation: function() {
 				
 				animations.push(new Animation(startPoint, endPoint, true, 'BR'));
 			}
+		}
 	}
 	
-	if (gameSettings.upMovement && gameSettings.downMovement && 
-		gameSettings.rightMovement && gameSettings.mixMovements /**&& !gameSettings.leftMovement*/) {
+	if (levelSettings.upMovement && levelSettings.downMovement && 
+			levelSettings.rightMovement && levelSettings.mixMovements /**&& !gameSettings.leftMovement*/) {
 			
-		if (Math.random() > 0.5) {
+		for (var i = 0; i < levelSettings.repetitionsOfMovements; i++) {
+			if (Math.random() > 0.5) {
 				// primo movimento verso l'alto
-				if (!gameSettings.startFromCenter) {
+				if (!levelSettings.startFromCenter) {
 					startPoint = new Point(leftMiddleScreen.left,
 								leftMiddleScreen.top + Math.floor(Math.random() * leftMiddleScreen.top));
 					
@@ -726,7 +796,7 @@ defineSingleAnimation: function() {
 			}
 			else {
 				// primo movimento verso il basso 
-				if (!gameSettings.startFromCenter) {
+				if (!levelSettings.startFromCenter) {
 					startPoint = new Point(leftMiddleScreen.left,
 								leftMiddleScreen.top - Math.floor(Math.random() * leftMiddleScreen.top));
 					
@@ -745,16 +815,18 @@ defineSingleAnimation: function() {
 				
 				animations.push(new Animation(startPoint, endPoint, true, 'TR'));
 			}
+		}
 	}
 
-	if (gameSettings.downMovement && gameSettings.leftMovement && 
-		gameSettings.rightMovement && gameSettings.mixMovements /*&& !gameSettings.upMovement*/) {
+	if (levelSettings.downMovement && levelSettings.leftMovement && 
+			levelSettings.rightMovement && levelSettings.mixMovements /*&& !gameSettings.upMovement*/) {
 			
+		for (var i = 0; i < levelSettings.repetitionsOfMovements; i++) {
 			if (Math.random() > 0.5) {
 				/**
 				 * First movement to left
 				 */
-				if (!gameSettings.startFromCenter) {
+				if (!levelSettings.startFromCenter) {
 					startPoint = new Point(topCenterScreen.top,
 								topCenterScreen.left + Math.floor(Math.random() * topCenterScreen.left));
 					endPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
@@ -776,7 +848,7 @@ defineSingleAnimation: function() {
 				/**
 				 * First movement to right
 				 */
-				if (!gameSettings.startFromCenter) {
+				if (!levelSettings.startFromCenter) {
 					startPoint = new Point(topCenterScreen.top,
 								topCenterScreen.left - Math.floor(Math.random() * topCenterScreen.left));
 					endPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
@@ -793,254 +865,257 @@ defineSingleAnimation: function() {
 				
 				animations.push(new Animation(startPoint, endPoint, true, 'BL'));
 			}
+		}
 	}
-	if (gameSettings.upMovement && gameSettings.downMovement &&
-		gameSettings.leftMovement && gameSettings.rightMovement && gameSettings.mixMovements) {
+	if (levelSettings.upMovement && levelSettings.downMovement &&
+			levelSettings.leftMovement && levelSettings.rightMovement && levelSettings.mixMovements) {
 		
-		var firstPoint = Math.random();
-		var direction = Math.random();
-		
-		if (firsPoint < 0.25) {
-			/**
-			 * Starting point at the top of the screen
-			 */
-			if (!gameSettings.startFromCenter) {
-				startPoint = new Point(topCenterScreen.top, topCenterScreen.left);	
-			}
-			if (direction < 0.5) {
-				/**
-				 * First movement to right
-				 */
-				endPoint = new Point(rightMiddleScreen.top + Math.floor(Math.random() * (rightMiddleScreen.top / 2)),
-							rightMiddleScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'BR'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(bottomCenterScreen.top,
-							bottomCenterScreen.left - Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'BL'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(leftMiddleScreen.top - Math.floor(Math.random() * (leftMiddleScreen.top / 2)),
-							leftMiddleScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'TL'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(topCenterScreen.top, topCenterScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, true, 'TR'));
-				
-			}
-			else {
-				/**
-				 * First movement to the left
-				 */
-				endPoint = new Point(leftMiddleScreen.top,
-							leftMiddleScreen.left + Math.floor(Math.random() * (leftMiddleScreen.left / 2)));
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'BL'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(bottomCenterScreen.top,
-							bottomCenterScreen.left + Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'BR'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(rightMiddleScreen.top - Math.floor(Math.random() * (rightMiddleScreen.top / 2)),
-							rightMiddleScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'TR'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(topCenterScreen.top, endPoint.left);
-				
-				animations.push(new Animation(startPoint, endPoint, true, 'TL'));
-			}
-		}
-		else if (firstPoint >= 0.25 && firsPoint < 0.5) {
+		for (var i = 0; i < levelSettings.repetitionsOfMovements; i++) {
+			var firstPoint = Math.random();
+			var direction = Math.random();
 			
-			/**
-			 * Starting point on the right of the screen
-			 */
-			if (!gameSettings.startFromCenter) {
-				startPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
-			}
-			if (direction < 0.5) {
-				/*
-				 * To the bottom of the screen
-				 */
-				endPoint = new Point(bottomCenterScreen.top,
-							bottomCenterScreen.left - Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'BL'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(leftMiddleScreen.top - Math.floor(Math.random() * (leftMiddleScreen.top / 2)),
-							leftMiddleScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'TL'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(topCenterScreen.top, 
-							topCenterScreen.left + Math.floor(Math.random() * (topCenterScreen.left / 2)));
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'TR'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, true, 'BR'));
-				
-			}
-			else {
+			if (firsPoint < 0.25) {
 				/**
-				 * First movement to the top of the screen
+				 * Starting point at the top of the screen
 				 */
-				endPoint = new Point(topCenterScreen.top,
-							topCenterScreen.left - Math.floor(Math.random() * (topCenterScreen.left / 2)));
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'TL'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(leftMiddleScreen.top + Math.floor(Math.random() * (leftMiddleScreen.top / 2)),
-							leftMiddleScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'BL'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(bottomCenterScreen.top,
-							bottomCenterScreen.left + Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'BR'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, true, 'TR'));
+				if (!levelSettings.startFromCenter) {
+					startPoint = new Point(topCenterScreen.top, topCenterScreen.left);	
+				}
+				if (direction < 0.5) {
+					/**
+					 * First movement to right
+					 */
+					endPoint = new Point(rightMiddleScreen.top + Math.floor(Math.random() * (rightMiddleScreen.top / 2)),
+								rightMiddleScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(bottomCenterScreen.top,
+								bottomCenterScreen.left - Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(leftMiddleScreen.top - Math.floor(Math.random() * (leftMiddleScreen.top / 2)),
+								leftMiddleScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(topCenterScreen.top, topCenterScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, true, 'TR'));
+					
+				}
+				else {
+					/**
+					 * First movement to the left
+					 */
+					endPoint = new Point(leftMiddleScreen.top,
+								leftMiddleScreen.left + Math.floor(Math.random() * (leftMiddleScreen.left / 2)));
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(bottomCenterScreen.top,
+								bottomCenterScreen.left + Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(rightMiddleScreen.top - Math.floor(Math.random() * (rightMiddleScreen.top / 2)),
+								rightMiddleScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(topCenterScreen.top, endPoint.left);
+					
+					animations.push(new Animation(startPoint, endPoint, true, 'TL'));
+				}
 			}
-		}
-		else if (firstPoint >= 0.5 && firstPoint < 0.75) {
-			// punto di partenza in basso
-			
-			if (!gameSettings.startFromCenter) {
-				startPoint = new Point(bottomCenterScreen.top, bottomCenterScreen.left);	
-			}
-			if (direction < 0.5) {
-				// primo spostamento verso destra
+			else if (firstPoint >= 0.25 && firsPoint < 0.5) {
 				
-				endPoint = new Point(rightMiddleScreen.top - Math.floor(Math.random() * (rightMiddleScreen.top / 2)),
-							rightMiddleScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'TR'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(topCenterScreen.top,
-							topCenterScreen.left - Math.floor(Math.random() * (topCenterScreen.left / 2)));
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'TL'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(leftMiddleScreen.top + Math.floor(Math.random() * (leftMiddleScreen.top / 2)),
-							leftMiddleScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'BL'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(bottomCenterScreen.top, bottomCenterScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, true, 'BR'));
-				
-			}
-			else {
 				/**
-				 * First movement to the left
+				 * Starting point on the right of the screen
 				 */
-				endPoint = new Point(leftMiddleScreen.top - Math.floor(Math.random() * (leftMiddleScreen.top / 2)),
-							leftMiddleScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'TL'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(topCenterScreen.top,
-							topCenterScreen.left + Math.floor(Math.random() * (topCenterScreen.left / 2)));
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'TR'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(rightMiddleScreen.top + Math.floor(Math.random() * (rightMiddleScreen.top / 2)),
-							rightMiddleScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'BR'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(bottomCenterScreen.top, bottomCenterScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, true, 'BL'));
-			}	
-		}
-		else if (firstPoint >= 0.75) {
-			/**
-			 * Starting point on the left of the screen
-			 */
-			if (!gameSettings.startFromCenter) {
-				startPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
+				if (!levelSettings.startFromCenter) {
+					startPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
+				}
+				if (direction < 0.5) {
+					/*
+					 * To the bottom of the screen
+					 */
+					endPoint = new Point(bottomCenterScreen.top,
+								bottomCenterScreen.left - Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(leftMiddleScreen.top - Math.floor(Math.random() * (leftMiddleScreen.top / 2)),
+								leftMiddleScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(topCenterScreen.top, 
+								topCenterScreen.left + Math.floor(Math.random() * (topCenterScreen.left / 2)));
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, true, 'BR'));
+					
+				}
+				else {
+					/**
+					 * First movement to the top of the screen
+					 */
+					endPoint = new Point(topCenterScreen.top,
+								topCenterScreen.left - Math.floor(Math.random() * (topCenterScreen.left / 2)));
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(leftMiddleScreen.top + Math.floor(Math.random() * (leftMiddleScreen.top / 2)),
+								leftMiddleScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(bottomCenterScreen.top,
+								bottomCenterScreen.left + Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, true, 'TR'));
+				}
 			}
-			if (direction < 0.5) {
-				/**
-				 * First movement to the bottom of the screen
-				 */
-				endPoint = new Point(bottomCenterScreen.top,
-							bottomCenterScreen.left + Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
+			else if (firstPoint >= 0.5 && firstPoint < 0.75) {
+				// punto di partenza in basso
 				
-				animations.push(new Animation(startPoint, endPoint, false, 'BR'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(rightMiddleScreen.top - Math.floor(Math.random() * (rightMiddleScreen.top / 2)),
-							rightMiddleScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'TR'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(topCenterScreen.top,
-							topCenterScreen.left - Math.floor(Math.random() * (topCenterScreen.left / 2)));
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'TL'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, true, 'BL'));
-				
+				if (!levelSettings.startFromCenter) {
+					startPoint = new Point(bottomCenterScreen.top, bottomCenterScreen.left);	
+				}
+				if (direction < 0.5) {
+					// primo spostamento verso destra
+					
+					endPoint = new Point(rightMiddleScreen.top - Math.floor(Math.random() * (rightMiddleScreen.top / 2)),
+								rightMiddleScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(topCenterScreen.top,
+								topCenterScreen.left - Math.floor(Math.random() * (topCenterScreen.left / 2)));
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(leftMiddleScreen.top + Math.floor(Math.random() * (leftMiddleScreen.top / 2)),
+								leftMiddleScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(bottomCenterScreen.top, bottomCenterScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, true, 'BR'));
+					
+				}
+				else {
+					/**
+					 * First movement to the left
+					 */
+					endPoint = new Point(leftMiddleScreen.top - Math.floor(Math.random() * (leftMiddleScreen.top / 2)),
+								leftMiddleScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(topCenterScreen.top,
+								topCenterScreen.left + Math.floor(Math.random() * (topCenterScreen.left / 2)));
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(rightMiddleScreen.top + Math.floor(Math.random() * (rightMiddleScreen.top / 2)),
+								rightMiddleScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(bottomCenterScreen.top, bottomCenterScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, true, 'BL'));
+				}	
 			}
-			else {
+			else if (firstPoint >= 0.75) {
 				/**
-				 * First movement to the top
+				 * Starting point on the left of the screen
 				 */
-				endPoint = new Point(topCenterScreen.top,
-							topCenterScreen.left + Math.floor(Math.random() * (topCenterScreen.left / 2)));
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'TR'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(rightMiddleScreen.top + Math.floor(Math.random() * (rightMiddleScreen.top / 2)),
-							rightMiddleScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'BR'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(bottomCenterScreen.top,
-							bottomCenterScreen.left - Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
-				
-				animations.push(new Animation(startPoint, endPoint, false, 'BL'));
-				
-				startPoint = new Point(endPoint.top, endPoint.left);
-				endPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
-				
-				animations.push(new Animation(startPoint, endPoint, true, 'TL'));
+				if (!levelSettings.startFromCenter) {
+					startPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
+				}
+				if (direction < 0.5) {
+					/**
+					 * First movement to the bottom of the screen
+					 */
+					endPoint = new Point(bottomCenterScreen.top,
+								bottomCenterScreen.left + Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(rightMiddleScreen.top - Math.floor(Math.random() * (rightMiddleScreen.top / 2)),
+								rightMiddleScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(topCenterScreen.top,
+								topCenterScreen.left - Math.floor(Math.random() * (topCenterScreen.left / 2)));
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, true, 'BL'));
+					
+				}
+				else {
+					/**
+					 * First movement to the top
+					 */
+					endPoint = new Point(topCenterScreen.top,
+								topCenterScreen.left + Math.floor(Math.random() * (topCenterScreen.left / 2)));
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(rightMiddleScreen.top + Math.floor(Math.random() * (rightMiddleScreen.top / 2)),
+								rightMiddleScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(bottomCenterScreen.top,
+								bottomCenterScreen.left - Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
+					
+					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
+					
+					startPoint = new Point(endPoint.top, endPoint.left);
+					endPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
+					
+					animations.push(new Animation(startPoint, endPoint, true, 'TL'));
+				}
 			}
 		}
 	}
@@ -1057,8 +1132,7 @@ animationEndMovement: function() {
 	
 	console.log("Animazione Completata");
 	$('#image').remove();
-	CatchMeNamespace.drawCanvas();
-	setTimeout(CatchMeNamespace.defineAnimationFunction(false, 2000), 2000);
+	CatchMeNamespace.defineAnimationFunction(false, 4000);
 },
 
 /**
@@ -1233,15 +1307,7 @@ function sendPacketsGameDefinitionOffline() {
         
         websocket.send(JSON.stringify(firstPacket));
         
-        var secondPacket = {
-    		TYPE: "READY_TO_PLAY", 
-    		IMAGE_WIDTH: gameSettings.effectiveImageWidth,
-    		IMAGE_HEIGHT: gameSettings.effectiveImageHeight,
-    		SCREEN_WIDTH: getScreenWidth(),
-    		SCREEN_HEIGHT: getScreenHeight()
-    	};
-
-        websocket.send(JSON.stringify(secondPacket));
+        CatchMeNamespace.sendPacketImageScreenInfo();
 }
 
 function folderForOfflineSavingCreated() {

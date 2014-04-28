@@ -45,10 +45,10 @@ function presentationComplete() {
 			/**
 			 * To avoid presentation, delete after tests
 			 */
-			//presentationManager = new PresentationManager();
-			//presentationManager.createElements();
-			initGame();
-			allExamplesCompleted();
+			presentationManager = new PresentationManager();
+			presentationManager.createElements();
+			//initGame();
+			//allExamplesCompleted();
 		}
 		else if (packet.TYPE == 'START_WORKING') {
 			
@@ -165,6 +165,7 @@ function resetLevel() {
 
 function manageLevels(repeatLevel) {
 
+	gameManager.maxCorrectAnswers = 0;
     if (repeatLevel) {
         gameManager.currentLevelRepetition++;
 
@@ -284,14 +285,31 @@ function levelCompleted() {
     };
     websocket.send(JSON.stringify(packetEndLevel));
     
-    var levelCompletion = function() { 
+    var levelCompletion = function() {
+    	
 	    sacco.element.css({
 	    	top: getScreenHeight()
 	    }).one('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
 	    	
 	    	if (event.originalEvent.propertyName === "top") {
 		    	setTimeout(function() {
-		    		manageLevels(!gameManager.levelCompletedCorrectly);
+		    		
+		    		if (gameManager.maxCorrectAnswers > 0) {
+		    			
+		    			$('#divSounds #finalFeedback #messoInsieme').one('ended', function() {
+		    				
+		    				$('#divSounds #finalFeedback #numberOfObjects #correct' + gameManager.maxCorrectAnswers).one('ended', function() {
+		    					
+		    					$('#divSounds #finalFeedback #oggettiAssomigliano').one('ended', function() {
+		    						
+		    						setTimeout(function() {
+		    							manageLevels(!gameManager.levelCompletedCorrectly);
+		    						}, 1000);
+		    					}).get(0).play();
+		    				}).get(0).play();
+		    				
+		    			}).get(0).play();
+		    		}
 		    	}, 1000);
 	    	}
 	    	
@@ -306,7 +324,7 @@ function levelCompleted() {
     };
     
     if ($('#divSounds #audioBagComplete').length != 0) {
-    	$('#divSounds #audioBagComplete').on('ended', levelCompletion).get(0).play();
+    	$('#divSounds #audioBagComplete').one('ended', levelCompletion).get(0).play();
     }
     else {
     	levelCompletion();
@@ -403,7 +421,7 @@ function timeExpired(intoBin) {
 
         gameManager.packetWithResults.RIGHT_ANSWER = true;
         gameManager.imageRightAnswer.show();
-        gameManager.currentLevelCorrectAnswers++;
+        //gameManager.currentLevelCorrectAnswers++;
         playGoodAnswerSound();
     }
 
@@ -435,7 +453,7 @@ function waitingToStart(message) {
 
 /**
  * Function called when the sled move away, it plays the sound 
- * to provide a feedback to the child about his/her perfomance.
+ * to provide a feedback to the child about his/her performance.
  * 
  */
 function gameIsEnded() {
@@ -443,6 +461,10 @@ function gameIsEnded() {
 	websocket.close();
 	
 	setTimeout(function() {
+		location.replace('../patient/index.html');
+	})
+	
+	/*setTimeout(function() {
 		
 		//TODO cosa fare se risposte esatte = 0?'
 		if (gameManager.maxCorrectAnswers > 0) {
@@ -462,7 +484,7 @@ function gameIsEnded() {
 			}).get(0).play();
 		}
 		
-	}, 500);
+	}, 500); */
 	
 }
 

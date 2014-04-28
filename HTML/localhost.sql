@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.1
+-- version 4.0.4
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 10, 2013 at 05:17 PM
--- Server version: 5.5.24-log
--- PHP Version: 5.3.13
+-- Generation Time: Feb 03, 2014 at 02:11 PM
+-- Server version: 5.6.12-log
+-- PHP Version: 5.4.12
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -19,30 +19,29 @@ SET time_zone = "+00:00";
 --
 -- Database: `cvi_database`
 --
-CREATE DATABASE `cvi_database` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+CREATE DATABASE IF NOT EXISTS `cvi_database` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 USE `cvi_database`;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `CatchMeEvaluation`
+-- Table structure for table `catchmeevaluation`
 --
 
-DROP TABLE IF EXISTS `CatchMeEvaluation`;
-CREATE TABLE IF NOT EXISTS `CatchMeEvaluation` (
+CREATE TABLE IF NOT EXISTS `catchmeevaluation` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `IDVisit` int(11) NOT NULL,
   `TouchEvaluation` float DEFAULT NULL,
   `EyeEvaluation` float DEFAULT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `IDVisit` (`IDVisit`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=327 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=339 ;
 
 --
--- Dumping data for table `CatchMeEvaluation`
+-- Dumping data for table `catchmeevaluation`
 --
 
-INSERT INTO `CatchMeEvaluation` (`ID`, `IDVisit`, `TouchEvaluation`, `EyeEvaluation`) VALUES
+INSERT INTO `catchmeevaluation` (`ID`, `IDVisit`, `TouchEvaluation`, `EyeEvaluation`) VALUES
 (1, 2, 45, 70),
 (2, 4, 30, 50),
 (3, 103, 0, 0),
@@ -110,16 +109,27 @@ INSERT INTO `CatchMeEvaluation` (`ID`, `IDVisit`, `TouchEvaluation`, `EyeEvaluat
 (323, 370, 38.93, 0),
 (324, 371, 26.45, 0),
 (325, 372, 0, 0),
-(326, 373, 32.47, 0);
+(326, 373, 32.47, 0),
+(327, 385, 12.03, 0),
+(328, 386, 25.15, 10.74),
+(329, 387, 8.43, 9.66),
+(330, 388, 0, 13.62),
+(331, 389, 1.13, 10.2),
+(332, 390, 0, 16.5),
+(333, 402, 8.22, 13.15),
+(334, 406, 3.48, 8.14),
+(335, 427, 26.04, 2.13),
+(336, 428, 0, 0),
+(337, 435, 7.05, 0),
+(338, 436, 9.65, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `CatchMeExercises`
+-- Table structure for table `catchmeexercises`
 --
 
-DROP TABLE IF EXISTS `CatchMeExercises`;
-CREATE TABLE IF NOT EXISTS `CatchMeExercises` (
+CREATE TABLE IF NOT EXISTS `catchmeexercises` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `DefaultGravity` enum('L','M','H') COLLATE utf8_unicode_ci DEFAULT NULL,
   `IDPatient` int(11) DEFAULT NULL,
@@ -133,42 +143,85 @@ CREATE TABLE IF NOT EXISTS `CatchMeExercises` (
   `ImageID` int(11) DEFAULT NULL,
   `ImageWidth` int(11) DEFAULT NULL,
   `CurrentValidSettings` tinyint(1) DEFAULT NULL,
-  `IsSpaceGame` tinyint(1) DEFAULT NULL,
+  `ExerciseOrder` int(11) NOT NULL DEFAULT '-1',
+  `NumberOfRepetitions` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=71 ;
 
 --
--- Dumping data for table `CatchMeExercises`
+-- Dumping data for table `catchmeexercises`
 --
 
-INSERT INTO `CatchMeExercises` (`ID`, `DefaultGravity`, `IDPatient`, `Movements`, `StartFromCenter`, `MixMovements`, `Speed`, `Background`, `ImageColor`, `ChangeImageColor`, `ImageID`, `ImageWidth`, `CurrentValidSettings`, `IsSpaceGame`) VALUES
-(1, 'M', NULL, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, NULL, NULL),
-(2, 'H', NULL, 'L', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, NULL, NULL),
-(12, NULL, 1, 'L;R;B', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, 0, NULL),
-(13, NULL, 1, 'L;R;T;B', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, 0, NULL),
-(14, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 17, 0, NULL),
-(15, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 21, 0, NULL),
-(16, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 17, 0, NULL),
-(17, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 22, 0, NULL),
-(18, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 23, 0, NULL),
-(19, NULL, 1, 'L;R;B', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, 0, NULL),
-(20, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 19, 0, NULL),
-(21, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 0, NULL),
-(22, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 21, 0, NULL),
-(23, NULL, 1, 'T;R;L', 0, 1, 200, '#FF0000', '#FFFF00', 0, 3, 21, 0, NULL),
-(24, NULL, 4, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 4, 16, 1, NULL),
-(25, NULL, 1, 'L;R;T', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 0, NULL),
-(26, NULL, 1, 'L;T', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0),
-(27, NULL, 1, 'L;T', 0, 0, 100, '#FF0000', '#FFFF00', 0, 5, 21, 1, 1);
+INSERT INTO `catchmeexercises` (`ID`, `DefaultGravity`, `IDPatient`, `Movements`, `StartFromCenter`, `MixMovements`, `Speed`, `Background`, `ImageColor`, `ChangeImageColor`, `ImageID`, `ImageWidth`, `CurrentValidSettings`, `ExerciseOrder`, `NumberOfRepetitions`) VALUES
+(1, 'M', NULL, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, NULL, -1, 1),
+(2, 'H', NULL, 'L', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, NULL, -1, 1),
+(12, NULL, 1, 'L;R;B', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, 0, -1, 1),
+(13, NULL, 1, 'L;R;T;B', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, 0, -1, 1),
+(14, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 17, 0, -1, 1),
+(15, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 21, 0, -1, 1),
+(16, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 17, 0, -1, 1),
+(17, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 22, 0, -1, 1),
+(18, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 23, 0, -1, 1),
+(19, NULL, 1, 'L;R;B', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 10, 0, -1, 1),
+(20, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 19, 0, -1, 1),
+(21, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 0, -1, 1),
+(22, NULL, 1, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 1, 21, 0, -1, 1),
+(23, NULL, 1, 'T;R;L', 0, 1, 200, '#FF0000', '#FFFF00', 0, 3, 21, 0, -1, 1),
+(24, NULL, 4, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 4, 16, 0, -1, 1),
+(25, NULL, 1, 'L;R;T', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 0, -1, 1),
+(26, NULL, 1, 'L;T', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 21, 0, -1, 1),
+(27, NULL, 1, 'L;T', 0, 0, 100, '#FF0000', '#FFFF00', 0, 5, 21, 0, -1, 1),
+(28, NULL, 1, 'L;R', 0, 0, 1, '#FFFF00', '#FFFF00', 0, 3, 40, 0, 1, 1),
+(29, NULL, 1, 'R', 0, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, -1, 1),
+(30, NULL, 1, 'R;T', 0, 0, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, -1, 1),
+(31, NULL, 1, 'R;T', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, -1, 1),
+(32, NULL, 1, 'R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, -1, 1),
+(33, NULL, 1, 'L;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, -1, 1),
+(34, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(35, NULL, 1, 'R;T', 0, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, -1, 1),
+(36, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 2),
+(37, NULL, 4, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 4, 16, 1, 0, 2),
+(38, NULL, 2, 'L;R', 0, 0, 5, '#FF0000', '#FFFF00', 0, 3, 16, 1, 0, 2),
+(39, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 1),
+(40, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(41, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 1),
+(42, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(43, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 1),
+(44, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(45, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 1),
+(46, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(47, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 1),
+(48, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(49, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 1),
+(50, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(51, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 1),
+(52, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(53, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 1),
+(54, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(55, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 1),
+(56, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(57, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 1),
+(58, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(59, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 1),
+(60, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(61, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 1),
+(62, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(63, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 1),
+(64, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(65, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 1),
+(66, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(67, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 0, 0, 1),
+(68, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 0, 1, 1),
+(69, NULL, 1, 'R;T', 1, 0, 6, '#FF0000', '#FFFF00', 0, 3, 21, 1, 0, 1),
+(70, NULL, 1, 'L;R;B', 0, 1, 10, '#FF0000', '#FFFF00', 0, 3, 21, 1, 1, 3);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Doctors`
+-- Table structure for table `doctors`
 --
 
-DROP TABLE IF EXISTS `Doctors`;
-CREATE TABLE IF NOT EXISTS `Doctors` (
+CREATE TABLE IF NOT EXISTS `doctors` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `Surname` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -180,20 +233,19 @@ CREATE TABLE IF NOT EXISTS `Doctors` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
--- Dumping data for table `Doctors`
+-- Dumping data for table `doctors`
 --
 
-INSERT INTO `Doctors` (`ID`, `Name`, `Surname`, `Email`, `Username`, `Password`) VALUES
+INSERT INTO `doctors` (`ID`, `Name`, `Surname`, `Email`, `Username`, `Password`) VALUES
 (1, 'Matteo', 'Ciman', NULL, 'dottore', '4a087bb3d759f8a24ab011f27a2a3a3f');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Exercises`
+-- Table structure for table `exercises`
 --
 
-DROP TABLE IF EXISTS `Exercises`;
-CREATE TABLE IF NOT EXISTS `Exercises` (
+CREATE TABLE IF NOT EXISTS `exercises` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `IDGame` int(11) NOT NULL,
   `DefaultGravity` enum('L','M','H') COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -211,21 +263,20 @@ CREATE TABLE IF NOT EXISTS `Exercises` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `Exercises`
+-- Dumping data for table `exercises`
 --
 
-INSERT INTO `Exercises` (`ID`, `IDGame`, `DefaultGravity`, `IDPatient`, `Movement`, `Speed`, `BackgroundColor`, `ImageColor`, `ChangeImageColor`, `ImageID`, `ImageWidth`, `LevelHelpMe`, `CurrentValidSettings`) VALUES
+INSERT INTO `exercises` (`ID`, `IDGame`, `DefaultGravity`, `IDPatient`, `Movement`, `Speed`, `BackgroundColor`, `ImageColor`, `ChangeImageColor`, `ImageID`, `ImageWidth`, `LevelHelpMe`, `CurrentValidSettings`) VALUES
 (1, 1, 'M', NULL, 'L;R', 5, '#FF0000', '#FFFF00', 0, 1, 10, 'levels.xml', 0),
 (2, 1, 'H', NULL, 'L', 5, '#FF0000', '#FFFFFF', 0, 1, 10, 'levels.xml', 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Games`
+-- Table structure for table `games`
 --
 
-DROP TABLE IF EXISTS `Games`;
-CREATE TABLE IF NOT EXISTS `Games` (
+CREATE TABLE IF NOT EXISTS `games` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(500) COLLATE utf8_unicode_ci NOT NULL,
   `Folder` varchar(500) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Cartella dove è installato il gioco',
@@ -235,21 +286,20 @@ CREATE TABLE IF NOT EXISTS `Games` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Elenco dei giochi installati con relativa descrizione' AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `Games`
+-- Dumping data for table `games`
 --
 
-INSERT INTO `Games` (`ID`, `Name`, `Folder`, `Description`, `Identification`) VALUES
+INSERT INTO `games` (`ID`, `Name`, `Folder`, `Description`, `Identification`) VALUES
 (1, 'Prendimi!', 'catchMe', 'L''immagine si muove, bisogna seguirla con il dito e con lo sguardo.', 'CATCH_ME'),
 (2, 'Aiutami!', 'helpMe', 'Aiuta il folletto di Babbo Natale a preparare il sacco con i regali giusti..', 'HELP_ME');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `HelpMeEvaluation`
+-- Table structure for table `helpmeevaluation`
 --
 
-DROP TABLE IF EXISTS `HelpMeEvaluation`;
-CREATE TABLE IF NOT EXISTS `HelpMeEvaluation` (
+CREATE TABLE IF NOT EXISTS `helpmeevaluation` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `IDVisit` int(11) NOT NULL,
   `FirstResponseTime` float DEFAULT NULL,
@@ -258,13 +308,13 @@ CREATE TABLE IF NOT EXISTS `HelpMeEvaluation` (
   `WrongAnswers` int(11) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `IDVisit` (`IDVisit`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=36 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=51 ;
 
 --
--- Dumping data for table `HelpMeEvaluation`
+-- Dumping data for table `helpmeevaluation`
 --
 
-INSERT INTO `HelpMeEvaluation` (`ID`, `IDVisit`, `FirstResponseTime`, `CompletionTime`, `CorrectAnswers`, `WrongAnswers`) VALUES
+INSERT INTO `helpmeevaluation` (`ID`, `IDVisit`, `FirstResponseTime`, `CompletionTime`, `CorrectAnswers`, `WrongAnswers`) VALUES
 (1, 1, 5000, 4000, 4, 3),
 (2, 3, 3500, 7600, 3, 6),
 (3, 21, 3088, 4176, 3, 1),
@@ -297,44 +347,60 @@ INSERT INTO `HelpMeEvaluation` (`ID`, `IDVisit`, `FirstResponseTime`, `Completio
 (32, 357, 1509, 2340, 5, 2),
 (33, 367, 1509, 2340, 5, 2),
 (34, 366, 730, 13438, 1, 1),
-(35, 384, 1668, 18670, 1, 1);
+(35, 384, 1668, 18670, 1, 1),
+(36, 391, 4181, 6033, 2, 0),
+(37, 400, 560, 1075, 18, 2),
+(38, 401, 3655, 6309, 9, 1),
+(39, 403, 239467, 240924, 1, 0),
+(40, 405, 2068, 3182, 19, 1),
+(41, 407, 865, 3762, 8, 3),
+(42, 413, 18845, 20405, 1, 0),
+(43, 414, 1841, 22496, 1, 0),
+(44, 415, 14820, 21810, 1, 0),
+(45, 421, 15290, 29751, 1, 0),
+(46, 423, 4240, 4637, 19, 1),
+(47, 425, 447, 704, 12, 0),
+(48, 426, 1572, 1951, 21, 1),
+(49, 431, 0, 20000, 0, 1),
+(50, 434, 1890, 10037, 22, 10);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `HelpMeExercises`
+-- Table structure for table `helpmeexercises`
 --
 
-DROP TABLE IF EXISTS `HelpMeExercises`;
-CREATE TABLE IF NOT EXISTS `HelpMeExercises` (
+CREATE TABLE IF NOT EXISTS `helpmeexercises` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `DefaultGravity` enum('L','M','H') COLLATE utf8_unicode_ci DEFAULT NULL,
   `IDPatient` int(11) DEFAULT NULL,
   `FileLevels` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `CurrentValidSettings` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene i livelli assegnati a ciascun paziente' AUTO_INCREMENT=32 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene i livelli assegnati a ciascun paziente' AUTO_INCREMENT=35 ;
 
 --
--- Dumping data for table `HelpMeExercises`
+-- Dumping data for table `helpmeexercises`
 --
 
-INSERT INTO `HelpMeExercises` (`ID`, `DefaultGravity`, `IDPatient`, `FileLevels`, `CurrentValidSettings`) VALUES
+INSERT INTO `helpmeexercises` (`ID`, `DefaultGravity`, `IDPatient`, `FileLevels`, `CurrentValidSettings`) VALUES
 (1, 'L', NULL, 'low.xml', NULL),
 (2, 'M', NULL, 'medium.xml', NULL),
 (3, 'H', NULL, 'high.xml', NULL),
 (18, NULL, 1, '1/20120911-075034.xml', 0),
-(20, NULL, 1, '1/20120911-075801.xml', 1),
-(31, NULL, 1, '1/20121201-005753.xml', 0);
+(20, NULL, 1, '1/20120911-075801.xml', 0),
+(31, NULL, 1, '1/20121201-005753.xml', 0),
+(32, NULL, 1, '1/20130723-230552.xml', 1),
+(33, NULL, 4, '4/20131204-141029.xml', 0),
+(34, NULL, 4, '4/20131204-141033.xml', 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Images`
+-- Table structure for table `images`
 --
 
-DROP TABLE IF EXISTS `Images`;
-CREATE TABLE IF NOT EXISTS `Images` (
+CREATE TABLE IF NOT EXISTS `images` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `ImageName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `FileName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -344,10 +410,10 @@ CREATE TABLE IF NOT EXISTS `Images` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 --
--- Dumping data for table `Images`
+-- Dumping data for table `images`
 --
 
-INSERT INTO `Images` (`ID`, `ImageName`, `FileName`, `CanvasRules`, `Dimensions`) VALUES
+INSERT INTO `images` (`ID`, `ImageName`, `FileName`, `CanvasRules`, `Dimensions`) VALUES
 (1, 'Bugs Bunny intero', 'bugs_bunny.png', NULL, '448x785'),
 (2, 'Bugs Bunny 2', 'bugs_bunny1.svg', NULL, '300x400'),
 (3, 'Faccia Paperino', 'paperino.png', NULL, '193x201'),
@@ -356,22 +422,21 @@ INSERT INTO `Images` (`ID`, `ImageName`, `FileName`, `CanvasRules`, `Dimensions`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `MachinesOffset`
+-- Table structure for table `machinesoffset`
 --
 
-DROP TABLE IF EXISTS `MachinesOffset`;
-CREATE TABLE IF NOT EXISTS `MachinesOffset` (
+CREATE TABLE IF NOT EXISTS `machinesoffset` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Offset` varchar(500) COLLATE utf8_unicode_ci NOT NULL,
   `DateOffsetCalculation` date NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene tutti i valori di offset calcolati per le macchine utilizzate' AUTO_INCREMENT=190 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Contiene tutti i valori di offset calcolati per le macchine utilizzate' AUTO_INCREMENT=195 ;
 
 --
--- Dumping data for table `MachinesOffset`
+-- Dumping data for table `machinesoffset`
 --
 
-INSERT INTO `MachinesOffset` (`ID`, `Offset`, `DateOffsetCalculation`) VALUES
+INSERT INTO `machinesoffset` (`ID`, `Offset`, `DateOffsetCalculation`) VALUES
 (1, '0', '2012-06-25'),
 (2, '0', '2012-06-25'),
 (10, '1.0,-0.44499999999999995', '2012-08-27'),
@@ -533,16 +598,20 @@ INSERT INTO `MachinesOffset` (`ID`, `Offset`, `DateOffsetCalculation`) VALUES
 (186, '1.0,-0.8', '2012-11-14'),
 (187, '1.0,-0.8', '2012-11-14'),
 (188, '1.0,-0.8', '2012-11-14'),
-(189, '1.0,-0.7', '2013-01-07');
+(189, '1.1,-14.8', '2013-12-16'),
+(190, '1.0,-0.8', '2013-07-11'),
+(191, '1.0,-1.8', '2013-07-23'),
+(192, '1.0,-0.7', '2013-07-25'),
+(193, '1.0,-0.8', '2013-11-22'),
+(194, '1.0,-2.8', '2014-01-24');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Patients`
+-- Table structure for table `patients`
 --
 
-DROP TABLE IF EXISTS `Patients`;
-CREATE TABLE IF NOT EXISTS `Patients` (
+CREATE TABLE IF NOT EXISTS `patients` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `DoctorID` int(11) NOT NULL,
   `Name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -557,10 +626,10 @@ CREATE TABLE IF NOT EXISTS `Patients` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
 
 --
--- Dumping data for table `Patients`
+-- Dumping data for table `patients`
 --
 
-INSERT INTO `Patients` (`ID`, `DoctorID`, `Name`, `Surname`, `Sex`, `DateOfBirth`, `Gravity`, `Username`, `Password`) VALUES
+INSERT INTO `patients` (`ID`, `DoctorID`, `Name`, `Surname`, `Sex`, `DateOfBirth`, `Gravity`, `Username`, `Password`) VALUES
 (1, 1, 'Matteo', 'Ciman', 'M', NULL, 'M', 'matteo.ciman', '610e2c278a8d33efcaade795132b2867'),
 (2, 1, 'Mario', 'Rossi', 'M', NULL, 'M', NULL, NULL),
 (3, 0, 'Pinco', 'Pallo', 'F', '2012-07-10', 'M', NULL, NULL),
@@ -569,11 +638,10 @@ INSERT INTO `Patients` (`ID`, `DoctorID`, `Name`, `Surname`, `Sex`, `DateOfBirth
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Visits`
+-- Table structure for table `visits`
 --
 
-DROP TABLE IF EXISTS `Visits`;
-CREATE TABLE IF NOT EXISTS `Visits` (
+CREATE TABLE IF NOT EXISTS `visits` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Date` date NOT NULL,
   `IDPatient` int(11) NOT NULL,
@@ -581,13 +649,13 @@ CREATE TABLE IF NOT EXISTS `Visits` (
   `Folder` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `IsAtHome` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=385 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=440 ;
 
 --
--- Dumping data for table `Visits`
+-- Dumping data for table `visits`
 --
 
-INSERT INTO `Visits` (`ID`, `Date`, `IDPatient`, `IDGame`, `Folder`, `IsAtHome`) VALUES
+INSERT INTO `visits` (`ID`, `Date`, `IDPatient`, `IDGame`, `Folder`, `IsAtHome`) VALUES
 (1, '2012-08-01', 1, 2, NULL, 0),
 (2, '2012-08-01', 1, 1, 'archivio_visite/1/2012-7-20-18-24-10/', 0),
 (3, '2012-08-01', 1, 2, NULL, 0),
@@ -957,7 +1025,67 @@ INSERT INTO `Visits` (`ID`, `Date`, `IDPatient`, `IDGame`, `Folder`, `IsAtHome`)
 (381, '2012-12-04', 1, 2, 'archivio_visite/1/2012-12-4-1-5-381/', 0),
 (382, '2012-12-04', 1, 2, 'archivio_visite/1/2012-12-4-9-58-382/', 0),
 (383, '2012-12-04', 1, 2, 'archivio_visite/1/2012-12-4-10-6-383/', 0),
-(384, '2012-12-04', 1, 2, 'archivio_visite/1/2012-12-4-10-11-384/', 0);
+(384, '2012-12-04', 1, 2, 'archivio_visite/1/2012-12-4-10-11-384/', 0),
+(385, '2013-07-11', 1, 1, 'archivio_visite/1/2013-7-11-19-51-385/', 0),
+(386, '2013-07-23', 1, 1, 'archivio_visite/1/2013-7-23-22-38-386/', 0),
+(387, '2013-07-23', 1, 1, 'archivio_visite/1/2013-7-23-23-33-387/', 0),
+(388, '2013-07-23', 1, 1, 'archivio_visite/1/2013-7-23-23-49-388/', 0),
+(389, '2013-07-23', 1, 1, 'archivio_visite/1/2013-7-23-23-51-389/', 0),
+(390, '2013-07-23', 1, 1, 'archivio_visite/1/2013-7-23-23-54-390/', 0),
+(391, '2013-07-24', 1, 2, 'archivio_visite/1/2013-7-24-1-7-391/', 0),
+(392, '2013-07-24', 1, 2, 'archivio_visite/1/2013-7-24-9-38-392/', 0),
+(393, '2013-07-24', 1, 2, 'archivio_visite/1/2013-7-24-10-0-393/', 0),
+(394, '2013-07-25', 1, 2, 'archivio_visite/1/2013-7-25-9-7-394/', 0),
+(395, '2013-07-25', 1, 2, 'archivio_visite/1/2013-7-25-9-7-395/', 0),
+(396, '2013-07-25', 1, 2, 'archivio_visite/1/2013-7-25-9-7-396/', 0),
+(397, '2013-07-25', 1, 2, 'archivio_visite/1/2013-7-25-9-7-397/', 0),
+(398, '2013-07-25', 1, 2, 'archivio_visite/1/2013-7-25-9-26-398/', 0),
+(399, '2013-07-25', 1, 2, 'archivio_visite/1/2013-7-25-9-39-399/', 0),
+(400, '2013-07-25', 1, 2, 'archivio_visite/1/2013-7-25-9-52-400/', 0),
+(401, '2013-07-25', 1, 2, 'archivio_visite/1/2013-7-25-10-47-401/', 0),
+(402, '2013-07-25', 1, 1, 'archivio_visite/1/2013-7-25-10-52-402/', 0),
+(403, '2013-07-25', 1, 2, 'archivio_visite/1/2013-7-25-11-49-403/', 0),
+(404, '2013-07-25', 1, 2, 'archivio_visite/1/2013-7-25-12-20-404/', 0),
+(405, '2013-11-11', 1, 2, 'archivio_visite/1/2013-11-11-16-12-405/', 0),
+(406, '2013-11-22', 1, 1, 'archivio_visite/1/2013-11-22-16-36-406/', 0),
+(407, '2013-11-28', 1, 2, 'archivio_visite/1/2013-11-28-17-35-407/', 0),
+(408, '2013-11-29', 1, 2, 'archivio_visite/1/2013-11-29-15-12-408/', 0),
+(409, '2013-11-29', 1, 2, 'archivio_visite/1/2013-11-29-15-14-409/', 0),
+(410, '2013-11-29', 1, 2, 'archivio_visite/1/2013-11-29-15-17-410/', 0),
+(411, '2013-12-02', 1, 2, 'archivio_visite/1/2013-12-2-17-37-411/', 0),
+(412, '2013-12-03', 1, 2, 'archivio_visite/1/2013-12-3-10-48-412/', 0),
+(413, '2013-12-04', 1, 2, 'archivio_visite/1/2013-12-4-10-43-413/', 0),
+(414, '2013-12-04', 1, 2, 'archivio_visite/1/2013-12-4-12-17-414/', 0),
+(415, '2013-12-04', 1, 2, 'archivio_visite/1/2013-12-4-14-8-415/', 0),
+(416, '2013-12-04', 1, 2, 'archivio_visite/1/2013-12-4-14-16-416/', 0),
+(417, '2013-12-04', 1, 2, 'archivio_visite/1/2013-12-4-14-57-417/', 0),
+(418, '2013-12-04', 1, 2, 'archivio_visite/1/2013-12-4-15-21-418/', 0),
+(419, '2013-12-04', 1, 2, 'archivio_visite/1/2013-12-4-15-31-419/', 0),
+(420, '2013-12-04', 1, 2, 'archivio_visite/1/2013-12-4-15-35-420/', 0),
+(421, '2013-12-05', 1, 2, 'archivio_visite/1/2013-12-5-18-21-421/', 0),
+(422, '2013-12-05', 1, 2, 'archivio_visite/1/2013-12-5-18-28-422/', 0),
+(423, '2013-12-05', 1, 2, 'archivio_visite/1/2013-12-5-18-49-423/', 0),
+(424, '2013-12-05', 1, 2, 'archivio_visite/1/2013-12-5-19-9-424/', 0),
+(425, '2013-12-05', 1, 2, 'archivio_visite/1/2013-12-5-19-19-425/', 0),
+(426, '2013-12-05', 1, 2, 'archivio_visite/1/2013-12-5-19-23-426/', 0),
+(427, '2013-12-05', 1, 1, 'archivio_visite/1/2013-12-5-22-47-427/', 0),
+(428, '2013-12-05', 1, 1, 'archivio_visite/1/2013-12-5-22-53-428/', 0),
+(429, '2013-12-05', 1, 2, 'archivio_visite/1/2013-12-5-22-57-429/', 0),
+(430, '2013-12-05', 1, 2, 'archivio_visite/1/2013-12-5-23-4-430/', 0),
+(431, '2013-12-05', 1, 2, 'archivio_visite/1/2013-12-5-23-12-431/', 0),
+(432, '2013-12-06', 1, 2, 'archivio_visite/1/2013-12-6-8-48-432/', 0),
+(433, '2013-12-06', 1, 2, 'archivio_visite/1/2013-12-6-8-53-433/', 0),
+(434, '2013-12-06', 1, 2, 'archivio_visite/1/2013-12-6-9-11-434/', 0),
+(435, '2013-12-06', 4, 1, 'archivio_visite/4/2013-12-6-9-26-435/', 0),
+(436, '2013-12-06', 2, 1, 'archivio_visite/2/2013-12-6-9-29-436/', 0),
+(437, '2013-12-23', 1, 1, 'archivio_visite/1/2013-12-23-12-11-437/', 0),
+(438, '2013-12-23', 1, 1, 'archivio_visite/1/2013-12-23-12-36-438/', 0),
+(439, '2013-12-23', 1, 1, 'archivio_visite/1/2013-12-23-12-45-439/', 0);
+--
+-- Database: `test`
+--
+CREATE DATABASE IF NOT EXISTS `test` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `test`;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -61,7 +61,7 @@ function presentationComplete() {
 				else {
 					
 					var dialog = $('<div>').attr('id', 'dialogAskSynch').attr('title', 'Sincronizzazione').appendTo('#divMainContent');
-					$('<p>').text('Il computer non è stato sincronizzato recentemente e sarebbe opportuno effettuarla per avere dati più precisi.').appendTo(dialog);
+					$('<p>').text('Il computer non Ã¨ stato sincronizzato recentemente e sarebbe opportuno effettuarla per avere dati piÃ¹ precisi.').appendTo(dialog);
 					$('<p>').text('Sincronizzare nuovamente?').appendTo(dialog);
 					dialog.dialog({
 						modal: true,

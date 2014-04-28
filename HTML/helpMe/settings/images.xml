@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <imageMaterials>
-    <family type="animali" audioFile="introduzione_sacco_animali_peluche" audioBagReady=""
+    <family type="animali" audioFile="introduzione_sacco_animali_peluche" audioBagReady="sacco_pronto_animali"
     	audioObjectNotInserted="oggetto_non_inserito_animali_peluche">
         <image id="1" name="Oca" fileName="oca.png" />
         <image id="2" name="Aquila" fileName="animali/aquila.png" />
@@ -33,7 +33,7 @@
     	audioObjectNotInserted="oggetto_non_inserito_macchinine">
         <image id="27" name="Ferrari" fileName="ferrari.png" />
         <image id="28" name="Auto" fileName="macchine/auto.png" />
-        <image id="29" name="Bicicletta" fileName="macchine/biciclette.png" />
+        <image id="29" name="Bicicletta" fileName="macchine/bicicletta.png" />
         <image id="30" name="Camion" fileName="macchine/camion.png" />
         <image id="31" name="Camion cisterna" fileName="macchine/camion_cisterna.png" />
         <image id="32" name="Ciclomotore" fileName="macchine/ciclomotore.png" />
@@ -78,5 +78,29 @@
     </family>
     <family type="Dolcetti" audioFile="introduzione_sacco_dolcetti" audioBagReady=""
     	audioObjectNotInserted="oggetto_non_inserito_dolcetti">
+    </family>
+    <family type="distrattori" audioFile="" audioBagReady=""
+        audioObjectNotInserted="">
+        <image id="55" name="Abitino" fileName="distrattori/abitino.png" />
+        <image id="56" name="Costruzioni" fileName="distrattori/costruzioni.png" />
+        <image id="57" name="Matitina" fileName="distrattori/matitina.png" />
+        <image id="58" name="Matitina 2" fileName="distrattori/matitina2.png" />
+        <image id="59" name="Matitina 3" fileName="distrattori/matitina3.png" />
+        <image id="60" name="Mattoncini" fileName="distrattori/mattoncini.png" />
+        <image id="61" name="Pennarelli" fileName="distrattori/pennarelli.png" />
+        <image id="62" name="Pennarelli 2" fileName="distrattori/pennarelli2.png" />
+        <image id="63" name="Pennarelli 3" fileName="distrattori/pennarelli3.png" />
+        <image id="64" name="Pennarello" fileName="distrattori/pennarello.png" />
+        <image id="65" name="Pennarello 2" fileName="distrattori/pennarello2.png" />
+        <image id="66" name="Pennarello 3" fileName="distrattori/pennarello3.png" />
+        <image id="67" name="Pennarello 4" fileName="distrattori/pennarello4.png" />
+        <image id="68" name="Soldatini" fileName="distrattori/soldatini.png" />
+        <image id="69" name="Soldatino" fileName="distrattori/soldatino.png" />
+        <image id="70" name="Soldatino 2" fileName="distrattori/soldatino2.png" />
+        <image id="71" name="Soldatino 3" fileName="distrattori/soldatino3.png" />
+        <image id="72" name="Soldatino 4" fileName="distrattori/soldatino4.png" />
+        <image id="73" name="Soldatino 5" fileName="distrattori/soldatino5.png" />
+        <image id="74" name="Soldatino 6" fileName="distrattori/soldatino6.png" />
+        <image id="75" name="Soldatino 7" fileName="distrattori/soldatino7.png" />
     </family>
 </imageMaterials>

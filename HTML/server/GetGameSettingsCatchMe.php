@@ -1,54 +1,34 @@
 <?php
 require_once("DBParameters.php");
 
-function retrieveImageInfo($imageID, $others) {
+function retrieveImageInfo() {
 	
 	$xmlFile = "../catchMe/settings/images.xml";
 	
 	$xml = simplexml_load_file($xmlFile);
-	
-	if (!$others) {
-		$correctNode = $xml->xpath('//image[@id="' . $imageID . '"]');
 		
-		$attributes = $correctNode[0]->attributes();
+	$arrayImages = array();
 		
+	$images = $xml->xpath('//image');
+		
+	foreach ($images as $image) {
+			
+		$attributes = $image->attributes();
+			
+		$imageID = (int)$attributes['id'][0];
 		$imageName = (string)$attributes['imageName'][0];
 		$fileName = (string)$attributes['fileName'][0];
 		$size = (string)$attributes['size'][0];
-		$forSpaceGame = (string)$attributes['isForSpaceGame'][0];
-		
-		return array($imageID, $imageName, $fileName, $size, $forSpaceGame);
+			
+		$arrayImages[$imageID] = array(
+				"IMG_NAME" => $imageName,
+				"IMG_FILE" => $fileName,
+				"IMG_SIZE" => $size
+			);
 	}
-	else {
 		
-		$arrayImages = array();
-		
-		$images = $xml->xpath('//image[@id!="' . $imageID . '"]');
-		
-		foreach ($images as $image) {
-			
-			$attributes = $image->attributes();
-			
-			$imageID = (int)$attributes['id'][0];
-			$imageName = (string)$attributes['imageName'][0];
-			$fileName = (string)$attributes['fileName'][0];
-			$size = (string)$attributes['size'][0];
-			$forSpaceGame = (string)$attributes['isForSpaceGame'][0];
-			
-			$arrayImages[$imageID] = array(
-					"IMG_NAME" => $imageName,
-					"IMG_FILE" => $fileName,
-					"IMG_SIZE" => $size,
-					"IS_FOR_SPACE_GAME" => $forSpaceGame
-				);
-		}
-		
-		return $arrayImages;
-	}
+	return $arrayImages;
 }
-
-
-
 
 $patientID = $_POST['patientID'];
 
@@ -60,22 +40,24 @@ $patientID = $_POST['patientID'];
 
 $baseQuery = "SELECT e.Movements, e.StartFromCenter, e.MixMovements,
 			e.Speed, e.ChangeImageColor, e.Background, e.ImageColor,
-			e.ImageWidth, e.ImageID, e.IsSpaceGame
+			e.ImageWidth, e.ImageID, e.ExerciseOrder, e.NumberOfRepetitions
 			FROM CatchMeExercises e
 			WHERE ";
 
 $row;
+$resultToUse;
 /**
  * First check if there is already defined an exercise for this particular game for
  * this particular patient
  */
-$queryExerciseAlreadyDefined = $baseQuery . "e.IDPatient = $patientID AND CurrentValidSettings = 1";
+$queryExerciseAlreadyDefined = $baseQuery . "e.IDPatient = $patientID AND CurrentValidSettings = 1 ORDER BY ExerciseOrder ASC";
 
 $resultQueryExerciseAlreadyDefined = mysqli_query($connection, $queryExerciseAlreadyDefined);
 
 if (mysqli_num_rows($resultQueryExerciseAlreadyDefined) != 0) {
 	
-	$row = mysqli_fetch_assoc($resultQueryExerciseAlreadyDefined);	
+	$resultsToUse = $resultQueryExerciseAlreadyDefined;
+	//$row = mysqli_fetch_assoc($resultQueryExerciseAlreadyDefined);	
 }
 else {
 	
@@ -90,67 +72,60 @@ else {
 	
 	$resultQueryRetrieveDefaultValues = mysqli_query($connection, $queryRetrieveDefaultValues) or die (mysqli_error($connection));
 	
-	$row = mysqli_fetch_assoc($resultQueryRetrieveDefaultValues);
+	$resultsToUse = $resultQueryRetrieveDefaultValues;
+	//$row = mysqli_fetch_assoc($resultQueryRetrieveDefaultValues);
 	
 }
 
-$movements = array(
-		'RightMovement' => 0, 
-		'LeftMovement' => 0,
-		'UpMovement' => 0,
-		'DownMovement' => 0);
+$finalResultToSend = array("TYPE" => "GAME_SPECS");
+$arrayExercises = array();
 
-if (strpos($row['Movements'], 'R') !== false) {
-	$movements['RightMovement'] = 1;
-}
-if (strpos($row['Movements'], 'L') !== false) {
-	$movements['LeftMovement'] = 1;
-}
-if (strpos($row['Movements'], 'T') !== false) {
-	$movements['UpMovement'] = 1;
-}
-if (strpos($row['Movements'], 'B') !== false) {
-	$movements['DownMovement'] = 1;
+$arrayOtherImages = retrieveImageInfo();
+
+if (count($arrayOtherImages) != 0) {
+	$finalResultToSend['IMAGES_SPECS'] = $arrayOtherImages;
 }
 
-list($imageID, $imageName, $imageFile, $imageSize, $forSpaceGame) = retrieveImageInfo($row['ImageID'], false);
+while ($row = mysqli_fetch_assoc($resultsToUse)) {
 
-$arrayToSend = array(
-	"TYPE" => "GAME_SPECS",
-	"RIGHT_MOV" => $movements["RightMovement"],
-	"LEFT_MOV" => $movements["LeftMovement"],
-	"UP_MOV" => $movements['UpMovement'],
-	"DOWN_MOV" => $movements['DownMovement'],
-	"SPEED" => $row["Speed"],
-	"START_CENTER" => (int)$row["StartFromCenter"],
-	"MIX_MOVEMENTS" => (int)$row["MixMovements"],
-	"BACK_COLOR" => $row["Background"],
-	"IMG_COLOR" => $row["ImageColor"],
-	"CHANGE_IMG_COLOR" => (int)$row["ChangeImageColor"],
-	"IMG_SPECS" => array("IMG_ID" => $imageID, "IMG_NAME" => $imageName, "IMG_FILE" => $imageFile, "IS_FOR_SPACE_GAME" => $forSpaceGame),
-	"IMG_WIDTH" => (int)$row['ImageWidth'],
-	"CANVAS_SIZE" => $imageSize,
-	"IS_SPACE_GAME" => $row['IsSpaceGame']
-);
+	$movements = array(
+			'RightMovement' => 0, 
+			'LeftMovement' => 0,
+			'UpMovement' => 0,
+			'DownMovement' => 0);
 
-//print_r($arrayToSend);
+	if (strpos($row['Movements'], 'R') !== false) {
+		$movements['RightMovement'] = 1;
+	}
+	if (strpos($row['Movements'], 'L') !== false) {
+		$movements['LeftMovement'] = 1;
+	}
+	if (strpos($row['Movements'], 'T') !== false) {
+		$movements['UpMovement'] = 1;
+	}
+	if (strpos($row['Movements'], 'B') !== false) {
+		$movements['DownMovement'] = 1;
+	}
 
-/*$querySelectImages = "SELECT ID, ImageName, FileName, Dimensions FROM Images ORDER BY ImageName ASC";
-
-$resultQuerySelectImages = mysqli_query($connection, $querySelectImages);*/
-
-retrieveImageInfo($row['ImageID'], true);
-
-if (!isset($_POST['onlySettings'])) {
-	
-	$arrayOtherImages = retrieveImageInfo($row['ImageID'], true);
-	
-	if (count($arrayOtherImages) != 0) {
-		$arrayToSend['OTHER_IMG'] = $arrayOtherImages;
-	}	
+	$arrayExercises[$row["ExerciseOrder"]] = array(
+		"RIGHT_MOV" => $movements["RightMovement"],
+		"LEFT_MOV" => $movements["LeftMovement"],
+		"UP_MOV" => $movements['UpMovement'],
+		"DOWN_MOV" => $movements['DownMovement'],
+		"SPEED" => $row["Speed"],
+		"START_CENTER" => (int)$row["StartFromCenter"],
+		"MIX_MOVEMENTS" => (int)$row["MixMovements"],
+		"BACK_COLOR" => $row["Background"],
+		"IMG_COLOR" => $row["ImageColor"],
+		"CHANGE_IMG_COLOR" => (int)$row["ChangeImageColor"],
+		"IMG_ID" => (int)$row['ImageID'],
+		"IMG_WIDTH" => (int)$row['ImageWidth'],
+		"NUM_REPETITIONS" => (int)$row['NumberOfRepetitions']
+	);
 }
-	
-echo json_encode($arrayToSend);
 
+$finalResultToSend["EXERCISES"] = $arrayExercises;
+
+echo json_encode($finalResultToSend);
 ?>
 

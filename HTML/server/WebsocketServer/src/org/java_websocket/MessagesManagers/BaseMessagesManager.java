@@ -37,8 +37,10 @@ public abstract class BaseMessagesManager extends Thread {
     public long startTime = 0;
 
     public final Object bufferSynchronizer = new Object();
-    protected Long MAX_DIFFERENCE = new Long(40); // 2 secondi
-    protected Long MAX_TIME_WAITING = new Long(2 * 1000); // 2 secondi
+    
+    protected int maxFPS = 25;
+    protected Long MAX_DIFFERENCE = new Long(1000 / maxFPS + (1000 / maxFPS) / 2);
+    protected Long MAX_TIME_WAITING = new Long((1000 / maxFPS) * 2); 
 
     protected static DoctorClientManager doctorManager = null;
 
@@ -140,7 +142,7 @@ public abstract class BaseMessagesManager extends Thread {
         fileSpecs = folderWhereArchive.concat("GameSpecs.ini");
 
         try {
-            BufferedWriter specsWriter = new BufferedWriter(new FileWriter(fileSpecs));
+            BufferedWriter specsWriter = new BufferedWriter(new FileWriter(fileSpecs, true));
             specsWriter.write(screenWidth.toString() + 'x' + screenHeight.toString());
             specsWriter.newLine();
             specsWriter.write(imgWidth.toString() + 'x' + imgHeight.toString());

@@ -7,6 +7,8 @@ var divTabs = null;
 var screenWidth = 0;
 var screenHeight = 0;
 var totalErrors = 0;
+var currentRetry = 0;
+var maxRetry = 5;
 
 function ImageGame(ID,name, fileName) {
 	this.imageID = ID;
@@ -144,8 +146,10 @@ var HelpMeSettingsNamespace = {
 			var isImageCorrect = HelpMeSettingsNamespace.checkImageType(imageID, typeElement, targetFamily);
 			
 			if (!isImageCorrect) {
-				$(this).parent().parent('tr').children('td').addClass('badSettings');
-				totalErrors++;
+				if ($(this).parent().parent('tr').children('td').hasClass('badSettings') == false) {
+					$(this).parent().parent('tr').children('td').addClass('badSettings');
+					totalErrors++;
+				}
 			}
 			else {
 				$(this).parent().parent('tr').children('td').removeClass('badSettings');
@@ -278,13 +282,23 @@ var HelpMeSettingsNamespace = {
 				if (data.RESULT == true) {
 					screenWidth = data.SCREEN_WIDTH;
 					screenHeight = data.SCREEN_HEIGHT;
+					console.log("WIDTH: " + screenWidth + "HEIGHT: " + screenHeight);
 					
 					HelpMeSettingsNamespace.getImagesFamilies();
 				}
 				else {
 					if (data.ERROR == "01") {
-						console.log("Errore: nessun client connesso");
-						NewVisitNamespace.noClientConnected();
+						currentRetry++;
+						if (currentRetry <= maxRetry) {
+							console.log("Retry connection to client: " + currentRetry);
+							setTimeout(function() {
+								websocket.send(JSON.stringify(packetToSend));
+							}, 2000);
+						}
+						else {
+							console.log("Errore: nessun client connesso");
+							NewVisitNamespace.noClientConnected();
+						}
 					}
 				}
 				

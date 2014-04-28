@@ -40,6 +40,7 @@ td.ui-selected, tr.ui-selected {
 
 .imgPreview {
 	width: 45%;
+	max-height: 50%;
 }
 
 #divNewLevel {
