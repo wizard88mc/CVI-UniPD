@@ -251,12 +251,12 @@ timingFunction: function() {
 sendPacketImageScreenInfo: function() {
 	
 	var packetToSend = {
-			"TYPE": "READY_TO_PLAY", 
-			"MACHINE_ID": machineID,
-			"IMAGE_WIDTH": levelsToPerform[gameManager.levelIterator].effectiveImageWidth,
-			"IMAGE_HEIGHT": levelsToPerform[gameManager.levelIterator].effectiveImageHeight,
-			"SCREEN_WIDTH": getScreenWidth(),
-			"SCREEN_HEIGHT": getScreenHeight()
+			'TYPE': 'READY_TO_PLAY', 
+			'MACHINE_ID': machineID,
+			'IMAGE_WIDTH': levelsToPerform[gameManager.levelIterator].effectiveImageWidth,
+			'IMAGE_HEIGHT': levelsToPerform[gameManager.levelIterator].effectiveImageHeight,
+			'SCREEN_WIDTH': getScreenWidth(),
+			'SCREEN_HEIGHT': getScreenHeight()
 		};
 		
 		websocket.send(JSON.stringify(packetToSend));
@@ -385,7 +385,6 @@ buildAnimations: function() {
 		padding: '0em'
 	});
 	CatchMeNamespace.drawCanvas(false);
-	//$('canvas#image').css('visibility', 'hidden');
 	
 	/**
 	 * Defining standard points
@@ -537,7 +536,7 @@ defineAnimationFunction: function(firstTime, timeToWait) {
 				var number = $('#divSounds audio').length;
 				
 				var index = Math.floor(Math.random() * number);
-				$('#divSounds audio').get(index).play();
+				$('#divSounds audio.soundGreetings').get(index).play();
 				
 				gameManager.lastTimePlayedGoodSound = time;
 			}

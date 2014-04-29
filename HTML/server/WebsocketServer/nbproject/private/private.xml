@@ -5,6 +5,7 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/EyeTrackerSimulator.java</file>
+            <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/DoctorClientManager.java</file>
             <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/ServerManager.java</file>
         </group>
     </open-files>

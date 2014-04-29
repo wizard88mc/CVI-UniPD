@@ -165,7 +165,7 @@ var CatchMeNamespace = {
 			
 			grafo.getOptions().xaxes[0].max = lastValue + 20;
 			if (lastValue > 60 * 1000) {
-				grafo.getOptions().xaxes[0].min = lastValue % (60 * 1000);
+				grafo.getOptions().xaxes[0].min = lastValue - (60 * 1000);
 			}
 		}
 		
@@ -356,6 +356,7 @@ var CatchMeNamespace = {
 		}
 		else {
 			console.log("Bad Message Received in manageMessagesGame");
+			console.log(dataReceived);
 		}
 	}
 };

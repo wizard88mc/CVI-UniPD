@@ -1378,10 +1378,11 @@ personalizationComplete: function() {
 		success: function(message) {
 			//messaggio ok se tutt ok
 			console.log(message);
+			
 		}
 	});
 	
-	/*var packetToSend = {
+	var packetToSend = {
 		TYPE: "GAME_SETTINGS",
 		GAME_ID: gameID,
 		EXERCISES: exercisesToSend,
@@ -1398,8 +1399,8 @@ personalizationComplete: function() {
 			
 	websocket.send(JSON.stringify(packetSession));*/
 	
-	//$('#divMainContent > h1').text('Prendimi!');
+	$('#divMainContent > h1').text('Prendimi!');
 	
-	//websocket.onmessage = CatchMeNamespace.entryFunction;
+	websocket.onmessage = CatchMeNamespace.entryFunction;
 	}
 };
