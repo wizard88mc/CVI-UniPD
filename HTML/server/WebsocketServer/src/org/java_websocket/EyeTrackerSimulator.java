@@ -28,7 +28,7 @@ public class EyeTrackerSimulator extends Thread {
         
         //host = "ciman.math.unipd.it";
         this.host = new String().concat("ws://")
-                .concat(host).concat(":").concat(new Integer(port).toString());
+                .concat(host).concat(":").concat(String.valueOf(port));
         System.out.println("Creating EyeTracker Client"); 
     }
     
