@@ -30,10 +30,14 @@ public class EyeTribeClient {
     private TrackerStateListener trackerState = null;
     private ConnectionStateListener connectionListener = null;
     
+    private EyeTribeTracker eyeTribeTracker = null;
+    
     private boolean trackerReady = false;
     private long screenWidth, screenHeight;
     
-    public EyeTribeClient() {
+    public EyeTribeClient(EyeTribeTracker eyeTribeTracker) {
+        
+        this.eyeTribeTracker = eyeTribeTracker;
         
         gazeManagerSingleton = GazeManager.getInstance();
         gazeManagerSingleton.activate(GazeManager.ApiVersion.VERSION_1_0, GazeManager.ClientMode.PUSH);
@@ -50,11 +54,26 @@ public class EyeTribeClient {
         gazeManagerSingleton.addConnectionStateListener(connectionListener);
     }
     
-    public void startCalibration() {
-        calibrationManager.performCalibration(7, 2000, 1500, 20, 0);
+    public EyeTribeClient() 
+    {
+        this(null);
     }
     
-    private class GazeListener implements IGazeListener {
+    public void startCalibration() 
+    {
+        calibrationManager.startCalibration();
+    }
+    
+    public ArrayList<Point> prepareCalibration(int pointsNumber, long pointDuration, 
+            long transitionDuration, int pointDiameter) 
+    {
+        
+        return calibrationManager.calculateCalibrationPoints(pointsNumber, pointDuration, 
+                transitionDuration, pointDiameter);
+    }
+    
+    private class GazeListener implements IGazeListener 
+    {
 
         @Override
         public void onGazeUpdate(GazeData gazeData) 
@@ -70,9 +89,11 @@ public class EyeTribeClient {
         }
     }
 
-    private class CalibrationResultListener implements ICalibrationResultListener {
+    private class CalibrationResultListener implements ICalibrationResultListener 
+    {
         @Override
-        public void onCalibrationChanged(boolean isCalibrated, CalibrationResult calibResult) {
+        public void onCalibrationChanged(boolean isCalibrated, CalibrationResult calibResult) 
+        {
             /**
              * CalibrationResult != null only when isCalibrated = true
              */
@@ -84,24 +105,28 @@ public class EyeTribeClient {
         }
     }
     
-    private class CalibrationManager implements ICalibrationProcessHandler {
+    private class CalibrationManager implements ICalibrationProcessHandler 
+    {
         
         private ArrayList<Point> listPoint = new ArrayList<Point>();
+        private Point centerScreen;
         private long pointDuration;
         private long transitionDuration;
         
-        public void performCalibration(int pointsNumber, long pointDuration, 
-                long transitionDuration, int pointDiameter, long startTime) {
+        public ArrayList<Point> calculateCalibrationPoints(int pointsNumber, long pointDuration, 
+                long transitionDuration, int pointDiameter) 
+        {
             
             if (gazeManagerSingleton.getTrackerState() != GazeManager.TrackerState.TRACKER_CONNECTED) {
                 System.out.println("Tracker not connected");
-                return;
+                return null;
             }
             
             int screenWidth = gazeManagerSingleton.getScreenResolutionWidth();
             int screenHeight = gazeManagerSingleton.getScreenResolutionHeight();
             this.pointDuration = pointDuration;
             this.transitionDuration = transitionDuration;
+            this.centerScreen = new Point(screenWidth / 2, screenHeight / 2);
             
             Point firstPoint = new Point(2 * pointDiameter, 2 * pointDiameter);
             listPoint.add(firstPoint);
@@ -112,12 +137,14 @@ public class EyeTribeClient {
             Point thirdPoint = new Point(screenWidth - 2 * pointDiameter, 2 * pointDiameter);
             listPoint.add(thirdPoint);
             
-            if (pointsNumber == 7) {
+            if (pointsNumber == 7) 
+            {
                 
                 Point fourthPoint = new Point(screenWidth / 2, screenHeight / 2);
                 listPoint.add(fourthPoint);
             }
-            else if (pointsNumber == 9) {
+            else if (pointsNumber == 9) 
+            {
                 
                 Point fourthPoint = new Point(2 * pointDiameter, screenHeight / 2);
                 listPoint.add(fourthPoint);
@@ -138,17 +165,22 @@ public class EyeTribeClient {
             Point seventhPoint = new Point(screenWidth - 2 * pointDiameter, screenHeight - 2 * pointDiameter);
             listPoint.add(seventhPoint);
             
-            if (!gazeManagerSingleton.isActivated()) {
+            if (!gazeManagerSingleton.isActivated()) 
+            {
                 System.out.println("Eye Tribe not activated");
-                return;
+                return null;
             }
-            gazeManagerSingleton.calibrationStart(pointsNumber, this);
-            
+            return listPoint;
+        }
+        
+        public void startCalibration() 
+        {
+            gazeManagerSingleton.calibrationStart(listPoint.size(), this);
             iterateOnPoints();
         }
         
-        private void iterateOnPoints() {
-            
+        private void iterateOnPoints() 
+        { 
             System.out.println("Iterate on points");
             for (int i = 0; i < listPoint.size(); i++) 
             {
@@ -169,7 +201,8 @@ public class EyeTribeClient {
         }
 
         @Override
-        public void onCalibrationStarted() {
+        public void onCalibrationStarted() 
+        {
             /**
              * Called when calibration started
              */
@@ -177,7 +210,8 @@ public class EyeTribeClient {
         }
 
         @Override
-        public void onCalibrationProgress(double progress) {
+        public void onCalibrationProgress(double progress) 
+        {
             /**
              * Called every time a calibration point is completed
              */
@@ -185,7 +219,8 @@ public class EyeTribeClient {
         }
 
         @Override
-        public void onCalibrationProcessing() {
+        public void onCalibrationProcessing() 
+        {
             /**
              * Called when all calibration points submitted and calibration processing 
              * begins
@@ -194,48 +229,61 @@ public class EyeTribeClient {
         }
 
         @Override
-        public void onCalibrationResult(CalibrationResult calibResult) {
+        public void onCalibrationResult(CalibrationResult calibResult) 
+        {
             /**
              * Called when everything completed 
              */
             System.out.println("Calibration result: ");
+            System.out.println("Result: " + calibResult.result);
+            System.out.println("Average error degree: " + calibResult.averageErrorDegree);
         }
         
     }
     
-    private class TrackerStateListener implements ITrackerStateListener {
+    private class TrackerStateListener implements ITrackerStateListener 
+    {
 
         @Override
-        public void onTrackerStateChanged(int trackerState) {
+        public void onTrackerStateChanged(int trackerState) 
+        {
             /**
              * State of connected Tracker device has changed.
              */
             trackerReady = false;
-            if (GazeManager.TrackerState.fromInt(trackerState) == GazeManager.TrackerState.TRACKER_CONNECTED) 
+            if (GazeManager.TrackerState.fromInt(trackerState) == 
+                    GazeManager.TrackerState.TRACKER_CONNECTED) 
             {
                 System.out.println("Tracker correctly connected");
                 trackerReady = true;
             }
-            else if (GazeManager.TrackerState.fromInt(trackerState) == GazeManager.TrackerState.TRACKER_CONNECTED_BADFW) 
+            else if (GazeManager.TrackerState.fromInt(trackerState) == 
+                    GazeManager.TrackerState.TRACKER_CONNECTED_BADFW) 
             {
                 System.out.println("Tracker bad forwarding");
             }
-            else if (GazeManager.TrackerState.fromInt(trackerState) == GazeManager.TrackerState.TRACKER_CONNECTED_NOSTREAM) 
+            else if (GazeManager.TrackerState.fromInt(trackerState) == 
+                    GazeManager.TrackerState.TRACKER_CONNECTED_NOSTREAM) 
             {
                 System.out.println("Tracker not streaming");
             }
-            else if (GazeManager.TrackerState.fromInt(trackerState) == GazeManager.TrackerState.TRACKER_CONNECTED_NOUSB3) 
+            else if (GazeManager.TrackerState.fromInt(trackerState) == 
+                    GazeManager.TrackerState.TRACKER_CONNECTED_NOUSB3) 
             {
                 System.out.println("Tracker connected to USB3");
             }
-            else if (GazeManager.TrackerState.fromInt(trackerState) == GazeManager.TrackerState.TRACKER_NOT_CONNECTED) 
+            else if (GazeManager.TrackerState.fromInt(trackerState) == 
+                    GazeManager.TrackerState.TRACKER_NOT_CONNECTED) 
             {
                 System.out.println("Tracker not connected");
             }
         }
 
         @Override
-        public void OnScreenStatesChanged(int screenIndex, int screenResolutionWidth, int screenResolutionHeight, float screenPhysicalWidth, float screenPhysicalHeight) {
+        public void OnScreenStatesChanged(int screenIndex, int screenResolutionWidth, 
+                int screenResolutionHeight, float screenPhysicalWidth, 
+                float screenPhysicalHeight) 
+        {
             /**
              * main screen index has changed. This is only relevant for multi-screen setups
              */
@@ -243,10 +291,12 @@ public class EyeTribeClient {
         
     }
     
-    private class ConnectionStateListener implements IConnectionStateListener {
+    private class ConnectionStateListener implements IConnectionStateListener 
+    {
 
         @Override
-        public void onConnectionStateChanged(boolean isConnected) {
+        public void onConnectionStateChanged(boolean isConnected) 
+        {
             /**
              * Notification when connection to the EyeTribe Server changes
              */
@@ -261,9 +311,10 @@ public class EyeTribeClient {
         }
     }
     
-    public static void main(String args[]) {
+    public static void main(String args[]) 
+    {
         
         final EyeTribeClient client = new EyeTribeClient();
-        client.startCalibration();
+        //client.startCalibration();
     }
 }

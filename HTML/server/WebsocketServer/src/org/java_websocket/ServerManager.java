@@ -9,6 +9,7 @@ package org.java_websocket;
 
 import java.net.UnknownHostException;
 import java.util.Date;
+import org.java_websocket.eyetracker.EyeTribeTracker;
 import org.json.simple.JSONObject;
 
 public class ServerManager {
@@ -52,6 +53,7 @@ public class ServerManager {
         int eyeTrackerPort = 8000;
         int ipadPort = 8001;
         int doctorPort = 8002;
+        
         clientDoctor = new DoctorClientManager(doctorPort);
         clientEyeTracker = new EyeTrackerManager(eyeTrackerPort);
         clientIpad = new IPADClientManager(ipadPort);
@@ -81,6 +83,9 @@ public class ServerManager {
             System.out.println("Server Started");
             
             Thread.sleep(3000);
+            EyeTribeTracker eyeTracker = new EyeTribeTracker(host, 8000);
+            eyeTracker.connect();
+            
             //EyeTrackerSimulator simulator = new EyeTrackerSimulator(host, 8000);
             //simulator.connect();
         }

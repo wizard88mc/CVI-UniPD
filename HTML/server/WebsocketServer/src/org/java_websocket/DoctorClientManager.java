@@ -101,22 +101,21 @@ public class DoctorClientManager extends BaseManager {
             patientManager.sendPacket(packet);
         }
         /**
+         * This packet contains the settings selected by the doctor for the training
+         * This packet has to be sent to the eye tracker that has to calculate 
+         * the training points
+         */
+        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("TRAINING_SETTINGS")) {
+            eyeTrackerManager.sendPacket(packet);
+            patientManager.sendPacket(packet);
+        }
+        /**
          * Packet identifies the beginning of the training session. 
          * Calculates a starting time and sends it to the eye tracker 
          * and the patient client.
          */
         else if (packet.get(BaseManager.MESSAGE_TYPE).equals(BaseManager.START_TRAINING)) {
             
-            long timeToStart = new Date().getTime() + 15000; // Audio presentation lasts 12 seconds
-            long timeForEyeTracker = eyeTrackerManager.calculateTimeWithOffset(timeToStart);
-            long timeForPatient = patientManager.calculateTimeWithOffset(timeToStart);
-            
-            JSONObject packetEyeTracker = (JSONObject)packet.clone();
-            packetEyeTracker.put(BaseManager.START_TIME, timeForEyeTracker);
-            packet.put(BaseManager.START_TIME, timeForPatient);
-            
-            eyeTrackerManager.sendPacket(packetEyeTracker);
-            patientManager.sendPacket(packet);
         }
         /*
          * TODO: Provide a game without the eye-tracker

@@ -6,6 +6,11 @@
 
 package org.java_websocket.eyetracker;
 
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.concurrent.Executors;
+
 /**
  *
  * @author Matteo Ciman
@@ -13,6 +18,7 @@ package org.java_websocket.eyetracker;
 public class EyeTribeTracker extends Thread {
     
     private WebSocketClientTracker websocketClient = null;
+    private EyeTribeClient eyeTribeClient = null;
     private String host = null;
     private long startTime = 0L;
     private long screenWidth = 0L, screenHeight = 0L;
@@ -29,9 +35,27 @@ public class EyeTribeTracker extends Thread {
         websocketClient = new WebSocketClientTracker(host, this);
         websocketClient.connect();
         
+        eyeTribeClient = new EyeTribeClient();
     }
     
-    public void setScreenWidthAndHeight(long screenWidth, long screenHeight) {
-        this.screenWidth = screenWidth; this.screenHeight = screenHeight;
+    public ArrayList<Point> prepareCalibration(int pointsNumber, long pointDuration, 
+            long transitionDuration, int pointDiameter) 
+    {
+        
+        return eyeTribeClient.prepareCalibration(pointsNumber, pointDuration, 
+                transitionDuration, pointDiameter);
+    }
+    
+    public void startCalibration(long startTime) 
+    {
+        Executors.newSingleThreadScheduledExecutor()
+                    .schedule(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            eyeTribeClient.startCalibration();
+                        }
+                        
+                    }, startTime - new Date().getTime(), java.util.concurrent.TimeUnit.MILLISECONDS);
     }
 }

@@ -10,6 +10,8 @@ package org.java_websocket;
  */
 
 import java.net.UnknownHostException;
+import java.util.Date;
+import static org.java_websocket.BaseManager.eyeTrackerManager;
 import org.java_websocket.Messages.OnlyImageGameDataPacket;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -113,6 +115,19 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                     doctorManager.sendPacket(packetEyeTrackerNotReady);
                 }
                 
+            }
+            else if (packetType.equals("START_TRAINING")) 
+            {
+                long timeToStart = new Date().getTime() + 1500; // Audio presentation lasts 12 seconds
+                long timeForEyeTracker = eyeTrackerManager.calculateTimeWithOffset(timeToStart);
+                long timeForPatient = patientManager.calculateTimeWithOffset(timeToStart);
+
+                JSONObject packetEyeTracker = (JSONObject)packet.clone();
+                packetEyeTracker.put(BaseManager.START_TIME, timeForEyeTracker);
+                packet.put(BaseManager.START_TIME, timeForPatient);
+
+                eyeTrackerManager.sendPacket(packetEyeTracker);
+                patientManager.sendPacket(packet);
             }
         }
 

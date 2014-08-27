@@ -6,11 +6,11 @@
 
 package org.java_websocket.eyetracker;
 
+import java.awt.Point;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import org.java_websocket.EyeTrackerSimulator;
 import org.java_websocket.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.simple.JSONObject;
@@ -45,18 +45,13 @@ public class WebSocketClientTracker extends WebSocketClient {
          */
         JSONObject packet = (JSONObject)JSONValue.parse(message);
 
-        if (packet.get("TYPE").equals("CALCULATING")) {
-
-            //try {
-                //Thread.sleep(200);
-                packet.put("DATA", System.currentTimeMillis());
-                //Thread.sleep(200);
-            //}
-            //catch(InterruptedException exc) {}
+        if (packet.get("TYPE").equals("CALCULATING")) 
+        {
+            packet.put("DATA", System.currentTimeMillis());
             this.send(packet.toJSONString());
         }
-        else if (packet.get("TYPE").equals("START_WORKING")) {
-
+        else if (packet.get("TYPE").equals("START_WORKING")) 
+        {
             System.out.println("EYE_TRACKER: Start game");
             startTime = (Long)packet.get("START_TIME");
             long now = new Date().getTime();
@@ -70,16 +65,19 @@ public class WebSocketClientTracker extends WebSocketClient {
             /*Executors.newSingleThreadScheduledExecutor()
                     .schedule(EyeTrackerSimulator.this, 5000, TimeUnit.MILLISECONDS);*/
         }
-        else if (packet.get("TYPE").equals("STOP_GAME")) {
+        else if (packet.get("TYPE").equals("STOP_GAME")) 
+        {
             //work = false;
         }
-        else if (packet.get("TYPE").equals("IDENTIFICATION")) {
+        else if (packet.get("TYPE").equals("IDENTIFICATION")) 
+        {
             System.out.println("EYE_TRACKER: Identification");
 
             packet.put("DATA", "EyeTrackerClient");
             this.send(packet.toJSONString());
         }
-        else if (packet.get("TYPE").equals("IDENTIFICATION_COMPLETE")) {
+        else if (packet.get("TYPE").equals("IDENTIFICATION_COMPLETE")) 
+        {
             System.out.println("EYE_TRACKER: Identification complete");
             // Inizio sincronizzazione tempi se non ho salvato da 
             // qualche parte ID della macchina 
@@ -93,30 +91,35 @@ public class WebSocketClientTracker extends WebSocketClient {
         /**
          * Start Training
          */
-        else if (packet.get("TYPE").equals("START_TRAINING")) {
-            //EyeTrackerSimulator.this.simulateTraining(packet);
+        else if (packet.get("TYPE").equals("START_TRAINING")) 
+        {
+            eyeTribeTracker.startCalibration((Long)packet.get("START_TIME"));   
         }
-        else if (packet.get("TYPE").equals("TRAINING_SESSION")) {
-
+        else if (packet.get("TYPE").equals("TRAINING_SESSION")) 
+        {
             packet.put("DATA", "true");
             this.send(packet.toJSONString());
         }
-        else if (packet.get("TYPE").equals("OFFSET_CALCULATION")) {
+        else if (packet.get("TYPE").equals("OFFSET_CALCULATION")) 
+        {
 
-            if (packet.get("TODO").equals("true")) {
+            if (packet.get("TODO").equals("true")) 
+            {
                 JSONObject packetToSend = new JSONObject();
                 packetToSend.put("TYPE", "START_OFFSET_CALCULATION");
 
                 this.send(packetToSend.toJSONString());
             }
-            else {
+            else 
+            {
                 JSONObject packetToSend = new JSONObject();
                 packetToSend.put("TYPE", "READY_TO_PLAY");
 
                 this.send(packetToSend.toJSONString());
             }
         }
-        else if (packet.get("TYPE").equals("OFFSET_CALCULATION_COMPLETE")) {
+        else if (packet.get("TYPE").equals("OFFSET_CALCULATION_COMPLETE")) 
+        {
             System.out.println("EYE: Fine calcolo offset");
             // Calcolo dell'offset completato
             int machineID = ((Long)packet.get("MACHINE_ID")).intValue();
@@ -127,16 +130,36 @@ public class WebSocketClientTracker extends WebSocketClient {
 
             this.send(packetToSend.toJSONString());
         }
-        else if (packet.get("TYPE").equals("SCREEN_MEASURES")) {
+        else if (packet.get("TYPE").equals("SCREEN_MEASURES")) 
+        {
             System.out.println("EYE TRACKER: Screen dimensions received");
 
-            eyeTribeTracker.setScreenWidthAndHeight((Long)packet.get("SCREEN_WIDTH"), 
-                    (Long)packet.get("SCREEN_HEIGHT"));
+            /*eyeTribeTracker.setScreenWidthAndHeight((Long)packet.get("SCREEN_WIDTH"), 
+                    (Long)packet.get("SCREEN_HEIGHT"));*/
         }
-        else if (packet.get("TYPE").equals("TRAINING_SETTINGS")) {
-            //EyeTrackerSimulator.this.simulateTraining(packet);
+        else if (packet.get("TYPE").equals("TRAINING_SETTINGS")) 
+        {
+            
+            int numberPoints = ((Long)packet.get("POINTS")).intValue();
+            long pointDuration = (Long)packet.get("POINT_DURATION");
+            long transitionDuration = (Long)packet.get("TRANSITION_DURATION");
+            int pointDiameter = ((Long)packet.get("POINT_DIAMETER")).intValue();
+            
+            ArrayList<Point> points = eyeTribeTracker.prepareCalibration(numberPoints, pointDuration, 
+                    transitionDuration, pointDiameter);
+            
+            JSONObject packetToSend = new JSONObject();
+            packetToSend.put("TYPE", "CAL_POINT");
+            
+            ArrayList<String> pointsString = new ArrayList<String>();
+            for (Point point: points)
+            {
+                pointsString.add(point.x + ";" + point.y);
+            }
+            packetToSend.put("POINTS", pointsString);
+            
+            this.send(packetToSend.toJSONString());
         }
-
     }
 
     @Override
@@ -148,6 +171,7 @@ public class WebSocketClientTracker extends WebSocketClient {
     public void onError(Exception ex) {
         System.out.println("onError EyeTracker");
         System.out.println(ex.toString());
+        ex.printStackTrace();
     }
             
 }

@@ -49,7 +49,7 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
                     }
                 }
                 /*
-                 * Packet with the coordinates for the calibration
+                 * Packet with the points for the calibration
                  */
                 else if (packetType.equals("CAL_POINT")) {
 
