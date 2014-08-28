@@ -39,23 +39,27 @@ public class EyeTribeTracker extends Thread {
     }
     
     public ArrayList<Point> prepareCalibration(int pointsNumber, long pointDuration, 
-            long transitionDuration, int pointDiameter) 
+            long transitionDuration, int imageWidth) 
     {
-        
         return eyeTribeClient.prepareCalibration(pointsNumber, pointDuration, 
-                transitionDuration, pointDiameter);
+                transitionDuration, imageWidth);
     }
     
     public void startCalibration(long startTime) 
     {
         Executors.newSingleThreadScheduledExecutor()
-                    .schedule(new Runnable() {
+            .schedule(new Runnable() {
 
-                        @Override
-                        public void run() {
-                            eyeTribeClient.startCalibration();
-                        }
-                        
-                    }, startTime - new Date().getTime(), java.util.concurrent.TimeUnit.MILLISECONDS);
+                @Override
+                public void run() {
+                    eyeTribeClient.startCalibration();
+                }
+
+            }, startTime - new Date().getTime(), java.util.concurrent.TimeUnit.MILLISECONDS);
+    }
+    
+    public void setScreenWidthAndHeight(int pixelsWidth, int pixelsHeight) 
+    {
+        eyeTribeClient.setScreenHeightAndWidth(pixelsWidth, pixelsHeight);
     }
 }

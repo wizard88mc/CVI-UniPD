@@ -39,10 +39,10 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
                 BaseManager.eyeTrackerManager = this;
             }
 
-            if (!alreadyManaged) {
-
-                if (packetType.equals("GAZE_DATA")) {
-
+            if (!alreadyManaged) 
+            {
+                if (packetType.equals("GAZE_DATA")) 
+                {
                     synchronized(messageManager.bufferSynchronizer) {
                         messageManager.messagesEyeTrackerBuffer.add(packet);
                         messageManager.bufferSynchronizer.notifyAll();
@@ -51,12 +51,12 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
                 /*
                  * Packet with the points for the calibration
                  */
-                else if (packetType.equals("CAL_POINT")) {
-
+                else if (packetType.equals("CAL_POINT")) 
+                {
                     patientManager.sendPacket(packet);
                 }
-                else if (packetType.equals("READY_TO_PLAY")) {
-
+                else if (packetType.equals("READY_TO_PLAY")) 
+                {
                     System.out.println("Eye_Tracker_Manager READY TO START");
                     
                     if (waitingForTracker) {

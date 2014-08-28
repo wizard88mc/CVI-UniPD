@@ -134,8 +134,8 @@ public class WebSocketClientTracker extends WebSocketClient {
         {
             System.out.println("EYE TRACKER: Screen dimensions received");
 
-            /*eyeTribeTracker.setScreenWidthAndHeight((Long)packet.get("SCREEN_WIDTH"), 
-                    (Long)packet.get("SCREEN_HEIGHT"));*/
+            eyeTribeTracker.setScreenWidthAndHeight(((Long)packet.get("SCREEN_WIDTH")).intValue(), 
+                    ((Long)packet.get("SCREEN_HEIGHT")).intValue());
         }
         else if (packet.get("TYPE").equals("TRAINING_SETTINGS")) 
         {

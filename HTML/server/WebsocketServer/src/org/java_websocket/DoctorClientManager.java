@@ -83,16 +83,16 @@ public class DoctorClientManager extends BaseManager {
                 clientConnected.send(packet.toJSONString());
             }
         }
-        else if (packet.get(BaseManager.MESSAGE_TYPE).equals(BaseManager.GAME_SETTINGS)) {
-            
+        else if (packet.get(BaseManager.MESSAGE_TYPE).equals(BaseManager.GAME_SETTINGS)) 
+        {    
             patientManager.sendPacket(packet);
             
             patientID = (String)packet.get(BaseManager.PATIENT_ID);
             gameIdentification = dbManager.getGameIdentification((String)packet.get(BaseManager.GAME_ID));
             
         }
-        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("WAITING_TRACKER")) {
-            
+        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("WAITING_TRACKER")) 
+        {    
             waitingForTracker = true;
         }
         else if (packet.get(BaseManager.MESSAGE_TYPE).equals(BaseManager.START_PRESENTATION) || 
@@ -105,22 +105,16 @@ public class DoctorClientManager extends BaseManager {
          * This packet has to be sent to the eye tracker that has to calculate 
          * the training points
          */
-        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("TRAINING_SETTINGS")) {
+        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("TRAINING_SETTINGS")) 
+        {
             eyeTrackerManager.sendPacket(packet);
             patientManager.sendPacket(packet);
-        }
-        /**
-         * Packet identifies the beginning of the training session. 
-         * Calculates a starting time and sends it to the eye tracker 
-         * and the patient client.
-         */
-        else if (packet.get(BaseManager.MESSAGE_TYPE).equals(BaseManager.START_TRAINING)) {
-            
-        }
+        }        
         /*
          * TODO: Provide a game without the eye-tracker
          */
-        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("WITHOUT_TRACKER")) {
+        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("WITHOUT_TRACKER")) 
+        {
             
         }
         /**

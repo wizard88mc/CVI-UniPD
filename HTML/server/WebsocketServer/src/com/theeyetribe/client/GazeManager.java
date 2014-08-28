@@ -480,7 +480,7 @@ public class GazeManager implements IGazeApiResponseListener, IGazeApiConnection
 	 * Switch currently active screen. Enabled the user to take control of which screen is used for calibration 
 	 * and gaze control.
 	 * 
-	 * @param screenIndex Index of nex screen. On windows 'Primary Screen' has index 0
+	 * @param screenIndex Index of new screen. On windows 'Primary Screen' has index 0
 	 * @param screenResW Screen resolution width in pixels
 	 * @param screenResH Screen resolution height in pixels
 	 * @param screenPsyW Physical Screen width in meters
@@ -488,12 +488,12 @@ public class GazeManager implements IGazeApiResponseListener, IGazeApiConnection
 	 */
 	public void switchScreen(int screenIndex, int screenResW, int screenResH, float screenPsyW, float screenPsyH)
 	{
-		if (isActivated())
-		{
-                    apiManager.requestScreenSwitch(screenIndex, screenResW, screenResH, screenPsyW, screenPsyH);
-		}
-		else
-                    System.out.println("TET Java Client not activated!");
+            if (isActivated())
+            {
+                apiManager.requestScreenSwitch(screenIndex, screenResW, screenResH, screenPsyW, screenPsyH);
+            }
+            else
+                System.out.println("TET Java Client not activated!");
 	}
 
 	/**

@@ -118,7 +118,7 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
             }
             else if (packetType.equals("START_TRAINING")) 
             {
-                long timeToStart = new Date().getTime() + 1500; // Audio presentation lasts 12 seconds
+                long timeToStart = new Date().getTime() + 1500; 
                 long timeForEyeTracker = eyeTrackerManager.calculateTimeWithOffset(timeToStart);
                 long timeForPatient = patientManager.calculateTimeWithOffset(timeToStart);
 

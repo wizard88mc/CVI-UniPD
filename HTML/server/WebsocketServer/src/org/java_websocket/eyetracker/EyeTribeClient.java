@@ -72,6 +72,12 @@ public class EyeTribeClient {
                 transitionDuration, pointDiameter);
     }
     
+    public void setScreenHeightAndWidth(int screenWidth, int screenHeight)
+    {
+        gazeManagerSingleton.switchScreen(1, screenWidth, screenHeight, 
+                screenWidth, screenHeight);
+    }
+    
     private class GazeListener implements IGazeListener 
     {
 
@@ -114,9 +120,8 @@ public class EyeTribeClient {
         private long transitionDuration;
         
         public ArrayList<Point> calculateCalibrationPoints(int pointsNumber, long pointDuration, 
-                long transitionDuration, int pointDiameter) 
+                long transitionDuration, int imageWidth) 
         {
-            
             if (gazeManagerSingleton.getTrackerState() != GazeManager.TrackerState.TRACKER_CONNECTED) {
                 System.out.println("Tracker not connected");
                 return null;
@@ -128,13 +133,15 @@ public class EyeTribeClient {
             this.transitionDuration = transitionDuration;
             this.centerScreen = new Point(screenWidth / 2, screenHeight / 2);
             
-            Point firstPoint = new Point(2 * pointDiameter, 2 * pointDiameter);
+            int oneImageAndHalf = 2 * imageWidth - imageWidth / 2;
+            
+            Point firstPoint = new Point(oneImageAndHalf, oneImageAndHalf);
             listPoint.add(firstPoint);
                 
-            Point secondPoint = new Point(screenWidth / 2, 2 * pointDiameter);
+            Point secondPoint = new Point(screenWidth / 2, oneImageAndHalf);
             listPoint.add(secondPoint);
                 
-            Point thirdPoint = new Point(screenWidth - 2 * pointDiameter, 2 * pointDiameter);
+            Point thirdPoint = new Point(screenWidth - oneImageAndHalf, oneImageAndHalf);
             listPoint.add(thirdPoint);
             
             if (pointsNumber == 7) 
@@ -146,23 +153,24 @@ public class EyeTribeClient {
             else if (pointsNumber == 9) 
             {
                 
-                Point fourthPoint = new Point(2 * pointDiameter, screenHeight / 2);
+                Point fourthPoint = new Point(oneImageAndHalf, oneImageAndHalf);
                 listPoint.add(fourthPoint);
                 
                 Point fifthPoint = new Point(screenWidth / 2, screenHeight / 2);
                 listPoint.add(fifthPoint);
                 
-                Point sixthPoint = new Point(screenWidth - 2 * pointDiameter, screenHeight / 2);
+                Point sixthPoint = new Point(screenWidth - oneImageAndHalf, screenHeight / 2);
                 listPoint.add(sixthPoint);
             }
             
-            Point fifthPoint = new Point(2 * pointDiameter, screenHeight - 2 * pointDiameter);
+            Point fifthPoint = new Point(oneImageAndHalf, screenHeight - oneImageAndHalf);
             listPoint.add(fifthPoint);
                 
-            Point sixthPoint = new Point(screenWidth / 2, screenHeight - 2 * pointDiameter);
+            Point sixthPoint = new Point(screenWidth / 2, screenHeight - oneImageAndHalf);
             listPoint.add(sixthPoint);
                 
-            Point seventhPoint = new Point(screenWidth - 2 * pointDiameter, screenHeight - 2 * pointDiameter);
+            Point seventhPoint = new Point(screenWidth - oneImageAndHalf, 
+                    screenHeight - oneImageAndHalf);
             listPoint.add(seventhPoint);
             
             if (!gazeManagerSingleton.isActivated()) 
@@ -287,6 +295,8 @@ public class EyeTribeClient {
             /**
              * main screen index has changed. This is only relevant for multi-screen setups
              */
+            System.out.println("Screen changed, new index: " + screenIndex);
+            System.out.println("PX Width: " + screenResolutionWidth + ", PX Height: " + screenResolutionHeight);
         }
         
     }
