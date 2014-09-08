@@ -93,9 +93,9 @@ var CatchMeNamespace = {
 			 */
 			TrainingManager.dialogSelectParameters();
 		}
-		else if (dataReceived.TYPE == "CAL_QUAL") {
+		else if (dataReceived.TYPE == "CALIBRATION_RESULT") {
 			
-			TrainingManager.trainingResult(dataReceived.DATA);
+			TrainingManager.trainingResult(dataReceived);
 			TrainingManager.trainingComplete = CatchMeNamespace.trainingComplete;
 		}
 		else if (dataReceived.TYPE == "EYE_TRACKER_NOT_READY") {

@@ -320,11 +320,11 @@ waitingToStart: function(message) {
 		 */
 		CatchMeNamespace.startGame();
 	}
-	else if (packet.TYPE == "START_TRAINING") {
+	else if (packet.TYPE == "TRAINING_SETTINGS") {
 		
 		TrainingExamplesNamespace.startTraining(packet);
 	}
-	else if (packet.TYPE == "CAL_POINT") {
+	else if (packet.TYPE == "CAL_POINT" || packet.TYPE == "START_TRAINING") {
 		
 		TrainingExamplesNamespace.messageManager(packet);
 	}

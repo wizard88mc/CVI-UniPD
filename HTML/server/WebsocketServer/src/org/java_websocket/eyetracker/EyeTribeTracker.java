@@ -6,16 +6,18 @@
 
 package org.java_websocket.eyetracker;
 
+import com.theeyetribe.client.data.CalibrationResult;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.Executors;
+import org.json.simple.JSONObject;
 
 /**
  *
  * @author Matteo Ciman
  */
-public class EyeTribeTracker extends Thread {
+public class EyeTribeTracker /*extends Thread*/ {
     
     private WebSocketClientTracker websocketClient = null;
     private EyeTribeClient eyeTribeClient = null;
@@ -35,7 +37,7 @@ public class EyeTribeTracker extends Thread {
         websocketClient = new WebSocketClientTracker(host, this);
         websocketClient.connect();
         
-        eyeTribeClient = new EyeTribeClient();
+        eyeTribeClient = new EyeTribeClient(this);
     }
     
     public ArrayList<Point> prepareCalibration(int pointsNumber, long pointDuration, 
@@ -61,5 +63,10 @@ public class EyeTribeTracker extends Thread {
     public void setScreenWidthAndHeight(int pixelsWidth, int pixelsHeight) 
     {
         eyeTribeClient.setScreenHeightAndWidth(pixelsWidth, pixelsHeight);
+    }
+    
+    public void sendCalibrationResult(JSONObject packet) 
+    {
+        websocketClient.sendCalibrationResult(packet);
     }
 }

@@ -35,7 +35,8 @@ startNewGame: function() {
 		
 		$('<div>').attr('id', 'errorStartGame').attr('title', 'Mancano informazioni')
 			.css('padding', '0.3em').appendTo('#divMainContent');
-		$('<p>').text('Non sono state fornite tutte le informazioni necessarie:').appendTo('#errorStartGame');
+		$('<p>').text('Non sono state fornite tutte le informazioni necessarie:')
+			.appendTo('#errorStartGame');
 		errorsList.appendTo('#errorStartGame');
 		
 		var width = getScreenWidth() * 0.5;
@@ -408,7 +409,8 @@ initializePage: function() {
 					data: {
 						name: patientName, surname: patientSurname, 
 						dateOfBirth: dateOfBirth, disabilita: disability, 
-						sex: sex, doctorID: doctorID },
+						sex: sex, doctorID: doctorID 
+						},
 					success: function(message) {
 						
 						console.log(message);

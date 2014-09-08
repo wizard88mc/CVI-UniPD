@@ -518,12 +518,16 @@ buildDialogChangeSpeed: function(settingsToUpdate, elementToUpdate) {
 
 deleteLevel: function(exerciseNumber, divToRemove) {
 	
-	console.log(divToRemove.nextAll('div.divSetExercises').find('p.titleExercise > span.numberExercise'));
-	divToRemove.nextAll('div.divSetExercises').find('p.titleExercise > span.numberExercise').each(function() {
+	//console.log(divToRemove.nextAll('div.divSetExercises').find('p.titleExercise > span.numberExercise'));
+	divToRemove.nextAll('div.divSetExercises').find('p.titleExercise').each(function() {
 		
 		var value = $(this).text();
-		console.log(value);
-		$(this).text(value - 1);
+		var elements = value.split(" ");
+		/**
+		 * Updating the number of the exercise
+		 */
+		elements[elements.length - 1] = elements[elements.length - 1] - 1;
+		$(this).text(elements.join(" "));
 		
 	});
 	divToRemove.remove();
@@ -573,11 +577,9 @@ createNewExerciseEditer: function(exerciseOrder, numberExerciseLabel, settings) 
 		'vertical-align': 'middle'
 	}).appendTo(spanDeleteLevel);
 	
-	var paragraph = $('<p>').text('Esercizio personalizzato ')
+	var paragraph = $('<p>').text('Esercizio personalizzato ' + numberExerciseLabel)
 		.addClass('ui-state-default ui-corner-all ui-helper-clearfix titleExercise')
 		.appendTo(divSetExercises);
-	
-	$('<span>').addClass('numberExercise').text(numberExerciseLabel).appendTo(paragraph);
 	
 	spanDeleteLevel.appendTo(paragraph);
 	

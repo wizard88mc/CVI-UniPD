@@ -10,7 +10,6 @@ import java.awt.Point;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.Executors;
 import org.java_websocket.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.simple.JSONObject;
@@ -163,7 +162,8 @@ public class WebSocketClientTracker extends WebSocketClient {
     }
 
     @Override
-    public void onClose(int code, String reason, boolean remote) {
+    public void onClose(int code, String reason, boolean remote) 
+    {
         System.out.println("OnClose EyeTracker");
     }
 
@@ -173,5 +173,10 @@ public class WebSocketClientTracker extends WebSocketClient {
         System.out.println(ex.toString());
         ex.printStackTrace();
     }
-            
+    
+    public void sendCalibrationResult(JSONObject packet) 
+    {
+        packet.put("TYPE", "CALIBRATION_RESULT");
+        this.send(packet.toJSONString());
+    }
 }

@@ -13,9 +13,11 @@ import com.theeyetribe.client.IConnectionStateListener;
 import com.theeyetribe.client.IGazeListener;
 import com.theeyetribe.client.ITrackerStateListener;
 import com.theeyetribe.client.data.CalibrationResult;
+import com.theeyetribe.client.data.CalibrationResult.CalibrationPoint;
 import com.theeyetribe.client.data.GazeData;
 import java.awt.Point;
 import java.util.ArrayList;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -74,8 +76,8 @@ public class EyeTribeClient {
     
     public void setScreenHeightAndWidth(int screenWidth, int screenHeight)
     {
-        gazeManagerSingleton.switchScreen(1, screenWidth, screenHeight, 
-                screenWidth, screenHeight);
+        //gazeManagerSingleton.switchScreen(0, screenWidth, screenHeight, 
+                //screenWidth, screenHeight);
     }
     
     private class GazeListener implements IGazeListener 
@@ -122,7 +124,8 @@ public class EyeTribeClient {
         public ArrayList<Point> calculateCalibrationPoints(int pointsNumber, long pointDuration, 
                 long transitionDuration, int imageWidth) 
         {
-            if (gazeManagerSingleton.getTrackerState() != GazeManager.TrackerState.TRACKER_CONNECTED) {
+            if (gazeManagerSingleton.getTrackerState() != 
+                    GazeManager.TrackerState.TRACKER_CONNECTED) {
                 System.out.println("Tracker not connected");
                 return null;
             }
@@ -133,44 +136,49 @@ public class EyeTribeClient {
             this.transitionDuration = transitionDuration;
             this.centerScreen = new Point(screenWidth / 2, screenHeight / 2);
             
-            int oneImageAndHalf = 2 * imageWidth - imageWidth / 2;
+            int defaultPixelOffset = 50;
             
-            Point firstPoint = new Point(oneImageAndHalf, oneImageAndHalf);
+            Point firstPoint = new Point(defaultPixelOffset + imageWidth / 2, 
+                    defaultPixelOffset + imageWidth / 2);
             listPoint.add(firstPoint);
                 
-            Point secondPoint = new Point(screenWidth / 2, oneImageAndHalf);
+            Point secondPoint = new Point(screenWidth / 2 - imageWidth / 2, 
+                    defaultPixelOffset + imageWidth / 2);
             listPoint.add(secondPoint);
                 
-            Point thirdPoint = new Point(screenWidth - oneImageAndHalf, oneImageAndHalf);
+            Point thirdPoint = new Point(screenWidth - defaultPixelOffset - imageWidth / 2, 
+                    defaultPixelOffset + imageWidth / 2);
             listPoint.add(thirdPoint);
             
             if (pointsNumber == 7) 
             {
-                
                 Point fourthPoint = new Point(screenWidth / 2, screenHeight / 2);
                 listPoint.add(fourthPoint);
             }
             else if (pointsNumber == 9) 
             {
-                
-                Point fourthPoint = new Point(oneImageAndHalf, oneImageAndHalf);
+                Point fourthPoint = new Point(defaultPixelOffset + imageWidth / 2, 
+                        screenHeight / 2);
                 listPoint.add(fourthPoint);
                 
                 Point fifthPoint = new Point(screenWidth / 2, screenHeight / 2);
                 listPoint.add(fifthPoint);
                 
-                Point sixthPoint = new Point(screenWidth - oneImageAndHalf, screenHeight / 2);
+                Point sixthPoint = new Point(screenWidth - defaultPixelOffset - imageWidth / 2, 
+                        screenHeight / 2);
                 listPoint.add(sixthPoint);
             }
             
-            Point fifthPoint = new Point(oneImageAndHalf, screenHeight - oneImageAndHalf);
+            Point fifthPoint = new Point(defaultPixelOffset + imageWidth / 2, 
+                    screenHeight - defaultPixelOffset - imageWidth / 2);
             listPoint.add(fifthPoint);
                 
-            Point sixthPoint = new Point(screenWidth / 2, screenHeight - oneImageAndHalf);
+            Point sixthPoint = new Point(screenWidth / 2, 
+                    screenHeight - defaultPixelOffset - imageWidth / 2);
             listPoint.add(sixthPoint);
                 
-            Point seventhPoint = new Point(screenWidth - oneImageAndHalf, 
-                    screenHeight - oneImageAndHalf);
+            Point seventhPoint = new Point(screenWidth - defaultPixelOffset - imageWidth / 2, 
+                    screenHeight - defaultPixelOffset - imageWidth / 2);
             listPoint.add(seventhPoint);
             
             if (!gazeManagerSingleton.isActivated()) 
@@ -183,6 +191,8 @@ public class EyeTribeClient {
         
         public void startCalibration() 
         {
+            System.out.println("Screen size: " + gazeManagerSingleton.getScreenResolutionWidth() + 
+                    "," + gazeManagerSingleton.getScreenResolutionHeight());
             gazeManagerSingleton.calibrationStart(listPoint.size(), this);
             iterateOnPoints();
         }
@@ -233,7 +243,6 @@ public class EyeTribeClient {
              * Called when all calibration points submitted and calibration processing 
              * begins
              */
-            System.out.println("Processing points");
         }
 
         @Override
@@ -245,6 +254,48 @@ public class EyeTribeClient {
             System.out.println("Calibration result: ");
             System.out.println("Result: " + calibResult.result);
             System.out.println("Average error degree: " + calibResult.averageErrorDegree);
+            
+            
+            JSONObject packet = new JSONObject();
+            ArrayList<String> calibrationPoints = new ArrayList<String>();
+
+            for (int i = 0; i < calibResult.calibpoints.length; i++) {
+                /*calibrationPoints.add(listPoint.get(i).x + "_" + listPoint.get(i).y + 
+                        "_" + calibResult.calibpoints[i].state + "_" + 
+                        calibResult.calibpoints[i].accuracy.accuracyDegrees + "_" + 
+                        calibResult.calibpoints[i].meanError.meanErrorPixels);*/
+                System.out.println("Point: " + i);
+                System.out.println("X position: " + calibResult.calibpoints[i].coordinates.x+ ", Y Position: "
+                    + calibResult.calibpoints[i].coordinates.y);
+                System.out.println("X estimated: " + calibResult.calibpoints[i].meanEstimatedCoords.x + 
+                        ", Y position: " + calibResult.calibpoints[i].meanEstimatedCoords.y);
+            }
+            
+            packet.put("RESULT", calibResult.result);
+            packet.put("AVERAGE_ERROR", calibResult.averageErrorDegree);
+            packet.put("AVERAGE_ERROR_LEFT", calibResult.averageErrorDegreeLeft);
+            packet.put("AVERAGE_ERROR_RIGHT", calibResult.averageErrorDegreeRight);
+            int stars = 0; 
+            if (calibResult.averageErrorDegree < 0.5) 
+            {
+                stars = 4;
+            }
+            else  if (calibResult.averageErrorDegree < 0.7)
+            {
+                stars = 3;
+            }
+            else if (calibResult.averageErrorDegree < 1)
+            {
+                stars = 2;
+            }
+            else if (calibResult.averageErrorDegree < 1.5)
+            {
+                stars = 1;
+            }
+            packet.put("STARS", stars);
+            //packet.put("CALIBRATION_POINTS", calibrationPoints);
+            
+            eyeTribeTracker.sendCalibrationResult(packet);
         }
         
     }

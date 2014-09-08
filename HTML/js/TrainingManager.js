@@ -21,7 +21,7 @@ var ImageForTraining = function(settings) {
 	this.pointDuration = settings.POINT_DURATION;
 	this.pointsToDraw = new Array(4);
 	this.pointsArrived = 0;
-	this.currentPoint = -1;
+	this.currentPoint = 0;
 	this.scale = "";
 	this.rotate = "";
 	this.distanceX = 0;
@@ -37,6 +37,8 @@ var ImageForTraining = function(settings) {
 	};
 	
 	this.moveObject = function() {
+		
+		console.log("MOVING OBJECT");
 		
 		var pointCenter = this.pointsToDraw[this.currentPoint];
 		
@@ -271,7 +273,7 @@ var TrainingExamplesNamespace = {
 		imageForTraining = new ImageForTraining(settings);
 		
 		/**
-		 * Loading audio for when Nemo reaches a target point for the traing
+		 * Loading audio for when Nemo reaches a target point for the training
 		 */
 		if (audioNemoArrived.length == 0) {
 			
@@ -304,11 +306,6 @@ var TrainingExamplesNamespace = {
 				audioNemoMoving.push(audioToAdd);
 			}
 		}
-		
-		soundNemoPresentation = $('<audio>').attr('id', 'audioNemoPresentation').appendTo('#audioTraining');
-		addGeneralSound(soundNemoPresentation, '../sounds/nemoPresentazione');
-		
-		soundNemoPresentation.get(0).play();
 	},
 	
 	/**
@@ -330,59 +327,58 @@ var TrainingExamplesNamespace = {
 		
 		imageForTraining.initializeImage();
 		
-		/**
-		 * Start to move the image contemporary with
-		 * the eye tracker 
-		 */
-		/*setTimeout(function() {
-
-
-			imageForTraining.currentPoint++;
-			if (imageForTraining.currentPoint < imageForTraining.pointsToDraw.length) {
-
-				//imageForTraining.prepareImage()
-				imageForTraining.moveObject();
-				//imageForTraining.drawObject();
-			}
-
-		}, imageForTraining.timeToStart - (new Date().getTime())
-			+ imageForTraining.fixedWaitingForFirstPoint);*/
-		
 	},
 
 	messageManager: function(data) {
 		
+		/**
+		 * This message contains the list of point to be shown
+		 * for the training phase
+		 */
 		if (data.TYPE == "CAL_POINT") {
 			
-			imageForTraining.pointsArrived++;
-			
 			/**
-			 * POINTS[0] = # POINT
-			 * POINTS[1] = X position
-			 * POINTS[2] = Y position
+			 * POINTS[n] = n point
+			 * POINTS[n] = "X;Y" coordinates of a point
 			 */ 
-			var elements = (data.DATA).split(" ");
 			
-			var centerToDraw = new Point(Number(elements[2].replace(",", ".")), 
-					Number(elements[1].replace(",", ".")));
-			
-			imageForTraining.pointsToDraw[elements[0] - 1] = centerToDraw;
-			
-			if (imageForTraining.pointsArrived == 1) {
+			for (var i = 0; i < data.POINTS.length; i++)
+			{
 				
-				setTimeout(function() {
-					
-					imageForTraining.currentPoint++;
-					console.log("Current point: " + imageForTraining.currentPoint + ",Length: " + imageForTraining.pointsToDraw.length);
-					if (imageForTraining.currentPoint < imageForTraining.pointsToDraw.length) {
-						
-						//imageForTraining.prepareImage()
-						imageForTraining.moveObject();
-						//imageForTraining.drawObject();
-					}
-					
-				}, imageForTraining.fixedWaitingForFirstPoint);
+				var elements = data.POINTS[i].split(";");
+				var centerToDraw = new Point(Number(elements[1].replace(",", ".")), 
+						Number(elements[0].replace(",", ".")));
+				
+				imageForTraining.pointsToDraw[i] = centerToDraw;
 			}
+			
+			soundNemoPresentation = $('<audio>').attr('id', 'audioNemoPresentation').appendTo('#audioTraining');
+			addGeneralSound(soundNemoPresentation, '../sounds/nemoPresentazione');
+			
+			soundNemoPresentation.on('ended', function() {
+				
+				var packetToSend = {
+						TYPE: 'START_TRAINING'
+				};
+				websocket.send(JSON.stringify(packetToSend));
+				
+			});
+			
+			soundNemoPresentation.get(0).play();
+		}
+		else if (data.TYPE == "START_TRAINING") 
+		{
+			console.log("MESSAGE START TRAINING");
+			var timeToStart = data.START_TIME;
+			
+			console.log(timeToStart - (new Date().getTime()));
+			
+			setTimeout(function() {
+				
+				imageForTraining.moveObject();
+				
+			}, timeToStart - (new Date().getTime()));
+			
 		}
 	}
 };
@@ -394,9 +390,10 @@ var TrainingManager = {
 	dialogSelectParameters: function() {
 		
 		var selectNumberPoints = $('<select>').attr('id', 'selectNumberOfPoints');
-		$('<option>').attr('value', '5').attr('selected', 'selected').text('5 punti').appendTo(selectNumberPoints);
-		$('<option>').attr('value', '7').text('7 punti').appendTo(selectNumberPoints);
+		$('<option>').attr('value', '7').attr('selected', 'selected').text('7 punti').appendTo(selectNumberPoints);
 		$('<option>').attr('value', '9').text('9 punti').appendTo(selectNumberPoints);
+		$('<option>').attr('value', '12').text('12 punti').appendTo(selectNumberPoints);
+		$('<option>').attr('value', '15').text('15 punti').appendTo(selectNumberPoints);
 		
 		var selectTimePerPoint = $('<select>').attr('id', 'selectTimePerPoint');
 		$('<option>').attr('value', '2000').attr('selected', 'selected').text('2 secondi').appendTo(selectTimePerPoint);
@@ -451,8 +448,8 @@ var TrainingManager = {
 				resizable: false,
 				draggable: false,
 				closeOnEscape: false,
-				width: getScreenWidth() * 0.6,
-
+				//width: getScreenWidth() * 0.6,
+				width: 'auto',
 				buttons: {
 					"Inizia": function() {
 						
@@ -462,11 +459,11 @@ var TrainingManager = {
 						var imagePerc = $('#sliderSize').val();
 						
 						var packetWithSettings = {
-							TYPE: 'START_TRAINING',
-							POINTS: numberOfPoints,
-							POINT_DURATION: totalSeconds,
-							TRANSITION_DURATION: secondsTransition,
-							POINT_DIAMETER: imagePerc * TrainingManager.screenWidth / 100
+							TYPE: 'TRAINING_SETTINGS', 
+							POINTS: parseInt(numberOfPoints),
+							POINT_DURATION: parseInt(totalSeconds),
+							TRANSITION_DURATION: parseInt(secondsTransition),
+							POINT_DIAMETER: parseInt(imagePerc * TrainingManager.screenWidth / 100)
 						};
 						
 						websocket.send(JSON.stringify(packetWithSettings));
@@ -490,11 +487,12 @@ var TrainingManager = {
 			});
 	}, 
 	
-	trainingResult: function(value) {
+	trainingResult: function(message) {
 		
 		$('#dialogWaitingCompleteTraining').dialog('close');
 		$('#dialogWaitingCompleteTraining').remove();
 		
+		var valueCalibration = message.STARS;
 		var starsContainer = $('<p>');
 		
 		for (var i = 0; i < value; i++) {
@@ -513,15 +511,34 @@ var TrainingManager = {
 		});
 		
 		var dialog = $('<div>').attr('id', 'divDialogTrainingEvaluation')
-			.attr('title', 'Risultato').appendTo('#divMainContent');
-		
+		.attr('title', 'Risultato').appendTo('#divMainContent');
+	
 		$('<p>').text('Valutazione training: ').appendTo(dialog);
-		starsContainer.appendTo(dialog);
+		
+		var finalResult = $('<p>').text('Risultato: ' + message.RESULT);
+		var meanError = $('<p>').text('Errore medio: ' + message.AVERAGE_ERROR);
+		var meanErrorRight = null; var meanErrorLeft = null
+		
+		if (message.RESULT) 
+		{
+			meanErrorRight = $('<p>').text('Errore medio occhio destro: ' + message.AVERAGE_ERROR_RIGHT);
+			meanErrorLeft = $('<p>').text('Errore medio occhio sinistro: ' + message.AVERAGE_ERROR_LEFT);
+		}
+		
+		finalResult.appendTo(dialog);
+		meanError.appendTo(dialog);
+		if (meanErrorRight != null && meanErrorLeft != null)
+		{
+			meanErrorRight.appendTo(dialog);
+			meanErrorLeft.appendTo(dialog);
+		}
+		//starsContainer.appendTo(dialog);
 		dialog.dialog({
 				modal: true,
 				closeOnEscape: false,
 				resizable: false,
 				draggable: false,
+				width: 'auto',
 				buttons: {
 					"Inizia": function() {
 						$(this).dialog("close");

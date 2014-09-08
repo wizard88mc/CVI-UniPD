@@ -72,7 +72,7 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
                     }
                 }
                 else if (packetType.equals("TRAINING_SESSION") || 
-                        packetType.equals("TRAINING_RESULT") || 
+                        packetType.equals("CALIBRATION_RESULT") || 
                         packetType.equals("CAL_END") || 
                         packetType.equals("CAL_QUAL")) {
                     
