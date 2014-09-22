@@ -22,7 +22,6 @@ import org.json.simple.JSONValue;
 public class WebSocketClientTracker extends WebSocketClient {
     
     private EyeTribeTracker eyeTribeTracker;
-    private long startTime;
     
     public WebSocketClientTracker(String host, EyeTribeTracker eyeTribeTracker) 
             throws Exception {
@@ -52,17 +51,9 @@ public class WebSocketClientTracker extends WebSocketClient {
         else if (packet.get("TYPE").equals("START_WORKING")) 
         {
             System.out.println("EYE_TRACKER: Start game");
-            startTime = (Long)packet.get("START_TIME");
-            long now = new Date().getTime();
-
-            //work = true;
-            //startTime = now + 5000;
-
-            /*Executors.newSingleThreadScheduledExecutor()
-                    .schedule(EyeTrackerSimulator.this, startTime - now, 
-                        TimeUnit.MILLISECONDS);
-            /*Executors.newSingleThreadScheduledExecutor()
-                    .schedule(EyeTrackerSimulator.this, 5000, TimeUnit.MILLISECONDS);*/
+            long startTime = (Long)packet.get("START_TIME");
+            
+            eyeTribeTracker.startSendingData(startTime);
         }
         else if (packet.get("TYPE").equals("STOP_GAME")) 
         {
@@ -174,9 +165,25 @@ public class WebSocketClientTracker extends WebSocketClient {
         ex.printStackTrace();
     }
     
+    /**
+     * Takes the packet containing the result of the calibration and sends it to
+     * the EyeTrackingManager, adding the correct TYPE to the packet
+     * @param packet packet with the result of the calibration
+     */
     public void sendCalibrationResult(JSONObject packet) 
     {
         packet.put("TYPE", "CALIBRATION_RESULT");
+        this.send(packet.toJSONString());
+    }
+    
+    /**
+     * Takes the packet containing the gaze data and sends it to the EyeTrackerManager, 
+     * adding the correct type to the packet
+     * @param packet containing Gaze data information
+     */
+    public void sendEyeTrackerData(JSONObject packet)
+    {
+        packet.put("TYPE", "GAZE_DATA");
         this.send(packet.toJSONString());
     }
 }

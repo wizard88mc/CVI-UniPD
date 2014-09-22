@@ -6,11 +6,11 @@
 
 package org.java_websocket.eyetracker;
 
-import com.theeyetribe.client.data.CalibrationResult;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import org.json.simple.JSONObject;
 
 /**
@@ -68,5 +68,26 @@ public class EyeTribeTracker /*extends Thread*/ {
     public void sendCalibrationResult(JSONObject packet) 
     {
         websocketClient.sendCalibrationResult(packet);
+    }
+    
+    /**
+     * Communicates to the EyeTribeClient to start sending data to the server
+     * @param startTime: the time to start at
+     */
+    public void startSendingData(final long startTime)
+    {
+        Executors.newSingleThreadScheduledExecutor()
+                .schedule(new Runnable() {
+
+                @Override
+                public void run() {
+                    eyeTribeClient.startSendDataToServer(startTime);
+                }
+            }, startTime - new Date().getTime(), TimeUnit.MILLISECONDS);
+    }
+    
+    public void sendGazeData(JSONObject packet)
+    {
+        websocketClient.sendEyeTrackerData(packet);
     }
 }

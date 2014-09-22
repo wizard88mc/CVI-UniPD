@@ -233,7 +233,6 @@ noServerWorking: function() {
 			"Chiudi": function() {
 				$(this).dialog("close");
 				$(this).remove();
-				location.replace('../index.html');
 			}
 		}
 	});

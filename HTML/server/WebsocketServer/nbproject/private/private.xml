@@ -4,14 +4,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/com/theeyetribe/client/GazeManager.java</file>
             <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/EyeTrackerManager.java</file>
-            <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/IPADClientManager.java</file>
-            <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/com/theeyetribe/client/data/CalibrationResult.java</file>
+            <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/Messages/BaseDataPacket.java</file>
             <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/eyetracker/EyeTribeTracker.java</file>
+            <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/EyeTrackerSimulator.java</file>
             <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/eyetracker/EyeTribeClient.java</file>
-            <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/eyetracker/WebSocketClientTracker.java</file>
+            <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/MessagesManagers/CatchMeMessagesManager.java</file>
+            <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/DoctorClientManager.java</file>
             <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/ServerManager.java</file>
+            <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/eyetracker/WebSocketClientTracker.java</file>
         </group>
     </open-files>
 </project-private>

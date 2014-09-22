@@ -227,7 +227,8 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
      * Sends to the client the converted time to start the job of tracking
      * @param time: time to start the game
      */
-    public void comunicateStartTime(long time) {
+    public void comunicateStartTime(long time) 
+    {
         
         if (clientConnected != null) {
             JSONObject packetToSend = new JSONObject();

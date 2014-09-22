@@ -495,11 +495,11 @@ var TrainingManager = {
 		var valueCalibration = message.STARS;
 		var starsContainer = $('<p>');
 		
-		for (var i = 0; i < value; i++) {
+		for (var i = 0; i < valueCalibration; i++) {
 			$('<img>').attr('src', '../images/star.png').appendTo(starsContainer);
 		}
 		
-		for (var i = value; i < 5; i++) {
+		for (var i = valueCalibration; i < 5; i++) {
 			$('<img>').attr('src', '../images/star.png').css('opacity', '0.5')
 				.appendTo(starsContainer);
 		}
@@ -514,6 +514,7 @@ var TrainingManager = {
 		.attr('title', 'Risultato').appendTo('#divMainContent');
 	
 		$('<p>').text('Valutazione training: ').appendTo(dialog);
+		starsContainer.appendTo(dialog);
 		
 		var finalResult = $('<p>').text('Risultato: ' + message.RESULT);
 		var meanError = $('<p>').text('Errore medio: ' + message.AVERAGE_ERROR);

@@ -22,7 +22,8 @@ public class ServerManager {
     private boolean gameReady = false;
     private boolean doctorClientReady = false;
     
-    protected void timeToStart() {
+    protected void timeToStart() 
+    {
         long minimumIncrement = 10000;
         
         long timeToStart = new Date().getTime() + minimumIncrement;

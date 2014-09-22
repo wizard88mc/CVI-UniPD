@@ -52,8 +52,8 @@ var CatchMeNamespace = {
 			 * to start the game
 			 */
 		}
-		else if (dataReceived.TYPE == "TRAINING_SESSION" && dataReceived.DATA == "false") {
-			
+		else if (dataReceived.TYPE == "TRAINING_SESSION" && dataReceived.DATA == "false") 
+		{
 			websocket.onmessage = CatchMeNamespace.manageMessagesGame;
 		
 			$('<p>').text('Non appena tutto sarà pronto, cliccare su Ok per iniziare')
@@ -86,19 +86,20 @@ var CatchMeNamespace = {
 				}
 			});
 		}
-		else if (dataReceived.TYPE == "TRAINING_SESSION" && dataReceived.DATA == "true") {
-			
+		else if (dataReceived.TYPE == "TRAINING_SESSION" && dataReceived.DATA == "true") 
+		{
 			/**
 			 * Showing dialog to start training session
 			 */
 			TrainingManager.dialogSelectParameters();
 		}
-		else if (dataReceived.TYPE == "CALIBRATION_RESULT") {
-			
+		else if (dataReceived.TYPE == "CALIBRATION_RESULT") 
+		{
 			TrainingManager.trainingResult(dataReceived);
 			TrainingManager.trainingComplete = CatchMeNamespace.trainingComplete;
 		}
-		else if (dataReceived.TYPE == "EYE_TRACKER_NOT_READY") {
+		else if (dataReceived.TYPE == "EYE_TRACKER_NOT_READY") 
+		{
 			
 			$('<p>').text('Il sistema di eye-tracking non è collegato. Si desidera procedere con la visita senza analisi del movimento degli occhi?')
 				.appendTo(

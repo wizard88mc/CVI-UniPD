@@ -23,8 +23,8 @@ var drawingSettings = {
 
 var HelpMeNamespace = {
 		
-	initializePage: function() {
-		
+	initializePage: function() 
+	{	
 		$('#divMainContent div').remove();
 	
 		HelpMeNamespace.prepareTable();	
@@ -50,8 +50,8 @@ var HelpMeNamespace = {
 		websocket.onmessage = HelpMeNamespace.entryFunction;
 	},
 	
-	trainingComplete: function() {
-		
+	trainingComplete: function() 
+	{	
 		var fakePacket = {
 			TYPE: 'TRAINING_SESSION',
 			DATA: 'false'
@@ -100,7 +100,9 @@ var HelpMeNamespace = {
 									resizable: false,
 									closeOnEscape: false,
 									draggable: false
-								}));
+								}
+								)
+							);
 						}
 						
 					}
@@ -110,21 +112,21 @@ var HelpMeNamespace = {
 		/**
 		 * Show dialog to select training parameters 
 		 */
-		else if (packet.TYPE == 'TRAINING_SESSION' && packet.DATA == "true") {
-			
+		else if (packet.TYPE == 'TRAINING_SESSION' && packet.DATA == "true") 
+		{	
 			TrainingManager.screenWidth = screenWidth;
 			TrainingManager.dialogSelectParameters();
 		}
 		/**
 		 * Training is ended, show evaluation from the eye tracker 
 		 */
-		else if (packet.TYPE == 'CAL_QUAL') {
-			
-			TrainingManager.trainingResult(packet.DATA);
+		else if (packet.TYPE == 'CALIBRATION_RESULTS') 
+		{	
+			TrainingManager.trainingResult(packet);
 			TrainingManager.trainingComplete = HelpMeNamespace.trainingComplete;
 		}
-		else if (packet.TYPE == 'EYE_TRACKER_NOT_READY') {
-			
+		else if (packet.TYPE == 'EYE_TRACKER_NOT_READY') 
+		{	
 			$('<p>').text('Il sistema di eye-tracking non è collegato. Si desidera procedere con la visita senza analisi del movimento degli occhi?')
 			.appendTo(
 					$('<div>').attr('id', 'dialogTrackerNotReady').attr('title', 'Tracciamento degli occhi non collegato')
@@ -174,8 +176,8 @@ var HelpMeNamespace = {
 				}
 			});
 		}
-		else if (packet.TYPE == 'PRESENTATION_COMPLETE') {
-			
+		else if (packet.TYPE == 'PRESENTATION_COMPLETE') 
+		{	
 			$('#dialogWaitingEndPresentation').dialog('close').remove();
 			
 			$('<p>').text('Presentazione completata. Premere Ok per iniziare il gioco')
