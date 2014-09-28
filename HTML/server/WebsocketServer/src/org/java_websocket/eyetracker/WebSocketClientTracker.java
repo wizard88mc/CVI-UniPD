@@ -1,15 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.java_websocket.eyetracker;
 
 import java.awt.Point;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Date;
 import org.java_websocket.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.simple.JSONObject;
@@ -19,25 +12,27 @@ import org.json.simple.JSONValue;
  *
  * @author Matteo
  */
-public class WebSocketClientTracker extends WebSocketClient {
-    
+public class WebSocketClientTracker extends WebSocketClient 
+{    
     private EyeTribeTracker eyeTribeTracker;
     
     public WebSocketClientTracker(String host, EyeTribeTracker eyeTribeTracker) 
-            throws Exception {
+            throws Exception 
+    {
         super(new URI(host));
         
         this.eyeTribeTracker = eyeTribeTracker;
     }
 
     @Override
-    public void onOpen(ServerHandshake handshakedata) {
+    public void onOpen(ServerHandshake handshakedata) 
+    {
         System.out.println("OnOpen EyeTracker");
     }
 
     @Override
-    public void onMessage(String message) {
-
+    public void onMessage(String message) 
+    {
         /**
          * Method to handle messages for the manager
          */
@@ -74,7 +69,7 @@ public class WebSocketClientTracker extends WebSocketClient {
 
             JSONObject packetToSend = new JSONObject();
             packetToSend.put("TYPE", "MACHINE_ID");
-            packetToSend.put("DATA", "194");
+            packetToSend.put("DATA", String.valueOf(eyeTribeTracker.getMachineID()));
 
             this.send(packetToSend.toJSONString());
         }
@@ -92,7 +87,6 @@ public class WebSocketClientTracker extends WebSocketClient {
         }
         else if (packet.get("TYPE").equals("OFFSET_CALCULATION")) 
         {
-
             if (packet.get("TODO").equals("true")) 
             {
                 JSONObject packetToSend = new JSONObject();
@@ -113,7 +107,7 @@ public class WebSocketClientTracker extends WebSocketClient {
             System.out.println("EYE: Fine calcolo offset");
             // Calcolo dell'offset completato
             int machineID = ((Long)packet.get("MACHINE_ID")).intValue();
-            // salvo machineID in quache posto
+            eyeTribeTracker.saveNewMachineID(machineID);
 
             JSONObject packetToSend = new JSONObject();
             packetToSend.put("TYPE", "READY_TO_PLAY");
@@ -129,7 +123,6 @@ public class WebSocketClientTracker extends WebSocketClient {
         }
         else if (packet.get("TYPE").equals("TRAINING_SETTINGS")) 
         {
-            
             int numberPoints = ((Long)packet.get("POINTS")).intValue();
             long pointDuration = (Long)packet.get("POINT_DURATION");
             long transitionDuration = (Long)packet.get("TRANSITION_DURATION");
@@ -159,7 +152,8 @@ public class WebSocketClientTracker extends WebSocketClient {
     }
 
     @Override
-    public void onError(Exception ex) {
+    public void onError(Exception ex) 
+    {
         System.out.println("onError EyeTracker");
         System.out.println(ex.toString());
         ex.printStackTrace();
@@ -184,6 +178,22 @@ public class WebSocketClientTracker extends WebSocketClient {
     public void sendEyeTrackerData(JSONObject packet)
     {
         packet.put("TYPE", "GAZE_DATA");
+        this.send(packet.toJSONString());
+    }
+    
+    public void sendTrackerConnected()
+    {
+        JSONObject packet = new JSONObject();
+        packet.put("TYPE", "TRACKRE_UPDATE");
+        packet.put("DATA", "CONNECTED");
+        this.send(packet.toJSONString());
+    }
+    
+    public void sendTrackerNotConnected()
+    {
+        JSONObject packet = new JSONObject();
+        packet.put("TYPE", "TRACKER_UPDATE");
+        packet.put("DATA", "NOT_CONNECTED");
         this.send(packet.toJSONString());
     }
 }

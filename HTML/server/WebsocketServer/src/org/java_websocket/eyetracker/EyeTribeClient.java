@@ -37,11 +37,12 @@ public class EyeTribeClient {
     private boolean trackerReady = false;
     private long startTime;
     
-    public EyeTribeClient(EyeTribeTracker eyeTribeTracker) {
-        
+    public EyeTribeClient(EyeTribeTracker eyeTribeTracker) throws Exception 
+    {    
         this.eyeTribeTracker = eyeTribeTracker;
         
         gazeManagerSingleton = GazeManager.getInstance();
+        
         gazeManagerSingleton.activate(GazeManager.ApiVersion.VERSION_1_0, GazeManager.ClientMode.PUSH);
         
         gazeListener = new GazeListener();
@@ -54,9 +55,15 @@ public class EyeTribeClient {
         gazeManagerSingleton.addCalibrationResultListener(calibrationResultListener);
         gazeManagerSingleton.addTrackerStateListener(trackerState);
         gazeManagerSingleton.addConnectionStateListener(connectionListener);
+        
+        if (gazeManagerSingleton.getTrackerState() == 
+                GazeManager.TrackerState.TRACKER_CONNECTED)
+        {
+            eyeTribeTracker.eyeTrackerConnected();
+        }
     }
     
-    public EyeTribeClient() 
+    public EyeTribeClient() throws Exception
     {
         this(null);
     }
@@ -77,7 +84,6 @@ public class EyeTribeClient {
     public ArrayList<Point> prepareCalibration(int pointsNumber, long pointDuration, 
             long transitionDuration, int pointDiameter) 
     {
-        
         return calibrationManager.calculateCalibrationPoints(pointsNumber, pointDuration, 
                 transitionDuration, pointDiameter);
     }
@@ -106,9 +112,12 @@ public class EyeTribeClient {
         sendData = false;
     }
     
+    /**
+     * This class is responsible to manage all the events associated with new
+     * data coming from the EyeTracker
+     */
     private class GazeListener implements IGazeListener 
     {
-
         @Override
         public void onGazeUpdate(GazeData gazeData) 
         {
@@ -121,14 +130,24 @@ public class EyeTribeClient {
             {
                 JSONObject packet = new JSONObject();
                 packet.put("TIME", gazeData.timeStamp - startTime);
-                packet.put("DATA", Math.round(gazeData.rawCoordinates.x) + " " + 
-                        Math.round(gazeData.rawCoordinates.y));
-                
+                if (Math.round(gazeData.rawCoordinates.x) == 0 && 
+                        Math.round(gazeData.rawCoordinates.y) == 0) 
+                {
+                    packet.put("DATA", "-1 -1");
+                }
+                else 
+                {
+                    packet.put("DATA", Math.round(gazeData.rawCoordinates.x) 
+                            + " " + Math.round(gazeData.rawCoordinates.y));
+                }
                 eyeTribeTracker.sendGazeData(packet);
             }
         }
     }
 
+    /**
+     * This class is responsible to manage the result of the calibration task
+     */
     private class CalibrationResultListener implements ICalibrationResultListener 
     {
         @Override
@@ -145,9 +164,13 @@ public class EyeTribeClient {
         }
     }
     
+    /**
+     * This class is responsible to manage the Calibration of the Eye Tracker, 
+     * from the calculation of the calibration point to the duration of the 
+     * transition and everything else
+     */
     private class CalibrationManager implements ICalibrationProcessHandler 
     {
-        
         private ArrayList<Point> listPoint = new ArrayList<Point>();
         private Point centerScreen;
         private long pointDuration;
@@ -383,6 +406,11 @@ public class EyeTribeClient {
             {
                 System.out.println("Tracker not connected");
             }
+            
+            if (!trackerReady)
+            {
+                eyeTribeTracker.eyeTrackerNotConnected();
+            }
         }
 
         @Override
@@ -422,7 +450,14 @@ public class EyeTribeClient {
     public static void main(String args[]) 
     {
         
+        try 
+        {
         final EyeTribeClient client = new EyeTribeClient();
         //client.startCalibration();
+        }
+        catch(Exception exc)
+        {
+            exc.printStackTrace();
+        }
     }
 }

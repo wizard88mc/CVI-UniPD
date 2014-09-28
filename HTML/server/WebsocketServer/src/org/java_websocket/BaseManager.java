@@ -48,6 +48,7 @@ public abstract class BaseManager extends WebSocketServer {
     protected static String gameIdentification = null;
     protected static String patientID = null;
     protected static boolean waitingForTracker = false;
+    protected static boolean eyeTrackerConnected = false;
     protected static ServerManager serverManager;
     protected WebSocket clientConnected = null;
     protected int machineID = 0;

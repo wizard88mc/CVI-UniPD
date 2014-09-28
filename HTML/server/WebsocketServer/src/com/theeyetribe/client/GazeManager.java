@@ -39,7 +39,7 @@ import com.theeyetribe.client.reply.TrackerGetReply;
  */
 public class GazeManager implements IGazeApiResponseListener, IGazeApiConnectionListener
 {
-    private final static int INIT_TIME_DELAY_SECONDS = 10;
+    private final static int INIT_TIME_DELAY_SECONDS = 2;
 
     private final static int FRAME_QUEUE_SIZE = 10;
 
@@ -118,7 +118,7 @@ public class GazeManager implements IGazeApiResponseListener, IGazeApiConnection
 	 * @param mode Mode though which the client will receive GazeData. Either ClientMode.PUSH or ClientMode.PULL
 	 * @return portnumber if successfully activated, false otherwise
 	 */
-	public boolean activate(ApiVersion version, ClientMode mode)
+	public boolean activate(ApiVersion version, ClientMode mode) throws Exception
 	{
             return activate(version, mode, GazeApiManager.DEFAULT_SERVER_HOST, GazeApiManager.DEFAULT_SERVER_PORT);
 	}
@@ -134,81 +134,84 @@ public class GazeManager implements IGazeApiResponseListener, IGazeApiConnection
 	 * @param hostname The host name or IP address where the eye tracking server is running
 	 * @return portnumber if successfully activated, false otherwise
 	 */
-	public boolean activate(final ApiVersion version, final ClientMode mode, final String hostname, final int portnumber)
+	public boolean activate(final ApiVersion version, final ClientMode mode, 
+                final String hostname, final int portnumber) throws Exception
 	{	
-		synchronized (instance)
-		{
-			//if already running, deactivate before starting anew		
-			if(isActivated())
-				deactivate();
+            synchronized (instance)
+            {
+                //if already running, deactivate before starting anew		
+                if(isActivated())
+                    deactivate();
 			
-			//lock calling thread while initializing
-			Object threadLock = Thread.currentThread();
+                //lock calling thread while initializing
+                Object threadLock = Thread.currentThread();
 			
-			synchronized (threadLock)
-			{
-				synchronized (initializationLock)
-				{
-					if(!isActivated())
-					{
-						isInitializing = true;
-						
-						try 
-						{
-							//threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-							threadPool = Executors.newCachedThreadPool();
+                synchronized (threadLock)
+                {
+                    synchronized (initializationLock)
+                    {
+                        if(!isActivated())
+                        {
+                            isInitializing = true;
+			
+                            try 
+                            {
+                                //threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+                                threadPool = Executors.newCachedThreadPool();
 							
-							//make sure we do not init networking on calling thread
-							threadPool.execute(new Runnable() 
-							{
-								@Override
-								public void run()
-								{
-									try 
-									{
-										apiManager = new GazeApiManager(GazeManager.this, GazeManager.this);
-										apiManager.connect(hostname, portnumber);
+                                //make sure we do not init networking on calling thread
+                                threadPool.execute(new Runnable() 
+                                {
+                                    @Override
+                                    public void run()
+                                    {
+                                        try 
+                                        {
+                                            apiManager = new GazeApiManager(GazeManager.this, GazeManager.this);
+                                            apiManager.connect(hostname, portnumber);
 										
-										if(apiManager.isConnected())
-										{
-											apiManager.requestTracker( mode, version);
-											apiManager.requestAllStates();
-										}
-									}
-									catch (Exception e) 
-									{
-										System.out.println("Exception while connecting to the EyeTribe Server: "+e.getLocalizedMessage());
-									}
-								}
-							});
+                                            if(apiManager.isConnected())
+                                            {
+                                                apiManager.requestTracker( mode, version);
+                                                apiManager.requestAllStates();
+                                            }
+                                        }
+                                        catch (Exception e) 
+                                        {
+                                            System.out.println("Exception while connecting to the EyeTribe Server: "+e.getLocalizedMessage());
+                                        }
+                                    }
+                                });
 							
-							//We wait until above requests have been handled by server or timeout occurs
-							initializationLock.wait( INIT_TIME_DELAY_SECONDS * 1000);
-							
-							if(!isInitialized)
-							{
-								deactivate();
-								System.out.println("Error initializing GazeManager, is EyeTribe Server running?");
-							}
-							else
-							{
-								if(!heartbeatHandler.isAlive())
-									heartbeatHandler.start();
-								
-								isActive = true;
-							}
-						}
-						catch (Exception e) 
-						{
-							deactivate();
-							System.out.println("Error initializing GazeManager.");
-						}
-					}
-				}
-			}
+                                //We wait until above requests have been handled by server or timeout occurs
+                                initializationLock.wait( INIT_TIME_DELAY_SECONDS * 1000);
+                                
+                                if(!isInitialized)
+                                {
+                                    deactivate();
+                                    System.out.println("Error initializing GazeManager, is EyeTribe Server running?");
+                                    throw(new Exception("EXCEPTION_NO_EYE_TRIBE_SERVER_RUNNING"));
+                                }
+                                else
+                                {
+                                    if(!heartbeatHandler.isAlive())
+                                        heartbeatHandler.start();
+
+                                    isActive = true;
+                                }
+                            }
+                            catch (Exception e) 
+                            {
+                                deactivate();
+                                System.out.println("Error initializing GazeManager.");
+                                throw(e);
+                            }
+                        }
+                    }
+                }
 			
-			return isActivated();
-		}
+                return isActivated();
+            }
 	}
 
 	/**

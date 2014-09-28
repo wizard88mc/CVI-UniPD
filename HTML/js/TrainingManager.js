@@ -448,8 +448,8 @@ var TrainingManager = {
 				resizable: false,
 				draggable: false,
 				closeOnEscape: false,
-				//width: getScreenWidth() * 0.6,
-				width: 'auto',
+				width: getScreenWidth() * 0.5,
+				//width: 'auto',
 				buttons: {
 					"Inizia": function() {
 						
@@ -533,13 +533,13 @@ var TrainingManager = {
 			meanErrorRight.appendTo(dialog);
 			meanErrorLeft.appendTo(dialog);
 		}
-		//starsContainer.appendTo(dialog);
+
 		dialog.dialog({
 				modal: true,
 				closeOnEscape: false,
 				resizable: false,
 				draggable: false,
-				width: 'auto',
+				width: getScreenWidth() * 0.5,
 				buttons: {
 					"Inizia": function() {
 						$(this).dialog("close");

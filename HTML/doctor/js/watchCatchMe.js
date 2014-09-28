@@ -46,7 +46,6 @@ var CatchMeNamespace = {
 			});
 			CatchMeNamespace.prepareChart();
 			
-			//timing = setInterval(CatchMeNamespace.updateChart, 5000);
 			/**
 			 * Everything is ready to start, showing a dialog to the doctor
 			 * to start the game
@@ -58,7 +57,9 @@ var CatchMeNamespace = {
 		
 			$('<p>').text('Non appena tutto sarà pronto, cliccare su Ok per iniziare')
 				.appendTo(
-					$('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Pronto a cominciare').appendTo('#divMainContent')
+					$('<div>').attr('id', 'dialogWaitingToStart')
+						.attr('title', 'Pronto a cominciare')
+						.appendTo('#divMainContent')
 				);
 			
 			$('#dialogWaitingToStart').dialog({
@@ -323,8 +324,15 @@ var CatchMeNamespace = {
 												dataReceived.IMAGE_SPECS.posLeft);
 			touchPositions[dataReceived.TIME] = new Point(dataReceived.TOUCH_SPECS.posTop,
 												dataReceived.TOUCH_SPECS.posLeft);
-			eyesPositions[dataReceived.TIME] = new Point(dataReceived.EYES_SPECS.posTop,
-												dataReceived.EYES_SPECS.posLeft);
+			if (dataReceived.EYES_SPECS.posTop != -1 && dataReceived.EYES_SPECS.posLeft != -1)
+			{
+				eyesPositions[dataReceived.TIME] = new Point(dataReceived.EYES_SPECS.posTop,
+						dataReceived.EYES_SPECS.posLeft);
+			}
+			else 
+			{
+				eyesPositions[dataReceived.TIME] = new Point(null, null);
+			}
 												
 			movements[dataReceived.TIME] = dataReceived.MOVEMENT;
 		}

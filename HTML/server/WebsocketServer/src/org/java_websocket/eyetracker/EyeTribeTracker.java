@@ -7,6 +7,12 @@
 package org.java_websocket.eyetracker;
 
 import java.awt.Point;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.Executors;
@@ -22,6 +28,7 @@ public class EyeTribeTracker /*extends Thread*/ {
     private WebSocketClientTracker websocketClient = null;
     private EyeTribeClient eyeTribeClient = null;
     private String host = null;
+    private static String filenameMachineID = "machineID.ini";
     private long startTime = 0L;
     private long screenWidth = 0L, screenHeight = 0L;
     
@@ -89,5 +96,68 @@ public class EyeTribeTracker /*extends Thread*/ {
     public void sendGazeData(JSONObject packet)
     {
         websocketClient.sendEyeTrackerData(packet);
+    }
+    
+    /**
+     * Retrieves the ID associated with the current PC used
+     * @return the machine ID or 0
+     */
+    public int getMachineID()
+    {
+        File file = new File(filenameMachineID);
+        
+        if (!file.exists())
+        {
+            return 0;
+        }
+        else
+        {
+            try 
+            {
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                String machineID = reader.readLine();
+                
+                reader.close();
+                return Integer.valueOf(machineID);
+            }
+            catch(Exception exc)
+            {
+                return 0;
+            }
+        }
+    }
+    
+    /**
+     * Stores the new machine ID in the settings file
+     * @param machineID the new ID for the current machine
+     */
+    public void saveNewMachineID(int machineID)
+    {
+        File file = new File(filenameMachineID);
+        try
+        {
+            if (!file.exists()) 
+            {
+                file.createNewFile();
+            }
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+            writer.write(String.valueOf(machineID));
+            writer.flush();
+            writer.close();
+        }
+        catch(Exception exc)
+        {
+            exc.printStackTrace();
+        }
+    }
+    
+    public void eyeTrackerConnected()
+    {
+        websocketClient.sendTrackerConnected();
+    }
+    
+    public void eyeTrackerNotConnected()
+    {
+        websocketClient.sendTrackerNotConnected();
     }
 }

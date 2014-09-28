@@ -33,6 +33,6 @@ public class EyeTrackerDataPacket extends BaseDataPacket {
     }
     
     public boolean hasValidCoordinates() {
-        return (eyes.x != -1L && eyes.y != -1L);
+        return (eyes.x != -1 && eyes.y != -1);
     }
 }

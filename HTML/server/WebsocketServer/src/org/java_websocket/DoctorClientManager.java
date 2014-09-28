@@ -2,7 +2,6 @@ package org.java_websocket;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Date;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.java_websocket.Messages.DoctorClientPacket;
@@ -34,11 +33,12 @@ public class DoctorClientManager extends BaseManager {
     }
     
     @Override
-    public boolean onMessage(WebSocket sender, String message) {
-        
+    public boolean onMessage(WebSocket sender, String message) 
+    {    
         JSONObject packet = (JSONObject)JSONValue.parse(message);
         
-        if (packet.get(BaseManager.MESSAGE_TYPE).equals("CHANGE_SPEED")) {
+        if (packet.get(BaseManager.MESSAGE_TYPE).equals("CHANGE_SPEED")) 
+        {
             serverManager.messageFromDoctorToClient(packet);
         }
         else if (packet.get(BaseManager.MESSAGE_TYPE).equals(BaseManager.STOP_GAME)) 
@@ -54,13 +54,26 @@ public class DoctorClientManager extends BaseManager {
                 JSONObject packetToSend = new JSONObject();
                 packetToSend.put(BaseManager.MESSAGE_TYPE, BaseManager.IDENTIFICATION_COMPLETE);
                 clientConnected.send(packetToSend.toJSONString());
-                
             }
             else 
             {
                 System.out.println("Wrong identification type for " + clientType
                         + " Manager");
             }
+        }
+        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("EYE_TRACKER_STATUS"))
+        {
+            JSONObject packetAnswer = new JSONObject();
+            packetAnswer.put("TYPE", "EYE_TRACKER_STATUS");
+            if (BaseManager.eyeTrackerConnected)
+            {
+                packetAnswer.put("DATA", "CONNECTED");
+            }
+            else 
+            {
+                packetAnswer.put("DATA", "NOT_CONNECTED");
+            }
+            clientConnected.send(packetAnswer.toJSONString());
         }
         else if (packet.get(BaseManager.MESSAGE_TYPE).equals("GAME")) 
         {    

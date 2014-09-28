@@ -185,7 +185,8 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
                 timeStartPacket, 
                 (Long)packet.get(BaseManager.DATA_IDENTIFIER), millisecondsReception);
         
-        if (operationComplete) {
+        if (operationComplete) 
+        {
             
             DecimalFormat twoDigits = new DecimalFormat("###.#");
             twoDigits.setMaximumFractionDigits(1);
@@ -201,13 +202,14 @@ public abstract class WebSocketWithOffsetCalc extends BaseManager {
                     machineID);
 
             JSONObject packetToSend = new JSONObject();
-                packetToSend.put(BaseManager.MESSAGE_TYPE, BaseManager.OFFSET_CALCULATION_COMPLETE);
+            packetToSend.put(BaseManager.MESSAGE_TYPE, BaseManager.OFFSET_CALCULATION_COMPLETE);
             
-            if (machineID == 0) {
-                
+            if (machineID == 0) 
+            {    
                 packetToSend.put(BaseManager.MACHINE_ID, newMachineID);
             }
-            else {
+            else 
+            {
                 packetToSend.put(BaseManager.MACHINE_ID, machineID);
             }
             

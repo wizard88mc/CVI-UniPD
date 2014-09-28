@@ -16,14 +16,60 @@ var doctorID = getFromSessionStorage("doctorID");
 var useEyeTracker = true;
 
 var NewVisitNamespace = {
+		
+checkEyeTrackerWorking: function()
+{
+	
+	var packetToSend = {
+		TYPE: "EYE_TRACKER_STATUS"
+	};
+	
+	if (websocket != null)
+	{
+		websocket.onmessage = function(message)
+		{
+			var respose = JSON.parse(message);
+			if (response.TYPE == "EYE_TRACKER_STATUS" && response.DATA == "CONNECTED")
+			{
+				NewVisitNamespace.startNewGame();
+			}
+			else 
+			{
+				var p = $('<p>').text("Eye Tracker non collegato. Collegarlo e poi proseguire").
+				$('<div>').attr('id', 'dialogNoTrackerConnected')
+					.attr('title', 'Eye Tracker non pronto')
+					appendTo('body');
+				p.appendTo('#dialogNoTrackerConnected');
+				
+				$('#dialogNoTrackerConnected').dialog({
+					modal: true,
+					resizable: false,
+					width: 'auto',
+					exitOnEscape: true,
+					buttons: {
+						Ok: function() {
+							$(this).dialog("close");
+							$(this).remove();
+						} 
+					}
+				});
+			}
+		};
+		websocket.send(JSON.stringify(packetToSend));
+	}
+	else 
+	{
+		NewVisitNamespace.noServerWorking();
+	}
+},
 
 startNewGame: function() {
 	
 	patientID = $('#selectPatient').val();
 	gameID = $('#selectGames').val();
 	
-	if (patientID == "" || gameID == "") {
-		
+	if (patientID == "" || gameID == "") 
+	{	
 		var errorsList = $('<ul>');
 		errorsList.css('list-style-position', 'inside');
 		if (patientID == "") {
@@ -35,6 +81,7 @@ startNewGame: function() {
 		
 		$('<div>').attr('id', 'errorStartGame').attr('title', 'Mancano informazioni')
 			.css('padding', '0.3em').appendTo('#divMainContent');
+		
 		$('<p>').text('Non sono state fornite tutte le informazioni necessarie:')
 			.appendTo('#errorStartGame');
 		errorsList.appendTo('#errorStartGame');
@@ -151,7 +198,8 @@ goToGame: function() {
 				/**
 				 * CatchMe game
 				 */
-				if (gameIdentification == "CATCH_ME") {
+				if (gameIdentification == "CATCH_ME") 
+				{
 					
 					var packetToSend = {
 						TYPE: "GAME",
@@ -159,15 +207,17 @@ goToGame: function() {
 					};
 					websocket.send(JSON.stringify(packetToSend));
 					
-					websocket.onmessage = function(message) {
-						
+					websocket.onmessage = function(message) 
+					{	
 						try {
 							var data = JSON.parse(message.data);
 							console.log(data);
-							if (data.TYPE == "GAME" && data.RESULT == true) {
+							if (data.TYPE == "GAME" && data.RESULT == true) 
+							{
 								setTimeout(CatchMeSettingsNamespace.requestScreenClient, 3000);
 							}
-							else if (data.TYPE == "GAME" && data.RESULT == false) {	
+							else if (data.TYPE == "GAME" && data.RESULT == false) 
+							{	
 								console.log("No client connected");
 								NewVisitNamespace.noClientConnected();
 							}
@@ -183,12 +233,12 @@ goToGame: function() {
 				/**
 				 * HelpMe game
 				 */
-				else if (gameIdentification == "HELP_ME") {
-					
+				else if (gameIdentification == "HELP_ME") 
+				{	
 					var packetToSend = {
-							TYPE: "GAME",
-							GAME_ID: gameIdentification
-						};
+						TYPE: "GAME",
+						GAME_ID: gameIdentification
+					};
 					websocket.send(JSON.stringify(packetToSend));
 					
 					websocket.onmessage = function(message) {
@@ -209,7 +259,6 @@ goToGame: function() {
 					};
 					
 					console.log("HelpMe to watch");
-					
 				}
 			}
 		}
@@ -221,21 +270,22 @@ noServerWorking: function() {
 	$('#waitingParameters').dialog("close").remove();
 	
 	$('<p>').text('Attenzione: Server non attivato o non funzionante. Verificare e riprovare')
-		.appendTo($('<div>').attr('id', 'divDialogServerNotWorking').attr('title', 'Attenzione').appendTo('#divMainContent'));
+		.appendTo($('<div>').attr('id', 'divDialogServerNotWorking')
+			.attr('title', 'Attenzione').appendTo('#divMainContent'));
 
 	$('#divDialogServerNotWorking')
-	.dialog({
-		modal: true,
-		resizable: false,
-		draggable: false,
-		width: (getScreenWidth() * 0.5),
-		buttons: {
-			"Chiudi": function() {
-				$(this).dialog("close");
-				$(this).remove();
+		.dialog({
+			modal: true,
+			resizable: false,
+			draggable: false,
+			width: (getScreenWidth() * 0.5),
+			buttons: {
+				"Chiudi": function() {
+					$(this).dialog("close");
+					$(this).remove();
+				}
 			}
-		}
-	});
+		});
 },
 
 noClientConnected: function() {
@@ -287,7 +337,8 @@ initializePage: function() {
 		.addClass('ui-corner-all')
 		.appendTo('#divMainContent');
 	
-	$('<h3>').text('Seleziona un bambino tra quelli già presenti').addClass('ui-widget-header').appendTo(divChooseOldPatient);
+	$('<h3>').text('Seleziona un bambino tra quelli già presenti')
+		.addClass('ui-widget-header').appendTo(divChooseOldPatient);
 	
 	$('<select>').attr('id', 'selectPatient').appendTo(divChooseOldPatient);
 	
@@ -378,7 +429,8 @@ initializePage: function() {
 				$('<div>').attr('id', 'dialogErrorInput').attr('title', 'Informazioni mancanti')
 					.css('padding',' 0.3em').appendTo('#divTableNewPatient');
 				
-				$('<p>').text('Non sono state inserite tutte le informazioni necessarie: ').appendTo('#dialogErrorInput');
+				$('<p>').text('Non sono state inserite tutte le informazioni necessarie: ')
+					.appendTo('#dialogErrorInput');
 				
 				listErrors.appendTo('#dialogError');
 				
@@ -500,6 +552,6 @@ initializePage: function() {
 			.addClass('alignCenter').appendTo('#divMainContent');
 		
 		$('<button>').attr('id', 'buttonStart').text('Comincia')
-			.button().click(NewVisitNamespace.startNewGame).appendTo(divButtons);	
+			.button().click(NewVisitNamespace.checkEyeTrackerWorking).appendTo(divButtons);	
 	}
 };

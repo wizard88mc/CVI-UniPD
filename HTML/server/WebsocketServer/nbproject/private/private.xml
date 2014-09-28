@@ -5,11 +5,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/EyeTrackerManager.java</file>
-            <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/Messages/BaseDataPacket.java</file>
             <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/eyetracker/EyeTribeTracker.java</file>
-            <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/EyeTrackerSimulator.java</file>
             <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/eyetracker/EyeTribeClient.java</file>
-            <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/MessagesManagers/CatchMeMessagesManager.java</file>
             <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/DoctorClientManager.java</file>
             <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/ServerManager.java</file>
             <file>file:/C:/wamp/htdocs/CVI/HTML/server/WebsocketServer/src/org/java_websocket/eyetracker/WebSocketClientTracker.java</file>

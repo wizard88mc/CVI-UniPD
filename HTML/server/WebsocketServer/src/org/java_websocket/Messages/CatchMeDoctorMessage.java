@@ -14,8 +14,8 @@ public class CatchMeDoctorMessage extends DoctorClientPacket {
     protected Map<String, Long> touchPosition = new HashMap<String, Long>();
     protected Map<String, Long> eyesPosition = new HashMap<String, Long>();
     protected long imageY = -1;
-    protected long deltaEye = -1;
-    protected long deltaTouch = -1;
+    protected Long deltaEye = null;
+    protected Long deltaTouch = null;
     protected String movement = "";
     
     public CatchMeDoctorMessage(CatchMeDataPacket catchMePacket, EyeTrackerDataPacket eyePacket) {
@@ -36,11 +36,13 @@ public class CatchMeDoctorMessage extends DoctorClientPacket {
             touchPosition.put("posTop", -1L);
         }
         
-        if (eyePacket != null) {
+        if (eyePacket != null) 
+        {
             eyesPosition.put("posLeft", eyePacket.eyes.x);
             eyesPosition.put("posTop", eyePacket.eyes.y);
         }
-        else {
+        else 
+        {
             eyesPosition.put("posLeft", -1L);
             eyesPosition.put("posTop", -1L);
         }
@@ -53,18 +55,19 @@ public class CatchMeDoctorMessage extends DoctorClientPacket {
         long imageCenterY = catchMePacket.image.y + 
                     (OnlyImageGameDataPacket.imageHeight / 2);
 
-        if (catchMePacket != null && catchMePacket.hasValidTouchCoordinates()) {
+        if (catchMePacket != null && catchMePacket.hasValidTouchCoordinates()) 
+        {
             deltaTouch = (long)Math.sqrt(
                     Math.pow(imageCenterX - catchMePacket.touch.x, 2) +
                     Math.pow(imageCenterY - catchMePacket.touch.y, 2));
         }
 
-        if (eyePacket != null && eyePacket.hasValidCoordinates()) {   
+        if (eyePacket != null && eyePacket.hasValidCoordinates()) 
+        {   
             deltaEye = (long)Math.sqrt(
                     Math.pow(imageCenterX - eyePacket.eyes.x, 2) +
                     Math.pow(imageCenterY - eyePacket.eyes.y, 2));
         }
-    
     }
     
     @Override
@@ -87,18 +90,8 @@ public class CatchMeDoctorMessage extends DoctorClientPacket {
         packet.put("TOUCH_SPECS", touchPosition);
         packet.put("EYES_SPECS", eyesPosition);
         packet.put("MOVEMENT", movement);
-        if (deltaTouch != -1) {
-            packet.put("DELTA_TOUCH", deltaTouch);
-        }
-        else {
-            packet.put("DELTA_TOUCH", null);
-        }
-        if (deltaEye != -1) {
-            packet.put("DELTA_EYE", deltaEye);
-        }
-        else {
-            packet.put("DELTA_EYE", null);
-        }
+        packet.put("DELTA_TOUCH", deltaTouch);
+        packet.put("DELTA_EYE", deltaEye);
         
         return packet.toJSONString();  
     }
