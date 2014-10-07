@@ -28,17 +28,17 @@ checkEyeTrackerWorking: function()
 	{
 		websocket.onmessage = function(message)
 		{
-			var respose = JSON.parse(message);
+			var response = JSON.parse(message.data);
 			if (response.TYPE == "EYE_TRACKER_STATUS" && response.DATA == "CONNECTED")
 			{
 				NewVisitNamespace.startNewGame();
 			}
 			else 
 			{
-				var p = $('<p>').text("Eye Tracker non collegato. Collegarlo e poi proseguire").
+				var p = $('<p>').text("Eye Tracker non collegato. Collegarlo e poi proseguire");
 				$('<div>').attr('id', 'dialogNoTrackerConnected')
 					.attr('title', 'Eye Tracker non pronto')
-					appendTo('body');
+					.appendTo('body');
 				p.appendTo('#dialogNoTrackerConnected');
 				
 				$('#dialogNoTrackerConnected').dialog({

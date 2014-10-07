@@ -147,9 +147,11 @@ this.getSystemSounds = function() {
     utilsNamespace.addSoundSource($('<audio>').attr('id', 'oggettiAssomigliano')
     		.appendTo('#divSounds #finalFeedback'), 'oggetti_assomigliano');
     
-    var divObjects = $('<div>').attr('id', 'numberOfObjects').appendTo('#divSounds div#finalFeedback');
+    var divObjects = $('<div>').attr('id', 'numberOfObjects')
+    	.appendTo('#divSounds div#finalFeedback');
     
-    var numbers = new Array('uno', 'due', 'tre', 'quattro', 'cinque', 'sei', 'sette', 'otto', 'nove', 'dieci');
+    var numbers = new Array('uno', 'due', 'tre', 'quattro', 'cinque', 'sei', 
+    		'sette', 'otto', 'nove', 'dieci');
     
     for (x in numbers) {
     	utilsNamespace.addSoundSource($('<audio>').attr('id', 'correct' + (Number(x)+1))

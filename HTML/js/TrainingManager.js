@@ -210,11 +210,12 @@ var ImageForTraining = function(settings) {
 						left: imageForTraining.center.left - imageForTraining.height / 2
 					}).appendTo('body');
 				
-			if (imageForTraining.center.left < $(window).width() / 2) {
-				
+			if (imageForTraining.center.left < $(window).width() / 2) 
+			{	
 				image.attr('src', '../images/nemo_left_nuovo.fw.png');
 			}
-			else {
+			else 
+			{
 				image.attr('src', '../images/nemo_right_nuovo.fw.png');
 			}
 	
@@ -243,6 +244,7 @@ var ImageForTraining = function(settings) {
 					imageForTraining.moveObject();
 				}
 				else {
+					imageForTraining.element.remove();
 					console.log("Training terminated");
 				}
 					
@@ -357,7 +359,8 @@ var TrainingExamplesNamespace = {
 			
 			soundNemoPresentation.on('ended', function() {
 				
-				var packetToSend = {
+				var packetToSend = 
+				{
 						TYPE: 'START_TRAINING'
 				};
 				websocket.send(JSON.stringify(packetToSend));
@@ -444,50 +447,51 @@ var TrainingManager = {
 			.appendTo('#divMainContent'));
 		
 		$('#dialogSettingsTraining').dialog({
-				modal: true,
-				resizable: false,
-				draggable: false,
-				closeOnEscape: false,
-				width: getScreenWidth() * 0.5,
-				//width: 'auto',
-				buttons: {
-					"Inizia": function() {
+			modal: true,
+			resizable: false,
+			draggable: false,
+			closeOnEscape: false,
+			width: getScreenWidth() * 0.5,
+			//width: 'auto',
+			buttons: {
+				"Inizia": function() {
 						
-						var numberOfPoints = $('select#selectNumberOfPoints').val();
-						var totalSeconds = $('select#selectTimePerPoint').val();
-						var secondsTransition = $('select#selectTimeTransition').val();
-						var imagePerc = $('#sliderSize').val();
+					var numberOfPoints = $('select#selectNumberOfPoints').val();
+					var totalSeconds = $('select#selectTimePerPoint').val();
+					var secondsTransition = $('select#selectTimeTransition').val();
+					var imagePerc = $('#sliderSize').val();
 						
-						var packetWithSettings = {
-							TYPE: 'TRAINING_SETTINGS', 
-							POINTS: parseInt(numberOfPoints),
-							POINT_DURATION: parseInt(totalSeconds),
-							TRANSITION_DURATION: parseInt(secondsTransition),
-							POINT_DIAMETER: parseInt(imagePerc * TrainingManager.screenWidth / 100)
-						};
+					var packetWithSettings = {
+						TYPE: 'TRAINING_SETTINGS', 
+						POINTS: parseInt(numberOfPoints),
+						POINT_DURATION: parseInt(totalSeconds),
+						TRANSITION_DURATION: parseInt(secondsTransition),
+						POINT_DIAMETER: parseInt(imagePerc * TrainingManager.screenWidth / 100)
+					};
 						
-						websocket.send(JSON.stringify(packetWithSettings));
+					websocket.send(JSON.stringify(packetWithSettings));
 						
-						$(this).dialog("close");
-						$(this).remove();
+					$(this).dialog("close");
+					$(this).remove();
 						
-						var dialog = $('<div>').attr('id', 'dialogWaitingCompleteTraining')
-							.attr('title', 'Attendere ...').appendTo('#divMainContent');
+					var dialog = $('<div>').attr('id', 'dialogWaitingCompleteTraining')
+						.attr('title', 'Attendere ...').appendTo('#divMainContent');
 							
-						$('<p>').text('Training in corso. Attendere ....').appendTo(dialog);
+					$('<p>').text('Training in corso. Attendere ....').appendTo(dialog);
 								
-						dialog.dialog({
-							modal: true,
-							resizable: false,
-							draggable: false,
-							closeOnEscape: false
-						});
-					}
+					dialog.dialog({
+						modal: true,
+						resizable: false,
+						draggable: false,
+						closeOnEscape: false
+					});
 				}
-			});
+			}
+		});
 	}, 
 	
-	trainingResult: function(message) {
+	trainingResult: function(message) 
+	{
 		
 		$('#dialogWaitingCompleteTraining').dialog('close');
 		$('#dialogWaitingCompleteTraining').remove();
@@ -495,46 +499,70 @@ var TrainingManager = {
 		var valueCalibration = message.STARS;
 		var starsContainer = $('<p>');
 		
-		for (var i = 0; i < valueCalibration; i++) {
+		for (var i = 0; i < valueCalibration; i++) 
+		{
 			$('<img>').attr('src', '../images/star.png').appendTo(starsContainer);
 		}
 		
-		for (var i = valueCalibration; i < 5; i++) {
+		for (var i = valueCalibration; i < 5; i++) 
+		{
 			$('<img>').attr('src', '../images/star.png').css('opacity', '0.5')
 				.appendTo(starsContainer);
 		}
 		
 		starsContainer.children('img').css({
-			width: '15%',
+			width: '10%',
 			display: 'inline',
 			'margin-left': '3%'
 		});
 		
 		var dialog = $('<div>').attr('id', 'divDialogTrainingEvaluation')
-		.attr('title', 'Risultato').appendTo('#divMainContent');
+			.attr('title', 'Risultato').appendTo('#divMainContent');
 	
 		$('<p>').text('Valutazione training: ').appendTo(dialog);
-		starsContainer.appendTo(dialog);
 		
-		var finalResult = $('<p>').text('Risultato: ' + message.RESULT);
-		var meanError = $('<p>').text('Errore medio: ' + message.AVERAGE_ERROR);
-		var meanErrorRight = null; var meanErrorLeft = null
-		
-		if (message.RESULT) 
+		if (message.RESULT)
 		{
-			meanErrorRight = $('<p>').text('Errore medio occhio destro: ' + message.AVERAGE_ERROR_RIGHT);
-			meanErrorLeft = $('<p>').text('Errore medio occhio sinistro: ' + message.AVERAGE_ERROR_LEFT);
+			starsContainer.appendTo(dialog);
 		}
 		
-		finalResult.appendTo(dialog);
-		meanError.appendTo(dialog);
-		if (meanErrorRight != null && meanErrorLeft != null)
+		var imgResult = null;
+		if (message.RESULT)
 		{
+			imgResult = $('<img>').attr('src', '../images/correct.png')
+				.attr('alt', 'Calibrazione riuscita');
+		}
+		else 
+		{
+			imgResult = $('<img>').attr('src', '../images/incorrect.png')
+				.attr('alt', 'Calibrazione non riuscita');
+		}
+		imgResult.css({
+			width: '10%',
+			display: 'inline',
+			'margin-left': '3%',
+			'vertical-align': 'middle'
+		});
+		var finalResult = $('<p>').text('Risultato: ');
+		imgResult.appendTo(finalResult);
+		finalResult.appendTo(dialog);
+		
+		var meanError = $('<p>').text('Errore medio: ' + message.AVERAGE_ERROR);
+		if (message.RESULT)
+		{
+			meanErrorRight = $('<p>').text('Errore medio occhio destro: ' 
+					+ message.AVERAGE_ERROR_RIGHT);
+			meanErrorLeft = $('<p>').text('Errore medio occhio sinistro: ' 
+					+ message.AVERAGE_ERROR_LEFT);
+			
+			meanError.appendTo(dialog);
 			meanErrorRight.appendTo(dialog);
 			meanErrorLeft.appendTo(dialog);
 		}
 
-		dialog.dialog({
+		if (message.RESULT) 
+		{
+			dialog.dialog({
 				modal: true,
 				closeOnEscape: false,
 				resizable: false,
@@ -544,12 +572,13 @@ var TrainingManager = {
 					"Inizia": function() {
 						$(this).dialog("close");
 						$(this).remove();
-						
-						var packetForValidation = {
+							
+						var packetForValidation = 
+						{
 							TYPE: 'TRAINING_VALIDATION',
 							DATA: true
 						};
-						
+							
 						websocket.send(JSON.stringify(packetForValidation));
 						
 						TrainingManager.trainingComplete();
@@ -557,18 +586,51 @@ var TrainingManager = {
 					"Ripeti": function() {
 						$(this).dialog("close");
 						$(this).remove();
-						
+							
 						var packetRetry = {
 							TYPE: 'TRAINING_VALIDATION',
+							DATA: false
+						};
+							
+						websocket.send(JSON.stringify(packetRetry));
+							
+						TrainingManager.dialogSelectParameters();
+					}
+				}
+			});
+		}
+		else 
+		{
+			dialog.dialog({
+				modal: true,
+				draggable: false,
+				closeOnEscape: false,
+				resizable: false,
+				width: getScreenWidth() * 0.4,
+				buttons: {
+					"Ripeti": function() {
+						$(this).dialog("close");
+						$(this).remove();
+						
+						var packetRetry = 
+						{
+							TYPE: 'TRAINING_VALIDATION', 
 							DATA: false
 						};
 						
 						websocket.send(JSON.stringify(packetRetry));
 						
 						TrainingManager.dialogSelectParameters();
+					}, 
+					"Annulla": function() {
+						$(this).dialog("close");
+						$(this).remove();
+						
+						// ricaricare pagina
 					}
 				}
-			});
+			})
+		}
 	},
 	
 	trainingComplete: function() {}

@@ -73,6 +73,15 @@ public class EyeTribeClient {
         calibrationManager.startCalibration();
     }
     
+    public void resultCalibration(boolean result)
+    {
+        if (!result)
+        {
+            gazeManagerSingleton.calibrationAbort();
+            gazeManagerSingleton.calibrationClear();
+        }
+    }
+    
     /**
      * Calibration has to be set up, it calls the method on th EyeTribeClient
      * @param pointsNumber: number of calibration points

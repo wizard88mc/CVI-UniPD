@@ -120,7 +120,7 @@ var HelpMeNamespace = {
 		/**
 		 * Training is ended, show evaluation from the eye tracker 
 		 */
-		else if (packet.TYPE == 'CALIBRATION_RESULTS') 
+		else if (packet.TYPE == 'CALIBRATION_RESULT') 
 		{	
 			TrainingManager.trainingResult(packet);
 			TrainingManager.trainingComplete = HelpMeNamespace.trainingComplete;

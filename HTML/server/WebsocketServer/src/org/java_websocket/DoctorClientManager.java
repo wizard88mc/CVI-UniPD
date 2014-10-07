@@ -91,7 +91,6 @@ public class DoctorClientManager extends BaseManager {
         }
         else if (packet.get(BaseManager.MESSAGE_TYPE).equals(BaseManager.SCREEN_MEASURES)) 
         {
-            
             if (patientManager != null) 
             {
                 patientManager.sendPacket(packet);
@@ -143,8 +142,8 @@ public class DoctorClientManager extends BaseManager {
          * Training completed, the doctor decides if keep the current
          * training session or to repeat it again
          */
-        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("TRAINING_VALIDATION")) {
-            
+        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("TRAINING_VALIDATION")) 
+        {    
             eyeTrackerManager.sendPacket(packet);
         }
         /*
@@ -171,7 +170,7 @@ public class DoctorClientManager extends BaseManager {
                 messageManager = new CatchMeMessagesManager(patientID, visitID, withEyeTracker);
                 String folder = messageManager.getFolderWhereArchive();
                 dbManager.setFolder(visitID, folder);
-                patientManager.writeGameSpecs();
+                //patientManager.writeGameSpecs();
             }
             else if (gameIdentification.equals(BaseManager.HELP_ME)) 
             {
@@ -187,28 +186,33 @@ public class DoctorClientManager extends BaseManager {
     }
     
     @Override
-    public void onClose(WebSocket client, int code, String reason, boolean remote) {
+    public void onClose(WebSocket client, int code, String reason, boolean remote) 
+    {
         System.out.println("Connection closed for " + clientType + " Manager");
-        clientConnected = null;
-        
+        clientConnected = null;    
     }
     
-    public void sendMessageToDoctorClient(DoctorClientPacket packet) {
-        
-        if (clientConnected != null) {
+    public void sendMessageToDoctorClient(DoctorClientPacket packet) 
+    {    
+        if (clientConnected != null) 
+        {
             clientConnected.send(packet.toJSONString());
         }
-        else {
+        else 
+        {
             messagesToSend.add(packet.toJSONString());
         }
     }
     
     @Override
-    public void sendPacket(JSONObject packet) {
-        if (clientConnected != null) {
+    public void sendPacket(JSONObject packet) 
+    {
+        if (clientConnected != null) 
+        {
             clientConnected.send(packet.toJSONString());
         }
-        else {
+        else 
+        {
             messagesToSend.add(packet.toJSONString());
         } 
     }

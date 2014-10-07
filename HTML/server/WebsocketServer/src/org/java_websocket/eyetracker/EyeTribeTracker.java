@@ -10,7 +10,6 @@ import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -29,13 +28,11 @@ public class EyeTribeTracker /*extends Thread*/ {
     private EyeTribeClient eyeTribeClient = null;
     private String host = null;
     private static String filenameMachineID = "machineID.ini";
-    private long startTime = 0L;
-    private long screenWidth = 0L, screenHeight = 0L;
     
     public EyeTribeTracker(String host, int port) {
         //host = "ciman.math.unipd.it";
         this.host = new String().concat("ws://")
-                .concat(host).concat(":").concat(new Integer(port).toString());
+                .concat(host).concat(":").concat(String.valueOf(port));
         System.out.println("Creating EyeTracker Client"); 
     }
     
@@ -151,13 +148,26 @@ public class EyeTribeTracker /*extends Thread*/ {
         }
     }
     
+    /**
+     * Tells the WebsocketClient to send a packet that tells that the eye tracker
+     * is connected
+     */
     public void eyeTrackerConnected()
     {
         websocketClient.sendTrackerConnected();
     }
     
+    /**
+     * Tells the WebsocketClient to send a packet that tells that the eye tracker
+     * is NOT connected
+     */
     public void eyeTrackerNotConnected()
     {
         websocketClient.sendTrackerNotConnected();
+    }
+    
+    public void communicateTrainingResult(boolean result)
+    {
+        eyeTribeClient.resultCalibration(result);
     }
 }

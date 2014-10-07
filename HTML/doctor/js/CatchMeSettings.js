@@ -1295,7 +1295,8 @@ setGameSettings: function(data) {
 			}
 			
 			if (areThereErrors) {
-				$('<div>').attr('id', 'dialogErrorsSettings').attr('title', 'Attenzione!').appendTo('#divMainContent');
+				$('<div>').attr('id', 'dialogErrorsSettings').attr('title', 'Attenzione!')
+					.appendTo('#divMainContent');
 				$('<p>').text('Attenzione: ').appendTo('#dialogErrorsSettings');
 				$('<ul>').appendTo('#dialogErrorsSettings');
 				$(stringErrors).appendTo('#dialogErrorsSettings ul');

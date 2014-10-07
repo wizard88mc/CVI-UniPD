@@ -58,10 +58,10 @@ function presentationComplete() {
 		else if (packet.TYPE == 'SCREEN_MEASURES') {
 			
 			var packetToSend = {
-				'TYPE': 'SCREEN_MEASURES',
-				'RESULT': true,
-				'SCREEN_WIDTH': getScreenWidth(),
-				'SCREEN_HEIGHT': getScreenHeight()
+				TYPE: 'SCREEN_MEASURES',
+				RESULT: true,
+				SCREEN_WIDTH: getScreenWidth(),
+				SCREEN_HEIGHT: getScreenHeight(),
 			};
 				
 			websocket.send(JSON.stringify(packetToSend));
@@ -75,19 +75,18 @@ function presentationComplete() {
 			
 			gameManager.gameInProgress = false;
 		}
-		else if (packet.TYPE == 'START_TRAINING') {
+		else if (packet.TYPE == "TRAINING_SETTINGS") {
 			
 			TrainingExamplesNamespace.startTraining(packet);
 		}
-		else if (packet.TYPE == 'CAL_POINT') {
+		else if (packet.TYPE == "CAL_POINT" || packet.TYPE == "START_TRAINING") {
 			
 			TrainingExamplesNamespace.messageManager(packet);
 		}
 		else {
+			console.log("Bad message received during game");
 			console.log(packet);
-			console.log(message);
 		}
-		
 	};
 }
 
@@ -166,6 +165,7 @@ function resetLevel() {
 function manageLevels(repeatLevel) {
 
 	gameManager.maxCorrectAnswers = 0;
+	gameManager.isAnExample = false;
     if (repeatLevel) {
         gameManager.currentLevelRepetition++;
 

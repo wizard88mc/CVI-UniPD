@@ -35,7 +35,8 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
             Object packetType = packet.get("TYPE");
 
             //System.out.println(packet);
-            if (packetType.equals("IDENTIFICATION") && clientConnected != null) {
+            if (packetType.equals("IDENTIFICATION") && clientConnected != null) 
+            {
                 BaseManager.eyeTrackerManager = this;
             }
 
@@ -43,7 +44,8 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
             {
                 if (packetType.equals("GAZE_DATA")) 
                 {
-                    synchronized(messageManager.bufferSynchronizer) {
+                    synchronized(messageManager.bufferSynchronizer) 
+                    {
                         messageManager.messagesEyeTrackerBuffer.add(packet);
                         messageManager.bufferSynchronizer.notifyAll();
                     }
@@ -80,14 +82,7 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
                 }
                 else if (packetType.equals("TRACKER_UPDATE"))
                 {
-                    if (packet.get("DATA").equals("CONNECTED"))
-                    {
-                        BaseManager.eyeTrackerConnected = true;
-                    }
-                    else 
-                    {
-                        BaseManager.eyeTrackerConnected = false;
-                    }
+                    BaseManager.eyeTrackerConnected = packet.get("DATA").equals("CONNECTED");
                 }
                 else {
                     System.out.println("PACCHETTO NON CORRETTO eyeTrackerManager");

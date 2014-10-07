@@ -143,6 +143,10 @@ public class WebSocketClientTracker extends WebSocketClient
             
             this.send(packetToSend.toJSONString());
         }
+        else if (packet.get("TYPE").equals("TRAINING_VALIDATION"))
+        {
+            boolean result = (Boolean)packet.get("DATA");
+        }
     }
 
     @Override
@@ -184,7 +188,7 @@ public class WebSocketClientTracker extends WebSocketClient
     public void sendTrackerConnected()
     {
         JSONObject packet = new JSONObject();
-        packet.put("TYPE", "TRACKRE_UPDATE");
+        packet.put("TYPE", "TRACKER_UPDATE");
         packet.put("DATA", "CONNECTED");
         this.send(packet.toJSONString());
     }

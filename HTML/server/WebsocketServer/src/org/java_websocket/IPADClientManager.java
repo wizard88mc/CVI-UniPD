@@ -78,10 +78,10 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                     }
                 }
             }
-            else if (packetType.equals("READY_TO_PLAY")) {                
-
-                if (packet.containsKey(BaseManager.IMAGE_WIDTH)) {
-                    
+            else if (packetType.equals("READY_TO_PLAY")) 
+            {
+                if (packet.containsKey(BaseManager.IMAGE_WIDTH)) 
+                {    
                     imageWidth = (Long)packet.get(BaseManager.IMAGE_WIDTH);                    
                     imageHeight = (Long)packet.get(BaseManager.IMAGE_HEIGHT);
 
@@ -100,15 +100,16 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                     doctorManager.sendPacket(packet);
                 }
                 
-                if (eyeTrackerManager != null) {
+                if (eyeTrackerManager != null) 
+                {
                     JSONObject packetStartTraining = new JSONObject();
                     packetStartTraining.put(BaseManager.MESSAGE_TYPE, "TRAINING_SESSION");
                     packetStartTraining.put(BaseManager.PATIENT_ID, patientID);
 
                     eyeTrackerManager.sendPacket(packetStartTraining);
                 }
-                else {
-                    
+                else 
+                {    
                     JSONObject packetEyeTrackerNotReady = new JSONObject();
                     packetEyeTrackerNotReady.put(BaseManager.MESSAGE_TYPE, "EYE_TRACKER_NOT_READY");
                     
