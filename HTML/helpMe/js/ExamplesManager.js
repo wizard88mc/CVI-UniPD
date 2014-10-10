@@ -22,7 +22,8 @@ this.loadOtherImages = function() {
     
     this.handImage = new Image();
     this.handImage.onload = ExampleNamespace.imageForExampleLoaded;
-    this.handImage.src = '../images/handPresentation.png';
+    //this.handImage.src = '../images/handPresentation.png';
+    this.handImage.src = '../images/finger3.png';
 };
 
 this.reduceArrowHeight = function(delta) {

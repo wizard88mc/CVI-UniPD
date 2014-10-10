@@ -170,4 +170,13 @@ public class EyeTribeTracker /*extends Thread*/ {
     {
         eyeTribeClient.resultCalibration(result);
     }
+    
+    /**
+     * Informs the EyeTribeClient to stop sending data to the server since the 
+     * exercise is stopped by the doctor.
+     */
+    public void stopSendDataToServer()
+    {
+        eyeTribeClient.stopSendDataToServer();
+    }
 }

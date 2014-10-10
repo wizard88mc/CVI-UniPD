@@ -38,7 +38,8 @@ var HelpMeNamespace = {
 			.insertBefore('#tableResultsHelpMe')
 			.button().on('click', function() {
 				
-				var packetToSend = {
+				var packetToSend = 
+				{
 					TYPE: "STOP_GAME"
 				};
 				
@@ -74,7 +75,8 @@ var HelpMeNamespace = {
 			
 			$('<p>').text('Non appena tutto sarà pronto, cliccare su Ok per iniziare la presentazione...')
 			.appendTo(
-				$('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Pronto').appendTo('#divMainContent')
+				$('<div>').attr('id', 'dialogWaitingToStart').attr('title', 'Pronto')
+				.appendTo('#divMainContent')
 				.dialog({
 					modal: true,
 					resizable: false,
@@ -94,7 +96,8 @@ var HelpMeNamespace = {
 							websocket.send(JSON.stringify(packetToSend));
 							
 							$('<p>').text('Presentazione in corso. Attendere ....').appendTo(
-								$('<div>').attr('id', 'dialogWaitingEndPresentation').attr('title', 'Attendere')
+								$('<div>').attr('id', 'dialogWaitingEndPresentation')
+								.attr('title', 'Attendere')
 								.appendTo('#divMainContent').dialog({
 									modal: true,
 									resizable: false,
@@ -129,7 +132,8 @@ var HelpMeNamespace = {
 		{	
 			$('<p>').text('Il sistema di eye-tracking non è collegato. Si desidera procedere con la visita senza analisi del movimento degli occhi?')
 			.appendTo(
-					$('<div>').attr('id', 'dialogTrackerNotReady').attr('title', 'Tracciamento degli occhi non collegato')
+					$('<div>').attr('id', 'dialogTrackerNotReady')
+					.attr('title', 'Tracciamento degli occhi non collegato')
 					.appendTo('#divMainContent')
 			)
 			.dialog({
@@ -241,6 +245,7 @@ var HelpMeNamespace = {
 					
 					context.strokeStyle = drawingSettings.colorTouch;
 					context.beginPath();
+					context.lineWidth = 3;
 					context.moveTo(drawingSettings.lastPointTouch.LEFT, 
 						drawingSettings.lastPointTouch.TOP);
 					context.lineTo(pointTouch.LEFT, pointTouch.TOP);
@@ -257,16 +262,20 @@ var HelpMeNamespace = {
 			
 			var pointEye = data.EYE_SPECS;
 			console.log(pointEye);
-			if (pointEye.LEFT != null && pointEye.LEFT != -1) {
+			if (pointEye.LEFT != null && pointEye.LEFT != -1) 
+			{
 				pointEye.LEFT = pointEye.LEFT * ratio;
 				pointEye.TOP = pointEye.TOP * ratio;
 				
-				if (!drawingSettings.firstPointEye) {
+				if (!drawingSettings.firstPointEye) 
+				{
 					drawingSettings.firstPointEye = true;
 				}
-				else {
+				else 
+				{
 					context.strokeStyle = drawingSettings.colorEye;
 					context.beginPath();
+					context.lineWidth = 1;
 					context.moveTo(drawingSettings.lastPointEye.LEFT, 
 						drawingSettings.lastPointEye.TOP);
 					context.lineTo(pointEye.LEFT, pointEye.TOP);
@@ -300,6 +309,7 @@ var HelpMeNamespace = {
 					context.strokeStyle = drawingSettings.colorImage;
 					context.fillStyoe = drawingSettings.colorImage;
 					context.beginPath();
+					context.lineWidth = 3;
 					context.moveTo(drawingSettings.lastPointImage.LEFT, 
 						drawingSettings.lastPointImage.TOP);
 					context.lineTo(pointImage.LEFT, pointImage.TOP);

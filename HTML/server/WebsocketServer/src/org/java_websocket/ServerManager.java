@@ -26,7 +26,7 @@ public class ServerManager {
     
     protected void timeToStart() 
     {
-        long minimumIncrement = 10000;
+        long minimumIncrement = 5000;
         
         long timeToStart = new Date().getTime() + minimumIncrement;
         clientEyeTracker.comunicateStartTime(timeToStart);
@@ -40,7 +40,8 @@ public class ServerManager {
         clientDoctor.start();
     }
     
-    public void stopGame(JSONObject packet) {
+    public void stopGame(JSONObject packet) 
+    {
         clientEyeTracker.sendPacket(packet);
         clientChild.sendPacket(packet);
         clientDoctor.sendPacket(packet);

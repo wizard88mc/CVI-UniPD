@@ -39,8 +39,8 @@ public abstract class BaseMessagesManager extends Thread {
     public final Object bufferSynchronizer = new Object();
     
     protected int maxFPS = 25;
-    protected Long MAX_DIFFERENCE = new Long(1000 / maxFPS + (1000 / maxFPS) / 2);
-    protected Long MAX_TIME_WAITING = new Long((1000 / maxFPS) * 2); 
+    protected Long MAX_DIFFERENCE = Long.valueOf(1000 / maxFPS + (1000 / maxFPS) / 2);
+    protected Long MAX_TIME_WAITING = Long.valueOf((1000 / maxFPS) * 2);
 
     protected static DoctorClientManager doctorManager = null;
 
@@ -53,14 +53,14 @@ public abstract class BaseMessagesManager extends Thread {
         }
         // devo creare cartella dove salverò i file
         Calendar giornoVisita = Calendar.getInstance();
-        String anno = new Integer(giornoVisita.get(Calendar.YEAR)).toString();
-        String mese = new Integer(giornoVisita.get(Calendar.MONTH) + 1).toString();
-        String giorno = new Integer(giornoVisita.get(Calendar.DAY_OF_MONTH)).toString();
-        String ora = new Integer(giornoVisita.get(Calendar.HOUR_OF_DAY)).toString();
-        String minuti = new Integer(giornoVisita.get(Calendar.MINUTE)).toString();
+        String anno = String.valueOf(giornoVisita.get(Calendar.YEAR));
+        String mese = String.valueOf(giornoVisita.get(Calendar.MONTH) + 1);
+        String giorno = String.valueOf(giornoVisita.get(Calendar.DAY_OF_MONTH));
+        String ora = String.valueOf(giornoVisita.get(Calendar.HOUR_OF_DAY));
+        String minuti = String.valueOf(giornoVisita.get(Calendar.MINUTE));
 
         String subfolder = anno + "-" + mese + "-" + giorno + "-"
-                + ora + "-" + minuti + "-" + new Integer(visitID).toString();
+                + ora + "-" + minuti + "-" + String.valueOf(visitID);
 
         relativeFolder = folderWhereArchive.concat(separator)
                 .concat(patientID).concat(separator).concat(subfolder)

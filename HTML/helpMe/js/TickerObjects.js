@@ -93,7 +93,8 @@ var frameAnimatorNamespace = {
                  * position to the end of the transition
                  */
                 else {
-                	exampleManager.hand = $(exampleManager.handImage).attr('id', 'imgHand').appendTo('#divMainContent');
+                	exampleManager.hand = $(exampleManager.handImage)
+                		.attr('id', 'imgHand').appendTo('#divMainContent');
                 	
                 	var startTopPositionHand = imageObjectOnScreen.drawingPosition.top + 
                 		imageObjectOnScreen.height * 2 / 3;
@@ -303,7 +304,7 @@ var frameAnimatorNamespace = {
     	
     	if (exampleManager.arrow != null) {
     		
-    		var transitionArrow = 'all ' + time * 2 / 3 + 's linear';
+    		var transitionArrow = 'all ' + time / 2 + 's linear';
     		var finalTopArrow = exampleManager.arrow.position().top + exampleManager.arrow.height();
     		
     		addTransitionSpecifications(exampleManager.arrow, transitionArrow);

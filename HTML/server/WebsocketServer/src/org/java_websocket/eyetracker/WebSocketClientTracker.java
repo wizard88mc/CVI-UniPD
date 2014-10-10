@@ -52,7 +52,7 @@ public class WebSocketClientTracker extends WebSocketClient
         }
         else if (packet.get("TYPE").equals("STOP_GAME")) 
         {
-            //work = false;
+            eyeTribeTracker.stopSendDataToServer();
         }
         else if (packet.get("TYPE").equals("IDENTIFICATION")) 
         {

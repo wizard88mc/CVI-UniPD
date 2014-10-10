@@ -103,6 +103,9 @@ var HelpMeSettingsNamespace = {
 		else {
 			$('#buttonComplete').button('enable');
 			$('#divTotalErrors #numberTotalErrorsSpan').text(0);
+			$('#divTotalErrors').css({
+				visibility: 'hidden'
+			});
 		}
 		
 	},
@@ -141,22 +144,29 @@ var HelpMeSettingsNamespace = {
 			var divLevel = $(this).parents().eq(4);
 			var targetFamily = divLevel.find('select.selectTargetFamily').val();
 			
-			$(this).parent().next().children('img').attr('src', '../helpMe/images/'+HelpMeSettingsNamespace.getImageFilename(imageID));
+			$(this).parent().next().children('img').attr('src', '../helpMe/images/'
+					+HelpMeSettingsNamespace.getImageFilename(imageID));
 
-			var isImageCorrect = HelpMeSettingsNamespace.checkImageType(imageID, typeElement, targetFamily);
+			var isImageCorrect = 
+				HelpMeSettingsNamespace.checkImageType(imageID, typeElement, targetFamily);
 			
-			if (!isImageCorrect) {
+			if (!isImageCorrect) 
+			{
+				console.log($(this).parent().parent('tr').children('td'));
 				if ($(this).parent().parent('tr').children('td').hasClass('badSettings') == false) {
 					$(this).parent().parent('tr').children('td').addClass('badSettings');
 					totalErrors++;
+					HelpMeSettingsNamespace.updateErrors();
 				}
 			}
-			else {
+			else 
+			{
 				$(this).parent().parent('tr').children('td').removeClass('badSettings');
 				totalErrors--;
+				HelpMeSettingsNamespace.updateErrors();
 			}
 			
-			HelpMeSettingsNamespace.updateErrors();
+			//HelpMeSettingsNamespace.updateErrors();
 			
 		});
 		
@@ -230,18 +240,6 @@ var HelpMeSettingsNamespace = {
 				$(ui.unselected.parentElement).children().removeClass('ui-selected');
 				console.log($(this));
 			}
-			/*stop: function() {
-				$('td.ui-selected, tr.ui-selected').removeClass('ui-selected');
-				
-				if ($(this).children('td.ui-selected').length > 0) {
-					$(this).removeClass('ui-selected');
-				}
-				else {
-					$(this).children().addClass('ui-selected');
-					$(this).addClass('ui-selected');
-				}
-				
-			}*/
 		});
 	},
 	
@@ -468,7 +466,8 @@ var HelpMeSettingsNamespace = {
 				.appendTo('#selectNewLevel');
 		}
 		
-		$('<div>').attr('id', 'buttonAddLevel').text('Aggiungi livello').appendTo('#divNewLevel').button();
+		$('<div>').attr('id', 'buttonAddLevel').text('Aggiungi livello')
+			.appendTo('#divNewLevel').button();
 		
 		$('#buttonAddLevel').on('click', function() {
 			
@@ -537,8 +536,27 @@ var HelpMeSettingsNamespace = {
 			$('<input>').attr('type', 'hidden').attr('name', 'numberDistracters')
 				.attr('value', elements[1]).appendTo(divLevel);
 			
-			var lastSimilarLevel = divLevel.prevAll('div[id^="level"]:has(input[name="levelType"][value="'+valueLevel+'"])').first();
+			var lastSimilarLevel = divLevel.prevAll('div[id^="level"]:has(input[name="numberTargets"][value="'+elements[0]+'"])').first();
+			if (lastSimilarLevel.length == 0)
+			{
+				var list = divLevel.prevAll('div[=id^="level"]:has(input[name="numberTargets"])');
+				var exit = false;
+				for (var i = 0; i < list.length && !exit; i++)
+				{
+					var valueTargets = $(list[i]).children('input[type="hidden"][name="numberTargets"]')
+						.val();
+					
+					if (Number(valueTargets) < elements[0])
+					{
+						exit = true;
+						lastSimilarLevel = $(list[i]);
+						console.log(i);
+					}
+				}
+			}
+			
 			divLevel.insertAfter(lastSimilarLevel);
+			
 			var indexToInsert = lastSimilarLevel.parent().children('div').index(lastSimilarLevel);
 			
 			var label = indexLevel + 1;

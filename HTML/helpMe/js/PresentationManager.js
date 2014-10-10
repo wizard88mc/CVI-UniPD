@@ -169,8 +169,6 @@ function PresentationManager() {
     this.currentAnimationFrame = null;
     this.timeLastFrame = 0;
     this.timeToMoveScreen = 5;
-    //this.speedForElementsWidth = (((getScreenWidth() / this.timeToMoveScreen) / 200));
-    //this.speedForElementsHeight = ((((getScreenHeight() / 10) / this.timeToMoveScreen)) / 200);
     this.speedModified = false;
     this.angleForJump = 0;
     this.totalDistanceTop = 0;
