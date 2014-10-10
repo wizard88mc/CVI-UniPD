@@ -595,6 +595,18 @@ var TrainingManager = {
 						websocket.send(JSON.stringify(packetRetry));
 							
 						TrainingManager.dialogSelectParameters();
+					},
+					"Esci": function() {
+						$(this).dialog("close");
+						$(this).remove();
+						
+						var packetGoBack = 
+						{
+							TYPE: 'GO_BACK'
+						};
+						
+						websocket.send(JSON.stringify(packetGoBack));
+						location.replace('../index.html');
 					}
 				}
 			});

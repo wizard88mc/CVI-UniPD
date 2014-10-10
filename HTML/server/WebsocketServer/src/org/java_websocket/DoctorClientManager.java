@@ -118,7 +118,6 @@ public class DoctorClientManager extends BaseManager {
         else if (packet.get(BaseManager.MESSAGE_TYPE).equals(BaseManager.START_PRESENTATION) || 
                 packet.get(BaseManager.MESSAGE_TYPE).equals("GO_BACK")) 
         {
-            
             patientManager.sendPacket(packet);
         }
         /**
