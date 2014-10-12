@@ -29,7 +29,7 @@ html, body {
 }
 
 body {
-	background-color: #4297D7;
+	background-color: #B70039;
 }
 
 .label {
@@ -57,6 +57,10 @@ body {
 	left: 35%;
 	top: 20%;
 	z-index: 10;
+}
+
+.ui-dialog-titlebar-close {
+  visibility: hidden;
 }
 
 

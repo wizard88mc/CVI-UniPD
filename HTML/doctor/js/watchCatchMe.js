@@ -69,7 +69,7 @@ var CatchMeNamespace = {
 				draggable: false,
 				buttons: {
 					Ok: function() {
-						$(this).dialog("remove");
+						$(this).dialog("close");
 						$(this).remove();
 						
 						$('#divMainContent > h1').text('Prendimi!');

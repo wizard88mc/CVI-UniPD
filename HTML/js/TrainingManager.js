@@ -604,8 +604,15 @@ var TrainingManager = {
 						{
 							TYPE: 'GO_BACK'
 						};
-						
 						websocket.send(JSON.stringify(packetGoBack));
+						
+						var packetValidation = 
+						{
+							TYPE: 'TRAINING_VALIDATION',
+							DATA: false
+						}
+						websocket.send(JSON.stringify(packetValidation));
+						
 						location.replace('../index.html');
 					}
 				}
@@ -638,7 +645,20 @@ var TrainingManager = {
 						$(this).dialog("close");
 						$(this).remove();
 						
-						// ricaricare pagina
+						var packetGoBack = 
+						{
+							TYPE: 'GO_BACK'
+						};
+						websocket.send(JSON.stringify(packetGoBack));
+						
+						var packetValidation = 
+						{
+							TYPE: 'TRAINING_VALIDATION',
+							DATA: false
+						}
+						websocket.send(JSON.stringify(packetValidation));
+						
+						location.replace('../index.html');
 					}
 				}
 			})

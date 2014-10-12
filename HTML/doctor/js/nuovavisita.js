@@ -86,13 +86,11 @@ startNewGame: function() {
 			.appendTo('#errorStartGame');
 		errorsList.appendTo('#errorStartGame');
 		
-		var width = getScreenWidth() * 0.5;
-		
 		$('#errorStartGame').dialog({
 			modal: true,
 			resizable: false,
 			draggable: false,
-			width: width, 
+			width: getScreenWidth() * 0.4,
 			buttons: {
 				Ok: function() {
 					$(this).dialog("close");
@@ -532,7 +530,8 @@ initializePage: function() {
 		var divGames = $('<div>').attr('id', 'divGames').addClass('ui-widget-content ui-corner-all')
 			.appendTo('#divMainContent');
 		
-		$('<label>').attr('for', 'selectGames').addClass('label').text('Seleziona il gioco: ').appendTo(divGames);
+		$('<label>').attr('for', 'selectGames').addClass('label')
+			.text('Seleziona il gioco: ').appendTo(divGames);
 		$('<select>').attr('id', 'selectGames').attr('name', 'selectGames').appendTo(divGames);
 		$('<p>').attr('id', 'gameDescription').appendTo(divGames);
 		NewVisitNamespace.getListOfGames();

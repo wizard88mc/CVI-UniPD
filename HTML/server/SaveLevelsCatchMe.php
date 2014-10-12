@@ -4,6 +4,7 @@ require_once("DBParameters.php");
 $patientID = $_POST['patientID'];
 $gameLevels = json_decode($_POST['settings'], true);
 $queryToTest = array();
+$queryToInsert = array();
 
 $finalQuery = "INSERT INTO CatchMeExercises(IDPatient, Movements, StartFromCenter, MixMovements, Speed,
 	Background, ImageColor, ChangeImageColor, ImageID, ImageWidth, CurrentValidSettings, ExerciseOrder, NumberOfRepetitions) VALUES";
@@ -43,10 +44,10 @@ foreach($gameLevels as $key => $levelSettings) {
 	$changeImageColor = $levelSettings['changeImageColor'] ? 1 : 0;
 	$percentualImageWidth = $levelSettings['percentualImageWidth'];
 	$numberOfRepetitions = $levelSettings['numberOfRepetitions'];
-
-	$finalQuery .= "($patientID, \"$stringMovements\", $startFromCenter, $mixMovements, $speed, \"$backgroundColor\", \"$foregroundColor\"
-		, $changeImageColor, $imageID, $percentualImageWidth, 1, $key, $numberOfRepetitions),";
 	
+	$queryToInsert[] = $finalQuery . " ($patientID, \"$stringMovements\", $startFromCenter, 
+		$mixMovements, $speed, \"$backgroundColor\", \"$foregroundColor\"
+		, $changeImageColor, $imageID, $percentualImageWidth, 1, $key, $numberOfRepetitions)";
 	
 	$queryToTest[] = "SELECT * FROM CatchMeExercises WHERE IDPatient = $patientID AND Movements = \"$stringMovements\" AND StartFromCenter = $startFromCenter AND MixMovements = $mixMovements AND 
 			Speed = $speed AND Background = \"$backgroundColor\" AND ImageColor = \"$foregroundColor\" AND ChangeImageColor = $changeImageColor AND ImageID = $imageID AND 
@@ -62,7 +63,7 @@ for ($i = 0; $i < count($queryToTest) && $oldExercise; $i++) {
 	$resultTest = mysqli_query($connection, $queryToTest[$i]) or die(mysqli_error($connection));
 	echo $resultTest->num_rows;
 	if ($resultTest->num_rows == 0) {
-		$oldExercise = false;
+		mysqli_query($connection, $queryToInsert[$i]) or die(mysqli_error($connection));
 	}
 }
 
@@ -72,8 +73,8 @@ if (!$oldExercise) {
 else {
 	echo "Vecchio esercizio";
 }
-/*
-if ($newExercise == true) {
+
+/*if (!$newExercise == true) {
 
 	$finalQuery = substr($finalQuery, 0, strlen($finalQuery) - 1);
 	
@@ -89,7 +90,7 @@ if ($newExercise == true) {
 }
 else {
 	echo "Esercizio vecchio";
-}*/
+}
 
 /*$queryCheckAlreadyExercise = "SELECT * FROM CatchMeExercises  
 		WHERE IDPatient = $patientID AND CurrentValidSettings = 1 

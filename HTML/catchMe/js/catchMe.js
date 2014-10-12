@@ -151,38 +151,54 @@ defineGame: function(settings) {
 	
 	for (var index in levels) {
 		
-		levelsToPerform[index] = new GameSettings();
-		
-		levelsToPerform[index].rightMovement = levels[index].rightMovement || levels[index].RIGHT_MOV;
-		levelsToPerform[index].downMovement = levels[index].downMovement || levels[index].DOWN_MOV;
-		levelsToPerform[index].upMovement = levels[index].upMovement || levels[index].UP_MOV;
-		levelsToPerform[index].leftMovement = levels[index].leftMovement || levels[index].LEFT_MOV;
-		levelsToPerform[index].startFromCenter = Boolean(levels[index].startFromCenter || levels[index].START_CENTER);
-		levelsToPerform[index].mixMovements = Boolean(levels[index].mixMovements || levels[index].MIX_MOVEMENTS);
-		levelsToPerform[index].backgroundColor = levels[index].backgroundColor || levels[index].BACK_COLOR;
-		levelsToPerform[index].foregroundColor = levels[index].foregroundColor || levels[index].IMG_COLOR;
-		levelsToPerform[index].speed = Number(levels[index].speed || levels[index].SPEED);
-		levelsToPerform[index].changeImageColor = Boolean(levels[index].changeImageColor || levels[index].CHANGE_IMG_COLOR);
-		levelsToPerform[index].percentualImageWidth = Number(levels[index].percentualImageWidth || levels[index].IMG_WIDTH);
-		levelsToPerform[index].imageID = Number(levels[index].imageID || levels[index].IMG_ID);
-		levelsToPerform[index].repetitionsOfMovements = Number(levels[index].numberOfRepetitions || levels[index].NUM_REPETITIONS);
-		
-		var imageID = levelsToPerform[index].imageID;
-		
-		listCanvasSettings[index] = new CanvasSettings();
-		
-		var dimensions = (availableImages[imageID].IMG_SIZE).split("x");
-		listCanvasSettings[index].width = Number(dimensions[0]);
-		listCanvasSettings[index].height = Number(dimensions[1]);
-		listCanvasSettings[index].fileName = availableImages[imageID].IMG_FILE;
-		
-		var divSounds = $('<div>').attr('id', 'divSounds').appendTo('body');
-		
-		var arraySounds = ['bene', 'molto_bene', 'continua_cosi'];
-		
-		for (var soundIndex in arraySounds) {
+		if (levels[index] != null)
+		{
+			levelsToPerform[index] = new GameSettings();
 			
-			addSoundSource($('<audio>').addClass('soundGreetings').appendTo(divSounds), arraySounds[soundIndex]);
+			levelsToPerform[index].rightMovement = levels[index].rightMovement 
+					|| levels[index].RIGHT_MOV;
+			levelsToPerform[index].downMovement = levels[index].downMovement 
+					|| levels[index].DOWN_MOV;
+			levelsToPerform[index].upMovement = levels[index].upMovement 
+					|| levels[index].UP_MOV;
+			levelsToPerform[index].leftMovement = levels[index].leftMovement 
+					|| levels[index].LEFT_MOV;
+			levelsToPerform[index].startFromCenter = Boolean(levels[index].startFromCenter 
+					|| levels[index].START_CENTER);
+			levelsToPerform[index].mixMovements = Boolean(levels[index].mixMovements 
+					|| levels[index].MIX_MOVEMENTS);
+			levelsToPerform[index].backgroundColor = levels[index].backgroundColor 
+					|| levels[index].BACK_COLOR;
+			levelsToPerform[index].foregroundColor = levels[index].foregroundColor 
+					|| levels[index].IMG_COLOR;
+			levelsToPerform[index].speed = Number(levels[index].speed 
+					|| levels[index].SPEED);
+			levelsToPerform[index].changeImageColor = Boolean(levels[index].changeImageColor
+					|| levels[index].CHANGE_IMG_COLOR);
+			levelsToPerform[index].percentualImageWidth = Number(levels[index].percentualImageWidth 
+					|| levels[index].IMG_WIDTH);
+			levelsToPerform[index].imageID = Number(levels[index].imageID 
+					|| levels[index].IMG_ID);
+			levelsToPerform[index].repetitionsOfMovements = Number(levels[index].numberOfRepetitions 
+					|| levels[index].NUM_REPETITIONS);
+			
+			var imageID = levelsToPerform[index].imageID;
+			
+			listCanvasSettings[index] = new CanvasSettings();
+			
+			var dimensions = (availableImages[imageID].IMG_SIZE).split("x");
+			listCanvasSettings[index].width = Number(dimensions[0]);
+			listCanvasSettings[index].height = Number(dimensions[1]);
+			listCanvasSettings[index].fileName = availableImages[imageID].IMG_FILE;
+			
+			var divSounds = $('<div>').attr('id', 'divSounds').appendTo('body');
+			
+			var arraySounds = ['bene', 'molto_bene', 'continua_cosi'];
+			
+			for (var soundIndex in arraySounds) {
+				
+				addSoundSource($('<audio>').addClass('soundGreetings').appendTo(divSounds), arraySounds[soundIndex]);
+			}
 		}
 	}
 	CatchMeNamespace.buildAnimations();
@@ -327,6 +343,11 @@ waitingToStart: function(message) {
 	else if (packet.TYPE == "CAL_POINT" || packet.TYPE == "START_TRAINING") {
 		
 		TrainingExamplesNamespace.messageManager(packet);
+	}
+	else if (packet.TYPE == "GO_BACK")
+	{
+		websocket.close();
+		location.replace("../patient/index.html");
 	}
 	else {
 		console.log("Bad message received during game");

@@ -70,7 +70,7 @@ var HelpMeSettingsNamespace = {
 	 */
 	checkImageType: function(imageID, typeElement, targetFamily) {
 		
-		if (targetFamily == "") {
+		if (targetFamily == "" || imageID == "") {
 			return false;
 		}
 		var possibleImages = imagesFamily[targetFamily];
@@ -152,7 +152,6 @@ var HelpMeSettingsNamespace = {
 			
 			if (!isImageCorrect) 
 			{
-				console.log($(this).parent().parent('tr').children('td'));
 				if ($(this).parent().parent('tr').children('td').hasClass('badSettings') == false) {
 					$(this).parent().parent('tr').children('td').addClass('badSettings');
 					totalErrors++;
@@ -161,12 +160,13 @@ var HelpMeSettingsNamespace = {
 			}
 			else 
 			{
-				$(this).parent().parent('tr').children('td').removeClass('badSettings');
-				totalErrors--;
-				HelpMeSettingsNamespace.updateErrors();
+				if ($(this).parent().parent('tr').children('td').hasClass('badSettings') == true) 
+				{
+					$(this).parent().parent('tr').children('td').removeClass('badSettings');
+					totalErrors--;
+					HelpMeSettingsNamespace.updateErrors();
+				}
 			}
-			
-			//HelpMeSettingsNamespace.updateErrors();
 			
 		});
 		
@@ -190,8 +190,23 @@ var HelpMeSettingsNamespace = {
 			option.text(family).attr('value', family).appendTo(select);
 		}
 		
-		return select;
+		select.on('change', function()
+		{
+			var currentValue = $(this).val();
+			
+			if (currentValue != "")
+			{
+				var selects = $(this).parent().parent().find('table select');
+				selects.each(function() {
+					if ($(this).val() != "")
+					{
+						selects.trigger('change');
+					}
+				});
+			}
+		});
 		
+		return select;
 	},
 	
 	buildMaxTimeSelect: function(timeDefined) {
@@ -205,7 +220,7 @@ var HelpMeSettingsNamespace = {
 
 			var option = $('<option>');
 			if (i == timeDefined) {
-				$('<option>').attr('selected', 'selected');
+				option.attr('selected', 'selected');
 			}
 			option.text(i).attr('value', i).appendTo(select);
 		}
@@ -238,21 +253,21 @@ var HelpMeSettingsNamespace = {
 			unselected: function(event, ui) {
 				$(ui.unselected.parentElement).removeClass('ui-selected');
 				$(ui.unselected.parentElement).children().removeClass('ui-selected');
-				console.log($(this));
 			}
 		});
 	},
 	
 	updateLabelsTabs: function() {
-		$('#menuTabs li').each(function(index) {
-			$(this).children('a').text(index + 1);
-			$(this).children('a').attr('href', "#level" + index);
-		});
 		
 		$('div[id^="level"]').each(function(index) {
 			
 			$(this).find('h2 span[class="levelIndex"]').text(index + 1);
 			$(this).attr('id', "level" + index);
+		});
+		
+		$('#menuTabs li').each(function(index) {
+			$(this).children('a').text(index + 1);
+			$(this).children('a').attr('href', "#level" + index);
 		});
 	},
 	
@@ -483,16 +498,21 @@ var HelpMeSettingsNamespace = {
 			 * Create the title of the level and the link for the div
 			 */
 			var link = "#level" + indexLevel;
-			var levelTitle = HelpMeSettingsNamespace.buildLevelTitle(indexLevel, elements[0], elements[1]);
+			var levelTitle = HelpMeSettingsNamespace.buildLevelTitle(indexLevel, 
+					elements[0], elements[1]);
+			
 			var divLevel = $('<div>').attr('id', 'level'+indexLevel)
 				.appendTo('#tabsLevels');
+			
 			$('<h2>').html(levelTitle).appendTo(divLevel);
 			
 			var select = HelpMeSettingsNamespace.buildSelectTargetFamily();
-			select.appendTo($('<div>').addClass('divSelectTargetFamily').text('Famiglia target: ').appendTo(divLevel));
+			select.appendTo($('<div>').addClass('divSelectTargetFamily')
+					.text('Famiglia target: ').appendTo(divLevel));
 			
 			var selectTime = HelpMeSettingsNamespace.buildMaxTimeSelect();
-			selectTime.appendTo($('<div>').addClass('divSelectMaxTime').text('Tempo massimo immagine: ').appendTo(divLevel));
+			selectTime.appendTo($('<div>').addClass('divSelectMaxTime')
+					.text('Tempo massimo immagine (s): ').appendTo(divLevel));
 			
 			/**
 			 * Creating the table necessary to build the level
@@ -512,8 +532,9 @@ var HelpMeSettingsNamespace = {
 				
 				$('<img>').addClass('imgPreview').appendTo($('<td>').appendTo(row));
 				
-				HelpMeSettingsNamespace.makeRowSelectable(row);
+				row.children('td').addClass('badSettings');
 				
+				HelpMeSettingsNamespace.makeRowSelectable(row);
 			}
 			
 			for (var i = 0; i < elements[1]; i++) {
@@ -526,6 +547,9 @@ var HelpMeSettingsNamespace = {
 				selectImage.appendTo(row.children('td').last());
 				
 				$('<img>').addClass('imgPreview').appendTo($('<td>').appendTo(row));
+				
+				row.children('td').addClass('badSettings');
+				
 				HelpMeSettingsNamespace.makeRowSelectable(row);
 			}
 			
@@ -537,6 +561,7 @@ var HelpMeSettingsNamespace = {
 				.attr('value', elements[1]).appendTo(divLevel);
 			
 			var lastSimilarLevel = divLevel.prevAll('div[id^="level"]:has(input[name="numberTargets"][value="'+elements[0]+'"])').first();
+			
 			if (lastSimilarLevel.length == 0)
 			{
 				var list = divLevel.prevAll('div[=id^="level"]:has(input[name="numberTargets"])');
@@ -555,16 +580,29 @@ var HelpMeSettingsNamespace = {
 				}
 			}
 			
-			divLevel.insertAfter(lastSimilarLevel);
-			
-			var indexToInsert = lastSimilarLevel.parent().children('div').index(lastSimilarLevel);
-			
-			var label = indexLevel + 1;
-			$('#tabsLevels').tabs("add", link, label, indexToInsert + 1);
+			var li = $('<li>');
+			$('<a>').attr('href', link).appendTo(li);
+			var indexToEnable = 0;
+				
+			if (lastSimilarLevel.length != 0)
+			{
+				divLevel.insertAfter(lastSimilarLevel);
+				var indexToInsert = lastSimilarLevel.parent().children('div').index(lastSimilarLevel);
+				$(".ui-tabs-nav li:eq("+(indexToInsert)+")").after(li);
+				indexToEnable = indexToInsert + 1;
+			}
+			else
+			{
+				divLevel.insertBefore('div[id^=level]:eq(0)');
+				li.prependTo('.ui-tabs-nav');
+				indexToEnable = 0;
+			}
 			
 			HelpMeSettingsNamespace.updateLabelsTabs();
 			
-			divTabs.tabs("option", 'selected', (indexToInsert + 1));
+			$("#tabsLevels").tabs("refresh");
+
+			$('#tabsLevels').tabs("enable", indexToEnable);
 			
 			totalErrors += Number(elements[0]) + Number(elements[1]);
 			
@@ -661,15 +699,45 @@ var HelpMeSettingsNamespace = {
 			}
 		});
 		
-		$('<div>').attr('id', 'buttonDeleteLevel').text('Elimina livello').appendTo(divButtons).button()
-		.on('click', function() {
-			
-			var index = $('#menuTabs').children().index('#menuTabs li[class*="ui-tabs-selected"]');
-			
-			divTabs.tabs("remove", index);
-			
-			HelpMeSettingsNamespace.updateLabelsTabs();
-		});
+		$('<div>').attr('id', 'buttonDeleteLevel').text('Elimina livello')
+			.appendTo(divButtons).button()
+			.on('click', function() {
+				
+				var index = $('#menuTabs').children('li[class*="ui-tabs-active"]')
+					.index();
+				
+				$('#tabsLevels').find(".ui-tabs-nav li:eq("+index+")").remove();
+				$('#tabsLevels').find('div[id^=level]:eq('+index+')').remove();
+				
+				HelpMeSettingsNamespace.updateLabelsTabs();
+				
+				$('#tabsLevels').tabs("refresh");
+				
+				/**
+				 * traverse all the select to check the current number of total
+				 * errors without the deleted level
+				 */
+				totalErrors = 0;
+				$('table select').each(function() 
+					{
+					var imageID = $(this).val();
+					var typeElement = $(this).parent().parent().children('.columnImageType').text();
+					var divLevel = $(this).parents().eq(4);
+					var targetFamily = divLevel.find('select.selectTargetFamily').val();
+					
+					$(this).parent().next().children('img').attr('src', '../helpMe/images/'
+							+HelpMeSettingsNamespace.getImageFilename(imageID));
+
+					var isImageCorrect = 
+						HelpMeSettingsNamespace.checkImageType(imageID, typeElement, targetFamily);
+					
+					if (!isImageCorrect) 
+					{
+						totalErrors++;
+					}
+				});
+				HelpMeSettingsNamespace.updateErrors();
+			});
 		
 		$('<div>').attr('id', 'buttonComplete').text('Livelli completati').appendTo(divButtons).button()
 			.on('click', function() {
