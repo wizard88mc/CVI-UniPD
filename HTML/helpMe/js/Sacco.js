@@ -46,6 +46,8 @@ function Sacco() {
     
     this.moveInside = function() {
     	
+    	console.log("Sacco.moveInside");
+    	
     	this.element.css({
     		top: this.drawingPosition.top
     	});
@@ -55,6 +57,9 @@ function Sacco() {
     };
     
     this.reset = function() {
+    	
+    	console.log("Sacco.reset");
+    	
     	this.element.css({
     		top: this.drawingPosition.top
     	});

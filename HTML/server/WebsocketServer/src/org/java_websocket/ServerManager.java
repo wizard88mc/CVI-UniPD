@@ -87,6 +87,7 @@ public class ServerManager {
     public static void main(String args[]) {
         WebSocket.DEBUG = false;
         String host = "localhost";
+        //host = "ciman.math.unipd.it";
         
         if (args.length != 0) {
             host = args[0];

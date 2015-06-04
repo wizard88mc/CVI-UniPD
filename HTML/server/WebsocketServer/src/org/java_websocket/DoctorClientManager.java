@@ -103,21 +103,20 @@ public class DoctorClientManager extends BaseManager {
                 clientConnected.send(packet.toJSONString());
             }
         }
-        else if (packet.get(BaseManager.MESSAGE_TYPE).equals(BaseManager.GAME_SETTINGS)) 
-        {    
+        else if (packet.get(BaseManager.MESSAGE_TYPE).equals(BaseManager.GAME_SETTINGS)) {
+            
             patientManager.sendPacket(packet);
             
             patientID = (String)packet.get(BaseManager.PATIENT_ID);
             gameIdentification = dbManager.getGameIdentification((String)packet.get(BaseManager.GAME_ID));
-            
         }
-        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("WAITING_TRACKER")) 
-        {    
+        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("WAITING_TRACKER")) {
+            
             waitingForTracker = true;
         }
         else if (packet.get(BaseManager.MESSAGE_TYPE).equals(BaseManager.START_PRESENTATION) || 
-                packet.get(BaseManager.MESSAGE_TYPE).equals("GO_BACK")) 
-        {
+                packet.get(BaseManager.MESSAGE_TYPE).equals("GO_BACK")) {
+            
             patientManager.sendPacket(packet);
         }
         /**
@@ -125,8 +124,8 @@ public class DoctorClientManager extends BaseManager {
          * This packet has to be sent to the eye tracker that has to calculate 
          * the training points
          */
-        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("TRAINING_SETTINGS")) 
-        {
+        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("TRAINING_SETTINGS")) {
+            
             eyeTrackerManager.sendPacket(packet);
             patientManager.sendPacket(packet);
         }        
@@ -141,8 +140,8 @@ public class DoctorClientManager extends BaseManager {
          * Training completed, the doctor decides if keep the current
          * training session or to repeat it again
          */
-        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("TRAINING_VALIDATION")) 
-        {    
+        else if (packet.get(BaseManager.MESSAGE_TYPE).equals("TRAINING_VALIDATION")) {
+            
             eyeTrackerManager.sendPacket(packet);
         }
         /*
@@ -152,8 +151,7 @@ public class DoctorClientManager extends BaseManager {
          * 2. Defines folder where save packets
          * 3. Call server method to calculate start time
          */
-        else if (packet.get(BaseManager.MESSAGE_TYPE).equals(BaseManager.START_GAME)) 
-        {
+        else if (packet.get(BaseManager.MESSAGE_TYPE).equals(BaseManager.START_GAME)) {
             
             //patientID = (String)packet.get("PATIENT_ID");
             //String gameIdentification = (String)packet.get("GAME_ID");
@@ -164,15 +162,15 @@ public class DoctorClientManager extends BaseManager {
             
             System.out.println("Game identification: " + gameIdentification);
             
-            if (gameIdentification.equals(BaseManager.CATCH_ME)) 
-            {
+            if (gameIdentification.equals(BaseManager.CATCH_ME)) {
+                
                 messageManager = new CatchMeMessagesManager(patientID, visitID, withEyeTracker);
                 String folder = messageManager.getFolderWhereArchive();
                 dbManager.setFolder(visitID, folder);
                 //patientManager.writeGameSpecs();
             }
-            else if (gameIdentification.equals(BaseManager.HELP_ME)) 
-            {
+            else if (gameIdentification.equals(BaseManager.HELP_ME)) {
+                
                 messageManager = new HelpMeMessagesManager(patientID, visitID, withEyeTracker);
                 String folder = messageManager.getFolderWhereArchive();
                 dbManager.setFolder(visitID, folder);

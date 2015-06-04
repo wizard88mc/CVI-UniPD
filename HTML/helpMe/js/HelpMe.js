@@ -157,12 +157,16 @@ function initGame() {
 
 function resetLevel() {
 	
+	console.log("HelpMe.resetLevel");
+	
 	sacco.reset();
 	gameManager.currentLevelCorrectAnswers = 0;
 	$('#divSounds #audioLevel, #divSounds #audioBagComplete, #divSounds #audioObjectNotInserted').remove();
 }
 
 function manageLevels(repeatLevel) {
+	
+	console.log("HelpMe.manageLevels");
 
 	gameManager.maxCorrectAnswers = 0;
 	gameManager.isAnExample = false;
@@ -188,7 +192,7 @@ function manageLevels(repeatLevel) {
 
         utilsNamespace.istantiateLevel(gameManager.currentLevel);
 
-        $('#audioLevel').on('ended', function() {
+        $('#audioLevel').one('ended', function() {
             manageImageObjectsLevel();
         }).get(0).play();
 
@@ -248,6 +252,7 @@ function manageImageObjectsLevel() {
 
     gameManager.indexImageObject++;
 
+    console.log("manageImageObjectsLevel");
     if (gameManager.indexImageObject < oggettiPerLivello.length && gameManager.gameInProgress) {
         gameManager.currentImage = oggettiPerLivello[gameManager.indexImageObject];
 
@@ -272,6 +277,8 @@ function manageImageObjectsLevel() {
 }
 
 function levelCompleted() {
+	
+	console.log("HelpMe.levelCompleted()");
 
     gameManager.indexImageObject = -1;
     
@@ -287,17 +294,25 @@ function levelCompleted() {
     
     var levelCompletion = function() {
     	
+    	console.log("Level Completion");
+    	
 	    sacco.element.css({
 	    	top: getScreenHeight()
 	    }).one('transitionend webkitTransitionEnd oTransitionEnd', function(event) {
 	    	
 	    	if (event.originalEvent.propertyName === "top") {
+	    		
+	    		console.log("evend transitionEnd for sacco HelpMe.305");
+	    		
 		    	setTimeout(function() {
 		    		
-		    		if (gameManager.maxCorrectAnswers > 0) {
+		    		if (gameManager.maxCorrectAnswers >= 0) {
 		    			
 		    			$('#divSounds #finalFeedback #messoInsieme').one('ended', function() {
 		    				
+		    				if (gameManager.maxCorrectAnswers == 0) {
+		    					gameManager.maxCorrectAnswers = 1;
+		    				}
 		    				$('#divSounds #finalFeedback #numberOfObjects #correct' + gameManager.maxCorrectAnswers).one('ended', function() {
 		    					
 		    					$('#divSounds #finalFeedback #oggettiAssomigliano').one('ended', function() {
@@ -310,7 +325,9 @@ function levelCompleted() {
 		    				
 		    			}).get(0).play();
 		    		}
-		    	}, 1000);
+		    	}, 500);
+		    	
+		    	sacco.element.off('transitionend webkitTransitionEnd oTransitionEnd');
 	    	}
 	    	
 	    });
@@ -348,6 +365,8 @@ function playGoodAnswerSound() {
  * the wrongness of the answer
  */
 function playBadAnswerSound() {
+	
+	console.log("HelpMe.playBadAnswerSound");
 	
 	var numberOfElements = $('#divSounds #soundsBadAnswer audio').length;
 	
@@ -393,6 +412,8 @@ function objectInsertedIntoSacco() {
  */
 function timeExpired(intoBin) {
 
+	console.log("HelpMe.timeExpired()");
+	
     $('#divMainContent div').hide();
     imageObjectOnScreen.element.remove();
     
@@ -409,9 +430,15 @@ function timeExpired(intoBin) {
         gameManager.levelCompletedCorrectly = false;
         
         if (intoBin) {
-        	$('#divSounds #audioObjectNotInserted').get(0).play();
+        	
+        	$('#divSounds #audioObjectNotInserted').one('ended', function() {
+            	utilsNamespace.resetGame();
+
+                setTimeout(manageImageObjectsLevel, 1000);
+            }).get(0).play();
         }
         else {
+        	console.log("HelpMe.timeExpired.intoBin playBadAnswerSound");
         	playBadAnswerSound();
         }
         
@@ -463,28 +490,6 @@ function gameIsEnded() {
 	setTimeout(function() {
 		location.replace('../patient/index.html');
 	})
-	
-	/*setTimeout(function() {
-		
-		//TODO cosa fare se risposte esatte = 0?'
-		if (gameManager.maxCorrectAnswers > 0) {
-		
-			$('#divSounds #finalFeedback #messoInsieme').on('ended', function() {
-				
-				$('#divSounds #finalFeedback #numberOfObjects #correct' + gameManager.maxCorrectAnswer).on('ended', function() {
-					
-					$('#divSounds #finalFeedback #oggettiAssomigliano').on('ended', function() {
-						
-						setTimeout(function() {
-							location.replace('../patient/index.html');
-						}, 1000);
-					}).get(0).play();
-				}).get(0).play();
-				
-			}).get(0).play();
-		}
-		
-	}, 500); */
 	
 }
 
@@ -731,6 +736,10 @@ $(document).ready(function() {
 	catch(e) {
 		operationsCacheFinished(e);
 	}
+	
+	$(window).scroll(function() {
+		$(window).scrollLeft(0);
+	})
 });
 
 function initPage() {

@@ -10,13 +10,17 @@ $row = mysqli_fetch_array($resultQueryGetFolderHelpMe);
 
 $folderGame = $row[0];
 
-$completeFolderGameSettings = "../$folderGame/settings/";
+$completeFolderGameSettings = ".." . DIRECTORY_SEPARATOR . $folderGame . DIRECTORY_SEPARATOR . "settings" . DIRECTORY_SEPARATOR;
 
 if (!file_exists($completeFolderGameSettings)) {
 	mkdir($completeFolderGameSettings);
 }
 
-$fileNewLevel = $patientID . "/" . date("Ymd-His") . '.xml';
+if (!file_exists($completeFolderGameSettings . $patientID)) {
+	mkdir($completeFolderGameSettings . $patientID . DIRECTORY_SEPARATOR);
+}
+
+$fileNewLevel = $patientID . DIRECTORY_SEPARATOR . date("Ymd-His") . '.xml';
 $completeNewFile = $completeFolderGameSettings . $fileNewLevel;
 $stringFileLevel = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
 $stringFileLevel .= "<levels>\r\n";
@@ -75,6 +79,8 @@ if (mysqli_num_rows($resultQuerySelectCurrentExercise) > 0) {
 	mysqli_query($connection, $queryUpdateRecord);
 	
 }
+
+$fileNewLevel = str_replace(DIRECTORY_SEPARATOR, "/", $fileNewLevel);
 
 $queryInsertNewExercise = "INSERT INTO HelpMeExercises(IDPatient, FileLevels, CurrentValidSettings)
 		VALUES ($patientID, \"$fileNewLevel\", TRUE)";

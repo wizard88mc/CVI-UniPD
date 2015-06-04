@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<levels>
+<level targetFamily="animali" type="6x4" maxTimeImage="30">
+<image type="T" imageID="1" />
+<image type="T" imageID="2" />
+</level>
+<level targetFamily="macchine" type="1x0" maxTimeImage="30">
+<image type="T" imageID="5" />
+</level>
+<level targetFamily="animali" type="1x0" maxTimeImage="30">
+<image type="T" imageID="9" />
+</level>
+</levels>

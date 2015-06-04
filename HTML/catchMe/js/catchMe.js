@@ -61,7 +61,10 @@ function Animation(startP, endP, finalA, mov) {
 					Math.pow(this.startPoint.top - this.endPoint.top, 2));
 					
 this.calculateAnimationTime = function() {
-					
+	
+	if (customSpeedFromDoctor != -1) {
+		levelsToPerform[gameManager.levelIterator].speed = customSpeedFromDoctor;
+	}
 	return Math.round(this.distance / (levelsToPerform[gameManager.levelIterator].speed * 5));
 };
 }
@@ -102,6 +105,7 @@ this.getForegroundRGB = function() {
 //var gameSettings = null;
 
 var levelsToPerform = new Object();
+var customSpeedFromDoctor = -1;
 var availableImages = new Array();
 var timeCloseIconShowed = 0;
 var patientID = null;
@@ -155,12 +159,12 @@ defineGame: function(settings) {
 		{
 			levelsToPerform[index] = new GameSettings();
 			
+			levelsToPerform[index].upMovement = levels[index].upMovement 
+				|| levels[index].UP_MOV;
+			levelsToPerform[index].downMovement = levels[index].downMovement 
+				|| levels[index].DOWN_MOV;
 			levelsToPerform[index].rightMovement = levels[index].rightMovement 
 					|| levels[index].RIGHT_MOV;
-			levelsToPerform[index].downMovement = levels[index].downMovement 
-					|| levels[index].DOWN_MOV;
-			levelsToPerform[index].upMovement = levels[index].upMovement 
-					|| levels[index].UP_MOV;
 			levelsToPerform[index].leftMovement = levels[index].leftMovement 
 					|| levels[index].LEFT_MOV;
 			levelsToPerform[index].startFromCenter = Boolean(levels[index].startFromCenter 
@@ -240,7 +244,10 @@ timingFunction: function() {
 	if (listCanvasSettings[gameManager.levelIterator].isArrivedToDestination()) {
 		
 		if (gameManager.currentAnimation.finalAnimation == true) {
-			// funzione di arrivo a destinazione
+			/**
+			 * Called when the animation is completed and the object reaches
+			 * the final destination
+			 */
 			CatchMeNamespace.animationEndMovement();
 		}
 		else {
@@ -312,7 +319,7 @@ waitingToStart: function(message) {
 				 * of the image
 				 */
 				if (packet.TYPE == "CHANGE_SPEED") {
-					gameSettings.speed = packet.NEW_SPEED;	
+					customSpeedFromDoctor = packet.NEW_SPEED;	
 				}
 				/**
 				 * The doctor requires to stop the game
@@ -535,6 +542,7 @@ defineAnimationFunction: function(firstTime, timeToWait) {
 		$('body').css({
 			'background-color': currentLevel.backgroundColor
 		});
+		$('#divCloseGame').css('background-color', currentLevel.backgroundColor);
 		
 		var animationToPerform = currentLevel.animations[currentLevel.iteratorAnimations];
 		gameManager.currentAnimation = animationToPerform;
@@ -554,7 +562,7 @@ defineAnimationFunction: function(firstTime, timeToWait) {
 			var time = new Date().getTime();
 			if (time - gameManager.lastTimePlayedGoodSound > 5000) {
 				
-				var number = $('#divSounds audio').length;
+				var number = $('#divSounds audio.soundGreetings').length;
 				
 				var index = Math.floor(Math.random() * number);
 				$('#divSounds audio.soundGreetings').get(index).play();
@@ -594,6 +602,10 @@ defineSingleAnimation: function(levelSettings) {
 			
 			endPoint = new Point(topCenterScreen.top, topCenterScreen.left);
 			animations.push(new Animation(startPoint, endPoint, true, 'T'));
+			/**
+			 * As requested, pushing two times the same animation
+			 */
+			animations.push(new Animation(startPoint, endPoint, true, 'T'));
 		}
 	}
 	if (levelSettings.downMovement) {
@@ -604,6 +616,10 @@ defineSingleAnimation: function(levelSettings) {
 			}
 			
 			endPoint = new Point(bottomCenterScreen.top, bottomCenterScreen.left);
+			animations.push(new Animation(startPoint, endPoint, true, 'B'));
+			/**
+			 * As requested, pushing two times the same animation
+			 */
 			animations.push(new Animation(startPoint, endPoint, true, 'B'));
 		}
 	}
@@ -617,6 +633,10 @@ defineSingleAnimation: function(levelSettings) {
 			
 			endPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
 			animations.push(new Animation(startPoint, endPoint, true, 'L'));
+			/**
+			 * Pushing two times the same animation
+			 */
+			animations.push(new Animation(startPoint, endPoint, true, 'L'));
 		}
 	}
 	if (levelSettings.rightMovement /*&& !gameSettings.leftMovement && 
@@ -628,6 +648,10 @@ defineSingleAnimation: function(levelSettings) {
 			}
 	
 			endPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
+			animations.push(new Animation(startPoint, endPoint, true, 'R'));
+			/**
+			 * Adding two times the same animation
+			 */
 			animations.push(new Animation(startPoint, endPoint, true, 'R'));
 		}
 	}
@@ -654,6 +678,10 @@ defineSingleAnimation: function(levelSettings) {
 				movement = 'T';
 			}
 			animations.push(new Animation(startPoint, endPoint, true, movement));
+			/**
+			 * Adding two times the same animation
+			 */
+			animations.push(new Animation(startPoint, endPoint, true, movement));
 		}
 	}
 	if (levelSettings.upMovement && levelSettings.leftMovement && levelSettings.mixMovements  
@@ -667,6 +695,11 @@ defineSingleAnimation: function(levelSettings) {
 			endPoint = new Point(topCenterScreen.top, 
 						topCenterScreen.left - Math.floor(Math.random() * topCenterScreen.left));
 	
+			
+			animations.push(new Animation(startPoint, endPoint, true, 'TL'));
+			/**
+			 * Adding two times the same animation
+			 */
 			animations.push(new Animation(startPoint, endPoint, true, 'TL'));
 		}
 	}
@@ -682,6 +715,10 @@ defineSingleAnimation: function(levelSettings) {
 						topCenterScreen.left + Math.floor(Math.random() * topCenterScreen.left));
 			
 			animations.push(new Animation(startPoint, endPoint, true, 'TR'));
+			/**
+			 * Adding two times the same animation
+			 */
+			animations.push(new Animation(startPoint, endPoint, true, 'TR'));
 		}
 	}
 	if (levelSettings.downMovement && levelSettings.leftMovement && levelSettings.mixMovements
@@ -696,6 +733,10 @@ defineSingleAnimation: function(levelSettings) {
 						bottomCenterScreen.left - Math.floor(Math.random() * bottomCenterScreen.left));
 			
 			animations.push(new Animation(startPoint, endPoint, true, 'BL'));
+			/**
+			 * Adding two times the same animation
+			 */
+			animations.push(new Animation(startPoint, endPoint, true, 'BL'));
 		}
 	}
 	if (levelSettings.downMovement && levelSettings.rightMovement && levelSettings.mixMovements
@@ -709,6 +750,10 @@ defineSingleAnimation: function(levelSettings) {
 			endPoint = new Point(bottomCenterScreen.top,
 						bottomCenterScreen.left + Math.floor(Math.random() * bottomCenterScreen.left));
 			
+			animations.push(new Animation(startPoint, endPoint, true, 'BR'));
+			/**
+			 * Adding two times the same animation
+			 */
 			animations.push(new Animation(startPoint, endPoint, true, 'BR'));
 		}
 	}
@@ -736,6 +781,10 @@ defineSingleAnimation: function(levelSettings) {
 				movement = 'R';
 			}
 			animations.push(new Animation(startPoint, endPoint, true, movement));
+			/**
+			 * Adding two times the same animation
+			 */
+			animations.push(new Animation(startPoint, endPoint, true, movement));
 		}
 	}
 	if (levelSettings.upMovement && levelSettings.downMovement && 
@@ -757,11 +806,19 @@ defineSingleAnimation: function(levelSettings) {
 					
 				}
 				animations.push(new Animation(startPoint, endPoint, false, 'TL'));
+				/**
+				 * Adding two times the same animation
+				 */
+				animations.push(new Animation(startPoint, endPoint, false, 'TL'));
 				
 				startPoint = new Point(endPoint.top, endPoint.left);
 				endPoint = new Point(leftMiddleScreen.top + Math.floor(Math.random() * leftMiddleScreen.top),
 								leftMiddleScreen.left);
 				
+				animations.push(new Animation(startPoint, endPoint, true, 'BL'));
+				/**
+				 * Adding two times the same animation
+				 */
 				animations.push(new Animation(startPoint, endPoint, true, 'BL'));
 			}
 			else {
@@ -778,11 +835,19 @@ defineSingleAnimation: function(levelSettings) {
 					
 				}
 				animations.push(new Animation(startPoint, endPoint, false, 'BL'));
+				/**
+				 * Adding two times the same animation
+				 */
+				animations.push(new Animation(startPoint, endPoint, false, 'BL'));
 				
 				startPoint = new Point(endPoint.top, endPoint.left);
 				endPoint = new Point(leftMiddleScreen.top - Math.floor(Math.random() * leftMiddleScreen.top),
 								leftMiddleScreen.left);
 				
+				animations.push(new Animation(startPoint, endPoint, true, 'BR'));
+				/**
+				 * Adding two times the same animation
+				 */
 				animations.push(new Animation(startPoint, endPoint, true, 'BR'));
 			}
 		}
@@ -807,11 +872,19 @@ defineSingleAnimation: function(levelSettings) {
 					
 				}
 				animations.push(new Animation(startPoint, endPoint, false, 'TR'));
+				/**
+				 * Adding two times the same animation
+				 */
+				animations.push(new Animation(startPoint, endPoint, false, 'TR'));
 				
 				startPoint = new Point(endPoint.top, endPoint.left);
 				endPoint = new Point(rightMiddleScreen.top + Math.floor(Math.random() * rightMiddleScreen.top),
 							rightMiddleScreen.left);
 				
+				animations.push(new Animation(startPoint, endPoint, true, 'BR'));
+				/**
+				 * Adding two times the same animation
+				 */
 				animations.push(new Animation(startPoint, endPoint, true, 'BR'));
 			}
 			else {
@@ -828,11 +901,19 @@ defineSingleAnimation: function(levelSettings) {
 					
 				}
 				animations.push(new Animation(startPoint, endPoint, false, 'BR'));
+				/**
+				 * Adding two times the same animation
+				 */
+				animations.push(new Animation(startPoint, endPoint, false, 'BR'));
 				
 				startPoint = new Point(endPoint.top, endPoint.left);
 				endPoint = new Point(rightMiddleScreen.top - Math.floor(Math.random() * rightMiddleScreen.top),
 							rightMiddleScreen.left);
 				
+				animations.push(new Animation(startPoint, endPoint, true, 'TR'));
+				/**
+				 * Adding two times the same animation
+				 */
 				animations.push(new Animation(startPoint, endPoint, true, 'TR'));
 			}
 		}
@@ -856,11 +937,19 @@ defineSingleAnimation: function(levelSettings) {
 				}
 				
 				animations.push(new Animation(startPoint, endPoint, false, 'BL'));
+				/**
+				 * Adding two times the same animation
+				 */
+				animations.push(new Animation(startPoint, endPoint, false, 'BL'));
 				
 				startPoint = new Point(endPoint.top, endPoint.left);
 				endPoint = new Point(bottomCenterScreen.top,
 							bottomCenterScreen.left + Math.floor(Math.random() * bottomCenterScreen.left));
 				
+				animations.push(new Animation(startPoint, endPoint, true, 'BR'));
+				/**
+				 * Adding two times the same animation
+				 */
 				animations.push(new Animation(startPoint, endPoint, true, 'BR'));
 				
 			}
@@ -878,11 +967,19 @@ defineSingleAnimation: function(levelSettings) {
 				}
 				
 				animations.push(new Animation(startPoint, endPoint, true, 'BR'));
+				/**
+				 * Adding two times the same animation
+				 */
+				animations.push(new Animation(startPoint, endPoint, true, 'BR'));
 				
 				startPoint = new Point(endPoint.top, endPoint.left);
 				endPoint = new Point(bottomCenterScreen.top,
 							bottomCenterScreen.left - Math.floor(Math.random() * bottomCenterScreen.left));
 				
+				animations.push(new Animation(startPoint, endPoint, true, 'BL'));
+				/**
+				 * Adding two times the same animation
+				 */
 				animations.push(new Animation(startPoint, endPoint, true, 'BL'));
 			}
 		}
@@ -909,11 +1006,19 @@ defineSingleAnimation: function(levelSettings) {
 								rightMiddleScreen.left);
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(bottomCenterScreen.top,
 								bottomCenterScreen.left - Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
 					
+					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
@@ -921,10 +1026,18 @@ defineSingleAnimation: function(levelSettings) {
 								leftMiddleScreen.left);
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(topCenterScreen.top, topCenterScreen.left);
 					
+					animations.push(new Animation(startPoint, endPoint, true, 'TR'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, true, 'TR'));
 					
 				}
@@ -936,11 +1049,19 @@ defineSingleAnimation: function(levelSettings) {
 								leftMiddleScreen.left + Math.floor(Math.random() * (leftMiddleScreen.left / 2)));
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(bottomCenterScreen.top,
 								bottomCenterScreen.left + Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
 					
+					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
@@ -948,10 +1069,18 @@ defineSingleAnimation: function(levelSettings) {
 								rightMiddleScreen.left);
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(topCenterScreen.top, endPoint.left);
 					
+					animations.push(new Animation(startPoint, endPoint, true, 'TL'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, true, 'TL'));
 				}
 			}
@@ -971,11 +1100,19 @@ defineSingleAnimation: function(levelSettings) {
 								bottomCenterScreen.left - Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(leftMiddleScreen.top - Math.floor(Math.random() * (leftMiddleScreen.top / 2)),
 								leftMiddleScreen.left);
 					
+					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
@@ -983,10 +1120,18 @@ defineSingleAnimation: function(levelSettings) {
 								topCenterScreen.left + Math.floor(Math.random() * (topCenterScreen.left / 2)));
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
 					
+					animations.push(new Animation(startPoint, endPoint, true, 'BR'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, true, 'BR'));
 					
 				}
@@ -998,11 +1143,19 @@ defineSingleAnimation: function(levelSettings) {
 								topCenterScreen.left - Math.floor(Math.random() * (topCenterScreen.left / 2)));
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(leftMiddleScreen.top + Math.floor(Math.random() * (leftMiddleScreen.top / 2)),
 								leftMiddleScreen.left);
 					
+					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
@@ -1010,10 +1163,18 @@ defineSingleAnimation: function(levelSettings) {
 								bottomCenterScreen.left + Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(rightMiddleScreen.top, rightMiddleScreen.left);
 					
+					animations.push(new Animation(startPoint, endPoint, true, 'TR'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, true, 'TR'));
 				}
 			}
@@ -1030,11 +1191,19 @@ defineSingleAnimation: function(levelSettings) {
 								rightMiddleScreen.left);
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(topCenterScreen.top,
 								topCenterScreen.left - Math.floor(Math.random() * (topCenterScreen.left / 2)));
 					
+					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
@@ -1042,10 +1211,18 @@ defineSingleAnimation: function(levelSettings) {
 								leftMiddleScreen.left);
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(bottomCenterScreen.top, bottomCenterScreen.left);
 					
+					animations.push(new Animation(startPoint, endPoint, true, 'BR'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, true, 'BR'));
 					
 				}
@@ -1057,11 +1234,19 @@ defineSingleAnimation: function(levelSettings) {
 								leftMiddleScreen.left);
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(topCenterScreen.top,
 								topCenterScreen.left + Math.floor(Math.random() * (topCenterScreen.left / 2)));
 					
+					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
@@ -1069,10 +1254,18 @@ defineSingleAnimation: function(levelSettings) {
 								rightMiddleScreen.left);
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(bottomCenterScreen.top, bottomCenterScreen.left);
 					
+					animations.push(new Animation(startPoint, endPoint, true, 'BL'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, true, 'BL'));
 				}	
 			}
@@ -1091,11 +1284,19 @@ defineSingleAnimation: function(levelSettings) {
 								bottomCenterScreen.left + Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(rightMiddleScreen.top - Math.floor(Math.random() * (rightMiddleScreen.top / 2)),
 								rightMiddleScreen.left);
 					
+					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
@@ -1103,10 +1304,18 @@ defineSingleAnimation: function(levelSettings) {
 								topCenterScreen.left - Math.floor(Math.random() * (topCenterScreen.left / 2)));
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'TL'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
 					
+					animations.push(new Animation(startPoint, endPoint, true, 'BL'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, true, 'BL'));
 					
 				}
@@ -1118,11 +1327,19 @@ defineSingleAnimation: function(levelSettings) {
 								topCenterScreen.left + Math.floor(Math.random() * (topCenterScreen.left / 2)));
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'TR'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(rightMiddleScreen.top + Math.floor(Math.random() * (rightMiddleScreen.top / 2)),
 								rightMiddleScreen.left);
 					
+					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, false, 'BR'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
@@ -1130,10 +1347,18 @@ defineSingleAnimation: function(levelSettings) {
 								bottomCenterScreen.left - Math.floor(Math.random() * (bottomCenterScreen.left / 2)));
 					
 					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
+					/**
+					 * Adding two times the same animation
+					 */
+					animations.push(new Animation(startPoint, endPoint, false, 'BL'));
 					
 					startPoint = new Point(endPoint.top, endPoint.left);
 					endPoint = new Point(leftMiddleScreen.top, leftMiddleScreen.left);
 					
+					animations.push(new Animation(startPoint, endPoint, true, 'TL'));
+					/**
+					 * Adding two times the same animation
+					 */
 					animations.push(new Animation(startPoint, endPoint, true, 'TL'));
 				}
 			}

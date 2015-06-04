@@ -129,6 +129,7 @@ this.getSystemSounds = function() {
 
     $('#divSounds div audio').on('ended', function() {
 
+    	console.log("end audio before resetGame()");
         utilsNamespace.resetGame();
 
         setTimeout(manageImageObjectsLevel, 1000);

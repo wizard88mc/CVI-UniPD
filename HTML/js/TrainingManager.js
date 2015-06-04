@@ -354,7 +354,8 @@ var TrainingExamplesNamespace = {
 				imageForTraining.pointsToDraw[i] = centerToDraw;
 			}
 			
-			soundNemoPresentation = $('<audio>').attr('id', 'audioNemoPresentation').appendTo('#audioTraining');
+			soundNemoPresentation = $('<audio>').attr('id', 'audioNemoPresentation')
+				.appendTo('#audioTraining');
 			addGeneralSound(soundNemoPresentation, '../sounds/nemoPresentazione');
 			
 			soundNemoPresentation.on('ended', function() {
@@ -399,16 +400,19 @@ var TrainingManager = {
 		$('<option>').attr('value', '15').text('15 punti').appendTo(selectNumberPoints);
 		
 		var selectTimePerPoint = $('<select>').attr('id', 'selectTimePerPoint');
-		$('<option>').attr('value', '2000').attr('selected', 'selected').text('2 secondi').appendTo(selectTimePerPoint);
+		$('<option>').attr('value', '2000').text('2 secondi').appendTo(selectTimePerPoint);
+		$('<option>').attr('value', '3000').attr('selected', 'selected')
+			.text('3 secondi').appendTo(selectTimePerPoint);
 		$('<option>').attr('value', '5000').text('5 secondi').appendTo(selectTimePerPoint);
 		$('<option>').attr('value', '10000').text('10 secondi').appendTo(selectTimePerPoint);
 		$('<option>').attr('value', '15000').text('15 secondi').appendTo(selectTimePerPoint);
 		$('<option>').attr('value', '20000').text('20 secondi').appendTo(selectTimePerPoint);
 		
 		var selectTimeTransition = $('<select>').attr('id', 'selectTimeTransition');
-		$('<option>').attr('value', '1000').attr('selected', 'selected').text('1 secondo').appendTo(selectTimeTransition);
+		$('<option>').attr('value', '1000').text('1 secondo').appendTo(selectTimeTransition);
 		$('<option>').attr('value', '2000').text('2 secondi').appendTo(selectTimeTransition);
-		$('<option>').attr('value', '3000').text('3 secondi').appendTo(selectTimeTransition);
+		$('<option>').attr('value', '3000').text('3 secondi')
+			.attr('selected', 'selected').appendTo(selectTimeTransition);
 		$('<option>').attr('value', '5000').text('5 secondi').appendTo(selectTimeTransition);
 		
 		var sliderSize = $('<input>').attr('id', 'sliderSize').attr('type', 'slider')

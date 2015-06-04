@@ -11,7 +11,7 @@ function GameSettings() {
 	this.foregroundColor = '#FFFFFF';
 	this.imageID = 1;
 	this.changeImageColor = false;
-	this.percentualImageWidth = 20; // percentual of the image width, used for CSS
+	this.percentualImageWidth = 20; // Percent of the image width, used for CSS
 	this.imageFileName = "";
 	this.numberOfRepetitions = 1;
 	
@@ -121,8 +121,7 @@ requestScreenClient: function() {
 	
 },
 /**
- * Function per la personalizzazione delle 
- * impostazioni di gioco
+ * Called to retrieve game settings for the patient
  */
 requestGameSettings: function() {
 	
@@ -130,6 +129,13 @@ requestGameSettings: function() {
 	
 	$('#imgGoBack').off('click');
 	$('#imgGoBack').on('click', function() {
+		
+		// invio pacchetto x dire di tornare indietro
+		var packet = {
+			TYPE: 'GO_BACK'
+		};
+		
+		websocket.send(JSON.stringify(packet));
 		
 		NewVisitNamespace.initializePage();
 		$(this).off('click');
@@ -171,17 +177,17 @@ updateMovementsLabel: function(settings, element) {
 	
 	var text = "";
 	
-	if (settings.rightMovement) {
-		text += "Destra";
-	}
-	if (settings.leftMovement) {
-		text += ", Sinistra";
-	}
 	if (settings.upMovement) {
-		text += ", Alto";
+		text += "Alto";
 	}
 	if (settings.downMovement) {
 		text += ", Basso";
+	}
+	if (settings.rightMovement) {
+		text += ", Destra";
+	}
+	if (settings.leftMovement) {
+		text += ", Sinistra";
 	}
 	
 	if (text.charAt(0) == ",") {
@@ -203,31 +209,10 @@ buildDialogChooseMovement: function(settingsToChange, elementToUpdate) {
 	var divMovimenti = $('<div>').attr('id', 'divDialogMovimenti')
 		.addClass('ui-widget-content ui-corner-all').attr('title', 'Gestione movimenti')
 		.appendTo('#divMainContent');
-		
-	$('<input>').attr('type', 'checkbox').attr('id', 'rightMovement')
-		.attr('name', 'rightMovement').appendTo(divMovimenti)
-		.change(function() {
-			settingsFinal.rightMovement = !settingsFinal.rightMovement;
-		});
-	$('<label>').attr('for', 'rightMovement').text('Movimento verso destra').appendTo(divMovimenti);
-	$('<br />').appendTo(divMovimenti);
 	
-	if (settingsToChange.rightMovement == true) {
-		$('#divDialogMovimenti input#rightMovement').attr('checked', 'checked');
-	}
-	
-	$('<input>').attr('type', 'checkbox').attr('id', 'leftMovement')
-		.attr('name', 'leftMovement').appendTo(divMovimenti)
-		.change(function() {
-			settingsFinal.leftMovement = !settingsFinal.leftMovement;
-	});
-	$('<label>').attr('for', 'leftMovement').text('Movimento verso sinistra').appendTo(divMovimenti);
-	$('<br />').appendTo(divMovimenti);
-	
-	if (settingsToChange.leftMovement == true) {
-		$('#divDialogMovimenti input#leftMovement').attr('checked', 'checked');
-	}
-	
+	/**
+	 * Checkbox per movimenti verso l'alto
+	 */
 	$('<input>').attr('type', 'checkbox').attr('id', 'upMovement')
 		.attr('name', 'upMovement').appendTo(divMovimenti)
 		.change(function() {
@@ -240,6 +225,9 @@ buildDialogChooseMovement: function(settingsToChange, elementToUpdate) {
 		$('#divDialogMovimenti input#upMovement').attr('checked', 'checked');
 	}
 	
+	/**
+	 * Checkbox per movimenti verso il basso
+	 */
 	$('<input>').attr('type', 'checkbox').attr('id', 'downMovement')
 		.attr('name', 'downMovement').appendTo(divMovimenti)
 		.change(function() {
@@ -247,9 +235,40 @@ buildDialogChooseMovement: function(settingsToChange, elementToUpdate) {
 	});
 	
 	$('<label>').attr('for', 'downMovement').text('Movimento verso il basso').appendTo(divMovimenti);
+	$('<br />').appendTo(divMovimenti);
 	
 	if (settingsToChange.downMovement == true) {
 		$('#divDialogMovimenti input#downMovement').attr('checked', 'checked');
+	}
+	
+	/**
+	 * Checkbox per movimenti verso destra
+	 */
+	$('<input>').attr('type', 'checkbox').attr('id', 'rightMovement')
+		.attr('name', 'rightMovement').appendTo(divMovimenti)
+		.change(function() {
+			settingsFinal.rightMovement = !settingsFinal.rightMovement;
+		});
+	$('<label>').attr('for', 'rightMovement').text('Movimento verso destra').appendTo(divMovimenti);
+	$('<br />').appendTo(divMovimenti);
+	
+	if (settingsToChange.rightMovement == true) {
+		$('#divDialogMovimenti input#rightMovement').attr('checked', 'checked');
+	}
+	
+	/**
+	 * Checkbox per movimenti verso sinistra
+	 */
+	$('<input>').attr('type', 'checkbox').attr('id', 'leftMovement')
+		.attr('name', 'leftMovement').appendTo(divMovimenti)
+		.change(function() {
+			settingsFinal.leftMovement = !settingsFinal.leftMovement;
+	});
+	$('<label>').attr('for', 'leftMovement').text('Movimento verso sinistra').appendTo(divMovimenti);
+	$('<br />').appendTo(divMovimenti);
+	
+	if (settingsToChange.leftMovement == true) {
+		$('#divDialogMovimenti input#leftMovement').attr('checked', 'checked');
 	}
 	
 	divMovimenti.appendTo('#divMainContent')
@@ -845,6 +864,8 @@ setGameSettingsNew: function(data) {
 	
 	availableImages = data.IMAGES_SPECS;
 	
+	exercisesToSend = new Object();
+	
 	var exercises = data.EXERCISES;
 	
 	for (var exerciseOrder in exercises) {
@@ -927,7 +948,7 @@ setGameSettingsNew: function(data) {
 	});
 },
 
-setGameSettings: function(data) {
+/*setGameSettings: function(data) {
 	
 	var divLeft = $('<div>').attr('id', 'divLeft')
 		.addClass('leftSide alignLeft')
@@ -1138,7 +1159,7 @@ setGameSettings: function(data) {
 	slider.attr('value', gameSettings.speed);
 	slider.appendTo(divSliderContainer);
 	
-	$('<span>').attr('id', 'labelSpeed').appendTo(divSpeed);*/
+	$('<span>').attr('id', 'labelSpeed').appendTo(divSpeed);
 	
 	$('<input>').attr('id', 'sliderSpeed').attr('type', 'slider')
 		.attr('name', 'speed')
@@ -1333,7 +1354,7 @@ setGameSettings: function(data) {
 			$('div#divChooseTypeOfGame input:radio[value=freeGame]').attr('checked', 'checked');
 			$('div#divChooseTypeOfGame input:radio').change();
 		}
-},
+},*/
 
 /**
  * Devo recuperare le istruzioni per disegnare correttamente canvas

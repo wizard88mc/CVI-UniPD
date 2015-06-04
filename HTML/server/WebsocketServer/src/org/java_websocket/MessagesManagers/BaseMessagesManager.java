@@ -31,6 +31,7 @@ public abstract class BaseMessagesManager extends Thread {
     protected String fileSpecs = null;
     protected int visitID = 0;
     protected boolean withEyeTracker = false;
+    protected boolean clearEyeTrackerData = false;
 
     public ArrayList<JSONObject> messagesGameBuffer = new ArrayList<JSONObject>();
     public ArrayList<JSONObject> messagesEyeTrackerBuffer = new ArrayList<JSONObject>();
@@ -38,7 +39,7 @@ public abstract class BaseMessagesManager extends Thread {
 
     public final Object bufferSynchronizer = new Object();
     
-    protected int maxFPS = 25;
+    protected int maxFPS = 30;
     protected Long MAX_DIFFERENCE = Long.valueOf(1000 / maxFPS + (1000 / maxFPS) / 2);
     protected Long MAX_TIME_WAITING = Long.valueOf((1000 / maxFPS) * 2);
 

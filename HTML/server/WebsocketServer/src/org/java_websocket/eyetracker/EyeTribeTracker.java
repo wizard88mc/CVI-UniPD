@@ -179,4 +179,21 @@ public class EyeTribeTracker /*extends Thread*/ {
     {
         eyeTribeClient.stopSendDataToServer();
     }
+    
+    public static void main(String args[]) {
+        
+        try {
+        EyeTribeTracker eyeTracker = new EyeTribeTracker("localhost", 8000);
+        try {
+            Thread.sleep(2000);
+        }
+        catch(Exception exc) {
+            
+        }
+        eyeTracker.connect();
+        }
+        catch(Exception exc) {
+            exc.printStackTrace();
+        }
+    }
 }

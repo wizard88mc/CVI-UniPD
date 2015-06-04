@@ -309,7 +309,10 @@ var CatchMeNamespace = {
 		
 		if (dataReceived.TYPE == "GRAPH_DATA") {
 			
-			// aggiungere dati al grafo
+			console.log(dataReceived);
+			/**
+			 * Adding received data to the graph
+			 */
 			datiEyeTracker.push([dataReceived.TIME, dataReceived.DELTA_EYE]);
 			datiTouch.push([dataReceived.TIME, dataReceived.DELTA_TOUCH]);
 			

@@ -69,12 +69,6 @@ anotherImageRetrieved: function() {
     gameManager.imageRetrieved++;
     if (gameManager.totalImageToRetrieve + gameManager.totalImagesFamilies 
     		== gameManager.imageRetrieved) {
-
-    	// devo aprire connessione e mettermi in attesa
-    	//ExampleNamespace.prepareExamples();
-        //presentationManager = new PresentationManager();
-        //presentationManager.createElements();
-        //ExampleNamespace.prepareExamples();
     	
     	if (getFromSessionStorage("permission") == "DOCTOR") {
     		openWebSocket(port);
@@ -147,17 +141,13 @@ istantiateLevel: function(level) {
     utilsNamespace.addSoundSource($('<audio>').attr('id', 'audioObjectNotInserted').appendTo('#divSounds'),
     		familySound[targetFamily].audioObjectNotInserted);
     
-    $('#divSounds #audioObjectNotInserted').on('ended', function() {
-    	utilsNamespace.resetGame();
-
-        setTimeout(manageImageObjectsLevel, 1000);
-    });
-    
     gameManager.maxTimeObjectOnScreen = Number(level.maxTimeImage) * 1000;
 
 },
 
     resetGame: function() {
+    	
+    	console.log("utils.resetGame()");
     	
         $('#divSystemImages').children().hide();
         $('#divMainContent div[id!="divBarraTempo"]').show();

@@ -88,6 +88,9 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
 
                         messageEyeTracker = new EyeTrackerDataPacket(stupidEye);
                         writeEyeTrackerMessage(messageEyeTracker);
+                        
+                        clearEyeTrackerData = true;
+                        //System.out.println("timeMessageGame < timeEyeTrackerMessage");
                     }
                     /**
                     * Ho solo informazioni riguardanti l'eye-tracker
@@ -100,6 +103,7 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
                     }
                 }
                 else if (messagesGameBuffer.isEmpty()) {
+                    
                     messageEyeTracker = 
                             new EyeTrackerDataPacket(messagesEyeTrackerBuffer.get(0));
 
@@ -121,6 +125,8 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
 
                         messageEyeTracker = new EyeTrackerDataPacket(stupidEye);
                         writeEyeTrackerMessage(messageEyeTracker);
+                        
+                        //System.out.println("Eye tracker vuoto");
                     }
                 }
                 if (removeMessageEyeTracker || removeMessageGame) {
@@ -135,6 +141,13 @@ public class CatchMeMessagesManager extends BaseMessagesManager {
                         if (removeMessageGame) {
                             synchronized(bufferSynchronizer) {
                                 messagesGameBuffer.remove(0);
+                            }
+                        }
+                        
+                        if (clearEyeTrackerData) {
+                            synchronized(bufferSynchronizer) {
+                                messagesEyeTrackerBuffer.clear();
+                                clearEyeTrackerData = false;
                             }
                         }
                     }

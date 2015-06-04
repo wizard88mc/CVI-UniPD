@@ -102,6 +102,8 @@ this.reduceArrowHeight = function(delta) {
 	
 	    if (exampleManager.imagesRetrieved == exampleManager.totalImagesToRetrieve) {
 	
+	    	console.log("ExampleManager.imageForExampleLoaded");
+	    	
 	        initGame();
 	        gameManager.isAnExample = true;
 	        var introductionSound = $('<audio>').attr('id', 'audioIntroduzione').appendTo(divSounds);
@@ -110,14 +112,19 @@ this.reduceArrowHeight = function(delta) {
 	        utilsNamespace.addSoundSource($('<audio>').attr('id', 'secondIntroduction').appendTo(divSounds), 
 	        		'introduzione_seconda_parte');
 	        
-	        introductionSound.on('ended', function() {
+	        introductionSound.one('ended', function() {
+	        	
+	        	console.log("introduction sound");
 	        	
 	        	sacco.element.one('transitionend webkitTransitionEnd oTransitionEnd', function() {
 	        		
-	        		$('#divSounds #secondIntroduction').on('ended', function() {
+	        		$('#divSounds #secondIntroduction').one('ended', function() {
+	        			console.log("secondIntroduction ended");
 	            		$(this).remove();
 	                	ExampleNamespace.iterateOnExamples();
 	            	}).get(0).play();
+	        		
+	        		sacco.element.off('transitionend webkitTransitionEnd oTransitionEnd');
 	        	});
 	        	
 	        	sacco.moveInside();

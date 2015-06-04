@@ -62,6 +62,8 @@ public class IPADClientManager extends WebSocketWithOffsetCalc {
                     packetType.equals(BaseManager.SCREEN_MEASURES) ||
                     packetType.equals("LEVEL_ENDED"))  {
                 
+                System.out.println("probably LEVEL_ENDED");
+                
                 doctorManager.sendPacket(packet);
                 
                 /**

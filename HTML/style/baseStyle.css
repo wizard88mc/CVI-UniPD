@@ -28,6 +28,11 @@ html, body {
 	font-size: 1.1em;
 }
 
+html {
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
 body {
 	background-color: #B70039;
 }

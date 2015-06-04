@@ -22,14 +22,12 @@ var frameAnimatorNamespace = {
     		
     		if (event.originalEvent.propertyName === "left") {
     			
-    			console.log("image arrived");
     			$(this).off(eventEndAnimation);
     			
     			addTransitionSpecifications(imageObjectOnScreen.element, 'none');
     			
     			imageObjectOnScreen.arrivedAtCenter();
     			
-    			console.log(gameManager.isAnExample);
     			frameAnimatorNamespace.imageInTheCenterOfTheScreen();
     		}
     	}).css({
@@ -56,7 +54,6 @@ var frameAnimatorNamespace = {
     	 */ 
         if (!gameManager.isAnExample) {
 
-        	console.log("making it draggable");
             imageObjectOnScreen.element.draggable({
                 start: touchManagerNamespace.touchStart,
                 drag: touchManagerNamespace.touchMove,
@@ -258,8 +255,6 @@ var frameAnimatorNamespace = {
                 	});
                 	
                 	addTransformSpecifications(exampleManager.hand, 'rotate(-20deg)');
-        			
-        			
         		}
         		
         		if ($('#divSounds #soundBefore').length > 0) {

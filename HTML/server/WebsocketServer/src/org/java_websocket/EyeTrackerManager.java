@@ -49,6 +49,7 @@ public class EyeTrackerManager extends WebSocketWithOffsetCalc {
                         messageManager.messagesEyeTrackerBuffer.add(packet);
                         messageManager.bufferSynchronizer.notifyAll();
                     }
+                    //System.out.println("GAZE DATA: " + packet.get("TIME") + " " + packet.get("DATA"));
                 }
                 /*
                  * Packet with the points for the calibration
